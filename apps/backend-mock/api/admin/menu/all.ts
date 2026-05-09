@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
   }
 
   const query = getQuery(event);
-  const includePlugins = query.includePlugins === 'true' || query.includePlugins === true;
+  const includePlugins = query.includePlugins !== 'false';
 
   const baseMenus =
     MOCK_MENUS.find((item) => item.username === userinfo.username)?.menus ?? [];
@@ -18,15 +18,5 @@ export default eventHandler(async (event) => {
   // 如果请求包含插件菜单，则合并插件菜单（转换为路由格式后）
   const pluginMenus = includePlugins ? getPluginMenusAsRoutes() : [];
   const menus = [...baseMenus, ...pluginMenus];
-
-  // 调试：打印返回的菜单
-  console.log(`[menu/all] Returning ${menus.length} menu items`);
-  if (includePlugins) {
-    console.log(
-      '[menu/all] Plugin menus:',
-      pluginMenus.map((m) => `${m.name} (${m.path})`),
-    );
-  }
-
   return useResponseSuccess(menus);
 });
