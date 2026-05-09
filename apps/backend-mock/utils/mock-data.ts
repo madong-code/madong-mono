@@ -383,6 +383,327 @@ export const MOCK_MENU_LIST = [
   },
 ];
 
+// ==================== 插件模块菜单模拟数据 ====================
+// 用于测试 meta.module 和模板页面加载机制
+
+/**
+ * 插件菜单配置（统一完整路径格式）
+ *
+ * component 统一使用完整路径：/plugins/{module}/views/{page}
+ * 通过 meta.module 字段区分是哪个模块的组件
+ *
+ * 示例：
+ * - component: '/plugins/demo/views/about/test'
+ * - meta.module: 'demo'
+ */
+const pluginMenus = [
+  {
+    id: 1000,
+    name: '插件管理',
+    path: '/plugin',
+    type: 'catalog',
+    status: 1,
+    meta: {
+      icon: 'lucide:box',
+      order: 100,
+      title: '插件管理',
+      badge: '新',
+      badgeType: 'normal',
+    },
+    children: [
+      // ==================== 问答模块 ====================
+      {
+        id: 1010,
+        pid: 1000,
+        name: '问答管理',
+        path: '/plugin/ask',
+        type: 'catalog',
+        status: 1,
+        meta: {
+          icon: 'lucide:message-square',
+          title: '问答管理',
+          module: 'ask',
+        },
+        children: [
+          {
+            id: 1011,
+            pid: 1010,
+            name: '问题列表',
+            path: '/plugin/ask/question',
+            component: '/plugins/ask/views/question/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:list',
+              title: '问题列表',
+              module: 'ask',
+              keepAlive: true,
+            },
+          },
+          {
+            id: 1012,
+            pid: 1010,
+            name: '分类管理',
+            path: '/plugin/ask/category',
+            component: '/plugins/ask/views/category/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:folder-tree',
+              title: '分类管理',
+              module: 'ask',
+              keepAlive: true,
+            },
+          },
+          {
+            id: 1013,
+            pid: 1010,
+            name: '标签管理',
+            path: '/plugin/ask/tag',
+            component: '/plugins/ask/views/tag/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:tags',
+              title: '标签管理',
+              module: 'ask',
+              keepAlive: true,
+            },
+          },
+        ],
+      },
+
+      // ==================== 文档模块 ====================
+      {
+        id: 1020,
+        pid: 1000,
+        name: '文档管理',
+        path: '/plugin/doc',
+        type: 'catalog',
+        status: 1,
+        meta: {
+          icon: 'lucide:file-text',
+          title: '文档管理',
+          module: 'doc',
+        },
+        children: [
+          {
+            id: 1021,
+            pid: 1020,
+            name: '文档列表',
+            path: '/plugin/doc/item',
+            component: '/plugins/doc/views/item/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:files',
+              title: '文档列表',
+              module: 'doc',
+              keepAlive: true,
+            },
+          },
+          {
+            id: 1022,
+            pid: 1020,
+            name: '文档分类',
+            path: '/plugin/doc/category',
+            component: '/plugins/doc/views/category/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:folder',
+              title: '文档分类',
+              module: 'doc',
+              keepAlive: true,
+            },
+          },
+          {
+            id: 1023,
+            pid: 1020,
+            name: '文档权限',
+            path: '/plugin/doc/permission',
+            component: '/plugins/doc/views/permission',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:shield',
+              title: '文档权限',
+              module: 'doc',
+              keepAlive: true,
+            },
+          },
+        ],
+      },
+
+      // ==================== 应用市场 ====================
+      {
+        id: 1030,
+        pid: 1000,
+        name: '应用市场',
+        path: '/plugin/market',
+        type: 'catalog',
+        status: 1,
+        meta: {
+          icon: 'lucide:shopping-bag',
+          title: '应用市场',
+          module: 'market',
+        },
+        children: [
+          {
+            id: 1031,
+            pid: 1030,
+            name: '应用列表',
+            path: '/plugin/market/apps',
+            component: '/plugins/market/views/apps/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:app-window',
+              title: '应用列表',
+              module: 'market',
+              keepAlive: true,
+            },
+          },
+          {
+            id: 1032,
+            pid: 1030,
+            name: '应用分类',
+            path: '/plugin/market/category',
+            component: '/plugins/market/views/category/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:layout-grid',
+              title: '应用分类',
+              module: 'market',
+              keepAlive: true,
+            },
+          },
+        ],
+      },
+
+      // ==================== 通用 CRUD 模板测试 ====================
+      {
+        id: 1040,
+        pid: 1000,
+        name: '模板演示',
+        path: '/plugin/template',
+        type: 'catalog',
+        status: 1,
+        meta: {
+          icon: 'lucide:layout-template',
+          title: '模板演示',
+          module: 'template',
+        },
+        children: [
+          {
+            id: 1041,
+            pid: 1040,
+            name: 'CRUD列表',
+            path: '/plugin/template/crud-list',
+            component: '/views/templates/crud/list',
+            type: 'menu',
+            status: 1,
+            meta: {
+              icon: 'lucide:table',
+              title: 'CRUD列表',
+              module: 'template',
+              templateOptions: {
+                api: {
+                  list: '/api/table/list',
+                  create: '/api/table/create',
+                  update: '/api/table/update',
+                  delete: '/api/table/delete',
+                },
+                columns: [
+                  { title: 'ID', dataIndex: 'id', key: 'id' },
+                  { title: '名称', dataIndex: 'name', key: 'name' },
+                  { title: '状态', dataIndex: 'status', key: 'status' },
+                  { title: '创建时间', dataIndex: 'createdAt', key: 'createdAt' },
+                ],
+              },
+              keepAlive: true,
+            },
+          },
+        ],
+      },
+
+      // ==================== Demo 插件测试（最简格式！） ====================
+      {
+        id: 1050,
+        pid: 1000,
+        name: '插件演示',
+        path: '/plugin/demo/about',
+        // ⭐ 最简写法：只写相对路径
+        component: 'about/test',
+        type: 'menu',
+        status: 1,
+        meta: {
+          icon: 'lucide:info',
+          title: '插件演示',
+          // ⭐ 通过 module 标识，自动定位到插件目录
+          module: 'demo',
+          keepAlive: true,
+        },
+      },
+      {
+        id: 1051,
+        pid: 1000,
+        name: '插件首页',
+        path: '/plugin/demo/home',
+        // ⭐ 最简写法：只写相对路径
+        component: 'home/test2',
+        type: 'menu',
+        status: 1,
+        meta: {
+          icon: 'lucide:home',
+          title: '插件首页',
+          // ⭐ 通过 module 标识，自动定位到插件目录
+          module: 'demo',
+          keepAlive: true,
+        },
+      },
+    ],
+  },
+];
+
+/**
+ * 获取插件菜单（用于测试）
+ */
+export function getPluginMenus() {
+  return pluginMenus;
+}
+
+/**
+ * 将后端菜单格式转换为前端路由格式
+ * 移除 id、pid、status、type 等后端特有字段
+ */
+function convertToRouteFormat(menu: any): any {
+  const { id, pid, status, type, authCode, children, ...rest } = menu;
+  const route: any = { ...rest };
+
+  // 递归处理子菜单
+  if (children && children.length > 0) {
+    route.children = children.map(convertToRouteFormat);
+  }
+
+  return route;
+}
+
+/**
+ * 获取插件菜单（前端路由格式）
+ */
+export function getPluginMenusAsRoutes() {
+  return pluginMenus.map(convertToRouteFormat);
+}
+
+/**
+ * 获取包含插件菜单的完整菜单列表
+ */
+export function getMenusWithPlugins() {
+  return [...(MOCK_MENU_LIST as any), ...pluginMenus];
+}
+
 export function getMenuIds(menus: any[]) {
   const ids: number[] = [];
   menus.forEach((item) => {

@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     return 'OK';
   } else if (
     ['DELETE', 'PATCH', 'POST', 'PUT'].includes(event.method) &&
-    event.path.startsWith('/api/system/')
+    event.path.startsWith('/api/admin/system/')
   ) {
     await sleep(Math.floor(Math.random() * 2000));
     return forbiddenResponse(event, '演示环境，禁止修改');
