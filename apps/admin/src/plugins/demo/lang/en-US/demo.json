@@ -1,0 +1,30 @@
+{
+  "title": "Demo Module",
+  "menu": {
+    "test": "Test Page",
+    "settings": "Settings",
+    "home": "Home",
+    "localeTest": "Locale Test"
+  },
+  "greeting": "Hello! Welcome to plugin locale test",
+  "welcome": "Welcome to backend route test",
+  "localeBackendTest": {
+    "title": "Backend Locale Test",
+    "description": "Test if plugin locale messages are loaded correctly",
+    "pluginLocaleTest": "Plugin Locale Test",
+    "frameworkLocaleTest": "Framework Locale Test",
+    "currentLocale": "Current Locale",
+    "switchLanguage": "Switch Language",
+    "chinese": "Chinese",
+    "english": "English",
+    "greeting": "Greeting",
+    "welcome": "Welcome Message",
+    "menuHome": "Menu - Home",
+    "menuSettings": "Menu - Settings",
+    "commonConfirm": "Common - Confirm",
+    "commonCancel": "Common - Cancel",
+    "loginTitle": "Login Title",
+    "preferencesTitle": "Preferences Title",
+    "currentLang": "Current Language"
+  }
+}

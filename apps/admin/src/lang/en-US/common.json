@@ -1,0 +1,10 @@
+{
+  "title": "System Title",
+  "button": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "message": {
+    "success": "Operation Success"
+  }
+}

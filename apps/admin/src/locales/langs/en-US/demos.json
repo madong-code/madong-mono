@@ -1,0 +1,28 @@
+{
+  "title": "Demos",
+  "elementPlus": "Element Plus",
+  "form": "Form",
+  "localeTest": {
+    "title": "Locale Test",
+    "description": "Test if locale messages are loaded correctly",
+    "basicTest": "Basic Translation Test",
+    "greeting": "Greeting",
+    "login": "Login",
+    "password": "Password",
+    "currentLocale": "Current Locale",
+    "switchLanguage": "Switch Language",
+    "chinese": "Chinese",
+    "english": "English",
+    "availableKeys": "Available Translation Keys"
+  },
+  "vben": {
+    "title": "Project",
+    "about": "About",
+    "document": "Document",
+    "antdv": "Ant Design Vue Version",
+    "antdv-next": "Antdv Next Version",
+    "naive-ui": "Naive UI Version",
+    "element-plus": "Element Plus Version",
+    "tdesign": "TDesign Vue Version"
+  }
+}
