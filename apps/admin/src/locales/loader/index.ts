@@ -1,166 +1,170 @@
-import { merge } from '@vben/utils';
 import type { SupportedLanguagesType } from '@vben/locales';
 
-/**
- * 语言代码映射: 处理 zh/zh-CN 和 en/en-US 之间的转换
- */
-function getLocaleDir(lang: SupportedLanguagesType): string {
-  const langMap: Record<string, string> = {
-    'zh': 'zh-CN',
-    'zh-CN': 'zh-CN',
-    'zh_CN': 'zh-CN',
-    'zh-Hans': 'zh-CN',
-    'en': 'en-US',
-    'en-US': 'en-US',
-    'en_US': 'en-US',
-    'en-GB': 'en-US',
-  };
-  return langMap[lang] || lang;
+type LocaleMessages = Record<string, any>;
+
+const LOCALE_DIR_MAP: Record<string, string> = {
+  en: 'en-US',
+  'en-GB': 'en-US',
+  'en-US': 'en-US',
+  en_US: 'en-US',
+  zh: 'zh-CN',
+  'zh-CN': 'zh-CN',
+  zh_CN: 'zh-CN',
+  'zh-Hans': 'zh-CN',
+};
+
+function normalizeLocaleDir(lang: SupportedLanguagesType): string {
+  return LOCALE_DIR_MAP[lang] || lang;
 }
 
-/**
- * Convert flat object to nested object
- * @param flatObj - Flat object with dot-separated keys
- * @returns Nested object
- */
-function toNestedObject(flatObj: Record<string, any>): Record<string, any> {
-  const result: Record<string, any> = {};
-
-  for (const key in flatObj) {
-    const keys = key.split('.');
-    let current = result;
-
-    keys.forEach((k, index) => {
-      if (index === keys.length - 1) {
-        current[k] = flatObj[key];
-      } else {
-        if (!current[k]) current[k] = {};
-        current = current[k];
-      }
-    });
-  }
-
-  return result;
-}
-
-export function loadAllLocaleMessages(lang: SupportedLanguagesType): Record<string, any> {
-  console.log('========================================');
-  console.log('[LocaleLoader] loadAllLocaleMessages called!');
-  console.log('[LocaleLoader] lang:', lang);
-  console.log('========================================');
-  
-  const messages: Record<string, any> = {};
-  const localeDir = getLocaleDir(lang);
-  
-  console.log('[LocaleLoader] localeDir:', localeDir);
-
-  // 需要检查的语言目录列表（处理 zh 和 zh-CN 的映射）
-  const localeDirsToCheck = lang !== localeDir ? [localeDir, lang] : [localeDir];
-  
-  console.log('[LocaleLoader] localeDirsToCheck:', localeDirsToCheck);
-
-  // Scan framework lang directory (src/lang/)
-  const langModules = import.meta.glob<{ default: Record<string, any> }>(
-    '../lang/**/*.json',
-    { eager: true }
-  );
-
-  // Scan locales langs directory (src/locales/langs/)
-  const localesModules = import.meta.glob<{ default: Record<string, any> }>(
-    '../locales/langs/**/*.json',
-    { eager: true }
-  );
-
-  // Scan plugin lang directory (src/plugins/**/lang/)
-  const pluginModules = import.meta.glob<{ default: Record<string, any> }>(
-    '../plugins/**/lang/**/*.json',
-    { eager: true }
-  );
-
-  // 额外的调试信息
-  console.log('[LocaleLoader] === 扫描结果 ===');
-  console.log('[LocaleLoader] langModules keys:', Object.keys(langModules));
-  console.log('[LocaleLoader] localesModules keys:', Object.keys(localesModules));
-  console.log('[LocaleLoader] pluginModules keys:', Object.keys(pluginModules));
-  console.log('[LocaleLoader] pluginModules count:', Object.keys(pluginModules).length);
-  
-  // 打印每个插件模块的路径
-  if (Object.keys(pluginModules).length === 0) {
-    console.log('[LocaleLoader] 警告: 没有扫描到任何插件语言包文件!');
-    console.log('[LocaleLoader] 当前目录:', import.meta.url);
-  } else {
-    console.log('[LocaleLoader] 扫描到的插件语言包路径:');
-    for (const path of Object.keys(pluginModules)) {
-      console.log('[LocaleLoader]   -', path);
+function deepMerge(
+  target: LocaleMessages,
+  source: LocaleMessages,
+): LocaleMessages {
+  for (const key of Object.keys(source)) {
+    if (
+      source[key] &&
+      typeof source[key] === 'object' &&
+      !Array.isArray(source[key])
+    ) {
+      if (!target[key]) target[key] = {};
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
     }
   }
+  return target;
+}
 
-  // Process framework locales
-  for (const [path, module] of Object.entries({ ...langModules, ...localesModules })) {
-    const sep = path.includes('\\') ? '\\' : '/';
-    const parts = path.split(sep);
-    const localeIndex = parts.findIndex(p => p === 'lang' || p === 'langs');
-    if (localeIndex === -1 || localeIndex + 1 >= parts.length) continue;
-    
-    const dirLocale = parts[localeIndex + 1];
-    // 检查目录是否在需要检查的语言目录列表中
-    if (!localeDirsToCheck.includes(dirLocale)) continue;
-    
-    const filePathParts = parts.slice(localeIndex + 2);
-    const fileName = filePathParts.pop()?.replace('.json', '') || '';
-    const fileKey = [...filePathParts, fileName].join('.');
-    
-    const content = module.default;
-    const nestedContent = toNestedObject(content);
-    
-    const wrapped: Record<string, any> = {};
-    wrapped[fileKey] = nestedContent;
-    merge(messages, wrapped);
-    
-    console.log('[LocaleLoader] Loaded framework:', fileKey, 'from:', dirLocale);
+function setNestedValue(
+  obj: LocaleMessages,
+  keys: string[],
+  value: LocaleMessages,
+): void {
+  if (keys.length === 0) return;
+
+  let current: LocaleMessages = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i]!;
+    if (!current[key]) current[key] = {};
+    current = current[key] as LocaleMessages;
+  }
+  const lastKey = keys.at(-1)!;
+  const existing = current[lastKey];
+  if (
+    existing &&
+    typeof existing === 'object' &&
+    !Array.isArray(existing) &&
+    typeof value === 'object'
+  ) {
+    deepMerge(existing as LocaleMessages, value);
+  } else {
+    current[lastKey] = value;
+  }
+}
+
+function extractLocaleAndFileKeys(
+  path: string,
+  langDirName: string,
+): { localeDir: string; fileKeys: string[] } | null {
+  const parts = path.split('/');
+  const langIndex = parts.lastIndexOf(langDirName);
+  if (langIndex === -1 || langIndex + 1 >= parts.length) return null;
+
+  const localeDir = parts[langIndex + 1];
+  if (!localeDir) return null;
+
+  const filePathParts = parts.slice(langIndex + 2);
+  const fileName = filePathParts.pop()?.replace('.json', '') || '';
+  const fileKeys = [...filePathParts, ...fileName.split('.')];
+
+  return { localeDir, fileKeys };
+}
+
+function loadAppLangLocales(
+  localeDir: string,
+): LocaleMessages {
+  const messages: LocaleMessages = {};
+
+  const langModules = import.meta.glob<{ default: LocaleMessages }>(
+    '../../lang/**/*.json',
+    { eager: true },
+  );
+
+  for (const [path, module] of Object.entries(langModules)) {
+    const result = extractLocaleAndFileKeys(path, 'lang');
+    if (!result || result.localeDir !== localeDir) continue;
+
+    setNestedValue(messages, result.fileKeys, module.default);
   }
 
-  // Process plugin locales
+  return messages;
+}
+
+function loadLocalesLangs(
+  localeDir: string,
+): LocaleMessages {
+  const messages: LocaleMessages = {};
+
+  const localesModules = import.meta.glob<{ default: LocaleMessages }>(
+    '../langs/**/*.json',
+    { eager: true },
+  );
+
+  for (const [path, module] of Object.entries(localesModules)) {
+    const result = extractLocaleAndFileKeys(path, 'langs');
+    if (!result || result.localeDir !== localeDir) continue;
+
+    const fileKeys = result.fileKeys;
+    if (fileKeys.length > 1) continue;
+
+    setNestedValue(messages, fileKeys, module.default);
+  }
+
+  return messages;
+}
+
+function loadPluginLocales(
+  localeDir: string,
+): LocaleMessages {
+  const messages: LocaleMessages = {};
+
+  const pluginModules = import.meta.glob<{ default: LocaleMessages }>(
+    '../../plugins/**/lang/**/*.json',
+    { eager: true },
+  );
+
   for (const [path, module] of Object.entries(pluginModules)) {
-    const sep = path.includes('\\') ? '\\' : '/';
-    const parts = path.split(sep);
-    
-    const pluginIndex = parts.findIndex(p => p === 'plugins');
-    const langIndex = parts.findIndex(p => p === 'lang');
-    
-    if (pluginIndex === -1 || langIndex === -1 || langIndex + 1 >= parts.length) continue;
-    
+    const parts = path.split('/');
+    const pluginIndex = parts.indexOf('plugins');
+    const langIndex = parts.indexOf('lang');
+
+    if (pluginIndex === -1 || langIndex === -1) continue;
+
     const pluginKey = parts[pluginIndex + 1];
     const dirLocale = parts[langIndex + 1];
-    
-    // 检查目录是否在需要检查的语言目录列表中
-    if (!pluginKey || !localeDirsToCheck.includes(dirLocale)) continue;
-    
+
+    if (!pluginKey || !dirLocale || dirLocale !== localeDir) continue;
+
     const filePathParts = parts.slice(langIndex + 2);
     const fileName = filePathParts.pop()?.replace('.json', '') || '';
-    const fileKey = [...filePathParts, fileName].join('.');
-    
-    const content = module.default;
-    const nestedContent = toNestedObject(content);
-    
-    if (!messages[pluginKey]) messages[pluginKey] = {};
-    
-    // If fileKey equals pluginKey, merge directly into plugin namespace
-    // Otherwise, use fileKey as sub-key and merge the content
-    if (fileKey === pluginKey) {
-      merge(messages[pluginKey], nestedContent);
-    } else {
-      // 如果已存在该子键，合并内容；否则直接赋值
-      if (messages[pluginKey][fileKey]) {
-        merge(messages[pluginKey][fileKey], nestedContent);
-      } else {
-        messages[pluginKey][fileKey] = nestedContent;
-      }
-    }
-    
-    console.log('[LocaleLoader] Loaded plugin:', pluginKey, 'file:', fileKey, 'from:', dirLocale);
+    const fileKeys = [pluginKey, ...filePathParts, ...fileName.split('.')];
+
+    setNestedValue(messages, fileKeys, module.default);
   }
 
-  console.log('[LocaleLoader] Final messages:', JSON.stringify(messages, null, 2));
+  return messages;
+}
+
+export function loadAllLocaleMessages(
+  lang: SupportedLanguagesType,
+): LocaleMessages {
+  const localeDir = normalizeLocaleDir(lang);
+  const messages: LocaleMessages = {};
+
+  deepMerge(messages, loadLocalesLangs(localeDir));
+  deepMerge(messages, loadAppLangLocales(localeDir));
+  deepMerge(messages, loadPluginLocales(localeDir));
+
   return messages;
 }
