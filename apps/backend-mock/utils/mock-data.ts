@@ -118,61 +118,201 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
     },
   };
 
-  return [
-    {
-      meta: {
-        icon: 'ic:baseline-view-in-ar',
-        keepAlive: true,
-        order: 1000,
-        title: 'demos.title',
-      },
-      name: 'Demos',
-      path: '/demos',
-      redirect: '/demos/access',
-      children: [
-        {
-          name: 'AccessDemos',
-          path: '/demosaccess',
-          meta: {
-            icon: 'mdi:cloud-key-outline',
-            title: 'demos.access.backendPermissions',
-          },
-          redirect: '/demos/access/page-control',
-          children: [
-            {
-              name: 'AccessPageControlDemo',
-              path: '/demos/access/page-control',
-              component: '/demos/access/index',
-              meta: {
-                icon: 'mdi:page-previous-outline',
-                title: 'demos.access.pageAccess',
-              },
-            },
-            {
-              name: 'AccessButtonControlDemo',
-              path: '/demos/access/button-control',
-              component: '/demos/access/button-control',
-              meta: {
-                icon: 'mdi:button-cursor',
-                title: 'demos.access.buttonControl',
-              },
-            },
-            {
-              name: 'AccessMenuVisible403Demo',
-              path: '/demos/access/menu-visible-403',
-              component: '/demos/access/menu-visible-403',
-              meta: {
-                authority: ['no-body'],
-                icon: 'mdi:button-cursor',
-                menuVisibleWithForbidden: true,
-                title: 'demos.access.menuVisible403',
-              },
-            },
-            roleWithMenus[role],
-          ],
-        },
-      ],
+  const demoMenus = {
+    meta: {
+      icon: 'lucide:flask-conical',
+      title: '示例模块',
     },
+    name: 'Demo',
+    path: '/demo',
+    redirect: '/demo/crud/basic',
+    children: [
+      {
+        meta: {
+          icon: 'lucide:table',
+          title: 'CRUD 示例',
+        },
+        name: 'DemoCrud',
+        path: '/demo/crud',
+        redirect: '/demo/crud/basic',
+        children: [
+          {
+            name: 'DemoCrudBasic',
+            path: '/demo/crud/basic',
+            component: 'crud/basic',
+            meta: {
+              icon: 'lucide:table-2',
+              module: 'demo',
+              title: '基础表格',
+            },
+          },
+          {
+            name: 'DemoCrudTree',
+            path: '/demo/crud/tree',
+            component: 'crud/tree',
+            meta: {
+              icon: 'lucide:git-fork',
+              module: 'demo',
+              title: '树形表格',
+            },
+          },
+          {
+            name: 'DemoCrudDrawer',
+            path: '/demo/crud/drawer',
+            component: 'crud/drawer',
+            meta: {
+              icon: 'lucide:panel-right',
+              module: 'demo',
+              title: '抽屉模式',
+            },
+          },
+        ],
+      },
+      {
+        name: 'DemoForm',
+        path: '/demo/form',
+        component: 'form/index',
+        meta: {
+          icon: 'lucide:text-cursor-input',
+          module: 'demo',
+          title: '表单示例',
+        },
+      },
+      {
+        name: 'DemoLocale',
+        path: '/demo/locale',
+        component: 'locale/index',
+        meta: {
+          icon: 'lucide:languages',
+          module: 'demo',
+          title: '多语言示例',
+        },
+      },
+      {
+        meta: {
+          icon: 'ion:layers-outline',
+          title: '组件示例',
+        },
+        name: 'DemoExamples',
+        path: '/demo/examples',
+        redirect: '/demo/examples/modal',
+        children: [
+          {
+            name: 'DemoExampleModal',
+            path: '/demo/examples/modal',
+            component: 'examples/modal/index',
+            meta: { icon: 'system-uicons:window-content', module: 'demo', title: '弹窗', keepAlive: true },
+          },
+          {
+            name: 'DemoExampleDrawer',
+            path: '/demo/examples/drawer',
+            component: 'examples/drawer/index',
+            meta: { icon: 'iconoir:drawer', module: 'demo', title: '抽屉', keepAlive: true },
+          },
+          {
+            meta: { icon: 'mdi:form-select', title: '表单' },
+            name: 'DemoExampleForm',
+            path: '/demo/examples/form',
+            redirect: '/demo/examples/form/basic',
+            children: [
+              { name: 'DemoExampleFormBasic', path: '/demo/examples/form/basic', component: 'examples/form/basic', meta: { module: 'demo', title: '基础表单' } },
+              { name: 'DemoExampleFormQuery', path: '/demo/examples/form/query', component: 'examples/form/query', meta: { module: 'demo', title: '查询表单' } },
+              { name: 'DemoExampleFormRules', path: '/demo/examples/form/rules', component: 'examples/form/rules', meta: { module: 'demo', title: '表单校验' } },
+              { name: 'DemoExampleFormDynamic', path: '/demo/examples/form/dynamic', component: 'examples/form/dynamic', meta: { module: 'demo', title: '动态表单' } },
+              { name: 'DemoExampleFormApi', path: '/demo/examples/form/api', component: 'examples/form/api', meta: { module: 'demo', title: '表单API' } },
+              { name: 'DemoExampleFormMerge', path: '/demo/examples/form/merge', component: 'examples/form/merge', meta: { module: 'demo', title: '合并表单' } },
+              { name: 'DemoExampleFormCustomLayout', path: '/demo/examples/form/custom-layout', component: 'examples/form/custom-layout', meta: { module: 'demo', title: '自定义布局' } },
+            ],
+          },
+          {
+            meta: { icon: 'lucide:table', title: 'Vxe 表格' },
+            name: 'DemoExampleVxeTable',
+            path: '/demo/examples/vxe-table',
+            redirect: '/demo/examples/vxe-table/basic',
+            children: [
+              { name: 'DemoExampleVxeTableBasic', path: '/demo/examples/vxe-table/basic', component: 'examples/vxe-table/basic', meta: { module: 'demo', title: '基础表格' } },
+              { name: 'DemoExampleVxeTableRemote', path: '/demo/examples/vxe-table/remote', component: 'examples/vxe-table/remote', meta: { module: 'demo', title: '远程加载' } },
+              { name: 'DemoExampleVxeTableTree', path: '/demo/examples/vxe-table/tree', component: 'examples/vxe-table/tree', meta: { module: 'demo', title: '树形表格' } },
+              { name: 'DemoExampleVxeTableCustomCell', path: '/demo/examples/vxe-table/custom-cell', component: 'examples/vxe-table/custom-cell', meta: { module: 'demo', title: '自定义单元格' } },
+              { name: 'DemoExampleVxeTableEditCell', path: '/demo/examples/vxe-table/edit-cell', component: 'examples/vxe-table/edit-cell', meta: { module: 'demo', title: '单元格编辑' } },
+              { name: 'DemoExampleVxeTableEditRow', path: '/demo/examples/vxe-table/edit-row', component: 'examples/vxe-table/edit-row', meta: { module: 'demo', title: '行编辑' } },
+              { name: 'DemoExampleVxeTableFixed', path: '/demo/examples/vxe-table/fixed', component: 'examples/vxe-table/fixed', meta: { module: 'demo', title: '固定表头/列' } },
+              { name: 'DemoExampleVxeTableForm', path: '/demo/examples/vxe-table/form', component: 'examples/vxe-table/form', meta: { module: 'demo', title: '搜索表单' } },
+              { name: 'DemoExampleVxeTableVirtual', path: '/demo/examples/vxe-table/virtual', component: 'examples/vxe-table/virtual', meta: { module: 'demo', title: '虚拟滚动' } },
+            ],
+          },
+          { name: 'DemoExampleCaptcha', path: '/demo/examples/captcha', component: 'examples/captcha/slider-captcha', meta: { icon: 'logos:recaptcha', module: 'demo', title: '验证码' } },
+          { name: 'DemoExampleEllipsis', path: '/demo/examples/ellipsis', component: 'examples/ellipsis/index', meta: { icon: 'ion:ellipsis-horizontal', module: 'demo', title: '文本省略' } },
+          { name: 'DemoExampleJsonViewer', path: '/demo/examples/json-viewer', component: 'examples/json-viewer/index', meta: { icon: 'tabler:json', module: 'demo', title: 'JsonViewer' } },
+          { name: 'DemoExampleLoading', path: '/demo/examples/loading', component: 'examples/loading/index', meta: { icon: 'mdi:circle-double', module: 'demo', title: 'Loading' } },
+          { name: 'DemoExampleCountTo', path: '/demo/examples/count-to', component: 'examples/count-to/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'CountTo' } },
+          { name: 'DemoExampleCropper', path: '/demo/examples/cropper', component: 'examples/cropper/index', meta: { icon: 'mdi:crop', module: 'demo', title: '图片裁剪' } },
+          { name: 'DemoExampleContextMenu', path: '/demo/examples/context-menu', component: 'examples/context-menu/index', meta: { icon: 'mdi:menu', module: 'demo', title: '上下文菜单' } },
+          { name: 'DemoExampleResize', path: '/demo/examples/resize', component: 'examples/resize/basic', meta: { icon: 'material-symbols:resize', module: 'demo', title: '拖动调整' } },
+          { name: 'DemoExampleTippy', path: '/demo/examples/tippy', component: 'examples/tippy/index', meta: { icon: 'mdi:message-settings-outline', module: 'demo', title: 'Tippy' } },
+          { name: 'DemoExampleTiptap', path: '/demo/examples/tiptap', component: 'examples/tiptap/index', meta: { icon: 'lucide:square-pen', module: 'demo', title: '富文本编辑器' } },
+          { name: 'DemoExampleMotion', path: '/demo/examples/motion', component: 'examples/motion/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'Motion' } },
+        ],
+      },
+    ],
+  };
+
+  return [
+    // {
+    //   meta: {
+    //     icon: 'ic:baseline-view-in-ar',
+    //     keepAlive: true,
+    //     order: 1000,
+    //     title: 'demos.title',
+    //   },
+    //   name: 'Demos',
+    //   path: '/demos',
+    //   redirect: '/demos/access',
+    //   children: [
+    //     {
+    //       name: 'AccessDemos',
+    //       path: '/demosaccess',
+    //       meta: {
+    //         icon: 'mdi:cloud-key-outline',
+    //         title: 'demos.access.backendPermissions',
+    //       },
+    //       redirect: '/demos/access/page-control',
+    //       children: [
+    //         {
+    //           name: 'AccessPageControlDemo',
+    //           path: '/demos/access/page-control',
+    //           component: '/demos/access/index',
+    //           meta: {
+    //             icon: 'mdi:page-previous-outline',
+    //             title: 'demos.access.pageAccess',
+    //           },
+    //         },
+    //         {
+    //           name: 'AccessButtonControlDemo',
+    //           path: '/demos/access/button-control',
+    //           component: '/demos/access/button-control',
+    //           meta: {
+    //             icon: 'mdi:button-cursor',
+    //             title: 'demos.access.buttonControl',
+    //           },
+    //         },
+    //         {
+    //           name: 'AccessMenuVisible403Demo',
+    //           path: '/demos/access/menu-visible-403',
+    //           component: '/demos/access/menu-visible-403',
+    //           meta: {
+    //             authority: ['no-body'],
+    //             icon: 'mdi:button-cursor',
+    //             menuVisibleWithForbidden: true,
+    //             title: 'demos.access.menuVisible403',
+    //           },
+    //         },
+    //         roleWithMenus[role],
+    //       ],
+    //     },
+    //   ],
+    // },
+    demoMenus,
   ];
 };
 
@@ -398,274 +538,274 @@ export const MOCK_MENU_LIST = [
  * - meta.module: 'demo'
  */
 const pluginMenus = [
-  {
-    id: 1000,
-    name: '插件管理',
-    path: '/plugin',
-    type: 'catalog',
-    status: 1,
-    meta: {
-      icon: 'lucide:box',
-      order: 100,
-      title: '插件管理',
-      badge: '新',
-      badgeType: 'normal',
-    },
-    children: [
-      // ==================== 问答模块 ====================
-      // {
-      //   id: 1010,
-      //   pid: 1000,
-      //   name: '问答管理',
-      //   path: '/plugin/ask',
-      //   type: 'catalog',
-      //   status: 1,
-      //   meta: {
-      //     icon: 'lucide:message-square',
-      //     title: '问答管理',
-      //     module: 'ask',
-      //   },
-      //   children: [
-      //     {
-      //       id: 1011,
-      //       pid: 1010,
-      //       name: '问题列表',
-      //       path: '/plugin/ask/question',
-      //       component: '/plugins/ask/views/question/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:list',
-      //         title: '问题列表',
-      //         module: 'ask',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //     {
-      //       id: 1012,
-      //       pid: 1010,
-      //       name: '分类管理',
-      //       path: '/plugin/ask/category',
-      //       component: '/plugins/ask/views/category/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:folder-tree',
-      //         title: '分类管理',
-      //         module: 'ask',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //     {
-      //       id: 1013,
-      //       pid: 1010,
-      //       name: '标签管理',
-      //       path: '/plugin/ask/tag',
-      //       component: '/plugins/ask/views/tag/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:tags',
-      //         title: '标签管理',
-      //         module: 'ask',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //   ],
-      // },
+  // {
+  //   id: 1000,
+  //   name: '插件管理',
+  //   path: '/plugin',
+  //   type: 'catalog',
+  //   status: 1,
+  //   meta: {
+  //     icon: 'lucide:box',
+  //     order: 100,
+  //     title: '插件管理',
+  //     badge: '新',
+  //     badgeType: 'normal',
+  //   },
+  //   children: [
+  //     // ==================== 问答模块 ====================
+  //     // {
+  //     //   id: 1010,
+  //     //   pid: 1000,
+  //     //   name: '问答管理',
+  //     //   path: '/plugin/ask',
+  //     //   type: 'catalog',
+  //     //   status: 1,
+  //     //   meta: {
+  //     //     icon: 'lucide:message-square',
+  //     //     title: '问答管理',
+  //     //     module: 'ask',
+  //     //   },
+  //     //   children: [
+  //     //     {
+  //     //       id: 1011,
+  //     //       pid: 1010,
+  //     //       name: '问题列表',
+  //     //       path: '/plugin/ask/question',
+  //     //       component: '/plugins/ask/views/question/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:list',
+  //     //         title: '问题列表',
+  //     //         module: 'ask',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //     {
+  //     //       id: 1012,
+  //     //       pid: 1010,
+  //     //       name: '分类管理',
+  //     //       path: '/plugin/ask/category',
+  //     //       component: '/plugins/ask/views/category/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:folder-tree',
+  //     //         title: '分类管理',
+  //     //         module: 'ask',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //     {
+  //     //       id: 1013,
+  //     //       pid: 1010,
+  //     //       name: '标签管理',
+  //     //       path: '/plugin/ask/tag',
+  //     //       component: '/plugins/ask/views/tag/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:tags',
+  //     //         title: '标签管理',
+  //     //         module: 'ask',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //   ],
+  //     // },
 
-      // // ==================== 文档模块 ====================
-      // {
-      //   id: 1020,
-      //   pid: 1000,
-      //   name: '文档管理',
-      //   path: '/plugin/doc',
-      //   type: 'catalog',
-      //   status: 1,
-      //   meta: {
-      //     icon: 'lucide:file-text',
-      //     title: '文档管理',
-      //     module: 'doc',
-      //   },
-      //   children: [
-      //     {
-      //       id: 1021,
-      //       pid: 1020,
-      //       name: '文档列表',
-      //       path: '/plugin/doc/item',
-      //       component: '/plugins/doc/views/item/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:files',
-      //         title: '文档列表',
-      //         module: 'doc',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //     {
-      //       id: 1022,
-      //       pid: 1020,
-      //       name: '文档分类',
-      //       path: '/plugin/doc/category',
-      //       component: '/plugins/doc/views/category/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:folder',
-      //         title: '文档分类',
-      //         module: 'doc',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //     {
-      //       id: 1023,
-      //       pid: 1020,
-      //       name: '文档权限',
-      //       path: '/plugin/doc/permission',
-      //       component: '/plugins/doc/views/permission',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:shield',
-      //         title: '文档权限',
-      //         module: 'doc',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //   ],
-      // },
+  //     // // ==================== 文档模块 ====================
+  //     // {
+  //     //   id: 1020,
+  //     //   pid: 1000,
+  //     //   name: '文档管理',
+  //     //   path: '/plugin/doc',
+  //     //   type: 'catalog',
+  //     //   status: 1,
+  //     //   meta: {
+  //     //     icon: 'lucide:file-text',
+  //     //     title: '文档管理',
+  //     //     module: 'doc',
+  //     //   },
+  //     //   children: [
+  //     //     {
+  //     //       id: 1021,
+  //     //       pid: 1020,
+  //     //       name: '文档列表',
+  //     //       path: '/plugin/doc/item',
+  //     //       component: '/plugins/doc/views/item/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:files',
+  //     //         title: '文档列表',
+  //     //         module: 'doc',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //     {
+  //     //       id: 1022,
+  //     //       pid: 1020,
+  //     //       name: '文档分类',
+  //     //       path: '/plugin/doc/category',
+  //     //       component: '/plugins/doc/views/category/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:folder',
+  //     //         title: '文档分类',
+  //     //         module: 'doc',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //     {
+  //     //       id: 1023,
+  //     //       pid: 1020,
+  //     //       name: '文档权限',
+  //     //       path: '/plugin/doc/permission',
+  //     //       component: '/plugins/doc/views/permission',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:shield',
+  //     //         title: '文档权限',
+  //     //         module: 'doc',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //   ],
+  //     // },
 
-      // // ==================== 应用市场 ====================
-      // {
-      //   id: 1030,
-      //   pid: 1000,
-      //   name: '应用市场',
-      //   path: '/plugin/market',
-      //   type: 'catalog',
-      //   status: 1,
-      //   meta: {
-      //     icon: 'lucide:shopping-bag',
-      //     title: '应用市场',
-      //     module: 'market',
-      //   },
-      //   children: [
-      //     {
-      //       id: 1031,
-      //       pid: 1030,
-      //       name: '应用列表',
-      //       path: '/plugin/market/apps',
-      //       component: '/plugins/market/views/apps/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:app-window',
-      //         title: '应用列表',
-      //         module: 'market',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //     {
-      //       id: 1032,
-      //       pid: 1030,
-      //       name: '应用分类',
-      //       path: '/plugin/market/category',
-      //       component: '/plugins/market/views/category/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:layout-grid',
-      //         title: '应用分类',
-      //         module: 'market',
-      //         keepAlive: true,
-      //       },
-      //     },
-      //   ],
-      // },
+  //     // // ==================== 应用市场 ====================
+  //     // {
+  //     //   id: 1030,
+  //     //   pid: 1000,
+  //     //   name: '应用市场',
+  //     //   path: '/plugin/market',
+  //     //   type: 'catalog',
+  //     //   status: 1,
+  //     //   meta: {
+  //     //     icon: 'lucide:shopping-bag',
+  //     //     title: '应用市场',
+  //     //     module: 'market',
+  //     //   },
+  //     //   children: [
+  //     //     {
+  //     //       id: 1031,
+  //     //       pid: 1030,
+  //     //       name: '应用列表',
+  //     //       path: '/plugin/market/apps',
+  //     //       component: '/plugins/market/views/apps/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:app-window',
+  //     //         title: '应用列表',
+  //     //         module: 'market',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //     {
+  //     //       id: 1032,
+  //     //       pid: 1030,
+  //     //       name: '应用分类',
+  //     //       path: '/plugin/market/category',
+  //     //       component: '/plugins/market/views/category/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:layout-grid',
+  //     //         title: '应用分类',
+  //     //         module: 'market',
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //   ],
+  //     // },
 
-      // // ==================== 通用 CRUD 模板测试 ====================
-      // {
-      //   id: 1040,
-      //   pid: 1000,
-      //   name: '模板演示',
-      //   path: '/plugin/template',
-      //   type: 'catalog',
-      //   status: 1,
-      //   meta: {
-      //     icon: 'lucide:layout-template',
-      //     title: '模板演示',
-      //     module: 'template',
-      //   },
-      //   children: [
-      //     {
-      //       id: 1041,
-      //       pid: 1040,
-      //       name: 'CRUD列表',
-      //       path: '/plugin/template/crud-list',
-      //       component: '/views/templates/crud/list',
-      //       type: 'menu',
-      //       status: 1,
-      //       meta: {
-      //         icon: 'lucide:table',
-      //         title: 'CRUD列表',
-      //         module: 'template',
-      //         templateOptions: {
-      //           api: {
-      //             list: '/api/table/list',
-      //             create: '/api/table/create',
-      //             update: '/api/table/update',
-      //             delete: '/api/table/delete',
-      //           },
-      //           columns: [
-      //             { title: 'ID', dataIndex: 'id', key: 'id' },
-      //             { title: '名称', dataIndex: 'name', key: 'name' },
-      //             { title: '状态', dataIndex: 'status', key: 'status' },
-      //             { title: '创建时间', dataIndex: 'createdAt', key: 'createdAt' },
-      //           ],
-      //         },
-      //         keepAlive: true,
-      //       },
-      //     },
-      //   ],
-      // },
+  //     // // ==================== 通用 CRUD 模板测试 ====================
+  //     // {
+  //     //   id: 1040,
+  //     //   pid: 1000,
+  //     //   name: '模板演示',
+  //     //   path: '/plugin/template',
+  //     //   type: 'catalog',
+  //     //   status: 1,
+  //     //   meta: {
+  //     //     icon: 'lucide:layout-template',
+  //     //     title: '模板演示',
+  //     //     module: 'template',
+  //     //   },
+  //     //   children: [
+  //     //     {
+  //     //       id: 1041,
+  //     //       pid: 1040,
+  //     //       name: 'CRUD列表',
+  //     //       path: '/plugin/template/crud-list',
+  //     //       component: '/views/templates/crud/list',
+  //     //       type: 'menu',
+  //     //       status: 1,
+  //     //       meta: {
+  //     //         icon: 'lucide:table',
+  //     //         title: 'CRUD列表',
+  //     //         module: 'template',
+  //     //         templateOptions: {
+  //     //           api: {
+  //     //             list: '/api/table/list',
+  //     //             create: '/api/table/create',
+  //     //             update: '/api/table/update',
+  //     //             delete: '/api/table/delete',
+  //     //           },
+  //     //           columns: [
+  //     //             { title: 'ID', dataIndex: 'id', key: 'id' },
+  //     //             { title: '名称', dataIndex: 'name', key: 'name' },
+  //     //             { title: '状态', dataIndex: 'status', key: 'status' },
+  //     //             { title: '创建时间', dataIndex: 'createdAt', key: 'createdAt' },
+  //     //           ],
+  //     //         },
+  //     //         keepAlive: true,
+  //     //       },
+  //     //     },
+  //     //   ],
+  //     // },
 
-      // ==================== Demo 插件测试（最简格式！） ====================
-      {
-        id: 1050,
-        pid: 1000,
-        name: '插件演示',
-        path: '/plugin/demo/about',
-        // ⭐ 最简写法：只写相对路径
-        component: 'about/test',
-        type: 'menu',
-        status: 1,
-        meta: {
-          icon: 'lucide:info',
-          title: '插件演示',
-          // ⭐ 通过 module 标识，自动定位到插件目录
-          module: 'demo',
-          keepAlive: true,
-        },
-      },
-      {
-        id: 1051,
-        pid: 1000,
-        name: '插件首页',
-        path: '/plugin/demo/home',
-        // ⭐ 最简写法：只写相对路径
-        component: 'home/test2',
-        type: 'menu',
-        status: 1,
-        meta: {
-          icon: 'lucide:home',
-          title: '插件首页',
-          // ⭐ 通过 module 标识，自动定位到插件目录
-          module: 'demo',
-          keepAlive: true,
-        },
-      },
-    ],
-  },
+  //     // ==================== Demo 插件测试（最简格式！） ====================
+  //     {
+  //       id: 1050,
+  //       pid: 1000,
+  //       name: '插件演示',
+  //       path: '/plugin/demo/about',
+  //       // ⭐ 最简写法：只写相对路径
+  //       component: 'about/test',
+  //       type: 'menu',
+  //       status: 1,
+  //       meta: {
+  //         icon: 'lucide:info',
+  //         title: '插件演示',
+  //         // ⭐ 通过 module 标识，自动定位到插件目录
+  //         module: 'demo',
+  //         keepAlive: true,
+  //       },
+  //     },
+  //     {
+  //       id: 1051,
+  //       pid: 1000,
+  //       name: '插件首页',
+  //       path: '/plugin/demo/home',
+  //       // ⭐ 最简写法：只写相对路径
+  //       component: 'home/test2',
+  //       type: 'menu',
+  //       status: 1,
+  //       meta: {
+  //         icon: 'lucide:home',
+  //         title: '插件首页',
+  //         // ⭐ 通过 module 标识，自动定位到插件目录
+  //         module: 'demo',
+  //         keepAlive: true,
+  //       },
+  //     },
+  //   ],
+  // },
 ];
 
 /**
