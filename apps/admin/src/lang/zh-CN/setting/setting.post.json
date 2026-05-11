@@ -1,0 +1,24 @@
+{
+  "title": "岗位管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "岗位名称",
+      "code": "岗位代码",
+      "sort": "排序",
+      "enabled": "状态",
+      "remark": "备注"
+    }
+  },
+  "search": {
+    "name": "岗位名称"
+  },
+  "form": {
+    "id": "ID",
+    "name": "岗位名称",
+    "code": "岗位代码",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "title": "部门管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "部门名称",
+      "code": "部门代码",
+      "phone": "联系电话",
+      "sort": "排序",
+      "enabled": "状态",
+      "remark": "备注"
+    }
+  },
+  "search": {
+    "name": "部门名称"
+  },
+  "form": {
+    "id": "ID",
+    "pid": "上级部门",
+    "name": "部门名称",
+    "code": "部门代码",
+    "phone": "联系电话",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

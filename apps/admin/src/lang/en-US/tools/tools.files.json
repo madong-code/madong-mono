@@ -1,0 +1,21 @@
+{
+  "title": "Attachment Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "original_filename": "Original File Name",
+      "url": "Access Address",
+      "size_info": "File Details",
+      "ext": "Extension",
+      "content_type": "MIME Type",
+      "platform": "Storage Platform",
+      "created_at": "Creation Date"
+    }
+  },
+  "search": {
+    "original_filename": "Original File Name"
+  },
+  "form": {
+    "file": "Upload File"
+  }
+}

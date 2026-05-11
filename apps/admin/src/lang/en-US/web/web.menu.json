@@ -1,0 +1,29 @@
+{
+  "title": "Menu Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Name",
+      "category": "Category",
+      "url": "URL",
+      "sort": "Sort",
+      "type": "Type",
+      "enabled": "Status"
+    }
+  },
+  "search": {
+    "name": "Name",
+    "category": "Category"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Name",
+    "type": "Type",
+    "pid": "Parent Menu",
+    "url": "URL",
+    "target": "Target",
+    "icon": "Icon",
+    "sort": "Sort",
+    "enabled": "Status"
+  }
+}

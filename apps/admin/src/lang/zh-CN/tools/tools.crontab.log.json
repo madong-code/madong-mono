@@ -1,0 +1,15 @@
+{
+  "title": "执行日志",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "crontab_id": "任务ID",
+      "name": "任务名称",
+      "target": "调用目标",
+      "status": "执行状态",
+      "result": "执行结果",
+      "exception_message": "异常信息",
+      "created_at": "执行时间"
+    }
+  }
+}

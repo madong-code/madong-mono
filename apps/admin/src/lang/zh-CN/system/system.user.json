@@ -1,0 +1,32 @@
+{
+  "title": "用户管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "user_name": "账号",
+      "real_name": "用户昵称",
+      "nick_name": "用户昵称",
+      "mobile_phone": "手机号码",
+      "email": "邮箱",
+      "enabled": "状态",
+      "login_time": "登录时间"
+    }
+  },
+  "search": {
+    "user_name": "用户名",
+    "real_name": "姓名",
+    "enabled": "状态"
+  },
+  "form": {
+    "id": "ID",
+    "user_name": "账号",
+    "real_name": "用户昵称",
+    "nick_name": "用户昵称",
+    "mobile_phone": "手机号码",
+    "email": "邮箱",
+    "password": "用户密码",
+    "dept_id": "部门",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

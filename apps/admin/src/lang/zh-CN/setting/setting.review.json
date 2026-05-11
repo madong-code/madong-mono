@@ -1,0 +1,20 @@
+{
+  "title": "审核管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "标题",
+      "reviewable_type": "类型",
+      "applicant": "申请人",
+      "status": "状态",
+      "reviewer_name": "审核人",
+      "reason": "原因",
+      "created_at": "申请时间"
+    }
+  },
+  "search": {
+    "title": "标题",
+    "type": "类型",
+    "status": "状态"
+  }
+}

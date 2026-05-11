@@ -1,0 +1,29 @@
+{
+  "title": "Member Points",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "Username",
+      "nickname": "Nickname",
+      "type": "Operation Type",
+      "points": "Points",
+      "points_before": "Points Before",
+      "points_after": "Points After",
+      "source": "Source/Usage",
+      "remark": "Remark",
+      "operator": "Operator",
+      "create_time": "Operation Time"
+    }
+  },
+  "search": {
+    "username": "Username",
+    "type": "Operation Type"
+  },
+  "form": {
+    "id": "ID",
+    "member_id": "Member",
+    "type": "Operation Type",
+    "points": "Points",
+    "remark": "Remark"
+  }
+}

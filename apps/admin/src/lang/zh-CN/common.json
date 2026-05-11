@@ -1,0 +1,10 @@
+{
+  "title": "系统标题",
+  "button": {
+    "confirm": "确认",
+    "cancel": "取消"
+  },
+  "message": {
+    "success": "操作成功"
+  }
+}

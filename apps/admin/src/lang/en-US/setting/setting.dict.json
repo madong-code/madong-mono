@@ -1,0 +1,33 @@
+{
+  "title": "Dictionary Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Dictionary Name",
+      "code": "Dictionary Code",
+      "group_code": "Group",
+      "data_type": "Data Type",
+      "enabled": "Status",
+      "sort": "Sort",
+      "description": "Description"
+    },
+    "actions": {
+      "dict_item": "Dict Items",
+      "edit": "Edit"
+    }
+  },
+  "search": {
+    "name": "Dictionary Name",
+    "code": "Dictionary Code"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Dictionary Name",
+    "code": "Dictionary Code",
+    "group_code": "Group",
+    "data_type": "Data Type",
+    "enabled": "Status",
+    "sort": "Sort",
+    "description": "Description"
+  }
+}

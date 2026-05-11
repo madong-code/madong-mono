@@ -1,0 +1,24 @@
+{
+  "title": "My Messages",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "type": "Type",
+      "status": "Read Status",
+      "priority": "Priority",
+      "created_date": "Receive Time"
+    }
+  },
+  "search": {
+    "title": "Title",
+    "type": "Type"
+  },
+  "form": {
+    "id": "ID",
+    "title": "Title",
+    "type": "Type",
+    "content": "Content",
+    "enabled": "Status"
+  }
+}

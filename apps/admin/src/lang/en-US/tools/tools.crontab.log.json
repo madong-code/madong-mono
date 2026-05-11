@@ -1,0 +1,15 @@
+{
+  "title": "Execution Log",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "crontab_id": "Task ID",
+      "name": "Task Name",
+      "target": "Call Target",
+      "status": "Status",
+      "result": "Result",
+      "exception_message": "Exception",
+      "created_at": "Execution Time"
+    }
+  }
+}

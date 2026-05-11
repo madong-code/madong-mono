@@ -1,0 +1,25 @@
+{
+  "title": "Notice Announcement",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "type": "Type",
+      "enabled": "Status",
+      "created_date": "Creation Date",
+      "remark": "Remark"
+    }
+  },
+  "search": {
+    "title": "Title",
+    "type": "Type"
+  },
+  "form": {
+    "id": "ID",
+    "title": "Title",
+    "type": "Type",
+    "content": "Content",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}

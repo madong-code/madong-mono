@@ -1,0 +1,15 @@
+{
+  "title": "Recycle Bin Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "data": "Data",
+      "table_name": "Data Table",
+      "table_prefix": "Table Prefix",
+      "ip": "IP"
+    }
+  },
+  "search": {
+    "table_name": "Data Table"
+  }
+}

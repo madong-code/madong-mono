@@ -1,0 +1,30 @@
+{
+  "title": "Member Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "Username",
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "email": "Email",
+      "level_name": "Member Level",
+      "points": "Points",
+      "status": "Status",
+      "created_at": "Registration Time"
+    }
+  },
+  "search": {
+    "username": "Username",
+    "nickname": "Nickname",
+    "status": "Status"
+  },
+  "form": {
+    "id": "ID",
+    "username": "Username",
+    "nickname": "Nickname",
+    "phone": "Phone",
+    "email": "Email",
+    "level_id": "Member Level",
+    "status": "Status"
+  }
+}

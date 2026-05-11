@@ -1,0 +1,24 @@
+{
+  "title": "Post Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Post Name",
+      "code": "Post Code",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark"
+    }
+  },
+  "search": {
+    "name": "Post Name"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Post Name",
+    "code": "Post Code",
+    "sort": "Sort",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}

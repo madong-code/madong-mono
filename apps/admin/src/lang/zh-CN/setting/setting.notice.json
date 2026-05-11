@@ -1,0 +1,25 @@
+{
+  "title": "通知公告",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "标题",
+      "type": "类型",
+      "enabled": "状态",
+      "created_date": "创建日期",
+      "remark": "备注"
+    }
+  },
+  "search": {
+    "title": "标题",
+    "type": "类型"
+  },
+  "form": {
+    "id": "ID",
+    "title": "标题",
+    "type": "类型",
+    "content": "内容",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

@@ -14,6 +14,8 @@ import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
+import { registerCustomFormComponents } from '#/components/form/register';
+import { registerViewComponentsToForm } from '#/components/view/register';
 import App from './app.vue';
 import { router } from './router';
 
@@ -23,6 +25,12 @@ async function bootstrap(namespace: string) {
 
   // 初始化表单组件
   await initSetupVbenForm();
+
+  // 注册自定义表单组件
+  registerCustomFormComponents();
+
+  // 注册 View 列渲染组件到 Vben Form
+  registerViewComponentsToForm();
 
   // // 设置弹窗的默认配置
   // setDefaultModalProps({

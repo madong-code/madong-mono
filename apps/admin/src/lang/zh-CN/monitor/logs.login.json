@@ -1,0 +1,20 @@
+{
+  "title": "登录日志",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "user_name": "用户名",
+      "ip": "IP",
+      "ip_location": "IP归属地",
+      "os": "操作系统",
+      "browser": "浏览器",
+      "status": "登录状态",
+      "message": "提示消息",
+      "login_time": "登录时间"
+    }
+  },
+  "search": {
+    "user_name": "用户名",
+    "status": "登录状态"
+  }
+}

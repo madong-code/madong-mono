@@ -1,0 +1,30 @@
+{
+  "title": "会员管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "username": "用户名",
+      "nickname": "昵称",
+      "phone": "手机号",
+      "email": "邮箱",
+      "level_name": "会员等级",
+      "points": "积分",
+      "status": "状态",
+      "created_at": "注册时间"
+    }
+  },
+  "search": {
+    "username": "用户名",
+    "nickname": "昵称",
+    "status": "状态"
+  },
+  "form": {
+    "id": "ID",
+    "username": "用户名",
+    "nickname": "昵称",
+    "phone": "手机号",
+    "email": "邮箱",
+    "level_id": "会员等级",
+    "status": "状态"
+  }
+}

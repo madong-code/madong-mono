@@ -1,0 +1,27 @@
+{
+  "title": "Department Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Department Name",
+      "code": "Department Code",
+      "phone": "Phone",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark"
+    }
+  },
+  "search": {
+    "name": "Department Name"
+  },
+  "form": {
+    "id": "ID",
+    "pid": "Parent Department",
+    "name": "Department Name",
+    "code": "Department Code",
+    "phone": "Phone",
+    "sort": "Sort",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}

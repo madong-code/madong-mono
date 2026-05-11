@@ -1,0 +1,24 @@
+{
+  "title": "Friend Link Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Name",
+      "url": "URL",
+      "logo": "Logo",
+      "sort": "Sort",
+      "status": "Status"
+    }
+  },
+  "search": {
+    "name": "Link Name"
+  },
+  "form": {
+    "id": "ID",
+    "name": "Name",
+    "url": "URL",
+    "logo": "Logo",
+    "sort": "Sort",
+    "status": "Status"
+  }
+}

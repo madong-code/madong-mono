@@ -1,0 +1,20 @@
+{
+  "title": "操作日志",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "模块",
+      "app": "App",
+      "user_name": "操作用户",
+      "ip": "IP",
+      "url": "请求地址",
+      "method": "请求方式",
+      "action": "方法名称",
+      "created_at": "操作时间"
+    }
+  },
+  "search": {
+    "user_name": "操作用户",
+    "name": "模块"
+  }
+}

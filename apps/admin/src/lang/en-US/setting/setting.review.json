@@ -1,0 +1,20 @@
+{
+  "title": "Review Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "reviewable_type": "Type",
+      "applicant": "Applicant",
+      "status": "Status",
+      "reviewer_name": "Reviewer",
+      "reason": "Reason",
+      "created_at": "Application Time"
+    }
+  },
+  "search": {
+    "title": "Title",
+    "type": "Type",
+    "status": "Status"
+  }
+}

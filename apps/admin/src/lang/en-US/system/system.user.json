@@ -1,0 +1,32 @@
+{
+  "title": "User Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "user_name": "Account",
+      "real_name": "User Nickname",
+      "nick_name": "User Nickname",
+      "mobile_phone": "Phone Number",
+      "email": "Email",
+      "enabled": "Status",
+      "login_time": "Login Time"
+    }
+  },
+  "search": {
+    "user_name": "Username",
+    "real_name": "Name",
+    "enabled": "Status"
+  },
+  "form": {
+    "id": "ID",
+    "user_name": "Account",
+    "real_name": "User Nickname",
+    "nick_name": "User Nickname",
+    "mobile_phone": "Phone Number",
+    "email": "Email",
+    "password": "User Password",
+    "dept_id": "Department",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}

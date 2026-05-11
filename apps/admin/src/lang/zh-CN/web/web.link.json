@@ -1,0 +1,24 @@
+{
+  "title": "友情链接管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "名称",
+      "url": "地址",
+      "logo": "图标",
+      "sort": "排序",
+      "status": "状态"
+    }
+  },
+  "search": {
+    "name": "链接名称"
+  },
+  "form": {
+    "id": "ID",
+    "name": "名称",
+    "url": "地址",
+    "logo": "图标",
+    "sort": "排序",
+    "status": "状态"
+  }
+}

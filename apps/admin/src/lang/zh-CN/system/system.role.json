@@ -1,0 +1,29 @@
+{
+  "title": "角色管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "角色",
+      "code": "角色代码",
+      "role_type": "角色类型",
+      "data_scope": "数据权限",
+      "enabled": "状态",
+      "sort": "排序",
+      "remark": "备注",
+      "created_date": "创建时间"
+    }
+  },
+  "search": {
+    "name": "角色名称"
+  },
+  "form": {
+    "id": "ID",
+    "name": "角色名称",
+    "code": "角色代码",
+    "role_type": "角色类型",
+    "data_scope": "数据权限",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

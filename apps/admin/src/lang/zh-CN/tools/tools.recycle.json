@@ -1,0 +1,15 @@
+{
+  "title": "回收站管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "data": "数据",
+      "table_name": "数据表",
+      "table_prefix": "表前缀",
+      "ip": "IP"
+    }
+  },
+  "search": {
+    "table_name": "数据表"
+  }
+}

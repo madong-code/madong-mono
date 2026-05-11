@@ -1,0 +1,29 @@
+{
+  "title": "菜单管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "名称",
+      "category": "分类",
+      "url": "链接地址",
+      "sort": "排序",
+      "type": "类型",
+      "enabled": "状态"
+    }
+  },
+  "search": {
+    "name": "名称",
+    "category": "分类"
+  },
+  "form": {
+    "id": "ID",
+    "name": "名称",
+    "type": "类型",
+    "pid": "父菜单",
+    "url": "链接地址",
+    "target": "打开方式",
+    "icon": "图标",
+    "sort": "排序",
+    "enabled": "状态"
+  }
+}

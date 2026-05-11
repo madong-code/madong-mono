@@ -1,0 +1,34 @@
+{
+  "title": "Menu Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "code": "Permission Code",
+      "type": "Type",
+      "path": "Route Address",
+      "component": "Page Component",
+      "icon": "Icon",
+      "sort": "Sort",
+      "is_show": "Show",
+      "enabled": "Status"
+    }
+  },
+  "search": {
+    "title": "Title"
+  },
+  "form": {
+    "id": "ID",
+    "pid": "Parent Menu",
+    "title": "Menu Name",
+    "code": "Permission Code",
+    "type": "Menu Type",
+    "path": "Route Address",
+    "component": "Component Address",
+    "icon": "Icon",
+    "sort": "Sort",
+    "is_show": "Show",
+    "enabled": "Status",
+    "is_cache": "Cache"
+  }
+}
