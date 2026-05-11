@@ -76,7 +76,13 @@ function extractLocaleAndFileKeys(
 
   const filePathParts = parts.slice(langIndex + 2);
   const fileName = filePathParts.pop()?.replace('.json', '') || '';
-  const fileKeys = [...filePathParts, ...fileName.split('.')];
+  const nameKeys = fileName.split('.');
+
+  if (filePathParts.length > 0 && nameKeys.length > 0 && filePathParts[filePathParts.length - 1] === nameKeys[0]) {
+    filePathParts.pop();
+  }
+
+  const fileKeys = [...filePathParts, ...nameKeys];
 
   return { localeDir, fileKeys };
 }
@@ -146,9 +152,8 @@ function loadPluginLocales(
 
     if (!pluginKey || !dirLocale || dirLocale !== localeDir) continue;
 
-    const filePathParts = parts.slice(langIndex + 2);
-    const fileName = filePathParts.pop()?.replace('.json', '') || '';
-    const fileKeys = [pluginKey, ...filePathParts, ...fileName.split('.')];
+    const fileName = parts.at(-1)?.replace('.json', '') || '';
+    const fileKeys = [pluginKey, ...fileName.split('.')];
 
     setNestedValue(messages, fileKeys, module.default);
   }
