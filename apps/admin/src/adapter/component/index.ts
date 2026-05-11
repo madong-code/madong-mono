@@ -177,12 +177,15 @@ const withDefaultPlaceholder = <T extends Component>(
 
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type ComponentType =
+  | 'ApiDict'
   | 'ApiSelect'
   | 'ApiTreeSelect'
+  | 'Avatar'
   | 'Checkbox'
   | 'CheckboxGroup'
   | 'DatePicker'
   | 'Divider'
+  | 'Editor'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -199,12 +202,15 @@ export type ComponentType =
  * 与 {@link ComponentType} 中注册的组件名一一对应，便于 Schema 上 `component` + `componentProps` 联动提示
  */
 export interface ComponentPropsMap {
+  ApiDict: Record<string, any>;
   ApiSelect: ApiComponentSharedProps & SelectV2Props;
   ApiTreeSelect: ApiComponentSharedProps & ElTreeSelectSchemaProps;
+  Avatar: Record<string, any>;
   Checkbox: CheckboxProps;
   CheckboxGroup: CheckboxGroupProps;
   DatePicker: DatePickerProps;
   Divider: DividerProps;
+  Editor: Record<string, any>;
   IconPicker: IconPickerProps;
   Input: InputProps;
   InputNumber: InputNumberProps;
