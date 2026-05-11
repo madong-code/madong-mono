@@ -39,18 +39,49 @@ export const MOCK_USERS: UserInfo[] = [
 ];
 
 export const MOCK_CODES = [
-  // super
   {
-    codes: ['AC_100100', 'AC_100110', 'AC_100120', 'AC_100010'],
+    codes: [
+      'AC_100100', 'AC_100110', 'AC_100120', 'AC_100010',
+      'member:level:create', 'member:level:delete', 'member:level:update', 'member:level:read',
+      'member:user:create', 'member:user:delete', 'member:user:update', 'member:user:read',
+      'member:tag:create', 'member:tag:delete', 'member:tag:update', 'member:tag:read',
+      'member:points:create', 'member:points:delete', 'member:points:update', 'member:points:read',
+      'system:user:create', 'system:user:delete', 'system:user:update', 'system:user:read',
+      'system:role:create', 'system:role:delete', 'system:role:update', 'system:role:read',
+      'system:menu:create', 'system:menu:delete', 'system:menu:update', 'system:menu:read',
+      'setting:dict:create', 'setting:dict:delete', 'setting:dict:update', 'setting:dict:read',
+      'setting:dept:create', 'setting:dept:delete', 'setting:dept:update', 'setting:dept:read',
+      'setting:post:create', 'setting:post:delete', 'setting:post:update', 'setting:post:read',
+      'setting:notice:create', 'setting:notice:delete', 'setting:notice:update', 'setting:notice:read',
+      'setting:message:create', 'setting:message:delete', 'setting:message:update', 'setting:message:read',
+      'setting:config:update', 'setting:config:read',
+      'setting:review:create', 'setting:review:delete', 'setting:review:update', 'setting:review:read',
+      'setting:gateway:limiter:create', 'setting:gateway:limiter:delete', 'setting:gateway:limiter:update', 'setting:gateway:limiter:read',
+      'setting:gateway:blacklist:create', 'setting:gateway:blacklist:delete', 'setting:gateway:blacklist:update', 'setting:gateway:blacklist:read',
+      'tools:crontab:create', 'tools:crontab:delete', 'tools:crontab:update', 'tools:crontab:read',
+      'tools:files:create', 'tools:files:delete', 'tools:files:update', 'tools:files:read',
+      'tools:recycle:delete', 'tools:recycle:read',
+      'web:menu:create', 'web:menu:delete', 'web:menu:update', 'web:menu:read',
+      'web:link:create', 'web:link:delete', 'web:link:update', 'web:link:read',
+      'monitor:logs:login:read', 'monitor:logs:operate:read',
+    ],
     username: 'vben',
   },
   {
-    // admin
-    codes: ['AC_100010', 'AC_100020', 'AC_100030'],
+    codes: [
+      'AC_100010', 'AC_100020', 'AC_100030',
+      'member:level:create', 'member:level:delete', 'member:level:update', 'member:level:read',
+      'member:user:create', 'member:user:delete', 'member:user:update', 'member:user:read',
+      'system:user:create', 'system:user:delete', 'system:user:update', 'system:user:read',
+      'system:role:create', 'system:role:delete', 'system:role:update', 'system:role:read',
+      'system:menu:create', 'system:menu:delete', 'system:menu:update', 'system:menu:read',
+      'setting:dict:create', 'setting:dict:delete', 'setting:dict:update', 'setting:dict:read',
+      'setting:dept:create', 'setting:dept:delete', 'setting:dept:update', 'setting:dept:read',
+      'setting:config:update', 'setting:config:read',
+    ],
     username: 'admin',
   },
   {
-    // user
     codes: ['AC_1000001', 'AC_1000002'],
     username: 'jack',
   },
@@ -82,6 +113,259 @@ const dashboardMenus = [
         meta: {
           title: 'page.dashboard.workspace',
         },
+      },
+    ],
+  },
+];
+
+const businessMenus = [
+  {
+    meta: {
+      icon: 'lucide:users',
+      order: 10,
+      title: 'member.title',
+    },
+    name: 'Member',
+    path: '/member',
+    redirect: '/member/level',
+    children: [
+      {
+        name: 'MemberLevel',
+        path: '/member/level',
+        component: '/member/level/index',
+        meta: { icon: 'lucide:award', title: 'member.level.title' },
+      },
+      {
+        name: 'MemberPoints',
+        path: '/member/points',
+        component: '/member/points/index',
+        meta: { icon: 'lucide:coins', title: 'member.points.title' },
+      },
+      {
+        name: 'MemberTag',
+        path: '/member/tag',
+        component: '/member/tag/index',
+        meta: { icon: 'lucide:tag', title: 'member.tag.title' },
+      },
+      {
+        name: 'MemberUser',
+        path: '/member/user',
+        component: '/member/user/index',
+        meta: { icon: 'lucide:user', title: 'member.user.title' },
+      },
+    ],
+  },
+  {
+    meta: {
+      icon: 'lucide:activity',
+      order: 20,
+      title: 'monitor.title',
+    },
+    name: 'Monitor',
+    path: '/monitor',
+    redirect: '/monitor/logs/login',
+    children: [
+      {
+        meta: { icon: 'lucide:file-text', title: 'monitor.logs.title' },
+        name: 'MonitorLogs',
+        path: '/monitor/logs',
+        redirect: '/monitor/logs/login',
+        children: [
+          {
+            name: 'LoginLog',
+            path: '/monitor/logs/login',
+            component: '/monitor/logs/login/index',
+            meta: { icon: 'lucide:log-in', title: 'monitor.logs.login.title' },
+          },
+          {
+            name: 'OperateLog',
+            path: '/monitor/logs/operate',
+            component: '/monitor/logs/operate/index',
+            meta: { icon: 'lucide:clipboard-list', title: 'monitor.logs.operate.title' },
+          },
+        ],
+      },
+      {
+        name: 'RedisMonitor',
+        path: '/monitor/redis',
+        component: '/monitor/redis/index',
+        meta: { icon: 'lucide:database', title: 'monitor.redis.title' },
+      },
+      {
+        name: 'ServerMonitor',
+        path: '/monitor/server',
+        component: '/monitor/server/index',
+        meta: { icon: 'lucide:server', title: 'monitor.server.title' },
+      },
+    ],
+  },
+  {
+    meta: {
+      icon: 'lucide:settings',
+      order: 30,
+      title: 'setting.title',
+    },
+    name: 'Setting',
+    path: '/setting',
+    redirect: '/setting/config',
+    children: [
+      {
+        name: 'SettingConfig',
+        path: '/setting/config',
+        component: '/setting/config/index',
+        meta: { icon: 'lucide:wrench', title: 'setting.config.title' },
+      },
+      {
+        name: 'SettingDept',
+        path: '/setting/dept',
+        component: '/setting/dept/index',
+        meta: { icon: 'lucide:network', title: 'setting.dept.title' },
+      },
+      {
+        name: 'SettingDict',
+        path: '/setting/dict',
+        component: '/setting/dict/index',
+        meta: { icon: 'lucide:book-open', title: 'setting.dict.title' },
+      },
+      {
+        name: 'SettingDictItem',
+        path: '/setting/dict-item',
+        component: '/setting/dict-item/index',
+        meta: { icon: 'lucide:list', title: 'setting.dict.item.title' },
+      },
+      {
+        meta: { icon: 'lucide:shield', title: 'setting.gateway.title' },
+        name: 'SettingGateway',
+        path: '/setting/gateway',
+        redirect: '/setting/gateway/limiter',
+        children: [
+          {
+            name: 'GatewayLimiter',
+            path: '/setting/gateway/limiter',
+            component: '/setting/gateway/limiter/index',
+            meta: { icon: 'lucide:gauge', title: 'setting.gateway.limiter.title' },
+          },
+          {
+            name: 'GatewayBlacklist',
+            path: '/setting/gateway/blacklist',
+            component: '/setting/gateway/blacklist/index',
+            meta: { icon: 'lucide:ban', title: 'setting.gateway.blacklist.title' },
+          },
+        ],
+      },
+      {
+        name: 'SettingMessage',
+        path: '/setting/message',
+        component: '/setting/message/index',
+        meta: { icon: 'lucide:mail', title: 'setting.message.title' },
+      },
+      {
+        name: 'SettingNotice',
+        path: '/setting/notice',
+        component: '/setting/notice/index',
+        meta: { icon: 'lucide:megaphone', title: 'setting.notice.title' },
+      },
+      {
+        name: 'SettingPost',
+        path: '/setting/post',
+        component: '/setting/post/index',
+        meta: { icon: 'lucide:briefcase', title: 'setting.post.title' },
+      },
+      {
+        name: 'SettingReview',
+        path: '/setting/review',
+        component: '/setting/review/index',
+        meta: { icon: 'lucide:check-circle', title: 'setting.review.title' },
+      },
+    ],
+  },
+  {
+    meta: {
+      icon: 'lucide:cpu',
+      order: 40,
+      title: 'system.title',
+    },
+    name: 'System',
+    path: '/system',
+    redirect: '/system/menu',
+    children: [
+      {
+        name: 'SystemMenu',
+        path: '/system/menu',
+        component: '/system/menu/index',
+        meta: { icon: 'lucide:menu', title: 'system.menu.title' },
+      },
+      {
+        name: 'SystemRole',
+        path: '/system/role',
+        component: '/system/role/index',
+        meta: { icon: 'lucide:shield-check', title: 'system.role.title' },
+      },
+      {
+        name: 'SystemUser',
+        path: '/system/user',
+        component: '/system/user/index',
+        meta: { icon: 'lucide:users', title: 'system.user.title' },
+      },
+    ],
+  },
+  {
+    meta: {
+      icon: 'lucide:wrench',
+      order: 50,
+      title: 'tools.title',
+    },
+    name: 'Tools',
+    path: '/tools',
+    redirect: '/tools/crontab',
+    children: [
+      {
+        name: 'ToolsCrontab',
+        path: '/tools/crontab',
+        component: '/tools/crontab/index',
+        meta: { icon: 'lucide:clock', title: 'tools.crontab.title' },
+      },
+      {
+        name: 'ToolsFiles',
+        path: '/tools/files',
+        component: '/tools/files/index',
+        meta: { icon: 'lucide:folder', title: 'tools.files.title' },
+      },
+      {
+        name: 'ToolsRecycle',
+        path: '/tools/recycle',
+        component: '/tools/recycle/index',
+        meta: { icon: 'lucide:trash-2', title: 'tools.recycle.title' },
+      },
+      {
+        name: 'ToolsDelegation',
+        path: '/tools/delegation',
+        component: '/tools/delegation/index',
+        meta: { icon: 'lucide:key', title: 'tools.delegation.title' },
+      },
+    ],
+  },
+  {
+    meta: {
+      icon: 'lucide:globe',
+      order: 60,
+      title: 'web.title',
+    },
+    name: 'Web',
+    path: '/web',
+    redirect: '/web/link',
+    children: [
+      {
+        name: 'WebLink',
+        path: '/web/link',
+        component: '/web/link/index',
+        meta: { icon: 'lucide:link', title: 'web.link.title' },
+      },
+      {
+        name: 'WebMenu',
+        path: '/web/menu',
+        component: '/web/menu/index',
+        meta: { icon: 'lucide:layout-list', title: 'web.menu.title' },
       },
     ],
   },
@@ -121,7 +405,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
   const demoMenus = {
     meta: {
       icon: 'lucide:flask-conical',
-      title: '示例模块',
+      title: 'demo.menu.title',
     },
     name: 'Demo',
     path: '/demo',
@@ -130,7 +414,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
       {
         meta: {
           icon: 'lucide:table',
-          title: 'CRUD 示例',
+          title: 'demo.menu.crud',
         },
         name: 'DemoCrud',
         path: '/demo/crud',
@@ -143,7 +427,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
             meta: {
               icon: 'lucide:table-2',
               module: 'demo',
-              title: '基础表格',
+              title: 'demo.crud.basic.title',
             },
           },
           {
@@ -153,7 +437,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
             meta: {
               icon: 'lucide:git-fork',
               module: 'demo',
-              title: '树形表格',
+              title: 'demo.crud.tree.title',
             },
           },
           {
@@ -163,20 +447,69 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
             meta: {
               icon: 'lucide:panel-right',
               module: 'demo',
-              title: '抽屉模式',
+              title: 'demo.crud.drawer.title',
             },
           },
         ],
       },
       {
-        name: 'DemoForm',
-        path: '/demo/form',
-        component: 'form/index',
         meta: {
           icon: 'lucide:text-cursor-input',
-          module: 'demo',
-          title: '表单示例',
+          title: 'demo.menu.form',
         },
+        name: 'DemoForm',
+        path: '/demo/form',
+        redirect: '/demo/form/overview',
+        children: [
+          {
+            name: 'DemoFormOverview',
+            path: '/demo/form/overview',
+            component: 'form/overview',
+            meta: { icon: 'lucide:text-cursor-input', module: 'demo', title: 'demo.form.overview.title' },
+          },
+          {
+            name: 'DemoFormBasic',
+            path: '/demo/form/basic',
+            component: 'form/basic',
+            meta: { module: 'demo', title: 'demo.form.basic.title' },
+          },
+          {
+            name: 'DemoFormQuery',
+            path: '/demo/form/query',
+            component: 'form/query',
+            meta: { module: 'demo', title: 'demo.form.query.title' },
+          },
+          {
+            name: 'DemoFormRules',
+            path: '/demo/form/rules',
+            component: 'form/rules',
+            meta: { module: 'demo', title: 'demo.form.rules.title' },
+          },
+          {
+            name: 'DemoFormDynamic',
+            path: '/demo/form/dynamic',
+            component: 'form/dynamic',
+            meta: { module: 'demo', title: 'demo.form.dynamic.title' },
+          },
+          {
+            name: 'DemoFormApi',
+            path: '/demo/form/api',
+            component: 'form/api',
+            meta: { module: 'demo', title: 'demo.form.api.title' },
+          },
+          {
+            name: 'DemoFormMerge',
+            path: '/demo/form/merge',
+            component: 'form/merge',
+            meta: { module: 'demo', title: 'demo.form.merge.title' },
+          },
+          {
+            name: 'DemoFormCustomLayout',
+            path: '/demo/form/custom-layout',
+            component: 'form/custom-layout',
+            meta: { module: 'demo', title: 'demo.form.custom_layout.title' },
+          },
+        ],
       },
       {
         name: 'DemoLocale',
@@ -185,75 +518,62 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
         meta: {
           icon: 'lucide:languages',
           module: 'demo',
-          title: '多语言示例',
+          title: 'demo.locale.title',
         },
       },
       {
         meta: {
-          icon: 'ion:layers-outline',
-          title: '组件示例',
+          icon: 'system-uicons:window-content',
+          module: 'demo',
+          title: 'demo.modal.title',
+          keepAlive: true,
         },
-        name: 'DemoExamples',
-        path: '/demo/examples',
-        redirect: '/demo/examples/modal',
+        name: 'DemoModal',
+        path: '/demo/modal',
+        component: 'modal/index',
+      },
+      {
+        meta: {
+          icon: 'iconoir:drawer',
+          module: 'demo',
+          title: 'demo.drawer.title',
+          keepAlive: true,
+        },
+        name: 'DemoDrawer',
+        path: '/demo/drawer',
+        component: 'drawer/index',
+      },
+      {
+        meta: {
+          icon: 'lucide:table',
+          title: 'demo.menu.vxe_table',
+        },
+        name: 'DemoVxeTable',
+        path: '/demo/vxe-table',
+        redirect: '/demo/vxe-table/basic',
         children: [
-          {
-            name: 'DemoExampleModal',
-            path: '/demo/examples/modal',
-            component: 'examples/modal/index',
-            meta: { icon: 'system-uicons:window-content', module: 'demo', title: '弹窗', keepAlive: true },
-          },
-          {
-            name: 'DemoExampleDrawer',
-            path: '/demo/examples/drawer',
-            component: 'examples/drawer/index',
-            meta: { icon: 'iconoir:drawer', module: 'demo', title: '抽屉', keepAlive: true },
-          },
-          {
-            meta: { icon: 'mdi:form-select', title: '表单' },
-            name: 'DemoExampleForm',
-            path: '/demo/examples/form',
-            redirect: '/demo/examples/form/basic',
-            children: [
-              { name: 'DemoExampleFormBasic', path: '/demo/examples/form/basic', component: 'examples/form/basic', meta: { module: 'demo', title: '基础表单' } },
-              { name: 'DemoExampleFormQuery', path: '/demo/examples/form/query', component: 'examples/form/query', meta: { module: 'demo', title: '查询表单' } },
-              { name: 'DemoExampleFormRules', path: '/demo/examples/form/rules', component: 'examples/form/rules', meta: { module: 'demo', title: '表单校验' } },
-              { name: 'DemoExampleFormDynamic', path: '/demo/examples/form/dynamic', component: 'examples/form/dynamic', meta: { module: 'demo', title: '动态表单' } },
-              { name: 'DemoExampleFormApi', path: '/demo/examples/form/api', component: 'examples/form/api', meta: { module: 'demo', title: '表单API' } },
-              { name: 'DemoExampleFormMerge', path: '/demo/examples/form/merge', component: 'examples/form/merge', meta: { module: 'demo', title: '合并表单' } },
-              { name: 'DemoExampleFormCustomLayout', path: '/demo/examples/form/custom-layout', component: 'examples/form/custom-layout', meta: { module: 'demo', title: '自定义布局' } },
-            ],
-          },
-          {
-            meta: { icon: 'lucide:table', title: 'Vxe 表格' },
-            name: 'DemoExampleVxeTable',
-            path: '/demo/examples/vxe-table',
-            redirect: '/demo/examples/vxe-table/basic',
-            children: [
-              { name: 'DemoExampleVxeTableBasic', path: '/demo/examples/vxe-table/basic', component: 'examples/vxe-table/basic', meta: { module: 'demo', title: '基础表格' } },
-              { name: 'DemoExampleVxeTableRemote', path: '/demo/examples/vxe-table/remote', component: 'examples/vxe-table/remote', meta: { module: 'demo', title: '远程加载' } },
-              { name: 'DemoExampleVxeTableTree', path: '/demo/examples/vxe-table/tree', component: 'examples/vxe-table/tree', meta: { module: 'demo', title: '树形表格' } },
-              { name: 'DemoExampleVxeTableCustomCell', path: '/demo/examples/vxe-table/custom-cell', component: 'examples/vxe-table/custom-cell', meta: { module: 'demo', title: '自定义单元格' } },
-              { name: 'DemoExampleVxeTableEditCell', path: '/demo/examples/vxe-table/edit-cell', component: 'examples/vxe-table/edit-cell', meta: { module: 'demo', title: '单元格编辑' } },
-              { name: 'DemoExampleVxeTableEditRow', path: '/demo/examples/vxe-table/edit-row', component: 'examples/vxe-table/edit-row', meta: { module: 'demo', title: '行编辑' } },
-              { name: 'DemoExampleVxeTableFixed', path: '/demo/examples/vxe-table/fixed', component: 'examples/vxe-table/fixed', meta: { module: 'demo', title: '固定表头/列' } },
-              { name: 'DemoExampleVxeTableForm', path: '/demo/examples/vxe-table/form', component: 'examples/vxe-table/form', meta: { module: 'demo', title: '搜索表单' } },
-              { name: 'DemoExampleVxeTableVirtual', path: '/demo/examples/vxe-table/virtual', component: 'examples/vxe-table/virtual', meta: { module: 'demo', title: '虚拟滚动' } },
-            ],
-          },
-          { name: 'DemoExampleCaptcha', path: '/demo/examples/captcha', component: 'examples/captcha/slider-captcha', meta: { icon: 'logos:recaptcha', module: 'demo', title: '验证码' } },
-          { name: 'DemoExampleEllipsis', path: '/demo/examples/ellipsis', component: 'examples/ellipsis/index', meta: { icon: 'ion:ellipsis-horizontal', module: 'demo', title: '文本省略' } },
-          { name: 'DemoExampleJsonViewer', path: '/demo/examples/json-viewer', component: 'examples/json-viewer/index', meta: { icon: 'tabler:json', module: 'demo', title: 'JsonViewer' } },
-          { name: 'DemoExampleLoading', path: '/demo/examples/loading', component: 'examples/loading/index', meta: { icon: 'mdi:circle-double', module: 'demo', title: 'Loading' } },
-          { name: 'DemoExampleCountTo', path: '/demo/examples/count-to', component: 'examples/count-to/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'CountTo' } },
-          { name: 'DemoExampleCropper', path: '/demo/examples/cropper', component: 'examples/cropper/index', meta: { icon: 'mdi:crop', module: 'demo', title: '图片裁剪' } },
-          { name: 'DemoExampleContextMenu', path: '/demo/examples/context-menu', component: 'examples/context-menu/index', meta: { icon: 'mdi:menu', module: 'demo', title: '上下文菜单' } },
-          { name: 'DemoExampleResize', path: '/demo/examples/resize', component: 'examples/resize/basic', meta: { icon: 'material-symbols:resize', module: 'demo', title: '拖动调整' } },
-          { name: 'DemoExampleTippy', path: '/demo/examples/tippy', component: 'examples/tippy/index', meta: { icon: 'mdi:message-settings-outline', module: 'demo', title: 'Tippy' } },
-          { name: 'DemoExampleTiptap', path: '/demo/examples/tiptap', component: 'examples/tiptap/index', meta: { icon: 'lucide:square-pen', module: 'demo', title: '富文本编辑器' } },
-          { name: 'DemoExampleMotion', path: '/demo/examples/motion', component: 'examples/motion/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'Motion' } },
+          { name: 'DemoVxeTableBasic', path: '/demo/vxe-table/basic', component: 'vxe-table/basic', meta: { module: 'demo', title: 'demo.vxe_table.basic.title' } },
+          { name: 'DemoVxeTableRemote', path: '/demo/vxe-table/remote', component: 'vxe-table/remote', meta: { module: 'demo', title: 'demo.vxe_table.remote.title' } },
+          { name: 'DemoVxeTableTree', path: '/demo/vxe-table/tree', component: 'vxe-table/tree', meta: { module: 'demo', title: 'demo.vxe_table.tree.title' } },
+          { name: 'DemoVxeTableCustomCell', path: '/demo/vxe-table/custom-cell', component: 'vxe-table/custom-cell', meta: { module: 'demo', title: 'demo.vxe_table.custom_cell.title' } },
+          { name: 'DemoVxeTableEditCell', path: '/demo/vxe-table/edit-cell', component: 'vxe-table/edit-cell', meta: { module: 'demo', title: 'demo.vxe_table.edit_cell.title' } },
+          { name: 'DemoVxeTableEditRow', path: '/demo/vxe-table/edit-row', component: 'vxe-table/edit-row', meta: { module: 'demo', title: 'demo.vxe_table.edit_row.title' } },
+          { name: 'DemoVxeTableFixed', path: '/demo/vxe-table/fixed', component: 'vxe-table/fixed', meta: { module: 'demo', title: 'demo.vxe_table.fixed.title' } },
+          { name: 'DemoVxeTableForm', path: '/demo/vxe-table/form', component: 'vxe-table/form', meta: { module: 'demo', title: 'demo.vxe_table.form.title' } },
+          { name: 'DemoVxeTableVirtual', path: '/demo/vxe-table/virtual', component: 'vxe-table/virtual', meta: { module: 'demo', title: 'demo.vxe_table.virtual.title' } },
         ],
       },
+      { name: 'DemoCaptcha', path: '/demo/captcha', component: 'captcha/slider-captcha', meta: { icon: 'logos:recaptcha', module: 'demo', title: 'demo.captcha.title' } },
+      { name: 'DemoEllipsis', path: '/demo/ellipsis', component: 'ellipsis/index', meta: { icon: 'ion:ellipsis-horizontal', module: 'demo', title: 'demo.ellipsis.title' } },
+      { name: 'DemoJsonViewer', path: '/demo/json-viewer', component: 'json-viewer/index', meta: { icon: 'tabler:json', module: 'demo', title: 'demo.json_viewer.title' } },
+      { name: 'DemoLoading', path: '/demo/loading', component: 'loading/index', meta: { icon: 'mdi:circle-double', module: 'demo', title: 'demo.loading.title' } },
+      { name: 'DemoCountTo', path: '/demo/count-to', component: 'count-to/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'demo.count_to.title' } },
+      { name: 'DemoCropper', path: '/demo/cropper', component: 'cropper/index', meta: { icon: 'mdi:crop', module: 'demo', title: 'demo.cropper.title' } },
+      { name: 'DemoContextMenu', path: '/demo/context-menu', component: 'context-menu/index', meta: { icon: 'mdi:menu', module: 'demo', title: 'demo.context_menu.title' } },
+      { name: 'DemoResize', path: '/demo/resize', component: 'resize/basic', meta: { icon: 'material-symbols:resize', module: 'demo', title: 'demo.resize.title' } },
+      { name: 'DemoTippy', path: '/demo/tippy', component: 'tippy/index', meta: { icon: 'mdi:message-settings-outline', module: 'demo', title: 'demo.tippy.title' } },
+      { name: 'DemoTiptap', path: '/demo/tiptap', component: 'tiptap/index', meta: { icon: 'lucide:square-pen', module: 'demo', title: 'demo.tiptap.title' } },
+      { name: 'DemoMotion', path: '/demo/motion', component: 'motion/index', meta: { icon: 'mdi:animation-play', module: 'demo', title: 'demo.motion.title' } },
     ],
   };
 
@@ -318,15 +638,15 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
 
 export const MOCK_MENUS = [
   {
-    menus: [...dashboardMenus, ...createDemosMenus('super')],
+    menus: [...dashboardMenus, ...businessMenus, ...createDemosMenus('super')],
     username: 'vben',
   },
   {
-    menus: [...dashboardMenus, ...createDemosMenus('admin')],
+    menus: [...dashboardMenus, ...businessMenus, ...createDemosMenus('admin')],
     username: 'admin',
   },
   {
-    menus: [...dashboardMenus, ...createDemosMenus('user')],
+    menus: [...dashboardMenus, ...businessMenus, ...createDemosMenus('user')],
     username: 'jack',
   },
 ];
