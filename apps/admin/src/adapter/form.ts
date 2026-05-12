@@ -21,13 +21,13 @@ async function initSetupVbenForm() {
         if (value === undefined || value === null || value.length === 0) {
           return $t('ui.formRules.required', [ctx.label]);
         }
-        return true;
+        return true
       },
       selectRequired: (value, _params, ctx) => {
         if (value === undefined || value === null) {
           return $t('ui.formRules.selectRequired', [ctx.label]);
         }
-        return true;
+        return true
       },
     },
   });
@@ -37,5 +37,19 @@ const useVbenForm = useForm<ComponentType, ComponentPropsMap>;
 
 export { initSetupVbenForm, useVbenForm, z };
 
-export type VbenFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
+type BaseFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
+
+/**
+ * 扩展 VbenFormSchema，增加 viewComponent 和 viewComponentProps
+ * 用于 DetailView 详情展示
+ */
+export type VbenFormSchema = BaseFormSchema & {
+  /** 详情模式使用的展示组件名称 */
+  viewComponent?: string
+  /** 详情模式展示组件的参数 */
+  viewComponentProps?: Record<string, any>
+  /** 在详情模式下隐藏该字段 */
+  hideInDetail?: boolean
+}
+
 export type VbenFormProps = FormProps<ComponentType, ComponentPropsMap>;

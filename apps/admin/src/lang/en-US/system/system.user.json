@@ -1,5 +1,8 @@
 {
   "title": "User Management",
+  "toolbar": {
+    "create": "Add User"
+  },
   "table": {
     "columns": {
       "id": "ID",
@@ -9,13 +12,21 @@
       "mobile_phone": "Phone Number",
       "email": "Email",
       "enabled": "Status",
-      "login_time": "Login Time"
+      "login_time": "Login Time",
+      "operation": "Operation"
     }
   },
   "search": {
     "user_name": "Username",
     "real_name": "Name",
-    "enabled": "Status"
+    "mobile_phone": "Phone Number",
+    "enabled": "Status",
+    "placeholder": {
+      "user_name": "Please enter username",
+      "real_name": "Please enter name",
+      "mobile_phone": "Please enter phone number",
+      "enabled": "Please select status"
+    }
   },
   "form": {
     "id": "ID",
@@ -24,9 +35,45 @@
     "nick_name": "User Nickname",
     "mobile_phone": "Phone Number",
     "email": "Email",
-    "password": "User Password",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "sex": "Gender",
     "dept_id": "Department",
+    "post_name": "Post",
+    "role_name": "Role",
     "enabled": "Status",
-    "remark": "Remark"
+    "remark": "Remark",
+    "placeholder": {
+      "user_name": "Please enter account",
+      "real_name": "Please enter user nickname",
+      "nick_name": "Please enter user nickname",
+      "mobile_phone": "Please enter phone number",
+      "email": "Please enter email",
+      "password": "Please enter password",
+      "confirm_password": "Please enter confirm password",
+      "dept_name": "Please select department",
+      "post_name": "Please select post",
+      "role_name": "Please select role",
+      "remark": "Please enter remark"
+    }
+  },
+  "action": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "detail": "Detail",
+    "reset_password": "Reset Password",
+    "play_user": "Play User",
+    "unplay_user": "Unplay User",
+    "grant_role": "Grant Role",
+    "locked": "Lock",
+    "unlocked": "Unlock"
+  },
+  "confirm": {
+    "delete": "Are you sure to delete this user?",
+    "reset_password": "Are you sure to reset this user's password?",
+    "play_user": "Are you sure to play this user?",
+    "unplay_user": "Are you sure to unplay this user?",
+    "locked": "Are you sure to lock this user?",
+    "unlocked": "Are you sure to unlock this user?"
   }
 }

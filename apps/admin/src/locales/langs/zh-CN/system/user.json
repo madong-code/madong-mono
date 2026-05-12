@@ -1,0 +1,79 @@
+{
+  "system": {
+    "user": {
+      "title": "用户",
+      "toolbar": {
+        "create": "新增用户"
+      },
+      "search": {
+        "user_name": "用户名",
+        "real_name": "真实姓名",
+        "mobile_phone": "手机号",
+        "enabled": "状态",
+        "placeholder": {
+          "user_name": "请输入用户名",
+          "real_name": "请输入真实姓名",
+          "mobile_phone": "请输入手机号",
+          "enabled": "请选择状态"
+        }
+      },
+      "table": {
+        "columns": {
+          "user_name": "用户名",
+          "real_name": "真实姓名",
+          "nick_name": "昵称",
+          "mobile_phone": "手机号",
+          "email": "邮箱",
+          "enabled": "状态",
+          "login_time": "最后登录",
+          "operation": "操作"
+        }
+      },
+      "action": {
+        "detail": "详情",
+        "edit": "编辑",
+        "reset_password": "重置密码",
+        "grant_role": "授权角色",
+        "play_user": "扮演用户",
+        "locked": "锁定",
+        "unlocked": "解锁",
+        "delete": "删除"
+      },
+      "confirm": {
+        "reset_password": "确定要重置密码吗？",
+        "play_user": "确定要扮演该用户吗？",
+        "locked": "确定要锁定该用户吗？",
+        "unlocked": "确定要解锁该用户吗？",
+        "delete": "确定要删除该用户吗？"
+      },
+      "form": {
+        "user_name": "用户名",
+        "password": "密码",
+        "confirm_password": "确认密码",
+        "real_name": "真实姓名",
+        "nick_name": "昵称",
+        "sex": "性别",
+        "mobile_phone": "手机号",
+        "email": "邮箱",
+        "dept_id": "部门",
+        "post_name": "岗位",
+        "role_name": "角色",
+        "enabled": "状态",
+        "remark": "备注",
+        "placeholder": {
+          "user_name": "请输入用户名",
+          "password": "请输入密码",
+          "confirm_password": "请再次输入密码",
+          "real_name": "请输入真实姓名",
+          "nick_name": "请输入昵称",
+          "mobile_phone": "请输入手机号",
+          "email": "请输入邮箱",
+          "dept_name": "请选择部门",
+          "post_name": "请选择岗位",
+          "role_name": "请选择角色",
+          "remark": "请输入备注"
+        }
+      }
+    }
+  }
+}
