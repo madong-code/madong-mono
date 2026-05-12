@@ -6,6 +6,7 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
 import { accessRoutes, coreRouteNames } from '#/router/routes';
+import { getAccessCodesApi } from '#/api';
 import { useAuthStore } from '#/store';
 
 import { generateAccess } from './access';
@@ -93,6 +94,11 @@ function setupAccessGuard(router: Router) {
     // 生成路由表
     // 当前登录用户拥有的角色标识列表
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
+
+    // 刷新页面时重新从后端获取最新权限码
+    const accessCodes = await getAccessCodesApi();
+    accessStore.setAccessCodes(accessCodes);
+
     const userRoles = userInfo.roles ?? [];
 
     // 生成菜单和路由
