@@ -50,10 +50,20 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
    */
   async function doRefreshToken() {
     const accessStore = useAccessStore();
-    const resp = await refreshTokenApi();
-    const newToken = resp.data;
-    accessStore.setAccessToken(newToken);
-    return newToken;
+    const refreshToken = accessStore.refreshToken;
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+    const resp = await refreshTokenApi(refreshToken);
+    const data = resp.data?.data;
+    if (!data?.access_token) {
+      throw new Error('Invalid refresh token response');
+    }
+    accessStore.setAccessToken(data.access_token);
+    if (data.refresh_token) {
+      accessStore.setRefreshToken(data.refresh_token);
+    }
+    return data.access_token as string;
   }
 
   function formatToken(token: null | string) {
