@@ -24,11 +24,18 @@ function useAccess() {
   /**
    * 基于权限码判断是否有权限
    * @description: Determine whether there is permission，The permission code is judged by the user's permission code
+   * 支持超级权限码：如果用户的权限码中包含 superCodes 中的任一值（默认为 ['*']），则视为拥有所有权限
    * @param codes
    */
   function hasAccessByCodes(codes: string[]) {
-    const userCodesSet = new Set(accessStore.accessCodes);
+    const userCodes = accessStore.accessCodes;
+    const superCodes = accessStore.superCodes;
 
+    if (userCodes.some((code) => superCodes.includes(code))) {
+      return true;
+    }
+
+    const userCodesSet = new Set(userCodes);
     const intersection = codes.filter((item) => userCodesSet.has(item));
     return intersection.length > 0;
   }
