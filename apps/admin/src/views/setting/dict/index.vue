@@ -1,12 +1,14 @@
 <template>
-  <div class="dict-page art-full-height">
+  <Page auto-content-height>
     <BasicCrud />
     <DictItemDrawer ref="dictItemDrawerRef" />
-  </div>
+  </Page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import { Page } from '@vben/common-ui'
 
 import { useCrud } from '#/adapter/crud'
 import { crudSchema, dictItemDrawerOpener } from './schemas'

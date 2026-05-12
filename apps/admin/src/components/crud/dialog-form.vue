@@ -1,11 +1,11 @@
 <template>
-  <Modal v-if="crudSchema.dialogType !== 'drawer'" :title="dialogTitle" :class="dialogWidth">
-    <DetailForm v-if="viewType === 'view'" class="mx-4" />
-    <BasicForm v-else class="mx-4" />
+  <Modal v-if="crudSchema.dialogType !== 'drawer'" :title="dialogTitle" :class="dialogWidth" draggable>
+    <DetailView v-if="viewType === 'view'" class="p-4" :model="currentRow" :schema="formSchema" />
+    <BasicForm v-else class="p-4" :show-default-actions="false" />
   </Modal>
   <Drawer v-else :title="dialogTitle" :class="dialogWidth">
-    <DetailForm v-if="viewType === 'view'" class="mx-4" />
-    <BasicForm v-else class="mx-4" />
+    <DetailView v-if="viewType === 'view'" class="p-4" :model="currentRow" :schema="formSchema" />
+    <BasicForm v-else class="p-4" :show-default-actions="false" />
   </Drawer>
 </template>
 
@@ -16,6 +16,7 @@ import { useVbenForm } from '#/adapter/form'
 import { useVbenModal, useVbenDrawer } from '@vben/common-ui'
 import { computed, nextTick, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { DetailView } from '#/components/reader'
 
 const props = defineProps<{
   crudSchema: CrudSchema
@@ -31,29 +32,13 @@ const formSchema = computed(() => {
     typeof props.crudSchema.formSchema === 'function'
       ? props.crudSchema.formSchema()
       : props.crudSchema.formSchema
-  return schema ? { schema } : { schema: [] }
+  return schema || []
 })
 
-const [BasicForm, formApi] = useVbenForm(formSchema.value)
-
-const detailFormOptions = computed(() => {
-  const schema =
-    typeof props.crudSchema.formSchema === 'function'
-      ? props.crudSchema.formSchema()
-      : props.crudSchema.formSchema
-  if (!schema?.length) return { schema: [] }
-  return {
-    schema,
-    commonConfig: {
-      componentProps: (_schema: any) => ({
-        ..._schema.componentProps,
-        disabled: true,
-      }),
-    },
-  }
+const [BasicForm, formApi] = useVbenForm({ 
+  schema: formSchema.value,
+  showDefaultActions: false,
 })
-
-const [DetailForm, detailFormApi] = useVbenForm(detailFormOptions.value)
 
 const dialogTitle = computed(() => {
   const title = props.crudSchema.dialogTitle || ''
@@ -104,7 +89,6 @@ function handleOpen() {
       currentRow.value = { ...currentRow.value, ...res }
       nextTick(() => {
         formApi.setValues(currentRow.value)
-        detailFormApi.setValues(currentRow.value)
       })
     })
   } else {
@@ -164,3 +148,34 @@ function show({
 
 defineExpose({ show })
 </script>
+
+<style lang="scss" scoped>
+:deep(.vben-form) {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+:deep(.vben-form > form) {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+:deep(.vben-form > form > div) {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+:deep(.el-form) {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+:deep(.el-form-item) {
+  margin-bottom: 16px;
+}
+
+:deep(.detail-view) {
+  max-height: none !important;
+  overflow: visible !important;
+}
+</style>

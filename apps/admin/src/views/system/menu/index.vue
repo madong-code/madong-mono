@@ -1,7 +1,7 @@
 <template>
-  <div class="menu-page art-full-height">
-    <BasicCrud />
-  </div>
+    <Page auto-content-height>
+      <BasicCrud />
+    </Page>
 </template>
 
 <script setup lang="ts">

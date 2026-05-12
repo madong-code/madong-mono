@@ -1,12 +1,14 @@
 <template>
-  <div class="crontab-page art-full-height">
+  <Page auto-content-height>
     <BasicCrud />
     <CrontabLogDrawer ref="logDrawerRef" />
-  </div>
+  </Page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import { Page } from '@vben/common-ui'
 
 import { useCrud } from '#/adapter/crud'
 import { crudSchema, crontabLogDrawerOpener } from './schemas'

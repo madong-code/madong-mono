@@ -3,7 +3,6 @@
     <VxeGrid
       :grid-options="gridOptions"
       :form-options="formOptions"
-      :table-title="crudSchema.dialogTitle"
       v-bind="$attrs"
     >
       <template #toolbar-actions>

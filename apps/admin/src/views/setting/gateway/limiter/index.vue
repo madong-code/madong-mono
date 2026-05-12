@@ -1,10 +1,12 @@
 <template>
-  <div class="gateway-limiter-page art-full-height">
+  <Page auto-content-height>
     <BasicCrud />
-  </div>
+  </Page>
 </template>
 
 <script setup lang="ts">
+import { Page } from '@vben/common-ui'
+
 import { useCrud } from '#/adapter/crud'
 import { crudSchema } from './schemas'
 
