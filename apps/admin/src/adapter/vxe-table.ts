@@ -21,7 +21,7 @@ setupVbenVxeTable({
         columnConfig: {
           resizable: true,
         },
-        minHeight: 180,
+        height: 'auto',
         formConfig: {
           enabled: false,
         },
