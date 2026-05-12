@@ -3,7 +3,7 @@ import { createApp, watchEffect } from 'vue';
 import { registerAccessDirective } from '@vben/access';
 import { registerLoadingDirective } from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
-import { initStores } from '@vben/stores';
+import { initStores, useAccessStore } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/ele';
 
@@ -58,6 +58,11 @@ async function bootstrap(namespace: string) {
 
   // 配置 pinia-tore
   await initStores(app, { namespace });
+
+  // 配置超级权限码，拥有这些权限码的用户拥有所有权限
+  // 默认为 ['*']，可在此处自定义，例如 ['*', 'admin']
+  const accessStore = useAccessStore();
+  accessStore.setSuperCodes(['*', 'admin']);
 
   // 安装权限指令
   registerAccessDirective(app);
