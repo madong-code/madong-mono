@@ -1,28 +1,31 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { RoleService } from '#/api/system'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: RoleService.list,
-      add: RoleService.create,
-      edit: RoleService.update,
-      remove: RoleService.remove,
-      view: RoleService.get,
-    },
-    dialogTitle: $t('system.role.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: RoleService.list,
+    add: RoleService.create,
+    edit: RoleService.update,
+    remove: RoleService.delete,
+    batchRemove: RoleService.remove,
+    view: RoleService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'system:role:create',
-    removeAuth: 'system:role:delete',
-    editAuth: 'system:role:update',
-    viewAuth: 'system:role:read',
+    hasRemove: true,
+    permissions: {
+      add: 'system:role:create',
+      edit: 'system:role:update',
+      remove: 'system:role:delete',
+      view: 'system:role:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('system.role.table.columns.id'), minWidth: 60, visible: false },
@@ -53,14 +56,25 @@ export const crudSchema = (): CrudSchema => {
       { field: 'remark', title: $t('system.role.table.columns.remark'), minWidth: 160 },
       { field: 'created_date', title: $t('system.role.table.columns.created_date'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('system.role.search.name'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    dialogType: 'drawer',
+    schema: [
       { fieldName: 'id', label: $t('system.role.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'name', label: $t('system.role.form.name'), component: 'Input', rules: 'required' },
       { fieldName: 'code', label: $t('system.role.form.code'), component: 'Input', rules: 'required' },
@@ -83,9 +97,22 @@ export const crudSchema = (): CrudSchema => {
         component: 'ApiDict',
         componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
         defaultValue: 1,
+        formItemClass: 'cols-span-6',
       },
-      { fieldName: 'remark', label: $t('system.role.form.remark'), component: 'Input', componentProps: { type: 'textarea', rows: 3 } },
+      {
+        fieldName: 'remark',
+        label: $t('system.role.form.remark'),
+        component: 'Input',
+        componentProps: { type: 'textarea', rows: 3 },
+        formItemClass: 'cols-span-6',
+      },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('system.role.title'),
+    width: 'w-[40%]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: {
+      labelWidth: 80,
+      labelAlign: 'right',
+    },
+  },
 }

@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { MemberLevelService } from '#/api/member'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: MemberLevelService.list,
-      add: MemberLevelService.create,
-      edit: MemberLevelService.update,
-      remove: MemberLevelService.remove,
-      view: MemberLevelService.get,
-    },
-    dialogTitle: $t('member.level.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: MemberLevelService.list,
+    add: MemberLevelService.create,
+    edit: MemberLevelService.update,
+    remove: MemberLevelService.remove,
+    view: MemberLevelService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'member:level:create',
-    removeAuth: 'member:level:delete',
-    editAuth: 'member:level:update',
-    viewAuth: 'member:level:read',
+    hasRemove: true,
+    permissions: {
+      add: 'member:level:create',
+      edit: 'member:level:update',
+      remove: 'member:level:delete',
+      view: 'member:level:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('member.level.table.columns.id'), minWidth: 60, visible: false },
@@ -49,9 +51,14 @@ export const crudSchema = (): CrudSchema => {
         minWidth: 160,
       },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
-        fieldName: 'LINK_name',
+        fieldName: 'LIKE_name',
         label: $t('member.level.search.name'),
         component: 'Input',
       },
@@ -62,7 +69,12 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('member.level.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       {
         fieldName: 'name',
@@ -112,6 +124,7 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { type: 'textarea', rows: 3 },
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('member.level.title'),
+    width: 'w-[40%]',
+  },
 }

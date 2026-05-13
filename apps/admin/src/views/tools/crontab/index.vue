@@ -14,7 +14,7 @@ import { useCrud } from '#/adapter/crud'
 import { crudSchema, crontabLogDrawerOpener } from './schemas'
 import CrontabLogDrawer from './log-wrap.vue'
 
-const [BasicCrud] = useCrud(crudSchema())
+const [BasicCrud] = useCrud(crudSchema)
 
 const logDrawerRef = ref<any>(null)
 

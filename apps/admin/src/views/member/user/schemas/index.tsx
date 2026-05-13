@@ -1,52 +1,65 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
-import { MemberService } from '#/api/member'
+import { MemberUserService } from '#/api/member'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: MemberService.list,
-      add: MemberService.create,
-      edit: MemberService.update,
-      remove: MemberService.remove,
-      view: MemberService.get,
-    },
-    dialogTitle: $t('member.user.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: MemberUserService.list,
+    add: MemberUserService.create,
+    edit: MemberUserService.update,
+    remove: MemberUserService.remove,
+    view: MemberUserService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'member:user:create',
-    removeAuth: 'member:user:delete',
-    editAuth: 'member:user:update',
-    viewAuth: 'member:user:read',
+    hasRemove: true,
+    permissions: {
+      add: 'member:user:create',
+      edit: 'member:user:update',
+      remove: 'member:user:delete',
+      view: 'member:user:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('member.user.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'username', title: $t('member.user.table.columns.username'), minWidth: 100 },
-      { field: 'nickname', title: $t('member.user.table.columns.nickname'), minWidth: 100 },
-      { field: 'phone', title: $t('member.user.table.columns.phone'), minWidth: 120 },
-      { field: 'email', title: $t('member.user.table.columns.email'), minWidth: 160 },
-      { field: 'level_name', title: $t('member.user.table.columns.level_name'), minWidth: 100 },
-      { field: 'points', title: $t('member.user.table.columns.points'), minWidth: 80 },
+      { field: 'nickname', title: $t('member.user.table.columns.nickname'), minWidth: 120 },
+      { field: 'username', title: $t('member.user.table.columns.username'), minWidth: 120 },
+      {
+        field: 'avatar',
+        title: $t('member.user.table.columns.avatar'),
+        minWidth: 80,
+        viewComponent: 'CellImage',
+      },
+      {
+        field: 'level_id',
+        title: $t('member.user.table.columns.level_id'),
+        minWidth: 100,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.MEMBER_LEVEL },
+      },
       {
         field: 'status',
         title: $t('member.user.table.columns.status'),
         minWidth: 80,
         viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+        viewComponentProps: { code: DictEnum.SYS_NORMAL_DISABLE },
       },
-      { field: 'created_at', title: $t('member.user.table.columns.created_at'), minWidth: 160 },
+      { field: 'points', title: $t('member.user.table.columns.points'), minWidth: 80 },
+      { field: 'balance', title: $t('member.user.table.columns.balance'), minWidth: 80 },
+      { field: 'create_time', title: $t('member.user.table.columns.create_time'), minWidth: 160 },
     ],
-    searchFormSchema: [
-      {
-        fieldName: 'LIKE_username',
-        label: $t('member.user.search.username'),
-        component: 'Input',
-      },
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_nickname',
         label: $t('member.user.search.nickname'),
@@ -56,17 +69,16 @@ export const crudSchema = (): CrudSchema => {
         fieldName: 'EQ_status',
         label: $t('member.user.search.status'),
         component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
+        componentProps: { code: DictEnum.SYS_NORMAL_DISABLE, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('member.user.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
-      {
-        fieldName: 'username',
-        label: $t('member.user.form.username'),
-        component: 'Input',
-        rules: 'required',
-      },
       {
         fieldName: 'nickname',
         label: $t('member.user.form.nickname'),
@@ -74,28 +86,31 @@ export const crudSchema = (): CrudSchema => {
         rules: 'required',
       },
       {
-        fieldName: 'phone',
-        label: $t('member.user.form.phone'),
+        fieldName: 'username',
+        label: $t('member.user.form.username'),
         component: 'Input',
+        rules: 'required',
       },
       {
-        fieldName: 'email',
-        label: $t('member.user.form.email'),
-        component: 'Input',
+        fieldName: 'avatar',
+        label: $t('member.user.form.avatar'),
+        component: 'Upload',
       },
       {
         fieldName: 'level_id',
         label: $t('member.user.form.level_id'),
-        component: 'InputNumber',
+        component: 'ApiSelect',
+        componentProps: { code: DictEnum.MEMBER_LEVEL, clearable: true },
       },
       {
         fieldName: 'status',
         label: $t('member.user.form.status'),
         component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
+        componentProps: { code: DictEnum.SYS_NORMAL_DISABLE, renderType: 'RadioGroup', isBtn: true },
         defaultValue: 1,
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('member.user.title'),
+    width: 'w-[40%]',
+  },
 }

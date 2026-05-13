@@ -14,7 +14,7 @@ import { useCrud } from '#/adapter/crud'
 import { crudSchema, dictItemDrawerOpener } from './schemas'
 import DictItemDrawer from './dict-item-wrap.vue'
 
-const [BasicCrud] = useCrud(crudSchema())
+const [BasicCrud] = useCrud(crudSchema)
 
 const dictItemDrawerRef = ref<any>(null)
 

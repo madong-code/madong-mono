@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { LinkService } from '#/api/web'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: LinkService.list,
-      add: LinkService.create,
-      edit: LinkService.update,
-      remove: LinkService.remove,
-      view: LinkService.get,
-    },
-    dialogTitle: $t('web.link.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: LinkService.list,
+    add: LinkService.create,
+    edit: LinkService.update,
+    remove: LinkService.remove,
+    view: LinkService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'web:link:create',
-    removeAuth: 'web:link:delete',
-    editAuth: 'web:link:update',
-    viewAuth: 'web:link:read',
+    hasRemove: true,
+    permissions: {
+      add: 'web:link:create',
+      edit: 'web:link:update',
+      remove: 'web:link:delete',
+      view: 'web:link:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('web.link.table.columns.id'), minWidth: 60, visible: false },
@@ -38,14 +40,24 @@ export const crudSchema = (): CrudSchema => {
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('web.link.search.name'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('web.link.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'name', label: $t('web.link.form.name'), component: 'Input', rules: 'required' },
       { fieldName: 'url', label: $t('web.link.form.url'), component: 'Input', rules: 'required' },
@@ -59,6 +71,7 @@ export const crudSchema = (): CrudSchema => {
         defaultValue: 1,
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('web.link.title'),
+    width: 'w-[40%]',
+  },
 }

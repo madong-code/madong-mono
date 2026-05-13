@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { PostService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: PostService.list,
-      add: PostService.create,
-      edit: PostService.update,
-      remove: PostService.remove,
-      view: PostService.get,
-    },
-    dialogTitle: $t('setting.post.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: PostService.list,
+    add: PostService.create,
+    edit: PostService.update,
+    remove: PostService.remove,
+    view: PostService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'setting:post:create',
-    removeAuth: 'setting:post:delete',
-    editAuth: 'setting:post:update',
-    viewAuth: 'setting:post:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:post:create',
+      edit: 'setting:post:update',
+      remove: 'setting:post:delete',
+      view: 'setting:post:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.post.table.columns.id'), minWidth: 60, visible: false },
@@ -38,14 +40,24 @@ export const crudSchema = (): CrudSchema => {
       },
       { field: 'remark', title: $t('setting.post.table.columns.remark'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('setting.post.search.name'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.post.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'name', label: $t('setting.post.form.name'), component: 'Input', rules: 'required' },
       { fieldName: 'code', label: $t('setting.post.form.code'), component: 'Input' },
@@ -59,6 +71,7 @@ export const crudSchema = (): CrudSchema => {
       },
       { fieldName: 'remark', label: $t('setting.post.form.remark'), component: 'Input', componentProps: { type: 'textarea', rows: 3 } },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('setting.post.title'),
+    width: 'w-[40%]',
+  },
 }

@@ -1,73 +1,88 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { MemberPointsService } from '#/api/member'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: MemberPointsService.list,
-      add: MemberPointsService.create,
-      edit: MemberPointsService.update,
-      remove: MemberPointsService.remove,
-      view: MemberPointsService.get,
-    },
-    dialogTitle: $t('member.points.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: MemberPointsService.list,
+    add: MemberPointsService.create,
+    edit: MemberPointsService.update,
+    remove: MemberPointsService.remove,
+    view: MemberPointsService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'member:points:create',
-    removeAuth: 'member:points:delete',
-    editAuth: 'member:points:update',
-    viewAuth: 'member:points:read',
+    hasRemove: true,
+    permissions: {
+      add: 'member:points:create',
+      edit: 'member:points:update',
+      remove: 'member:points:delete',
+      view: 'member:points:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('member.points.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'username', title: $t('member.points.table.columns.username'), minWidth: 100 },
-      { field: 'nickname', title: $t('member.points.table.columns.nickname'), minWidth: 100 },
+      { field: 'name', title: $t('member.points.table.columns.name'), minWidth: 120 },
+      { field: 'code', title: $t('member.points.table.columns.code'), minWidth: 100 },
       {
         field: 'type',
         title: $t('member.points.table.columns.type'),
-        minWidth: 100,
+        minWidth: 80,
         viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.MEMBER_POINT_TYPE },
+        viewComponentProps: { code: DictEnum.POINTS_TYPE },
       },
-      { field: 'points', title: $t('member.points.table.columns.points'), minWidth: 100 },
-      { field: 'points_before', title: $t('member.points.table.columns.points_before'), minWidth: 100 },
-      { field: 'points_after', title: $t('member.points.table.columns.points_after'), minWidth: 100 },
+      { field: 'points', title: $t('member.points.table.columns.points'), minWidth: 80 },
+      { field: 'icon', title: $t('member.points.table.columns.icon'), minWidth: 80 },
       {
-        field: 'source',
-        title: $t('member.points.table.columns.source'),
-        minWidth: 100,
+        field: 'enabled',
+        title: $t('member.points.table.columns.enabled'),
+        minWidth: 80,
         viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.MEMBER_POINT_SOURCE },
+        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
-      { field: 'remark', title: $t('member.points.table.columns.remark'), minWidth: 160 },
-      { field: 'operator', title: $t('member.points.table.columns.operator'), minWidth: 100 },
       { field: 'create_time', title: $t('member.points.table.columns.create_time'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
-        fieldName: 'LIKE_username',
-        label: $t('member.points.search.username'),
+        fieldName: 'LIKE_name',
+        label: $t('member.points.search.name'),
         component: 'Input',
       },
       {
         fieldName: 'EQ_type',
         label: $t('member.points.search.type'),
         component: 'ApiDict',
-        componentProps: { code: DictEnum.MEMBER_POINT_TYPE, clearable: true },
+        componentProps: { code: DictEnum.POINTS_TYPE, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('member.points.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       {
-        fieldName: 'member_id',
-        label: $t('member.points.form.member_id'),
-        component: 'InputNumber',
+        fieldName: 'name',
+        label: $t('member.points.form.name'),
+        component: 'Input',
+        rules: 'required',
+      },
+      {
+        fieldName: 'code',
+        label: $t('member.points.form.code'),
+        component: 'Input',
         rules: 'required',
       },
       {
@@ -75,7 +90,7 @@ export const crudSchema = (): CrudSchema => {
         label: $t('member.points.form.type'),
         component: 'ApiDict',
         rules: 'required',
-        componentProps: { code: DictEnum.MEMBER_POINT_TYPE, renderType: 'RadioGroup', isBtn: true },
+        componentProps: { code: DictEnum.POINTS_TYPE, clearable: true },
       },
       {
         fieldName: 'points',
@@ -85,12 +100,19 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { min: 0, precision: 0 },
       },
       {
-        fieldName: 'remark',
-        label: $t('member.points.form.remark'),
-        component: 'Input',
-        componentProps: { type: 'textarea', rows: 3 },
+        fieldName: 'icon',
+        label: $t('member.points.form.icon'),
+        component: 'IconPicker',
+      },
+      {
+        fieldName: 'enabled',
+        label: $t('member.points.form.enabled'),
+        component: 'ApiDict',
+        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
+        defaultValue: 1,
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('member.points.title'),
+    width: 'w-[40%]',
+  },
 }

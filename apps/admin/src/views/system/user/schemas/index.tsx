@@ -118,13 +118,25 @@ export function formSchema(): VbenFormSchema[] {
       hide: true,
       hideInDetail: true,
     },
+    // 用户名和真实姓名一行两列
     {
       component: 'Input',
       fieldName: 'user_name',
       label: $t('system.user.form.user_name'),
       rules: 'required',
+      formItemClass: 'col-span-1',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.user_name'),
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'real_name',
+      label: $t('system.user.form.real_name'),
+      rules: 'required',
+      formItemClass: 'col-span-1',
+      componentProps: {
+        placeholder: $t('system.user.form.placeholder.real_name'),
       },
     },
     {
@@ -133,6 +145,7 @@ export function formSchema(): VbenFormSchema[] {
       label: $t('system.user.form.password'),
       rules: 'required',
       hideInDetail: true,
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.password'),
       },
@@ -150,6 +163,7 @@ export function formSchema(): VbenFormSchema[] {
       label: $t('system.user.form.confirm_password'),
       rules: 'required',
       hideInDetail: true,
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.confirm_password'),
       },
@@ -170,17 +184,9 @@ export function formSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
-      fieldName: 'real_name',
-      label: $t('system.user.form.real_name'),
-      rules: 'required',
-      componentProps: {
-        placeholder: $t('system.user.form.placeholder.real_name'),
-      },
-    },
-    {
-      component: 'Input',
       fieldName: 'nick_name',
       label: $t('system.user.form.nick_name'),
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.nick_name'),
       },
@@ -189,6 +195,7 @@ export function formSchema(): VbenFormSchema[] {
       component: 'ApiDict',
       fieldName: 'sex',
       label: $t('system.user.form.sex'),
+      formItemClass: 'col-span-2',
       componentProps: {
         code: DictEnum.SYS_SEX,
         renderType: 'RadioGroup',
@@ -204,6 +211,7 @@ export function formSchema(): VbenFormSchema[] {
       fieldName: 'mobile_phone',
       label: $t('system.user.form.mobile_phone'),
       rules: 'required',
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.mobile_phone'),
       },
@@ -212,6 +220,7 @@ export function formSchema(): VbenFormSchema[] {
       component: 'Input',
       fieldName: 'email',
       label: $t('system.user.form.email'),
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.email'),
       },
@@ -221,6 +230,7 @@ export function formSchema(): VbenFormSchema[] {
       fieldName: 'dept_id',
       label: $t('system.user.form.dept_id'),
       rules: 'selectRequired',
+      formItemClass: 'col-span-2',
       componentProps: {
         code: 'dept',
         clearable: true,
@@ -234,6 +244,7 @@ export function formSchema(): VbenFormSchema[] {
       component: 'ApiSelect',
       fieldName: 'post_id_list',
       label: $t('system.user.form.post_name'),
+      formItemClass: 'col-span-2',
       componentProps: {
         mode: 'multiple',
         allowClear: true,
@@ -245,6 +256,7 @@ export function formSchema(): VbenFormSchema[] {
       fieldName: 'role_id_list',
       label: $t('system.user.form.role_name'),
       rules: 'selectRequired',
+      formItemClass: 'col-span-2',
       componentProps: {
         mode: 'multiple',
         allowClear: true,
@@ -258,6 +270,7 @@ export function formSchema(): VbenFormSchema[] {
       component: 'ApiDict',
       fieldName: 'enabled',
       label: $t('system.user.form.enabled'),
+      formItemClass: 'col-span-2',
       componentProps: {
         code: DictEnum.SYS_ENABLED_STATUS,
         renderType: 'RadioGroup',
@@ -271,7 +284,7 @@ export function formSchema(): VbenFormSchema[] {
       component: 'Textarea',
       fieldName: 'remark',
       label: $t('system.user.form.remark'),
-      formItemClass: 'col-span-1 md:col-span-2',
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: $t('system.user.form.placeholder.remark'),
       },

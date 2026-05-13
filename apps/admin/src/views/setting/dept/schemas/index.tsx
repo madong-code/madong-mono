@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { DeptService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: DeptService.list,
-      add: DeptService.create,
-      edit: DeptService.update,
-      remove: DeptService.remove,
-      view: DeptService.get,
-    },
-    dialogTitle: $t('setting.dept.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: DeptService.list,
+    add: DeptService.create,
+    edit: DeptService.update,
+    remove: DeptService.remove,
+    view: DeptService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'setting:dept:create',
-    removeAuth: 'setting:dept:delete',
-    editAuth: 'setting:dept:update',
-    viewAuth: 'setting:dept:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:dept:create',
+      edit: 'setting:dept:update',
+      remove: 'setting:dept:delete',
+      view: 'setting:dept:read',
+    },
     tree: { id: 'id', pid: 'pid', children: 'children' },
     columns: [
       { type: 'checkbox', width: 60 },
@@ -40,14 +42,24 @@ export const crudSchema = (): CrudSchema => {
       },
       { field: 'remark', title: $t('setting.dept.table.columns.remark'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('setting.dept.search.name'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.dept.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       {
         fieldName: 'pid',
@@ -92,6 +104,7 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { type: 'textarea', rows: 3 },
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('setting.dept.title'),
+    width: 'w-[40%]',
+  },
 }

@@ -1,27 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { DictService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: DictService.list,
-      add: DictService.create,
-      edit: DictService.update,
-      remove: DictService.remove,
-      view: DictService.get,
-    },
-    dialogTitle: $t('setting.dict.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: DictService.list,
+    add: DictService.create,
+    edit: DictService.update,
+    remove: DictService.remove,
+    view: DictService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
+    hasEdit: false,
     hasView: true,
-    addAuth: 'setting:dict:create',
-    removeAuth: 'setting:dict:delete',
-    editAuth: 'setting:dict:update',
-    viewAuth: 'setting:dict:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:dict:create',
+      edit: 'setting:dict:update',
+      remove: 'setting:dict:delete',
+      view: 'setting:dict:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.dict.table.columns.id'), minWidth: 60, visible: false },
@@ -45,7 +48,33 @@ export const crudSchema = (): CrudSchema => {
       { field: 'sort', title: $t('setting.dict.table.columns.sort'), minWidth: 80 },
       { field: 'description', title: $t('setting.dict.table.columns.description'), minWidth: 160 },
     ],
-    searchFormSchema: [
+    tableActions: [
+      {
+        label: $t('setting.dict.table.actions.dict_item'),
+        icon: 'ant-design:unordered-list-outlined',
+        type: 'primary',
+        link: true,
+        onClick: ({ row }: any) => {
+          dictItemDrawerOpener.open(row)
+        },
+      },
+    ],
+    dropDownActions: [
+      {
+        label: $t('setting.dict.table.actions.edit'),
+        icon: 'ant-design:edit-outlined',
+        auth: 'setting:dict:update',
+        onClick: ({ row, crudApi }: any) => {
+          crudApi.openEditDialog(row)
+        },
+      },
+    ],
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('setting.dict.search.name'),
@@ -57,7 +86,12 @@ export const crudSchema = (): CrudSchema => {
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.dict.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       {
         fieldName: 'name',
@@ -103,28 +137,9 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { type: 'textarea', rows: 3 },
       },
     ],
-    tableActions: [
-      {
-        label: $t('setting.dict.table.actions.dict_item'),
-        type: 'primary',
-        link: true,
-        onClick: ({ row }: any) => {
-          dictItemDrawerOpener.open(row)
-        },
-      },
-    ],
-    dropDownActions: [
-      {
-        label: $t('setting.dict.table.actions.edit'),
-        auth: 'setting:dict:update',
-        onClick: ({ row, crudApi }: any) => {
-          crudApi.openEditDialog(row)
-        },
-      },
-    ],
-    hasEdit: false,
-    dialogWidth: '40%',
-  }
+    title: $t('setting.dict.title'),
+    width: 'w-[40%]',
+  },
 }
 
 export const dictItemDrawerOpener = { open: (_row: any) => {} }

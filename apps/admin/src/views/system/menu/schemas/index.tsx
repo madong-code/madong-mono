@@ -1,33 +1,79 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { MenuService } from '#/api/system'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: MenuService.list,
-      add: MenuService.create,
-      edit: MenuService.update,
-      remove: MenuService.remove,
-      view: MenuService.get,
-    },
-    dialogTitle: $t('system.menu.title'),
-    useCrud: true,
+/**
+ * 将扁平数组转换为树形结构
+ */
+function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'children'): any[] {
+  const map = new Map<any, any>()
+  const roots: any[] = []
+
+  // 建立 id 到节点的映射
+  data.forEach((item) => {
+    map.set(item[idKey], { ...item, [childrenKey]: [] })
+  })
+
+  // 构建树形结构
+  data.forEach((item) => {
+    const node = map.get(item[idKey])
+    if (item[pidKey] === null || item[pidKey] === undefined || item[pidKey] === 0) {
+      roots.push(node)
+    } else {
+      const parent = map.get(item[pidKey])
+      if (parent) {
+        parent[childrenKey].push(node)
+      } else {
+        // 找不到父节点，作为根节点
+        roots.push(node)
+      }
+    }
+  })
+
+  return roots
+}
+
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: MenuService.list,
+    add: MenuService.create,
+    edit: MenuService.update,
+    remove: MenuService.remove,
+    view: MenuService.get,
+  },
+
+  // 表格配置
+  table: {
+    rowKey: 'id',
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
-    hasView: true,
-    addAuth: 'system:menu:create',
-    removeAuth: 'system:menu:delete',
-    editAuth: 'system:menu:update',
-    viewAuth: 'system:menu:read',
+    hasView: false,
+    hasRemove: true,
+    hasBatchRemove: false,
+    permissions: {
+      add: 'system:menu:create',
+      edit: 'system:menu:update',
+      remove: 'system:menu:delete',
+      view: 'system:menu:read',
+    },
     tree: { id: 'id', pid: 'pid', children: 'children' },
+    // 请求前处理：树形不分页，设置 page=1 limit=999 一次加载全部
+    beforeFetch: (params: any) => {
+      return { ...params, page: 1, limit: 999 }
+    },
+    // 处理返回数据：扁平数组转树形
+    afterFetch: (res: { items?: any[]; total?: number }) => {
+      const items = res?.items || []
+      return {
+        items: arrayToTree(items),
+        total: res?.total ?? items.length,
+      }
+    },
     columns: [
-      { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('system.menu.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'title', title: $t('system.menu.table.columns.title'), minWidth: 150, treeNode: true },
+      { field: 'title', title: $t('system.menu.table.columns.title'), minWidth: 200, treeNode: true, align: 'left' },
       { field: 'code', title: $t('system.menu.table.columns.code'), minWidth: 120 },
       {
         field: 'type',
@@ -55,14 +101,24 @@ export const crudSchema = (): CrudSchema => {
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_title',
         label: $t('system.menu.search.title'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('system.menu.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'pid', label: $t('system.menu.form.pid'), component: 'TreeSelect', componentProps: { code: 'menu', clearable: true } },
       { fieldName: 'title', label: $t('system.menu.form.title'), component: 'Input', rules: 'required' },
@@ -100,6 +156,7 @@ export const crudSchema = (): CrudSchema => {
         defaultValue: 0,
       },
     ],
-    dialogWidth: '50%',
-  }
+    title: $t('system.menu.title'),
+    width: 'w-[50%]',
+  },
 }

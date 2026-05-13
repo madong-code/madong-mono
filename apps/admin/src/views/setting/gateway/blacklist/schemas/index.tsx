@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { GatewayBlacklistService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: GatewayBlacklistService.list,
-      add: GatewayBlacklistService.create,
-      edit: GatewayBlacklistService.update,
-      remove: GatewayBlacklistService.remove,
-      view: GatewayBlacklistService.get,
-    },
-    dialogTitle: $t('setting.gateway.blacklist.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: GatewayBlacklistService.list,
+    add: GatewayBlacklistService.create,
+    edit: GatewayBlacklistService.update,
+    remove: GatewayBlacklistService.remove,
+    view: GatewayBlacklistService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'setting:blacklist:create',
-    removeAuth: 'setting:blacklist:delete',
-    editAuth: 'setting:blacklist:update',
-    viewAuth: 'setting:blacklist:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:blacklist:create',
+      edit: 'setting:blacklist:update',
+      remove: 'setting:blacklist:delete',
+      view: 'setting:blacklist:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.gateway.blacklist.table.columns.id'), minWidth: 60, visible: false },
@@ -40,14 +42,24 @@ export const crudSchema = (): CrudSchema => {
       { field: 'start_date', title: $t('setting.gateway.blacklist.table.columns.start_date'), minWidth: 160 },
       { field: 'end_date', title: $t('setting.gateway.blacklist.table.columns.end_date'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('setting.gateway.blacklist.search.name'),
         component: 'Input',
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.gateway.blacklist.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'name', label: $t('setting.gateway.blacklist.form.name'), component: 'Input', rules: 'required' },
       { fieldName: 'ip', label: $t('setting.gateway.blacklist.form.ip'), component: 'Input', rules: 'required' },
@@ -64,6 +76,7 @@ export const crudSchema = (): CrudSchema => {
       { fieldName: 'end_date', label: $t('setting.gateway.blacklist.form.end_date'), component: 'DatePicker' },
       { fieldName: 'remark', label: $t('setting.gateway.blacklist.form.remark'), component: 'Input', componentProps: { type: 'textarea', rows: 3 } },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('setting.gateway.blacklist.title'),
+    width: 'w-[40%]',
+  },
 }

@@ -108,17 +108,17 @@
 <script setup lang="ts">
 import { Page } from '@vben/common-ui'
 import { useVbenVxeGrid } from '#/adapter/vxe-table'
-import { TableAction } from '#/components/table-action'
-import { useFormDialog } from '#/components/form-dialog'
+import { TableAction } from '#/components/crud/components/table-action'
+import { useFormDialog } from '#/components/crud/components/dialog'
 import { UserService } from '#/api/system'
 import { ElMessage } from 'element-plus'
 import { querySchema, useColumns, formSchema, grantRoleFormSchema } from './schemas'
 
 // === 新增/编辑/查看用户表单弹窗 ===
 const [UserFormDialog, formDialogApi] = useFormDialog({
-  schema: formSchema,
+  schema: () => formSchema(),
   layout: 'horizontal',
-  wrapperClass: 'grid-cols-1 md:grid-cols-2',
+  wrapperClass: 'grid-cols-2',
   commonConfig: {
     labelWidth: 80,
     componentProps: {

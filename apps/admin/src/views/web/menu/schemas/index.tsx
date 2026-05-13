@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { WebMenuService } from '#/api/web'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: WebMenuService.list,
-      add: WebMenuService.create,
-      edit: WebMenuService.update,
-      remove: WebMenuService.remove,
-      view: WebMenuService.get,
-    },
-    dialogTitle: $t('web.menu.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: WebMenuService.list,
+    add: WebMenuService.create,
+    edit: WebMenuService.update,
+    remove: WebMenuService.remove,
+    view: WebMenuService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'web:menu:create',
-    removeAuth: 'web:menu:delete',
-    editAuth: 'web:menu:update',
-    viewAuth: 'web:menu:read',
+    hasRemove: true,
+    permissions: {
+      add: 'web:menu:create',
+      edit: 'web:menu:update',
+      remove: 'web:menu:delete',
+      view: 'web:menu:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('web.menu.table.columns.id'), minWidth: 60, visible: false },
@@ -51,7 +53,12 @@ export const crudSchema = (): CrudSchema => {
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_name',
         label: $t('web.menu.search.name'),
@@ -64,7 +71,12 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { code: DictEnum.WEB_MENU_CATEGORY, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('web.menu.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'name', label: $t('web.menu.form.name'), component: 'Input', rules: 'required' },
       {
@@ -91,6 +103,7 @@ export const crudSchema = (): CrudSchema => {
         defaultValue: 1,
       },
     ],
-    dialogWidth: '40%',
-  }
+    title: $t('web.menu.title'),
+    width: 'w-[40%]',
+  },
 }

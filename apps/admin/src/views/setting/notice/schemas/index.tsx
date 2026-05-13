@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { NoticeService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: NoticeService.list,
-      add: NoticeService.create,
-      edit: NoticeService.update,
-      remove: NoticeService.remove,
-      view: NoticeService.get,
-    },
-    dialogTitle: $t('setting.notice.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: NoticeService.list,
+    add: NoticeService.create,
+    edit: NoticeService.update,
+    remove: NoticeService.remove,
+    view: NoticeService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'setting:notice:create',
-    removeAuth: 'setting:notice:delete',
-    editAuth: 'setting:notice:update',
-    viewAuth: 'setting:notice:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:notice:create',
+      edit: 'setting:notice:update',
+      remove: 'setting:notice:delete',
+      view: 'setting:notice:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.notice.table.columns.id'), minWidth: 60, visible: false },
@@ -44,7 +46,12 @@ export const crudSchema = (): CrudSchema => {
       { field: 'created_date', title: $t('setting.notice.table.columns.created_date'), minWidth: 160 },
       { field: 'remark', title: $t('setting.notice.table.columns.remark'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_title',
         label: $t('setting.notice.search.title'),
@@ -57,7 +64,12 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { code: DictEnum.SYS_NOTICE_TYPE, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.notice.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'title', label: $t('setting.notice.form.title'), component: 'Input', rules: 'required' },
       {
@@ -76,6 +88,7 @@ export const crudSchema = (): CrudSchema => {
       },
       { fieldName: 'remark', label: $t('setting.notice.form.remark'), component: 'Input', componentProps: { type: 'textarea', rows: 3 } },
     ],
-    dialogWidth: '60%',
-  }
+    title: $t('setting.notice.title'),
+    width: 'w-[60%]',
+  },
 }

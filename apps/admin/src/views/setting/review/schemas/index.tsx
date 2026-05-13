@@ -1,26 +1,28 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { ReviewService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: ReviewService.list,
-      add: ReviewService.create,
-      edit: ReviewService.update,
-      remove: ReviewService.remove,
-      view: ReviewService.get,
-    },
-    dialogTitle: $t('setting.review.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: ReviewService.list,
+    add: ReviewService.create,
+    edit: ReviewService.update,
+    remove: ReviewService.remove,
+    view: ReviewService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: false,
-    hasRemove: true,
     hasEdit: false,
     hasView: true,
-    removeAuth: 'setting:review:delete',
-    viewAuth: 'setting:review:read',
+    hasRemove: true,
+    permissions: {
+      remove: 'setting:review:delete',
+      view: 'setting:review:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.review.table.columns.id'), minWidth: 60, visible: false },
@@ -44,7 +46,12 @@ export const crudSchema = (): CrudSchema => {
       { field: 'reason', title: $t('setting.review.table.columns.reason'), minWidth: 160 },
       { field: 'created_at', title: $t('setting.review.table.columns.created_at'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_title',
         label: $t('setting.review.search.title'),
@@ -63,7 +70,13 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { code: DictEnum.REVIEW_STATUS, clearable: true },
       },
     ],
-    formSchema: [],
-    dialogWidth: '40%',
-  }
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: false,
+    schema: [],
+    title: $t('setting.review.title'),
+    width: 'w-[40%]',
+  },
 }

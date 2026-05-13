@@ -1,28 +1,30 @@
-import type { CrudSchema } from '#/adapter/crud'
+import type { CrudSchema } from '#/components/crud/components/types'
 
 import { MessageService } from '#/api/setting'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema = (): CrudSchema => {
-  return {
-    crudApi: {
-      list: MessageService.list,
-      add: MessageService.create,
-      edit: MessageService.update,
-      remove: MessageService.remove,
-      view: MessageService.get,
-    },
-    dialogTitle: $t('setting.message.title'),
-    useCrud: true,
+export const crudSchema: CrudSchema = {
+  crudApi: {
+    list: MessageService.list,
+    add: MessageService.create,
+    edit: MessageService.update,
+    remove: MessageService.remove,
+    view: MessageService.get,
+  },
+
+  // 表格配置
+  table: {
     hasAdd: true,
-    hasRemove: true,
     hasEdit: true,
     hasView: true,
-    addAuth: 'setting:message:create',
-    removeAuth: 'setting:message:delete',
-    editAuth: 'setting:message:update',
-    viewAuth: 'setting:message:read',
+    hasRemove: true,
+    permissions: {
+      add: 'setting:message:create',
+      edit: 'setting:message:update',
+      remove: 'setting:message:delete',
+      view: 'setting:message:read',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: $t('setting.message.table.columns.id'), minWidth: 60, visible: false },
@@ -50,7 +52,12 @@ export const crudSchema = (): CrudSchema => {
       },
       { field: 'created_date', title: $t('setting.message.table.columns.created_date'), minWidth: 160 },
     ],
-    searchFormSchema: [
+  },
+
+  // 搜索表单配置
+  searchForm: {
+    enabled: true,
+    schema: [
       {
         fieldName: 'LIKE_title',
         label: $t('setting.message.search.title'),
@@ -63,7 +70,12 @@ export const crudSchema = (): CrudSchema => {
         componentProps: { code: DictEnum.SYS_MESSAGE_TYPE, clearable: true },
       },
     ],
-    formSchema: [
+  },
+
+  // 表单弹窗配置
+  formDialog: {
+    enabled: true,
+    schema: [
       { fieldName: 'id', label: $t('setting.message.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       { fieldName: 'title', label: $t('setting.message.form.title'), component: 'Input', rules: 'required' },
       {
@@ -81,6 +93,7 @@ export const crudSchema = (): CrudSchema => {
         defaultValue: 1,
       },
     ],
-    dialogWidth: '60%',
-  }
+    title: $t('setting.message.title'),
+    width: 'w-[60%]',
+  },
 }
