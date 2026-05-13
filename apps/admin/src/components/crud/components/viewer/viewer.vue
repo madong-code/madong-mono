@@ -145,38 +145,27 @@ const getViewComponentInstance = (schema: VbenFormSchema) => {
 
 /**
  * 组件名映射为详情展示组件
- * 核心思路：
- * - 带请求的组件 (Api*）→ 都映射到通用的 select（支持 options/code 字典）
- * - 内置数据的组件 (Select/TreeSelect/Cascader) → 也映射到 select
- * - 其他类型按各自语义映射
  */
 const transformComponentName = (componentName: string): string => {
   const transformMap: Record<string, string> = {
-    // 文本类 → Input
     Input: 'Input',
     InputPassword: 'Input',
     InputTextarea: 'Input',
     Textarea: 'Input',
-    // 下拉选择类（含远程和本地）→ Select（通用，支持 options/code）
     Select: 'Select',
     ApiSelect: 'Select',
     TreeSelect: 'Select',
     ApiTreeSelect: 'Select',
     Cascader: 'Select',
     ApiCascader: 'Select',
-    // 开关类 → Switch
     Switch: 'Switch',
-    // 多选/单选组 → 各自组件
     Checkbox: 'Switch',
     CheckboxGroup: 'CheckboxGroup',
     ApiCheckboxGroup: 'CheckboxGroup',
     RadioGroup: 'RadioGroup',
     ApiRadioGroup: 'RadioGroup',
-    // 日期 → DatePicker
     DatePicker: 'DatePicker',
-    // 字典 → ApiDict
     ApiDict: 'ApiDict',
-    // 特殊组件
     Avatar: 'Avatar',
     Upload: 'Upload',
     Editor: 'Input',
@@ -207,7 +196,6 @@ const formatValue = (_schema: VbenFormSchema, value: any) => {
 
 /**
  * 判断字段是否应该显示
- * 支持 boolean 和 function 类型的 dependencies.show / dependencies.if
  */
 const shouldShow = (schema: VbenFormSchema) => {
   if (schema.dependencies?.show !== undefined) {
@@ -322,9 +310,15 @@ defineExpose({
   color: #1e293b;
   word-break: break-all;
   overflow-wrap: break-word;
+  padding: 0 6px !important;
+  border-radius: 2px !important;
+  background-color: #f5f6f8;
 }
 
 .empty-value {
   color: #94a3b8;
+  padding: 0 6px !important;
+  border-radius: 2px !important;
+  background-color: #f5f6f8;
 }
 </style>

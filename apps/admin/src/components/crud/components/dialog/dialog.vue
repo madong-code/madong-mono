@@ -5,7 +5,7 @@ import { useVbenForm } from '#/adapter/form'
 import { useVbenModal, useVbenDrawer } from '@vben/common-ui'
 import { computed, nextTick, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { DetailView } from '#/components/reader'
+import { DetailViewer } from '../viewer'
 
 const props = defineProps<{
   options: FormDialogOptions
@@ -29,7 +29,7 @@ function alignToClass(align?: 'left' | 'right'): string {
   return align === 'left' ? 'text-left' : 'text-right'
 }
 
-// DetailView 的 commonConfig：从 FormDialogOptions 的 commonConfig 中提取
+// DetailViewer 的 commonConfig：从 FormDialogOptions 的 commonConfig 中提取
 const detailCommonConfig = computed(() => {
   const common = props.options.commonConfig
   if (!common) return undefined
@@ -85,10 +85,12 @@ const formOptions = computed(() => {
     ...formProps,
     schema: formSchema.value,
     showDefaultActions: formProps.showDefaultActions ?? false,
-    // 合并 commonConfig
+    // 合并 commonConfig，并确保顶层 wrapperClass 优先
     commonConfig: {
-      ...formProps.commonConfig,
       ...formCommonConfig.value,
+      ...formProps.commonConfig,
+      // 顶层 wrapperClass 优先级最高
+      wrapperClass: props.options.wrapperClass || formProps.commonConfig?.wrapperClass,
     },
   }
 })
@@ -106,12 +108,12 @@ const dialogWidth = computed(() => props.options.width || 'w-[50%]')
 const rowKey = computed(() => props.options.rowKey || 'id')
 const isView = computed(() => viewType.value === 'view')
 
-// DetailView 的 layout：从 FormDialogOptions 的 layout 映射
+// DetailViewer 的 layout：从 FormDialogOptions 的 layout 映射
 const detailLayout = computed(() => {
   return (props.options.layout as 'horizontal' | 'vertical' | 'inline') || 'horizontal'
 })
 
-// DetailView 的 wrapperClass：从 formOptions 的 wrapperClass 映射（用于网格布局）
+// DetailViewer 的 wrapperClass：从 formOptions 的 wrapperClass 映射（用于网格布局）
 const detailWrapperClass = computed(() => {
   return props.options.wrapperClass || ''
 })
@@ -196,7 +198,7 @@ async function handleSubmit() {
   try {
     let values = await formApi.getValues()
 
-    // 提交前转换（兼容 CrudSchema.transformFormValues）
+    // 提交前转换
     if (props.options.transformFormValues) {
       values = props.options.transformFormValues(
         values,
@@ -229,6 +231,10 @@ function openAdd(data: Record<string, any> = {}) {
   viewType.value = 'add'
   currentRow.value = data
   currentApi.value.setData(data).open()
+  // 打开新增弹窗时重置表单，清空上一次的输入记录
+  nextTick(() => {
+    formApi.resetForm()
+  })
 }
 
 function openEdit(row: Record<string, any>) {
@@ -274,8 +280,8 @@ defineExpose({
 
 <template>
   <Modal v-if="options.dialogType !== 'drawer'" :title="dialogTitle" :class="dialogWidth">
-    <!-- 查看模式：使用 DetailView 详情组件 -->
-    <DetailView
+    <!-- 查看模式：使用 DetailViewer 详情组件 -->
+    <DetailViewer
       v-if="isView"
       class="p-4"
       :model="currentRow"
@@ -288,8 +294,8 @@ defineExpose({
     <BasicForm v-else class="p-4" :show-default-actions="false" />
   </Modal>
   <Drawer v-else :title="dialogTitle" :class="dialogWidth">
-    <!-- 查看模式：使用 DetailView 详情组件 -->
-    <DetailView
+    <!-- 查看模式：使用 DetailViewer 详情组件 -->
+    <DetailViewer
       v-if="isView"
       class="p-4"
       :model="currentRow"
@@ -304,31 +310,31 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-::deep(.vben-form) {
+::v-deep(.vben-form) {
   max-height: none !important;
   overflow: visible !important;
 }
 
-::deep(.vben-form > form) {
+::v-deep(.vben-form > form) {
   max-height: none !important;
   overflow: visible !important;
 }
 
-::deep(.vben-form > form > div) {
+::v-deep(.vben-form > form > div) {
   max-height: none !important;
   overflow: visible !important;
 }
 
-::deep(.el-form) {
+::v-deep(.el-form) {
   max-height: none !important;
   overflow: visible !important;
 }
 
-::deep(.el-form-item) {
+::v-deep(.el-form-item) {
   margin-bottom: 16px;
 }
 
-::deep(.detail-view) {
+::v-deep(.detail-view) {
   max-height: none !important;
   overflow: visible !important;
 }

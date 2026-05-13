@@ -1,3 +1,8 @@
+/**
+ * TableAction 表格操作按钮组件
+ * 支持行内按钮、下拉菜单、权限控制、确认操作
+ */
+
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
