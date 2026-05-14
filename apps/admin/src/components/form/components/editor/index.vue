@@ -16,19 +16,19 @@ import { ElInput } from 'element-plus'
 
 const props = withDefaults(
   defineProps<{
-    value?: string
+    modelValue?: string
   }>(),
   {
-    value: '',
+    modelValue: '',
   },
 )
 
 const emit = defineEmits<{
-  'update:value': [value: string]
+  'update:modelValue': [modelValue: string]
 }>()
 
 const content = computed({
-  get: () => props.value,
-  set: (val: string) => emit('update:value', val),
+  get: () => props.modelValue,
+  set: (val: string) => emit('update:modelValue', val),
 })
 </script>

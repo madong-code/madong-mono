@@ -21,20 +21,20 @@ import { ElUpload, ElMessage } from 'element-plus'
 
 const props = withDefaults(
   defineProps<{
-    value?: string
+    modelValue?: string
     shape?: 'circle' | 'square'
   }>(),
   {
-    value: '',
+    modelValue: '',
     shape: 'square',
   },
 )
 
 const emit = defineEmits<{
-  'update:value': [value: string]
+  'update:modelValue': [modelValue: string]
 }>()
 
-const displayUrl = computed(() => props.value)
+const displayUrl = computed(() => props.modelValue)
 
 const customRequest = async (e: any) => {
   try {
@@ -43,7 +43,7 @@ const customRequest = async (e: any) => {
     formData.append('file', e.file)
     const data = await requestClient.post('/file/upload', formData)
     const url = data?.base_path || data?.url || ''
-    emit('update:value', url)
+    emit('update:modelValue', url)
   } catch {
     ElMessage.error('头像上传失败')
   }
@@ -51,7 +51,7 @@ const customRequest = async (e: any) => {
 
 const handleRemove = (e: Event) => {
   e.stopPropagation()
-  emit('update:value', '')
+  emit('update:modelValue', '')
 }
 </script>
 
