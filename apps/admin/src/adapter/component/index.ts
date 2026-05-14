@@ -33,6 +33,8 @@ import { defineAsyncComponent, defineComponent, h, ref } from 'vue';
 import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
+import { getAll as getFormComponents } from '../../components/form/component-map';
+
 import { ElNotification } from 'element-plus';
 
 type ElTreeSelectSchemaProps = InstanceType<typeof ElTreeSelectType>['$props'];
@@ -179,6 +181,9 @@ const withDefaultPlaceholder = <T extends Component>(
 export type ComponentType =
   | 'ApiDict'
   | 'ApiSelect'
+  | 'ApiSelectDept'
+  | 'ApiSelectPosition'
+  | 'ApiSelectRole'
   | 'ApiTreeSelect'
   | 'Avatar'
   | 'Checkbox'
@@ -189,10 +194,12 @@ export type ComponentType =
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
+  | 'Password'
   | 'RadioGroup'
   | 'Select'
   | 'Space'
   | 'Switch'
+  | 'Textarea'
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
@@ -204,6 +211,9 @@ export type ComponentType =
 export interface ComponentPropsMap {
   ApiDict: Record<string, any>;
   ApiSelect: ApiComponentSharedProps & SelectV2Props;
+  ApiSelectDept: Record<string, any>;
+  ApiSelectPosition: Record<string, any>;
+  ApiSelectRole: Record<string, any>;
   ApiTreeSelect: ApiComponentSharedProps & ElTreeSelectSchemaProps;
   Avatar: Record<string, any>;
   Checkbox: CheckboxProps;
@@ -214,20 +224,31 @@ export interface ComponentPropsMap {
   IconPicker: IconPickerProps;
   Input: InputProps;
   InputNumber: InputNumberProps;
+  Password: Record<string, any>;
   RadioGroup: RadioGroupProps;
   Select: SelectV2Props;
   Space: SpaceProps;
   Switch: SwitchProps;
+  Textarea: InputProps;
   TimePicker: ElTimePickerSchemaProps;
   TreeSelect: ElTreeSelectSchemaProps;
   Upload: UploadProps;
 }
 
 async function initComponentAdapter() {
+  // 从 component-map 获取所有表单组件
+  const formComponents = getFormComponents();
+  const formComponentsObj: Partial<Record<ComponentType, Component>> = {};
+  formComponents.forEach((comp, name) => {
+    formComponentsObj[name as ComponentType] = comp;
+  });
+
   const components: Partial<Record<ComponentType, Component>> = {
     // 如果你的组件体积比较大，可以使用异步加载
     // Button: () =>
     // import('xxx').then((res) => res.Button),
+    // 自定义业务组件（来自 component-map 自动扫描）
+    ...formComponentsObj,
     ApiSelect: withDefaultPlaceholder(
       {
         ...ApiComponent,
@@ -291,6 +312,7 @@ async function initComponentAdapter() {
     }),
     Input: withDefaultPlaceholder(ElInput, 'input'),
     InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
+    Textarea: withDefaultPlaceholder(ElInput, 'input', { type: 'textarea' }),
     RadioGroup: (props, { attrs, slots }) => {
       let defaultSlot;
       if (Reflect.has(slots, 'default')) {
