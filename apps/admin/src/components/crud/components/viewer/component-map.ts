@@ -3,20 +3,25 @@ import type { Component } from 'vue'
 import { h, markRaw } from 'vue'
 
 const componentMap = new Map<string, Component>()
-const componentObj = import.meta.glob('./components/**/**.vue', { eager: true })
+const componentObj = import.meta.glob('./components/**/index.vue', { eager: true })
 
 function toPascalCase(str: string): string {
-  const match = str.match(/\/([^/]+)\.vue$/)
-  if (!match?.[1]) return ''
-  const fileName = match[1]
-  return fileName
+  // 支持 flat.vue 和 dir/index.vue 两种模式
+  const parts = str.split('/')
+  const fileName = parts.pop()?.replace('.vue', '') || ''
+  // index.vue → 使用目录名
+  const name = fileName === 'index' ? (parts.pop() || '') : fileName
+  // 添加 Read 前缀
+  const pascalName = name
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join('')
+  return 'Read' + pascalName
 }
 
 Object.keys(componentObj).forEach((key) => {
   const componentName = toPascalCase(key)
+  if (!componentName) return
   const comm: any = componentObj[key]
   if (comm) {
     addComponent(componentName, markRaw(comm.default as Component))

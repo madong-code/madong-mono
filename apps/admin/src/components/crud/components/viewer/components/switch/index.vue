@@ -1,13 +1,15 @@
 <template>
   <span class="reader-switch">
-    <span :class="['switch-dot', { active: value }]">
-      <span class="switch-inner">{{ value ? activeText : inactiveText }}</span>
+    <span :class="['switch-dot', { active: isActive }]">
+      <span class="switch-inner">{{ isActive ? activeText : inactiveText }}</span>
     </span>
   </span>
 </template>
 
 <script setup lang="ts">
-withDefaults(
+import { computed } from 'vue'
+
+const props = withDefaults(
   defineProps<{
     value?: boolean | number | string | null | undefined
     fieldName?: string
@@ -21,6 +23,11 @@ withDefaults(
     inactiveText: '否',
   },
 )
+
+const isActive = computed(() => {
+  if (typeof props.value === 'boolean') return props.value
+  return !!props.value && String(props.value) !== '0'
+})
 </script>
 
 <style lang="scss" scoped>

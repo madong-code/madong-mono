@@ -1,8 +1,3 @@
-/**
- * TableAction 表格操作按钮组件
- * 支持行内按钮、下拉菜单、权限控制、确认操作
- */
-
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
@@ -21,7 +16,7 @@ import {
   ElPopconfirm,
   ElSpace,
 } from 'element-plus'
-import { IconifyIcon } from '@vben/icons'
+import { Icon } from '#/components/icon'
 import { isBoolean, isFunction } from '@vben/utils'
 
 const props = defineProps({
@@ -55,7 +50,7 @@ const emit = defineEmits<{
 
 const renderIcon = (icon: string | any) => {
   if (typeof icon === 'string') {
-    return h(IconifyIcon, { icon })
+    return h(Icon, { icon })
   }
   return h(icon)
 }

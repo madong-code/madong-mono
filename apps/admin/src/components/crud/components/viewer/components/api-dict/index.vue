@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -29,12 +29,12 @@ const props = withDefaults(
   },
 )
 
-const options = ref<{ label: string; value: string | number }[]>([])
+const options = ref<any[]>([])
 const loading = ref(false)
 
 const displayValue = computed(() => {
-  if (!options.value.length) {
-    return props.value
+  if (loading.value || !options.value.length) {
+    return undefined
   }
   if (props.value === undefined || props.value === null) {
     return undefined
@@ -44,16 +44,17 @@ const displayValue = computed(() => {
 })
 
 const fetchDict = async () => {
-  if (!props.code) return
-  
+  if (!props.code) {
+    loading.value = false
+    return
+  }
+
   loading.value = true
   try {
-    const dictStore = await import('@vben/stores').then((m) => m.useDictStore())
-    const dict = await dictStore.getDict(props.code)
-    options.value = dict.map((item: any) => ({
-      label: item[props.labelField],
-      value: item[props.valueField],
-    }))
+    const dictModule = await import('#/store/modules/dict')
+    const dictStore = dictModule.useDictStore()
+    const data = await dictStore.getDictByType(props.code)
+    options.value = data
   } catch {
     options.value = []
   } finally {
@@ -61,10 +62,7 @@ const fetchDict = async () => {
   }
 }
 
-watch(() => props.code, fetchDict)
-watch(() => props.value, () => {})
-
-onMounted(fetchDict)
+watch(() => props.code, fetchDict, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

@@ -25,7 +25,7 @@
           </label>
           <div class="detail-view-value" :class="schema.controlClass || mergedControlClass">
             <component
-              v-if="schema.viewComponent || getViewComponent(schema.component as string)"
+              v-if="schema.viewComponent || getViewComponent(transformComponentName(schema.component as string))"
               :is="getViewComponentInstance(schema)"
               :value="resolveValue(schema.fieldName)"
               :field-name="schema.fieldName"
@@ -144,34 +144,10 @@ const getViewComponentInstance = (schema: VbenFormSchema) => {
 }
 
 /**
- * 组件名映射为详情展示组件
+ * 组件名映射为详情展示组件（默认加 Read 前缀）
  */
 const transformComponentName = (componentName: string): string => {
-  const transformMap: Record<string, string> = {
-    Input: 'Input',
-    InputPassword: 'Input',
-    InputTextarea: 'Input',
-    Textarea: 'Input',
-    Select: 'Select',
-    ApiSelect: 'Select',
-    TreeSelect: 'Select',
-    ApiTreeSelect: 'Select',
-    Cascader: 'Select',
-    ApiCascader: 'Select',
-    Switch: 'Switch',
-    Checkbox: 'Switch',
-    CheckboxGroup: 'CheckboxGroup',
-    ApiCheckboxGroup: 'CheckboxGroup',
-    RadioGroup: 'RadioGroup',
-    ApiRadioGroup: 'RadioGroup',
-    DatePicker: 'DatePicker',
-    ApiDict: 'ApiDict',
-    Avatar: 'Avatar',
-    Upload: 'Upload',
-    Editor: 'Input',
-    IconPicker: 'Input',
-  }
-  return transformMap[componentName] || componentName
+  return 'Read' + componentName
 }
 
 const getViewComponentProps = (schema: VbenFormSchema) => {
@@ -266,7 +242,7 @@ defineExpose({
 .detail-view-item {
   display: flex;
   margin-bottom: 16px;
-  align-items: flex-start;
+  align-items: center;
   max-width: 100%;
 
   &:last-child {
