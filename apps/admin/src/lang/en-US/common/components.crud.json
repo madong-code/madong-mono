@@ -1,0 +1,21 @@
+{
+  "search": {
+    "toggle": "Search",
+    "reset": "Reset"
+  },
+  "table": {
+    "action": "Action",
+    "confirm_delete": "Are you sure to delete {0}?",
+    "confirm_batch_delete": "Are you sure to delete {0} selected {1}?"
+  },
+  "action": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "export": "Export",
+    "refresh": "Refresh",
+    "confirm_title": "Confirm",
+    "confirm_content": "Are you sure to proceed?"
+  }
+}
