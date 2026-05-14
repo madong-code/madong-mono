@@ -87,6 +87,9 @@ function extractLocaleAndFileKeys(
   return { localeDir, fileKeys };
 }
 
+/** 仅用于归类的目录，不作为 i18n key 前缀 */
+const CATEGORY_DIRS = new Set(['common'])
+
 function loadAppLangLocales(
   localeDir: string,
 ): LocaleMessages {
@@ -101,7 +104,10 @@ function loadAppLangLocales(
     const result = extractLocaleAndFileKeys(path, 'lang');
     if (!result || result.localeDir !== localeDir) continue;
 
-    setNestedValue(messages, result.fileKeys, module.default);
+    // 去除仅归类用途的目录前缀
+    const fileKeys = result.fileKeys.filter((k) => !CATEGORY_DIRS.has(k));
+
+    setNestedValue(messages, fileKeys, module.default);
   }
 
   return messages;
