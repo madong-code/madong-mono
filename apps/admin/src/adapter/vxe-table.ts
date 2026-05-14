@@ -2,15 +2,12 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { h } from 'vue';
-
 import { setupVbenVxeTable, useVbenVxeGrid as useGrid } from '@vben/plugins/vxe-table';
 
-import { ElButton, ElImage } from 'element-plus';
-
-import { registerViewComponentToVxe } from '#/components/view/component-map';
-
 import { useVbenForm } from './form';
+
+// 导入渲染器
+import { cellRenderers } from '#/components/render';
 
 setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
@@ -41,27 +38,12 @@ setupVbenVxeTable({
       } as VxeTableGridOptions,
     });
 
-    vxeUI.renderer.add('CellImage', {
-      renderTableDefault(renderOpts, params) {
-        const { props } = renderOpts;
-        const { column, row } = params;
-        const src = row[column.field];
-        return h(ElImage, { src, previewSrcList: [src], ...props });
-      },
+    // 注册所有渲染器
+    console.log('[VxeTable] 注册的渲染器:', Object.keys(cellRenderers))
+    Object.entries(cellRenderers).forEach(([name, renderer]) => {
+      console.log(`[VxeTable] 注册 ${name}:`, renderer)
+      vxeUI.renderer.add(name, renderer);
     });
-
-    vxeUI.renderer.add('CellLink', {
-      renderTableDefault(renderOpts) {
-        const { props } = renderOpts;
-        return h(
-          ElButton,
-          { size: 'small', link: true },
-          { default: () => props?.text },
-        );
-      },
-    });
-
-    registerViewComponentToVxe(vxeUI);
   },
   useVbenForm,
 });
