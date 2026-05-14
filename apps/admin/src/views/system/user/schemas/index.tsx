@@ -56,6 +56,13 @@ export function querySchema(): VbenFormSchema[] {
 export function useColumns() {
   return [
     { type: 'checkbox', width: 60 },
+    // 测试 CellImage 渲染器 - 头像
+    {
+      field: 'avatar',
+      title: '头像',
+      width: 70,
+      cellRender: { name: 'CellImage' },
+    },
     {
       field: 'user_name',
       title: $t('system.user.table.columns.user_name'),
@@ -81,12 +88,42 @@ export function useColumns() {
       title: $t('system.user.table.columns.email'),
       minWidth: 160,
     },
+    // 测试 CellDictTag 渲染器 - 性别（字典 Tag）
+    {
+      field: 'sex',
+      title: '性别',
+      width: 100,
+      cellRender: {
+        name: 'CellDictTag',
+        attrs: { code: DictEnum.SYS_SEX },
+      },
+    },
+    // 测试 CellSwitch 渲染器 - 状态开关
     {
       field: 'enabled',
-      title: $t('system.user.table.columns.enabled'),
-      minWidth: 80,
-      viewComponent: 'ApiDict',
-      viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+      title: '状态',
+      width: 120,
+      cellRender: {
+        name: 'CellSwitch',
+        attrs: {
+          disabled:true,
+          beforeChange: async (value: number, row: any) => {
+            console.log('switch change:', { value, row })
+            // 可以在这里调用 API
+            return true
+          },
+        },
+      },
+    },
+    // 测试 CellDict 渲染器 - 状态（字典文本）
+    {
+      field: 'enabled',
+      title: '状态标签',
+      width: 100,
+      cellRender: {
+        name: 'CellDict',
+        attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+      },
     },
     {
       field: 'login_time',
@@ -118,11 +155,12 @@ export function formSchema(): VbenFormSchema[] {
       hide: true,
       hideInDetail: true,
     },
+
     // 用户名和真实姓名一行两列
     {
-      component: 'Input',
-      fieldName: 'user_name',
-      label: $t('system.user.form.user_name'),
+      component: 'Avatar',
+      fieldName: 'avatar',
+      label: '头像',
       rules: 'required',
       formItemClass: 'col-span-1',
       componentProps: {
@@ -140,7 +178,7 @@ export function formSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'InputPassword',
+      component: 'Password',
       fieldName: 'password',
       label: $t('system.user.form.password'),
       rules: 'required',
@@ -158,7 +196,7 @@ export function formSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'InputPassword',
+      component: 'Password',
       fieldName: 'confirmPassword',
       label: $t('system.user.form.confirm_password'),
       rules: 'required',
@@ -202,7 +240,7 @@ export function formSchema(): VbenFormSchema[] {
         isBtn: true,
         clearable: true,
       },
-      defaultValue: 3,
+      defaultValue: 1,
       viewComponent: 'ApiDict',
       viewComponentProps: { code: DictEnum.SYS_SEX },
     },
@@ -226,8 +264,8 @@ export function formSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'ApiTreeSelect',
-      fieldName: 'dept_id',
+      component: 'ApiSelectDept',
+      fieldName: 'dept_id_list',
       label: $t('system.user.form.dept_id'),
       rules: 'selectRequired',
       formItemClass: 'col-span-2',
@@ -241,7 +279,7 @@ export function formSchema(): VbenFormSchema[] {
       viewComponentProps: { code: 'dept' },
     },
     {
-      component: 'ApiSelect',
+      component: 'ApiSelectPosition',
       fieldName: 'post_id_list',
       label: $t('system.user.form.post_name'),
       formItemClass: 'col-span-2',
@@ -252,7 +290,7 @@ export function formSchema(): VbenFormSchema[] {
       },
     },
     {
-      component: 'ApiSelect',
+      component: 'ApiSelectRole',
       fieldName: 'role_id_list',
       label: $t('system.user.form.role_name'),
       rules: 'selectRequired',
@@ -286,6 +324,7 @@ export function formSchema(): VbenFormSchema[] {
       label: $t('system.user.form.remark'),
       formItemClass: 'col-span-2',
       componentProps: {
+        rows: 3,
         placeholder: $t('system.user.form.placeholder.remark'),
       },
     },
