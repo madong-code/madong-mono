@@ -34,7 +34,7 @@ catalogs:
       specifier: ^10.4.0
       version: 10.4.0
     '@iconify/json':
-      specifier: ^2.2.460
+      specifier: ^2.2.466
       version: 2.2.466
     '@iconify/tailwind4':
       specifier: ^1.2.3
@@ -533,6 +533,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@iconify/json':
+        specifier: 'catalog:'
+        version: 2.2.466
     devDependencies:
       '@changesets/changelog-github':
         specifier: 'catalog:'
@@ -639,6 +643,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@iconify/json':
+        specifier: 'catalog:'
+        version: 2.2.466
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
