@@ -116,10 +116,7 @@ async function fetchApi() {
   let funApi = api
   if (api && typeof api === 'string') {
     funApi = (params: any) => {
-      return (requestClient as any)[props.requestMethod]({
-        url: api,
-        params,
-      })
+      return (requestClient as any)[props.requestMethod](api, { params })
     }
   }
   if (!funApi || typeof funApi !== 'function') {

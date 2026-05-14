@@ -3,6 +3,7 @@ import type { CrudSchema } from '#/components/crud/components/types'
 import { MenuService } from '#/api/system'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
+import { type } from '../../../../../../../packages/effects/common-ui/src/components/captcha/index';
 
 /**
  * 将扁平数组转换为树形结构
@@ -40,7 +41,8 @@ export const crudSchema: CrudSchema = {
     list: MenuService.list,
     add: MenuService.create,
     edit: MenuService.update,
-    remove: MenuService.remove,
+    remove: MenuService.delete,
+    batchRemove: MenuService.remove,
     view: MenuService.get,
   },
 
@@ -49,7 +51,7 @@ export const crudSchema: CrudSchema = {
     rowKey: 'id',
     hasAdd: true,
     hasEdit: true,
-    hasView: false,
+    hasView: true,
     hasRemove: true,
     hasBatchRemove: false,
     permissions: {
@@ -118,45 +120,264 @@ export const crudSchema: CrudSchema = {
   // 表单弹窗配置
   formDialog: {
     enabled: true,
-    schema: [
-      { fieldName: 'id', label: $t('system.menu.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
-      { fieldName: 'pid', label: $t('system.menu.form.pid'), component: 'TreeSelect', componentProps: { code: 'menu', clearable: true } },
-      { fieldName: 'title', label: $t('system.menu.form.title'), component: 'Input', rules: 'required' },
-      { fieldName: 'code', label: $t('system.menu.form.code'), component: 'Input', rules: 'required' },
-      {
-        fieldName: 'type',
-        label: $t('system.menu.form.type'),
-        component: 'ApiDict',
-        rules: 'required',
-        componentProps: { code: DictEnum.SYS_MENU_TYPE, clearable: true },
-      },
-      { fieldName: 'path', label: $t('system.menu.form.path'), component: 'Input' },
-      { fieldName: 'component', label: $t('system.menu.form.component'), component: 'Input' },
-      { fieldName: 'icon', label: $t('system.menu.form.icon'), component: 'IconPicker' },
-      { fieldName: 'sort', label: $t('system.menu.form.sort'), component: 'InputNumber', defaultValue: 0, componentProps: { min: 0, precision: 0 } },
-      {
-        fieldName: 'is_show',
-        label: $t('system.menu.form.is_show'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_YES_NO, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 1,
-      },
-      {
-        fieldName: 'enabled',
-        label: $t('system.menu.form.enabled'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 1,
-      },
-      {
-        fieldName: 'is_cache',
-        label: $t('system.menu.form.is_cache'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_YES_NO, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 0,
-      },
-    ],
     title: $t('system.menu.title'),
-    width: 'w-[50%]',
+    width: 'w-[60%]',
+    dialogType: 'drawer',
+    wrapperClass: 'grid-cols-2',
+    commonConfig: {
+      labelWidth: 80,
+      labelAlign: 'right',
+    },
+    schema: [
+      // 菜单ID（隐藏字段）
+      {
+        label: $t('system.menu.form.modal.id'),
+        fieldName: 'id',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        dependencies: {
+          triggerFields: ['id'],
+          show: false,
+        },
+      },
+      // 菜单类型
+      {
+        label: $t('system.menu.form.modal.type'),
+        fieldName: 'type',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-2',
+        rules: 'required',
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.type'),
+          code: DictEnum.SYS_MENU_TYPE,
+          isBtn: true,
+          renderType: 'RadioGroup'
+        }
+      },
+      // 所属应用
+      {
+        label: $t('system.menu.form.modal.app'),
+        fieldName: 'app',
+        component: 'ApiTreeSelect',
+        defaultValue: 'admin',
+        formItemClass: 'col-span-2',
+        rules: 'required',
+        componentProps: (_value) => {
+          return {
+            api: '/system/menu/app/list',
+            requestMethod: 'get',
+            placeholder: $t('system.menu.form.placeholder.app'),
+            style: {
+              width: '330px'
+            },
+            labelField: 'label',
+            valueField: 'value',
+            onChange: (_values: any) => {
+              _value.pid = ''
+            }
+          }
+        }
+      },
+      // 所属上级
+      {
+        label: $t('system.menu.form.modal.pid'),
+        fieldName: 'pid',
+        component: 'ApiTreeSelect',
+        formItemClass: 'col-span-1',
+        componentProps: (_value) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.pid'),
+            clearable: true,
+            disabled: !_value?.app,
+            checkStrictly: true,
+            api: '/system/menu',
+            requestMethod: 'get',
+            params: {
+              format: 'tree',
+              app: _value.app || 'admin'
+            },
+            labelField: 'name',
+            valueField: 'id'
+          }
+        }
+      },
+      // 菜单名称
+      {
+        label: $t('system.menu.form.modal.title'),
+        fieldName: 'title',
+        component: 'Input',
+        formItemClass: 'col-span-1',
+        rules: 'required',
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.title'),
+          clearable: true
+        }
+      },
+      // 唯一编码
+      {
+        label: $t('system.menu.form.modal.code'),
+        fieldName: 'code',
+        component: 'Input',
+        formItemClass: 'col-span-1',
+        rules: 'required',
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.code'),
+          clearable: true
+        }
+      },
+      // 路由/接口地址
+      {
+        label: $t('system.menu.form.modal.path'),
+        fieldName: 'path',
+        component: 'Input',
+        formItemClass: 'col-span-1',
+        help: $t('system.menu.form.help.path'),
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.path'),
+            clearable: true,
+            disabled: ![1, 2, 4].includes(values.type)
+          }
+        }
+      },
+      // 组件地址
+      {
+        label: $t('system.menu.form.modal.component'),
+        fieldName: 'component',
+        component: 'Input',
+        formItemClass: 'col-span-1',
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.component'),
+            clearable: true,
+            disabled: ![1, 2].includes(values.type)
+          }
+        }
+      },
+      // 打开方式
+      {
+        label: $t('system.menu.form.modal.open_type'),
+        fieldName: 'openType',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-1',
+        rules: 'required',
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.open_type'),
+            code: 'sys_menu_open_type',
+            isBtn: true,
+            renderType: 'RadioGroup',
+            disabled: values.type !== 2
+          }
+        }
+      },
+      // 图标
+      {
+        label: $t('system.menu.form.modal.icon'),
+        fieldName: 'icon',
+        component: 'IconPicker',
+        formItemClass: 'col-span-1',
+        componentProps: (values) => {
+          return {
+            class: 'w-full',
+            placeholder: $t('system.menu.form.placeholder.icon'),
+            clearable: true,
+            disabled: ![1, 2].includes(values.type)
+          }
+        }
+      },
+      // 内外链地址
+      {
+        label: $t('system.menu.form.modal.link_url'),
+        fieldName: 'url',
+        component: 'Input',
+        formItemClass: 'col-span-1',
+        help: $t('system.menu.form.help.link_url'),
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.link_url'),
+            clearable: true,
+            disabled: ![2, 3].includes(values.openType)
+          }
+        }
+      },
+      // 排序
+      {
+        label: $t('system.menu.form.modal.sort'),
+        fieldName: 'sort',
+        component: 'InputNumber',
+        formItemClass: 'col-span-1',
+        defaultValue: 999,
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.sort'),
+          clearable: true,
+          min: 0
+        }
+      },
+      // 是否启用
+      {
+        label: $t('system.menu.form.modal.enabled'),
+        fieldName: 'enabled',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-1',
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.enabled'),
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
+        }
+      },
+      // 是否显示
+      {
+        label: $t('system.menu.form.modal.is_show'),
+        fieldName: 'isShow',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-1',
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.is_show'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup',
+            disabled: ![1, 2].includes(values.type)
+          }
+        }
+      },
+      // 是否同步
+      {
+        label: $t('system.menu.form.modal.is_sync'),
+        fieldName: 'isSync',
+        component: 'ApiDict',
+        defaultValue: 0,
+        formItemClass: 'col-span-1',
+        componentProps: {
+          placeholder: $t('system.menu.form.placeholder.is_sync'),
+          code: 'yes_no',
+          isBtn: true,
+          renderType: 'RadioGroup'
+        }
+      },
+      // 是否缓存
+      {
+        label: $t('system.menu.form.modal.is_cache'),
+        fieldName: 'isCache',
+        component: 'ApiDict',
+        defaultValue: 0,
+        formItemClass: 'col-span-1',
+        componentProps: (values) => {
+          return {
+            placeholder: $t('system.menu.form.placeholder.is_cache'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup',
+            disabled: ![1, 2].includes(values.type)
+          }
+        }
+      }
+    ]
   },
 }

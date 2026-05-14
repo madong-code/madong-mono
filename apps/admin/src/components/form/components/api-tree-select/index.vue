@@ -6,7 +6,7 @@
     :value-field="valueField"
     :label-field="labelField"
     :children-field="childrenField"
-    :teleported="$attrs.teleported ?? false"
+    v-bind="$attrs"
   />
 </template>
 

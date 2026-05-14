@@ -3,19 +3,19 @@
   "table": {
     "columns": {
       "id": "ID",
-      "title": "Title",
+      "title": "Menu Name",
       "code": "Permission Code",
-      "type": "Type",
-      "path": "Route Address",
-      "component": "Page Component",
+      "type": "Menu Type",
+      "path": "Route Path",
+      "component": "Component Path",
       "icon": "Icon",
       "sort": "Sort",
-      "is_show": "Show",
-      "enabled": "Status"
+      "is_show": "Visible",
+      "enabled": "Enabled"
     }
   },
   "search": {
-    "title": "Title"
+    "title": "Menu Name"
   },
   "form": {
     "id": "ID",
@@ -29,6 +29,45 @@
     "sort": "Sort",
     "is_show": "Show",
     "enabled": "Status",
-    "is_cache": "Cache"
+    "is_cache": "Cache",
+    "modal": {
+      "id": "Menu ID",
+      "type": "Menu Type",
+      "app": "Application",
+      "pid": "Parent Menu",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route/API Path",
+      "component": "Component Path",
+      "open_type": "Open Type",
+      "icon": "Icon",
+      "link_url": "Link URL",
+      "sort": "Sort Order",
+      "enabled": "Enabled",
+      "is_show": "Visible",
+      "is_sync": "Sync",
+      "is_cache": "Cache"
+    },
+    "placeholder": {
+      "type": "Please select menu type",
+      "app": "Please select application",
+      "pid": "Please select parent menu",
+      "title": "Please enter menu name",
+      "code": "Please enter permission code",
+      "path": "Please enter route/API path",
+      "component": "Please enter component path",
+      "open_type": "Please select open type",
+      "icon": "Please select icon",
+      "link_url": "Please enter link URL",
+      "sort": "Please enter sort order",
+      "enabled": "Please select enabled status",
+      "is_show": "Please select visibility",
+      "is_sync": "Please select sync status",
+      "is_cache": "Please select cache status"
+    },
+    "help": {
+      "path": "Route path must start with /, API path is not required",
+      "link_url": "Link URL only applies when open type is external or embedded"
+    }
   }
 }

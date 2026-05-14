@@ -249,138 +249,138 @@ async function initComponentAdapter() {
     // import('xxx').then((res) => res.Button),
     // 自定义业务组件（来自 component-map 自动扫描）
     ...formComponentsObj,
-    ApiSelect: withDefaultPlaceholder(
-      {
-        ...ApiComponent,
-        name: 'ApiSelect',
-      },
-      'select',
-      {
-        component: ElSelectV2,
-        loadingSlot: 'loading',
-        visibleEvent: 'onVisibleChange',
-      },
-    ),
-    ApiTreeSelect: withDefaultPlaceholder(
-      {
-        ...ApiComponent,
-        name: 'ApiTreeSelect',
-      },
-      'select',
-      {
-        component: ElTreeSelect,
-        props: { label: 'label', children: 'children' },
-        nodeKey: 'value',
-        loadingSlot: 'loading',
-        optionsPropName: 'data',
-        visibleEvent: 'onVisibleChange',
-      },
-    ),
-    Checkbox: ElCheckbox,
-    CheckboxGroup: (props, { attrs, slots }) => {
-      let defaultSlot;
-      if (Reflect.has(slots, 'default')) {
-        defaultSlot = slots.default;
-      } else {
-        const { options, isButton } = attrs;
-        if (Array.isArray(options)) {
-          defaultSlot = () =>
-            options.map((option) =>
-              h(isButton ? ElCheckboxButton : ElCheckbox, option),
-            );
-        }
-      }
-      return h(
-        ElCheckboxGroup,
-        { ...props, ...attrs },
-        { ...slots, default: defaultSlot },
-      );
-    },
-    // 自定义默认按钮
-    DefaultButton: (props, { attrs, slots }) => {
-      return h(ElButton, { ...props, attrs, type: 'info' }, slots);
-    },
-    // 自定义主要按钮
-    PrimaryButton: (props, { attrs, slots }) => {
-      return h(ElButton, { ...props, attrs, type: 'primary' }, slots);
-    },
-    Divider: ElDivider,
-    IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
-      iconSlot: 'append',
-      modelValueProp: 'model-value',
-      inputComponent: ElInput,
-    }),
+    // ApiSelect: withDefaultPlaceholder(
+    //   {
+    //     ...ApiComponent,
+    //     name: 'ApiSelect',
+    //   },
+    //   'select',
+    //   {
+    //     component: ElSelectV2,
+    //     loadingSlot: 'loading',
+    //     visibleEvent: 'onVisibleChange',
+    //   },
+    // ),
+    // ApiTreeSelect: withDefaultPlaceholder(
+    //   {
+    //     ...ApiComponent,
+    //     name: 'ApiTreeSelect',
+    //   },
+    //   'select',
+    //   {
+    //     component: ElTreeSelect,
+    //     props: { label: 'label', children: 'children' },
+    //     nodeKey: 'value',
+    //     loadingSlot: 'loading',
+    //     optionsPropName: 'data',
+    //     visibleEvent: 'onVisibleChange',
+    //   },
+    // ),
+    // Checkbox: ElCheckbox,
+    // CheckboxGroup: (props, { attrs, slots }) => {
+    //   let defaultSlot;
+    //   if (Reflect.has(slots, 'default')) {
+    //     defaultSlot = slots.default;
+    //   } else {
+    //     const { options, isButton } = attrs;
+    //     if (Array.isArray(options)) {
+    //       defaultSlot = () =>
+    //         options.map((option) =>
+    //           h(isButton ? ElCheckboxButton : ElCheckbox, option),
+    //         );
+    //     }
+    //   }
+    //   return h(
+    //     ElCheckboxGroup,
+    //     { ...props, ...attrs },
+    //     { ...slots, default: defaultSlot },
+    //   );
+    // },
+    // // 自定义默认按钮
+    // DefaultButton: (props, { attrs, slots }) => {
+    //   return h(ElButton, { ...props, attrs, type: 'info' }, slots);
+    // },
+    // // 自定义主要按钮
+    // PrimaryButton: (props, { attrs, slots }) => {
+    //   return h(ElButton, { ...props, attrs, type: 'primary' }, slots);
+    // },
+    // Divider: ElDivider,
+    // IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
+    //   iconSlot: 'append',
+    //   modelValueProp: 'model-value',
+    //   inputComponent: ElInput,
+    // }),
     Input: withDefaultPlaceholder(ElInput, 'input'),
-    InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
+    // InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
     Textarea: withDefaultPlaceholder(ElInput, 'input', { type: 'textarea' }),
-    RadioGroup: (props, { attrs, slots }) => {
-      let defaultSlot;
-      if (Reflect.has(slots, 'default')) {
-        defaultSlot = slots.default;
-      } else {
-        const { options } = attrs;
-        if (Array.isArray(options)) {
-          defaultSlot = () =>
-            options.map((option) =>
-              h(attrs.isButton ? ElRadioButton : ElRadio, option),
-            );
-        }
-      }
-      return h(
-        ElRadioGroup,
-        { ...props, ...attrs },
-        { ...slots, default: defaultSlot },
-      );
-    },
-    Select: (props, { attrs, slots }) => {
-      return h(ElSelectV2, { ...props, attrs }, slots);
-    },
-    Space: ElSpace,
-    Switch: ElSwitch,
-    TimePicker: (props, { attrs, slots }) => {
-      const { name, id, isRange } = props;
-      const extraProps: Recordable<any> = {};
-      if (isRange) {
-        if (name && !Array.isArray(name)) {
-          extraProps.name = [name, `${name}_end`];
-        }
-        if (id && !Array.isArray(id)) {
-          extraProps.id = [id, `${id}_end`];
-        }
-      }
-      return h(
-        ElTimePicker,
-        {
-          ...props,
-          ...attrs,
-          ...extraProps,
-        },
-        slots,
-      );
-    },
-    DatePicker: (props, { attrs, slots }) => {
-      const { name, id, type } = props;
-      const extraProps: Recordable<any> = {};
-      if (type && type.includes('range')) {
-        if (name && !Array.isArray(name)) {
-          extraProps.name = [name, `${name}_end`];
-        }
-        if (id && !Array.isArray(id)) {
-          extraProps.id = [id, `${id}_end`];
-        }
-      }
-      return h(
-        ElDatePicker,
-        {
-          ...props,
-          ...attrs,
-          ...extraProps,
-        },
-        slots,
-      );
-    },
-    TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
-    Upload: ElUpload,
+    // RadioGroup: (props, { attrs, slots }) => {
+    //   let defaultSlot;
+    //   if (Reflect.has(slots, 'default')) {
+    //     defaultSlot = slots.default;
+    //   } else {
+    //     const { options } = attrs;
+    //     if (Array.isArray(options)) {
+    //       defaultSlot = () =>
+    //         options.map((option) =>
+    //           h(attrs.isButton ? ElRadioButton : ElRadio, option),
+    //         );
+    //     }
+    //   }
+    //   return h(
+    //     ElRadioGroup,
+    //     { ...props, ...attrs },
+    //     { ...slots, default: defaultSlot },
+    //   );
+    // },
+    // Select: (props, { attrs, slots }) => {
+    //   return h(ElSelectV2, { ...props, attrs }, slots);
+    // },
+    // Space: ElSpace,
+    // Switch: ElSwitch,
+    // TimePicker: (props, { attrs, slots }) => {
+    //   const { name, id, isRange } = props;
+    //   const extraProps: Recordable<any> = {};
+    //   if (isRange) {
+    //     if (name && !Array.isArray(name)) {
+    //       extraProps.name = [name, `${name}_end`];
+    //     }
+    //     if (id && !Array.isArray(id)) {
+    //       extraProps.id = [id, `${id}_end`];
+    //     }
+    //   }
+    //   return h(
+    //     ElTimePicker,
+    //     {
+    //       ...props,
+    //       ...attrs,
+    //       ...extraProps,
+    //     },
+    //     slots,
+    //   );
+    // },
+    // DatePicker: (props, { attrs, slots }) => {
+    //   const { name, id, type } = props;
+    //   const extraProps: Recordable<any> = {};
+    //   if (type && type.includes('range')) {
+    //     if (name && !Array.isArray(name)) {
+    //       extraProps.name = [name, `${name}_end`];
+    //     }
+    //     if (id && !Array.isArray(id)) {
+    //       extraProps.id = [id, `${id}_end`];
+    //     }
+    //   }
+    //   return h(
+    //     ElDatePicker,
+    //     {
+    //       ...props,
+    //       ...attrs,
+    //       ...extraProps,
+    //     },
+    //     slots,
+    //   );
+    // },
+    // TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
+    // Upload: ElUpload,
   };
 
   // 将组件注册到全局共享状态中
