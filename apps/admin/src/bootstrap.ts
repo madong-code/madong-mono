@@ -14,10 +14,16 @@ import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
-import { registerCustomFormComponents } from '#/components/form/register';
-import { registerViewComponentsToForm } from '#/components/view/register';
+
 import App from './app.vue';
 import { router } from './router';
+
+(async () => {
+  //加载离线图标
+  if ((import.meta as any).env.VITE_APP_ICON_OFFLINE === 'true') {
+    await import('#/components/icon/load-offline');
+  }
+})();
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器
@@ -26,20 +32,7 @@ async function bootstrap(namespace: string) {
   // 初始化表单组件
   await initSetupVbenForm();
 
-  // 注册自定义表单组件
-  registerCustomFormComponents();
 
-  // 注册 View 列渲染组件到 Vben Form
-  registerViewComponentsToForm();
-
-  // // 设置弹窗的默认配置
-  // setDefaultModalProps({
-  //   fullscreenButton: false,
-  // });
-  // // 设置抽屉的默认配置
-  // setDefaultDrawerProps({
-  //   zIndex: 2000,
-  // });
   const app = createApp(App);
 
   // 注册Element Plus提供的v-loading指令
@@ -52,9 +45,7 @@ async function bootstrap(namespace: string) {
   });
 
   // 国际化 i18n 配置
-  console.log('[bootstrap] Calling setupI18n...');
   await setupI18n(app);
-  console.log('[bootstrap] setupI18n completed!');
 
   // 配置 pinia-tore
   await initStores(app, { namespace });
