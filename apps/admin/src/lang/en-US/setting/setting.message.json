@@ -1,24 +1,5 @@
 {
-  "title": "My Messages",
-  "table": {
-    "columns": {
-      "id": "ID",
-      "title": "Title",
-      "type": "Type",
-      "status": "Read Status",
-      "priority": "Priority",
-      "created_date": "Receive Time"
-    }
-  },
-  "search": {
-    "title": "Title",
-    "type": "Type"
-  },
-  "form": {
-    "id": "ID",
-    "title": "Title",
-    "type": "Type",
-    "content": "Content",
-    "enabled": "Status"
-  }
+  "title": "Messages",
+  "table": { "columns": { "priority": "Priority", "related_id": "Related ID", "title": "Title", "content": "Content", "status": "Status", "sender": "Sender", "created_date": "Created", "read_date": "Read" }, "search": { "title": "Title", "content": "Content", "status": "Status", "priority": "Priority" } },
+  "form": { "title": "Title", "content": "Content", "status": "Status", "priority": "Priority", "type": "Type", "remark": "Remark" }
 }

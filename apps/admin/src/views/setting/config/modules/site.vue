@@ -1,76 +1,139 @@
 <template>
-  <div class="p-4">
+  <div>
     <BasicForm />
-    <div class="mt-4 ml-[100px]">
-      <ElButton type="primary" @click="onSubmit">{{ $t('setting.config.button.submit') }}</ElButton>
-    </div>
+    <el-button class="ml-[100px] mt-4" type="primary" @click="onSubmit">
+      {{ $t('common.save') }}
+    </el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
-import { ElButton, ElMessage } from 'element-plus'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 import { useVbenForm } from '#/adapter/form'
+import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
+import { convertStringNumbers } from '../schemas'
 import { ConfigService } from '#/api/setting/config'
-import { DictEnum } from '#/enums/dict-enum'
+
+const formData = ref({})
+const groupCode = 'system'
 
 const [BasicForm, formApi] = useVbenForm({
-  layout: 'horizontal',
-  commonConfig: {
-    componentProps: { class: 'w-full' },
-  },
-  wrapperClass: 'grid-cols-1',
+  showDefaultActions: false,
+  commonConfig: { labelWidth: 100 },
   schema: [
-    { component: 'Input', fieldName: 'site_name', label: $t('setting.config.site.site_name'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_name'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'site_url', label: $t('setting.config.site.site_url'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_url'), clearable: true, style: { width: '40%' } } },
-    { component: 'ApiDict', fieldName: 'site_open', label: $t('setting.config.site.site_open'),
+    {
+      fieldName: 'site_open',
+      label: $t('setting.config.site.open'),
+      component: 'ApiDict',
       defaultValue: 1,
-      componentProps: { renderType: 'RadioGroup', isBtn: true, code: DictEnum.SYS_ENABLED_STATUS } },
-    { component: 'Input', fieldName: 'site_record_no', label: $t('setting.config.site.site_record_no'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_record_no'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'site_icp_url', label: $t('setting.config.site.site_icp_url'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_icp_url'), clearable: true, style: { width: '60%' } } },
-    { component: 'Input', fieldName: 'site_network_security', label: $t('setting.config.site.site_network_security'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_network_security'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'site_network_security_url', label: $t('setting.config.site.site_network_security_url'),
-      componentProps: { placeholder: $t('setting.config.site.placeholder.site_network_security_url'), clearable: true, style: { width: '60%' } } },
+      componentProps: {
+        renderType: 'RadioGroup',
+        isBtn: true,
+        code: DictEnum.SYS_ENABLED_STATUS,
+      },
+    },
+    {
+      fieldName: 'site_url',
+      label: $t('setting.config.site.url'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.url'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_name',
+      label: $t('setting.config.site.name'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.name'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_logo',
+      label: $t('setting.config.site.logo'),
+      component: 'Avatar',
+    },
+    {
+      fieldName: 'site_network_security',
+      label: $t('setting.config.site.network_security'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.network_security'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_keywords',
+      label: $t('setting.config.site.keywords'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.keywords'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_record_no',
+      label: $t('setting.config.site.record_no'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.record_no'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_icp_url',
+      label: $t('setting.config.site.icp_url'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.icp_url'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_network_security_url',
+      label: $t('setting.config.site.network_security_url'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.network_security_url'),
+        clearable: true,
+      },
+    },
+    {
+      fieldName: 'site_description',
+      label: $t('setting.config.site.description'),
+      component: 'Input',
+      componentProps: {
+        placeholder: $t('setting.config.site.placeholder.description'),
+        clearable: true,
+        type: 'textarea',
+        rows: 4,
+      },
+    },
   ],
 })
 
 async function onSubmit() {
   const { valid } = await formApi.validate()
   if (!valid) return
-  const values = await formApi.getValues()
-  const data = {
-    group_code: 'system',
+
+  const content = await formApi.getValues()
+  const values = {
+    group_code: groupCode,
     code: 'site_setting',
-    name: '站点设置',
-    content: values,
+    name: $t('setting.config.site.title'),
+    content,
   }
-  await ConfigService.update('site_setting', data)
-  ElMessage.success($t('common.operationSuccess'))
-  retrieveData()
+  await ConfigService.update('site_setting', values)
+  ElMessage.success($t('common.operation_success'))
 }
 
-async function retrieveData() {
-  const record = await ConfigService.getByCode('site_setting') as any
-  if (record) {
-    await formApi.setValues(convertStringNumbers(record))
-  }
-}
-
-function convertStringNumbers(obj: Record<string, any>): Record<string, any> {
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key]
-    if (typeof value === 'string' && value.trim() !== '' && !isNaN(Number(value))) {
-      obj[key] = Number(value)
-    }
-  })
-  return obj
+const retrieveData = async () => {
+  const record = (await ConfigService.getByCode('site_setting')) as any
+  await formApi.setValues(convertStringNumbers(record))
 }
 
 onMounted(() => {

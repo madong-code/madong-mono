@@ -1,6 +1,6 @@
 import type { CrudSchema } from '#/components/crud/components/types'
 
-import { GatewayLimiterService } from '#/api/setting'
+import { GatewayLimiterService } from '#/api/setting/gateway'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
@@ -9,76 +9,214 @@ export const crudSchema: CrudSchema = {
     list: GatewayLimiterService.list,
     add: GatewayLimiterService.create,
     edit: GatewayLimiterService.update,
-    remove: GatewayLimiterService.remove,
+    remove: GatewayLimiterService.delete,
+    batchRemove: GatewayLimiterService.remove,
     view: GatewayLimiterService.get,
   },
 
-  // 表格配置
   table: {
     hasAdd: true,
     hasEdit: true,
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'setting:limiter:create',
-      edit: 'setting:limiter:update',
-      remove: 'setting:limiter:delete',
-      view: 'setting:limiter:read',
+      add: 'gateway:limiter:create',
+      edit: 'gateway:limiter:update',
+      remove: 'gateway:limiter:delete',
+      view: 'gateway:limiter:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('setting.gateway.limiter.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'name', title: $t('setting.gateway.limiter.table.columns.name'), minWidth: 120 },
-      { field: 'ip', title: $t('setting.gateway.limiter.table.columns.ip'), minWidth: 120 },
-      { field: 'path', title: $t('setting.gateway.limiter.table.columns.path'), minWidth: 150 },
-      { field: 'methods', title: $t('setting.gateway.limiter.table.columns.methods'), minWidth: 100 },
-      { field: 'limit_type', title: $t('setting.gateway.limiter.table.columns.limit_type'), minWidth: 100 },
-      { field: 'limit_value', title: $t('setting.gateway.limiter.table.columns.limit_value'), minWidth: 80 },
-      { field: 'period', title: $t('setting.gateway.limiter.table.columns.period'), minWidth: 80 },
+      { field: 'priority', title: $t('setting.gateway.limiter.table.columns.priority'), width: 60 },
+      { field: 'name', title: $t('setting.gateway.limiter.table.columns.name'), minWidth: 150, align: 'left' },
+      { field: 'match_type', title: $t('setting.gateway.limiter.table.columns.match_type'), width: 110 },
+      {
+        field: 'methods',
+        title: $t('setting.gateway.limiter.table.columns.methods'),
+        minWidth: 90,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_REQUEST_MODE },
+      },
+      { field: 'path', title: $t('setting.gateway.limiter.table.columns.path'), minWidth: 100, align: 'left' },
       {
         field: 'enabled',
         title: $t('setting.gateway.limiter.table.columns.enabled'),
-        minWidth: 80,
+        width: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
+      { field: 'limit_type', title: $t('setting.gateway.limiter.table.columns.limit_type'), width: 100 },
+      { field: 'limit_value', title: $t('setting.gateway.limiter.table.columns.limit_value'), width: 100 },
+      { field: 'period', title: $t('setting.gateway.limiter.table.columns.period'), width: 110 },
+      { field: 'ttl', title: $t('setting.gateway.limiter.table.columns.ttl'), width: 80 },
     ],
   },
 
-  // 搜索表单配置
   searchForm: {
     enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
     schema: [
       {
-        fieldName: 'LIKE_name',
-        label: $t('setting.gateway.limiter.search.name'),
         component: 'Input',
+        fieldName: 'LIKE_name',
+        label: $t('setting.gateway.limiter.table.search.name'),
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.table.search.placeholder.name'),
+          clearable: true,
+        },
+      },
+      {
+        component: 'Input',
+        fieldName: 'path',
+        label: $t('setting.gateway.limiter.table.search.path'),
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.table.search.placeholder.path'),
+          clearable: true,
+        },
+      },
+      {
+        component: 'ApiDict',
+        fieldName: 'EQ_enabled',
+        label: $t('setting.gateway.limiter.table.search.enabled'),
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          clearable: true,
+          placeholder: $t('setting.gateway.limiter.table.search.placeholder.enabled'),
+        },
       },
     ],
   },
 
-  // 表单弹窗配置
   formDialog: {
     enabled: true,
-    schema: [
-      { fieldName: 'id', label: $t('setting.gateway.limiter.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
-      { fieldName: 'name', label: $t('setting.gateway.limiter.form.name'), component: 'Input', rules: 'required' },
-      { fieldName: 'ip', label: $t('setting.gateway.limiter.form.ip'), component: 'Input' },
-      { fieldName: 'path', label: $t('setting.gateway.limiter.form.path'), component: 'Input' },
-      { fieldName: 'methods', label: $t('setting.gateway.limiter.form.methods'), component: 'Input' },
-      { fieldName: 'limit_type', label: $t('setting.gateway.limiter.form.limit_type'), component: 'Input' },
-      { fieldName: 'limit_value', label: $t('setting.gateway.limiter.form.limit_value'), component: 'InputNumber', componentProps: { min: 0 } },
-      { fieldName: 'period', label: $t('setting.gateway.limiter.form.period'), component: 'InputNumber', componentProps: { min: 0 } },
-      {
-        fieldName: 'enabled',
-        label: $t('setting.gateway.limiter.form.enabled'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 1,
-      },
-      { fieldName: 'message', label: $t('setting.gateway.limiter.form.message'), component: 'Input' },
-    ],
     title: $t('setting.gateway.limiter.title'),
-    width: 'w-[40%]',
+    width: 'w-[50%]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: {
+      labelWidth: 120,
+      labelAlign: 'right',
+    },
+    schema: [
+      {
+        label: $t('setting.gateway.limiter.form.modal.name'),
+        fieldName: 'name',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.name'),
+          clearable: true,
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.match_type'),
+        fieldName: 'match_type',
+        component: 'Select',
+        defaultValue: 'exact',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.match_type'),
+          clearable: true,
+          options: [
+            { label: '精确匹配', value: 'exact' },
+            { label: '通配符匹配', value: 'wildcard' },
+            { label: '正则表达式匹配', value: 'regex' },
+          ],
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.limit_type'),
+        fieldName: 'limit_type',
+        component: 'Select',
+        defaultValue: 'ip',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.limit_type'),
+          clearable: true,
+          options: [
+            { label: 'IP限流', value: 'ip' },
+            { label: '用户限流', value: 'user' },
+          ],
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.methods'),
+        fieldName: 'methods',
+        component: 'ApiDict',
+        formItemClass: 'col-span-2',
+        componentProps: { code: DictEnum.SYS_REQUEST_MODE },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.path'),
+        fieldName: 'path',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.path'),
+          clearable: true,
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.limit_value'),
+        fieldName: 'limit_value',
+        component: 'Input',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'number',
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.limit_value'),
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.period'),
+        fieldName: 'period',
+        component: 'Input',
+        defaultValue: 1,
+        formItemClass: 'col-span-2',
+        componentProps: {
+          min: 1,
+          max: 60,
+          type: 'number',
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.period'),
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.ttl'),
+        fieldName: 'ttl',
+        component: 'Input',
+        defaultValue: 60,
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'number',
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.ttl'),
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.enabled'),
+        fieldName: 'enabled',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-2',
+        componentProps: {
+          renderType: 'RadioGroup',
+          code: DictEnum.SYS_ENABLED_STATUS,
+          isBtn: true,
+        },
+      },
+      {
+        label: $t('setting.gateway.limiter.form.modal.message'),
+        fieldName: 'message',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'textarea',
+          rows: 4,
+          placeholder: $t('setting.gateway.limiter.form.modal.placeholder.message'),
+        },
+      },
+    ],
   },
 }

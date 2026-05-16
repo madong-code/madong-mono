@@ -1,25 +1,5 @@
 {
-  "title": "Member Tag",
-  "table": {
-    "columns": {
-      "id": "ID",
-      "name": "Tag Name",
-      "color": "Tag Color",
-      "member_count": "Member Count",
-      "sort": "Sort",
-      "status": "Status",
-      "create_time": "Created At"
-    }
-  },
-  "search": {
-    "name": "Tag Name"
-  },
-  "form": {
-    "id": "ID",
-    "name": "Tag Name",
-    "color": "Tag Color",
-    "sort": "Sort",
-    "status": "Status",
-    "description": "Description"
-  }
+  "title": "Member Tags",
+  "table": { "columns": { "id": "ID", "name": "Tag Name", "description": "Description", "member_count": "Members", "enabled": "Status", "created_at": "Created" }, "search": { "name": "Name", "enabled": "Status" } },
+  "form": { "name": "Tag Name", "description": "Description", "enabled": "Status" }
 }

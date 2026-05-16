@@ -116,11 +116,19 @@ const wrapConfirm = (action: ActionItem) => {
     const dialogRef = action.dialogRef
     newAction.onClick = () => {
       if (isFunction((dialogRef.value || dialogRef).show)) {
+        // 树形模式下新增子节点：将父节点的 id 映射为子节点的 pid
+        let data = { ...props.record, ...params.data }
+        if (params.tree && params.type === 'add') {
+          const tree = params.tree
+          data = {
+            [tree.pid]: props.record[tree.id],
+          }
+          if (params.data) {
+            data = { ...data, ...params.data }
+          }
+        }
         ;(dialogRef.value || dialogRef).show({
-          data: {
-            ...props.record,
-            ...params.data,
-          },
+          data,
           ...params,
         })
       }

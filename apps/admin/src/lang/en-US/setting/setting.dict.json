@@ -1,33 +1,16 @@
 {
-  "title": "Dictionary Management",
+  "title": "Dictionary",
   "table": {
-    "columns": {
-      "id": "ID",
-      "name": "Dictionary Name",
-      "code": "Dictionary Code",
-      "group_code": "Group",
-      "data_type": "Data Type",
-      "enabled": "Status",
-      "sort": "Sort",
-      "description": "Description"
-    },
-    "actions": {
-      "dict_item": "Dict Items",
-      "edit": "Edit"
+    "columns": { "group_code": "Group", "name": "Name", "code": "Code", "data_type": "Data Type", "sort": "Sort", "enabled": "Status" },
+    "search": {
+      "group_code": "Group", "name": "Name", "code": "Code", "enabled": "Status",
+      "placeholder": { "group_code": "Please select group", "name": "Please enter name", "code": "Please enter code", "enabled": "Please select status" }
     }
   },
-  "search": {
-    "name": "Dictionary Name",
-    "code": "Dictionary Code"
-  },
   "form": {
-    "id": "ID",
-    "name": "Dictionary Name",
-    "code": "Dictionary Code",
-    "group_code": "Group",
-    "data_type": "Data Type",
-    "enabled": "Status",
-    "sort": "Sort",
-    "description": "Description"
+    "modal": {
+      "id": "ID", "group_code": "Group", "name": "Name", "code": "Code", "data_type": "Data Type", "sort": "Sort", "enabled": "Status", "remark": "Remark",
+      "placeholder": { "group_code": "Please select group", "name": "Please enter name", "code": "Please enter code", "remark": "Please enter remark" }
+    }
   }
 }

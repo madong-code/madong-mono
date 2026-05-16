@@ -1,79 +1,57 @@
 {
   "title": "User Management",
-  "toolbar": {
-    "create": "Add User"
-  },
   "table": {
     "columns": {
-      "id": "ID",
-      "user_name": "Account",
-      "real_name": "User Nickname",
-      "nick_name": "User Nickname",
-      "mobile_phone": "Phone Number",
+      "user_name": "Username",
+      "real_name": "Real Name",
+      "nick_name": "Nickname",
+      "mobile_phone": "Mobile",
       "email": "Email",
       "enabled": "Status",
-      "login_time": "Login Time",
+      "login_time": "Last Login",
       "operation": "Operation"
-    }
-  },
-  "search": {
-    "user_name": "Username",
-    "real_name": "Name",
-    "mobile_phone": "Phone Number",
-    "enabled": "Status",
-    "placeholder": {
-      "user_name": "Please enter username",
-      "real_name": "Please enter name",
-      "mobile_phone": "Please enter phone number",
-      "enabled": "Please select status"
+    },
+    "search": {
+      "user_name": "Username",
+      "real_name": "Real Name",
+      "mobile_phone": "Mobile",
+      "is_locked": "Lock Status",
+      "placeholder": {
+        "user_name": "Please enter username",
+        "real_name": "Please enter real name",
+        "mobile_phone": "Please enter mobile",
+        "is_locked": "Please select lock status"
+      }
     }
   },
   "form": {
-    "id": "ID",
-    "user_name": "Account",
-    "real_name": "User Nickname",
-    "nick_name": "User Nickname",
-    "mobile_phone": "Phone Number",
-    "email": "Email",
+    "user_name": "Username",
     "password": "Password",
     "confirm_password": "Confirm Password",
-    "sex": "Gender",
+    "real_name": "Real Name",
+    "nick_name": "Nickname",
+    "sex": "Sex",
+    "mobile_phone": "Mobile",
+    "email": "Email",
     "dept_id": "Department",
     "post_name": "Post",
     "role_name": "Role",
     "enabled": "Status",
     "remark": "Remark",
     "placeholder": {
-      "user_name": "Please enter account",
-      "real_name": "Please enter user nickname",
-      "nick_name": "Please enter user nickname",
-      "mobile_phone": "Please enter phone number",
-      "email": "Please enter email",
+      "user_name": "Please enter username",
       "password": "Please enter password",
-      "confirm_password": "Please enter confirm password",
+      "confirm_password": "Please confirm password",
+      "real_name": "Please enter real name",
+      "nick_name": "Please enter nickname",
+      "mobile_phone": "Please enter mobile",
+      "email": "Please enter email",
       "dept_name": "Please select department",
       "post_name": "Please select post",
       "role_name": "Please select role",
       "remark": "Please enter remark"
     }
   },
-  "action": {
-    "edit": "Edit",
-    "delete": "Delete",
-    "detail": "Detail",
-    "reset_password": "Reset Password",
-    "play_user": "Play User",
-    "unplay_user": "Unplay User",
-    "grant_role": "Grant Role",
-    "locked": "Lock",
-    "unlocked": "Unlock"
-  },
-  "confirm": {
-    "delete": "Are you sure to delete this user?",
-    "reset_password": "Are you sure to reset this user's password?",
-    "play_user": "Are you sure to play this user?",
-    "unplay_user": "Are you sure to unplay this user?",
-    "locked": "Are you sure to lock this user?",
-    "unlocked": "Are you sure to unlock this user?"
-  }
+  "action": { "edit": "Edit", "delete": "Delete", "detail": "Detail", "reset_password": "Reset Password", "play_user": "Play User", "unplay_user": "Cancel Play", "grant_role": "Grant Role", "locked": "Lock", "unlocked": "Unlock" },
+  "confirm": { "delete": "Are you sure to delete this user?", "reset_password": "Are you sure to reset password?", "play_user": "Are you sure to play this user?", "unplay_user": "Are you sure to cancel play?", "locked": "Are you sure to lock this user?", "unlocked": "Are you sure to unlock this user?" }
 }

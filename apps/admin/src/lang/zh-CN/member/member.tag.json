@@ -1,25 +1,5 @@
 {
   "title": "会员标签",
-  "table": {
-    "columns": {
-      "id": "ID",
-      "name": "标签名称",
-      "color": "标签颜色",
-      "member_count": "会员数量",
-      "sort": "排序",
-      "status": "状态",
-      "create_time": "创建时间"
-    }
-  },
-  "search": {
-    "name": "标签名称"
-  },
-  "form": {
-    "id": "ID",
-    "name": "标签名称",
-    "color": "标签颜色",
-    "sort": "排序",
-    "status": "状态",
-    "description": "描述"
-  }
+  "table": { "columns": { "id": "ID", "name": "标签名称", "description": "描述", "member_count": "会员数", "enabled": "状态", "created_at": "创建时间" }, "search": { "name": "标签名称", "enabled": "状态" } },
+  "form": { "name": "标签名称", "description": "描述", "enabled": "状态" }
 }

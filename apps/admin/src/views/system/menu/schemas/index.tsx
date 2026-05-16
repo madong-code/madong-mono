@@ -3,7 +3,7 @@ import type { CrudSchema } from '#/components/crud/components/types'
 import { MenuService } from '#/api/system'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
-import { type } from '../../../../../../../packages/effects/common-ui/src/components/captcha/index';
+
 
 /**
  * 将扁平数组转换为树形结构
@@ -108,11 +108,67 @@ export const crudSchema: CrudSchema = {
   // 搜索表单配置
   searchForm: {
     enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
     schema: [
       {
-        fieldName: 'LIKE_title',
-        label: $t('system.menu.search.title'),
+        component: 'ApiDict',
+        fieldName: 'EQ_type',
+        label: $t('system.menu.table.search.type'),
+        componentProps: {
+          code: DictEnum.SYS_MENU_TYPE,
+          clearable: true,
+          placeholder: $t('system.menu.table.search.placeholder.type'),
+        },
+      },
+      {
+        component: 'ApiDict',
+        fieldName: 'EQ_enabled',
+        label: $t('system.menu.table.search.enabled'),
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          clearable: true,
+          placeholder: $t('system.menu.table.search.placeholder.enabled'),
+        },
+      },
+      {
+        component: 'ApiSelect',
+        fieldName: 'EQ_app',
+        label: $t('system.menu.form.modal.app'),
+        defaultValue: 'admin',
+        componentProps: {
+          api: '/system/menu/app/list',
+          requestMethod: 'GET',
+          placeholder: $t('system.menu.form.placeholder.app'),
+          clearable: true,
+        },
+      },
+      {
         component: 'Input',
+        fieldName: 'LIKE_title',
+        label: $t('system.menu.table.search.title'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.table.search.placeholder.title'),
+        },
+      },
+      {
+        component: 'Input',
+        fieldName: 'LIKE_code',
+        label: $t('system.menu.table.search.code'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.table.search.placeholder.code'),
+        },
+      },
+      {
+        component: 'Input',
+        fieldName: 'LIKE_path',
+        label: $t('system.menu.table.search.path'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('system.menu.table.search.placeholder.path'),
+        },
       },
     ],
   },

@@ -1,15 +1,10 @@
 {
-  "title": "回收站管理",
+  "title": "回收站",
   "table": {
-    "columns": {
-      "id": "ID",
-      "data": "数据",
-      "table_name": "数据表",
-      "table_prefix": "表前缀",
-      "ip": "IP"
-    }
+    "columns": { "table_name": "表名", "data": "数据", "enabled": "状态", "created_date": "删除时间" },
+    "search": { "table_name": "表名", "enabled": "状态" }
   },
-  "search": {
-    "table_name": "数据表"
+  "form": {
+    "modal": { "id": "ID", "table_name": "表名", "operate_name": "操作人", "ip": "IP", "created_date": "创建时间", "enabled": "状态", "data": "数据" }
   }
 }

@@ -1,61 +1,131 @@
 <template>
-  <div class="p-4">
-    <BasicForm />
-    <div class="mt-4 ml-[130px]">
-      <ElButton type="primary" @click="onSubmit">{{ $t('setting.config.button.submit') }}</ElButton>
-    </div>
-  </div>
+  <Page auto-content-height>
+    <BasicCrud />
+  </Page>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
-import { ElButton, ElMessage } from 'element-plus'
-import { useVbenForm } from '#/adapter/form'
-import { $t } from '#/locales'
+import { useCrud, type CrudSchema } from '#/adapter/crud'
 import { ConfigService } from '#/api/setting/config'
+import { DictEnum } from '#/enums'
+import { $t } from '#/locales'
+import { Page } from '#/components/page'
 
-const [BasicForm, formApi] = useVbenForm({
-  layout: 'horizontal',
-  commonConfig: {
-    componentProps: { class: 'w-full' },
+const crudSchema: CrudSchema = {
+  crudApi: {
+    list: (params: any) =>
+      ConfigService.getItems({ ...params, groupCode: 'common' }),
+    add: (params: any) => {
+      const { group_code, code, name, content, remark } = params
+      return ConfigService.save({ group_code, code, name, content, remark })
+    },
+    edit: (params: any) => {
+      const { group_code, code, name, content, remark, enabled } = params
+      return ConfigService.update(code, { group_code, code, name, content, remark, enabled })
+    },
+    remove: (params: any) => {
+      const codes = params.codes || params.code
+      if (Array.isArray(codes)) {
+        return Promise.all(codes.map((c: string) => ConfigService.delete(c)))
+      }
+      return ConfigService.delete(codes)
+    },
+    batchRemove: () => Promise.resolve(),
+    view: ConfigService.getByCode as any,
   },
-  wrapperClass: 'grid-cols-1',
-  schema: [
-    { component: 'Input', fieldName: 'app_name', label: $t('setting.config.common.app_name'),
-      componentProps: { placeholder: $t('setting.config.common.placeholder.app_name'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'app_version', label: $t('setting.config.common.app_version'),
-      componentProps: { placeholder: $t('setting.config.common.placeholder.app_version'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'company_name', label: $t('setting.config.common.company_name'),
-      componentProps: { placeholder: $t('setting.config.common.placeholder.company_name'), clearable: true, style: { width: '40%' } } },
-    { component: 'Input', fieldName: 'company_url', label: $t('setting.config.common.company_url'),
-      componentProps: { placeholder: $t('setting.config.common.placeholder.company_url'), clearable: true, style: { width: '60%' } } },
-  ],
-})
 
-async function onSubmit() {
-  const { valid } = await formApi.validate()
-  if (!valid) return
-  const values = await formApi.getValues()
-  const data = {
-    group_code: 'system',
-    code: 'common_setting',
-    name: '通用设置',
-    content: values,
-  }
-  await ConfigService.update('common_setting', data)
-  ElMessage.success($t('common.operationSuccess'))
-  retrieveData()
+  table: {
+    rowKey: 'code',
+    hasAdd: false,
+    hasEdit: false,
+    hasView: false,
+    hasRemove: false,
+    columns: [
+      { field: 'name', title: $t('setting.config.common.columns.name'), width: 180 },
+      { field: 'code', title: $t('setting.config.common.columns.code'), width: 200 },
+      { field: 'content', title: $t('setting.config.common.columns.content'), minWidth: 250 },
+      {
+        field: 'enabled',
+        title: $t('setting.config.common.columns.enabled'),
+        width: 80,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+      },
+      { field: 'updated_at', title: $t('setting.config.common.columns.updated_at'), minWidth: 170 },
+    ],
+  },
+
+  searchForm: {
+    enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
+    schema: [
+      {
+        component: 'Input',
+        fieldName: 'keyword',
+        label: '',
+        componentProps: {
+          placeholder: $t('setting.config.common.search.keyword'),
+        },
+      },
+    ],
+  },
+
+  formDialog: {
+    enabled: true,
+    title: $t('setting.config.common.title'),
+    width: 'w-[50%]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: { labelWidth: 100, labelAlign: 'right' },
+    schema: [
+      {
+        fieldName: 'code',
+        label: $t('setting.config.common.form.code'),
+        component: 'Input',
+        rules: 'required',
+        componentProps: { placeholder: $t('setting.config.common.form.placeholder.code') },
+      },
+      {
+        fieldName: 'name',
+        label: $t('setting.config.common.form.name'),
+        component: 'Input',
+        rules: 'required',
+        componentProps: { placeholder: $t('setting.config.common.form.placeholder.name') },
+      },
+      {
+        fieldName: 'content',
+        label: $t('setting.config.common.form.content'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 10,
+          placeholder: $t('setting.config.common.form.placeholder.content'),
+        },
+      },
+      {
+        fieldName: 'enabled',
+        label: $t('setting.config.common.form.enabled'),
+        component: 'ApiDict',
+        defaultValue: 1,
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          renderType: 'RadioGroup',
+          isBtn: true,
+        },
+      },
+      {
+        fieldName: 'remark',
+        label: $t('setting.config.common.form.remark'),
+        component: 'Input',
+        componentProps: {
+          type: 'textarea',
+          rows: 3,
+          placeholder: $t('setting.config.common.form.placeholder.remark'),
+        },
+      },
+    ],
+  },
 }
 
-async function retrieveData() {
-  const record = await ConfigService.getByCode('common_setting') as any
-  if (record) {
-    await formApi.setValues(record)
-  }
-}
-
-onMounted(() => {
-  retrieveData()
-})
+const [BasicCrud] = useCrud(crudSchema)
 </script>

@@ -1,69 +1,59 @@
 <template>
-  <div class="p-4">
+  <div>
     <BasicForm />
-    <div class="mt-4 ml-[120px]">
-      <ElButton type="primary" @click="onSubmit">{{ $t('setting.config.button.submit') }}</ElButton>
-    </div>
+    <el-button class="ml-[130px] mt-4" type="primary" @click="onSubmit">{{ $t('common.save') }}</el-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-
-import { ElButton, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useVbenForm } from '#/adapter/form'
+import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 import { ConfigService } from '#/api/setting/config'
-import { DictEnum } from '#/enums/dict-enum'
 
 const [BasicForm, formApi] = useVbenForm({
-  layout: 'horizontal',
-  commonConfig: {
-    componentProps: { class: 'w-full' },
-  },
-  wrapperClass: 'grid-cols-1',
+  showDefaultActions: false,
+  commonConfig: { labelWidth: 130 },
   schema: [
-    { component: 'ApiDict', fieldName: 'baidu_tongji_enabled', label: $t('setting.config.baidu_tongji.baidu_tongji_enabled'),
+    {
+      fieldName: 'baidu_open',
+      label: $t('setting.config.baidu_tongji.open'),
+      component: 'ApiDict',
       defaultValue: 0,
-      componentProps: { renderType: 'RadioGroup', isBtn: true, code: DictEnum.SYS_ENABLED_STATUS } },
-    { component: 'Input', fieldName: 'baidu_tongji_code', label: $t('setting.config.baidu_tongji.baidu_tongji_code'),
-      componentProps: { placeholder: $t('setting.config.baidu_tongji.placeholder.baidu_tongji_code'), clearable: true, style: { width: '60%' } } },
+      componentProps: { renderType: 'RadioGroup', isBtn: true, code: DictEnum.SYS_ENABLED_STATUS },
+    },
+    {
+      fieldName: 'baidu_tongji_code',
+      label: $t('setting.config.baidu_tongji.code'),
+      component: 'Input',
+      componentProps: {
+        type: 'textarea',
+        rows: 8,
+        placeholder: $t('setting.config.baidu_tongji.placeholder.code'),
+      },
+    },
   ],
 })
 
 async function onSubmit() {
   const { valid } = await formApi.validate()
   if (!valid) return
-  const values = await formApi.getValues()
-  const data = {
+  const content = await formApi.getValues()
+  await ConfigService.update('baidu_tongji', {
     group_code: 'system',
-    code: 'baidu_tongji_setting',
-    name: '百度统计设置',
-    content: values,
-  }
-  await ConfigService.update('baidu_tongji_setting', data)
-  ElMessage.success($t('common.operationSuccess'))
-  retrieveData()
-}
-
-async function retrieveData() {
-  const record = await ConfigService.getByCode('baidu_tongji_setting') as any
-  if (record) {
-    await formApi.setValues(convertStringNumbers(record))
-  }
-}
-
-function convertStringNumbers(obj: Record<string, any>): Record<string, any> {
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key]
-    if (typeof value === 'string' && value.trim() !== '' && !isNaN(Number(value))) {
-      obj[key] = Number(value)
-    }
+    code: 'baidu_tongji',
+    name: $t('setting.config.baidu_tongji.title'),
+    content,
   })
-  return obj
+  ElMessage.success($t('common.operation_success'))
 }
 
-onMounted(() => {
-  retrieveData()
-})
+const retrieveData = async () => {
+  const record = (await ConfigService.getByCode('baidu_tongji')) as any
+  await formApi.setValues({ ...record })
+}
+
+onMounted(() => { retrieveData() })
 </script>

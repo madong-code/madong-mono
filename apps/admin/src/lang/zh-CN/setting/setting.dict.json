@@ -1,33 +1,16 @@
 {
   "title": "字典管理",
   "table": {
-    "columns": {
-      "id": "ID",
-      "name": "字典名称",
-      "code": "字典标识",
-      "group_code": "所属分组",
-      "data_type": "数据类型",
-      "enabled": "状态",
-      "sort": "排序",
-      "description": "描述"
-    },
-    "actions": {
-      "dict_item": "字典项",
-      "edit": "编辑"
+    "columns": { "group_code": "分组", "name": "字典名称", "code": "字典编码", "data_type": "数据类型", "sort": "排序", "enabled": "状态" },
+    "search": {
+      "group_code": "分组", "name": "字典名称", "code": "字典编码", "enabled": "状态",
+      "placeholder": { "group_code": "请选择分组", "name": "请输入字典名称", "code": "请输入字典编码", "enabled": "请选择状态" }
     }
   },
-  "search": {
-    "name": "字典名称",
-    "code": "字典代码"
-  },
   "form": {
-    "id": "ID",
-    "name": "字典名称",
-    "code": "字典标识",
-    "group_code": "所属分组",
-    "data_type": "数据类型",
-    "enabled": "状态",
-    "sort": "排序",
-    "description": "描述"
+    "modal": {
+      "id": "ID", "group_code": "分组", "name": "字典名称", "code": "字典编码", "data_type": "数据类型", "sort": "排序", "enabled": "状态", "remark": "备注",
+      "placeholder": { "group_code": "请选择分组", "name": "请输入字典名称", "code": "请输入字典编码", "remark": "请输入备注" }
+    }
   }
 }

@@ -15,7 +15,7 @@
 import type { Ref } from 'vue'
 
 import type { CrudApiInstance, CrudSchema } from './components/types'
-import type { ActionItem } from '#/components/table-action'
+import type { ActionItem } from './components/table-action'
 
 import { computed } from 'vue'
 

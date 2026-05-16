@@ -1,21 +1,7 @@
 {
-  "title": "附件管理",
+  "title": "文件管理",
   "table": {
-    "columns": {
-      "id": "ID",
-      "original_filename": "原始文件名",
-      "url": "访问地址",
-      "size_info": "文件详情",
-      "ext": "扩展名",
-      "content_type": "MIME类型",
-      "platform": "存储平台",
-      "created_at": "创建日期"
-    }
-  },
-  "search": {
-    "original_filename": "原文件名"
-  },
-  "form": {
-    "file": "上传文件"
+    "columns": { "filename": "文件名", "original_filename": "原始文件名", "size_info": "大小", "ext": "扩展名", "platform": "平台", "created_date": "上传时间", "created_name": "上传人" },
+    "search": { "filename": "文件名", "original_filename": "原始文件名", "ext": "扩展名", "platform": "平台" }
   }
 }

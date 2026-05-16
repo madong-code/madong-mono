@@ -178,6 +178,8 @@ function handleOpen() {
     }
   } else {
     nextTick(() => {
+      // 先重置清空旧数据，再设置新值（树形新增子节点时会带 pid）
+      formApi.resetForm()
       formApi.setValues(currentRow.value)
     })
   }
@@ -231,10 +233,6 @@ function openAdd(data: Record<string, any> = {}) {
   viewType.value = 'add'
   currentRow.value = data
   currentApi.value.setData(data).open()
-  // 打开新增弹窗时重置表单，清空上一次的输入记录
-  nextTick(() => {
-    formApi.resetForm()
-  })
 }
 
 function openEdit(row: Record<string, any>) {

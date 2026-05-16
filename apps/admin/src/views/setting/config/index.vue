@@ -1,50 +1,86 @@
 <template>
   <Page auto-content-height>
-    <ElTabs v-model="activeTab" type="border-card" class="h-full" @tab-click="handleTabClick">
-      <ElTabPane :label="$t('setting.config.tab.site')" name="site">
-        <SiteConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.web_site')" name="web_site">
-        <WebSiteConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.baidu_tongji')" name="baidu_tongji">
-        <BaiduTongjiConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.upload')" name="upload">
-        <UploadConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.email')" name="email">
-        <EmailConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.sms')" name="sms">
-        <SmsConfig />
-      </ElTabPane>
-      <ElTabPane :label="$t('setting.config.tab.common')" name="common">
-        <CommonConfig />
-      </ElTabPane>
-    </ElTabs>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane v-for="item in settingList" :key="item.key" :name="item.key" :label="item.name">
+        <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
+      </el-tab-pane>
+    </el-tabs>
   </Page>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script setup lang="tsx">
+import { ref, defineAsyncComponent, markRaw } from 'vue'
+import type { TabsPaneContext } from 'element-plus'
+import { $t } from '#/locales'
+import { Page } from '#/components/page'
 
-import { Page } from '@vben/common-ui'
-import { ElTabs, ElTabPane } from 'element-plus'
-import SiteConfig from './modules/site.vue'
-import WebSiteConfig from './modules/web-site.vue'
-import BaiduTongjiConfig from './modules/baidu-tongji.vue'
-import UploadConfig from './modules/upload.vue'
-import EmailConfig from './modules/email.vue'
-import SmsConfig from './modules/sms.vue'
-import CommonConfig from './modules/common.vue'
+const activeName = ref('1')
 
-const activeTab = ref('site')
-const loadKey = ref(0)
-
-function handleTabClick(tab: any) {
-  if (tab.paneName === activeTab.value) {
-    loadKey.value++
-  }
+const handleClick = (tab: TabsPaneContext) => {
+  const targetKey = tab.props.name
+  settingList.value.forEach((item) => {
+    if (item.key === targetKey) {
+      item.loadKey += 1
+    }
+  })
 }
+
+const settingList = ref([
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/site.vue')),
+    ),
+    key: '1',
+    name: $t('setting.config.site.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/web-site.vue')),
+    ),
+    key: '6',
+    name: $t('setting.config.web_site.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/baidu-tongji.vue')),
+    ),
+    key: '7',
+    name: $t('setting.config.baidu_tongji.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/upload.vue')),
+    ),
+    key: '2',
+    name: $t('setting.config.upload.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/email.vue')),
+    ),
+    key: '3',
+    name: $t('setting.config.email.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/sms.vue')),
+    ),
+    key: '4',
+    name: $t('setting.config.sms.title'),
+    loadKey: 0,
+  },
+  {
+    component: markRaw(
+      defineAsyncComponent(() => import('./modules/common.vue')),
+    ),
+    key: '5',
+    name: $t('setting.config.common.title'),
+    loadKey: 0,
+  },
+])
 </script>

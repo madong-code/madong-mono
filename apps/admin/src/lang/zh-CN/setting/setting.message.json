@@ -1,24 +1,5 @@
 {
-  "title": "我的消息",
-  "table": {
-    "columns": {
-      "id": "ID",
-      "title": "标题",
-      "type": "类型",
-      "status": "是否已读",
-      "priority": "优先级",
-      "created_date": "接收时间"
-    }
-  },
-  "search": {
-    "title": "标题",
-    "type": "类型"
-  },
-  "form": {
-    "id": "ID",
-    "title": "标题",
-    "type": "类型",
-    "content": "内容",
-    "enabled": "状态"
-  }
+  "title": "消息管理",
+  "table": { "columns": { "priority": "优先级", "related_id": "关联ID", "title": "标题", "content": "内容", "status": "状态", "sender": "发送人", "created_date": "创建时间", "read_date": "阅读时间" }, "search": { "title": "标题", "content": "内容", "status": "状态", "priority": "优先级" } },
+  "form": { "title": "标题", "content": "内容", "status": "状态", "priority": "优先级", "type": "类型", "remark": "备注" }
 }

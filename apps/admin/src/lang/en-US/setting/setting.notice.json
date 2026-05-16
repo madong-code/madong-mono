@@ -1,25 +1,13 @@
 {
-  "title": "Notice Announcement",
+  "title": "Notice",
   "table": {
-    "columns": {
-      "id": "ID",
-      "title": "Title",
-      "type": "Type",
-      "enabled": "Status",
-      "created_date": "Creation Date",
-      "remark": "Remark"
+    "columns": { "type": "Type", "title": "Title", "content": "Content", "enabled": "Status", "created_date": "Created" },
+    "search": {
+      "title": "Title", "type": "Type",
+      "placeholder": { "title": "Please enter title", "type": "Please select type" }
     }
   },
-  "search": {
-    "title": "Title",
-    "type": "Type"
-  },
   "form": {
-    "id": "ID",
-    "title": "Title",
-    "type": "Type",
-    "content": "Content",
-    "enabled": "Status",
-    "remark": "Remark"
+    "modal": { "id": "ID", "type": "Type", "title": "Title", "content": "Content", "enabled": "Status" }
   }
 }

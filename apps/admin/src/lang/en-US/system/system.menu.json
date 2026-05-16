@@ -12,11 +12,23 @@
       "sort": "Sort",
       "is_show": "Visible",
       "enabled": "Enabled"
+    },
+    "search": {
+      "type": "Menu Type",
+      "enabled": "Enabled",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route Path",
+      "placeholder": {
+        "type": "Please select menu type",
+        "enabled": "Please select enabled status",
+        "title": "Please enter menu name",
+        "code": "Please enter permission code",
+        "path": "Please enter route path"
+      }
     }
   },
-  "search": {
-    "title": "Menu Name"
-  },
+
   "form": {
     "id": "ID",
     "pid": "Parent Menu",

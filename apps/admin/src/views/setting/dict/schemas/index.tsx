@@ -1,6 +1,6 @@
 import type { CrudSchema } from '#/components/crud/components/types'
 
-import { DictService } from '#/api/setting'
+import { DictService } from '#/api/setting/dict'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
@@ -9,28 +9,33 @@ export const crudSchema: CrudSchema = {
     list: DictService.list,
     add: DictService.create,
     edit: DictService.update,
-    remove: DictService.remove,
-    view: DictService.get,
+    remove: DictService.delete,
+    batchRemove: DictService.remove,
+    view: DictService.detail,
   },
 
-  // 表格配置
   table: {
     hasAdd: true,
-    hasEdit: false,
+    hasEdit: true,
     hasView: true,
     hasRemove: true,
     permissions: {
-      add: 'setting:dict:create',
-      edit: 'setting:dict:update',
-      remove: 'setting:dict:delete',
-      view: 'setting:dict:read',
+      add: 'dict:dict:create',
+      edit: 'dict:dict:update',
+      remove: 'dict:dict:delete',
+      view: 'dict:dict:read',
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('setting.dict.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'name', title: $t('setting.dict.table.columns.name'), minWidth: 120 },
-      { field: 'code', title: $t('setting.dict.table.columns.code'), minWidth: 150 },
-      { field: 'group_code', title: $t('setting.dict.table.columns.group_code'), minWidth: 120 },
+      {
+        field: 'group_code',
+        title: $t('setting.dict.table.columns.group_code'),
+        minWidth: 200,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_DICT_GROUP_CODE },
+      },
+      { field: 'name', title: $t('setting.dict.table.columns.name'), minWidth: 200 },
+      { field: 'code', title: $t('setting.dict.table.columns.code'), minWidth: 200 },
       {
         field: 'data_type',
         title: $t('setting.dict.table.columns.data_type'),
@@ -38,108 +43,151 @@ export const crudSchema: CrudSchema = {
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_DICT_DATA_TYPE },
       },
+      { field: 'sort', title: $t('setting.dict.table.columns.sort'), minWidth: 100 },
       {
         field: 'enabled',
         title: $t('setting.dict.table.columns.enabled'),
-        minWidth: 80,
+        minWidth: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
-      { field: 'sort', title: $t('setting.dict.table.columns.sort'), minWidth: 80 },
-      { field: 'description', title: $t('setting.dict.table.columns.description'), minWidth: 160 },
-    ],
-    tableActions: [
-      {
-        label: $t('setting.dict.table.actions.dict_item'),
-        icon: 'ant-design:unordered-list-outlined',
-        type: 'primary',
-        link: true,
-        onClick: ({ row }: any) => {
-          dictItemDrawerOpener.open(row)
-        },
-      },
-    ],
-    dropDownActions: [
-      {
-        label: $t('setting.dict.table.actions.edit'),
-        icon: 'ant-design:edit-outlined',
-        auth: 'setting:dict:update',
-        onClick: ({ row, crudApi }: any) => {
-          crudApi.openEditDialog(row)
-        },
-      },
     ],
   },
 
-  // 搜索表单配置
   searchForm: {
     enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
     schema: [
       {
-        fieldName: 'LIKE_name',
-        label: $t('setting.dict.search.name'),
-        component: 'Input',
+        component: 'ApiDict',
+        fieldName: 'IN_groupCode',
+        label: $t('setting.dict.table.search.group_code'),
+        componentProps: {
+          code: DictEnum.SYS_DICT_GROUP_CODE,
+          clearable: true,
+          placeholder: $t('setting.dict.table.search.placeholder.group_code'),
+          multiple: true,
+        },
       },
       {
-        fieldName: 'LIKE_code',
-        label: $t('setting.dict.search.code'),
         component: 'Input',
+        fieldName: 'LIKE_name',
+        label: $t('setting.dict.table.search.name'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('setting.dict.table.search.placeholder.name'),
+        },
+      },
+      {
+        component: 'Input',
+        fieldName: 'LIKE_code',
+        label: $t('setting.dict.table.search.code'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('setting.dict.table.search.placeholder.code'),
+        },
+      },
+      {
+        component: 'ApiDict',
+        fieldName: 'IN_enabled',
+        label: $t('setting.dict.table.search.enabled'),
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          clearable: true,
+          placeholder: $t('setting.dict.table.search.placeholder.enabled'),
+        },
       },
     ],
   },
 
-  // 表单弹窗配置
   formDialog: {
     enabled: true,
+    title: $t('setting.dict.title'),
+    width: 'w-[50%]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: {
+      labelWidth: 100,
+      labelAlign: 'right',
+    },
     schema: [
-      { fieldName: 'id', label: $t('setting.dict.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
       {
-        fieldName: 'name',
-        label: $t('setting.dict.form.name'),
+        label: $t('setting.dict.form.modal.id'),
+        fieldName: 'id',
         component: 'Input',
-        rules: 'required',
+        formItemClass: 'col-span-2',
+        dependencies: { triggerFields: ['id'], show: false },
       },
       {
-        fieldName: 'code',
-        label: $t('setting.dict.form.code'),
-        component: 'Input',
-        rules: 'required',
-      },
-      {
+        label: $t('setting.dict.form.modal.group_code'),
         fieldName: 'group_code',
-        label: $t('setting.dict.form.group_code'),
+        component: 'ApiDict',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: { code: DictEnum.SYS_DICT_GROUP_CODE },
+      },
+      {
+        label: $t('setting.dict.form.modal.name'),
+        fieldName: 'name',
         component: 'Input',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.dict.form.modal.placeholder.name'),
+        },
       },
       {
+        label: $t('setting.dict.form.modal.code'),
+        fieldName: 'code',
+        component: 'Input',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.dict.form.modal.placeholder.code'),
+        },
+      },
+      {
+        label: $t('setting.dict.form.modal.data_type'),
         fieldName: 'data_type',
-        label: $t('setting.dict.form.data_type'),
         component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_DICT_DATA_TYPE, clearable: true },
-      },
-      {
-        fieldName: 'enabled',
-        label: $t('setting.dict.form.enabled'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
         defaultValue: 1,
+        formItemClass: 'col-span-2',
+        componentProps: {
+          code: DictEnum.SYS_DICT_DATA_TYPE,
+          renderType: 'RadioGroup',
+          isBtn: true,
+        },
       },
       {
+        label: $t('setting.dict.form.modal.enabled'),
+        fieldName: 'enabled',
+        component: 'ApiDict',
+        defaultValue: 1,
+        formItemClass: 'col-span-2',
+        componentProps: {
+          code: DictEnum.SYS_ENABLED_STATUS,
+          renderType: 'RadioGroup',
+          isBtn: true,
+        },
+      },
+      {
+        label: $t('setting.dict.form.modal.sort'),
         fieldName: 'sort',
-        label: $t('setting.dict.form.sort'),
         component: 'InputNumber',
         defaultValue: 0,
-        componentProps: { min: 0, precision: 0 },
+        formItemClass: 'col-span-2',
       },
       {
-        fieldName: 'description',
-        label: $t('setting.dict.form.description'),
+        label: $t('setting.dict.form.modal.remark'),
+        fieldName: 'remark',
         component: 'Input',
-        componentProps: { type: 'textarea', rows: 3 },
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'textarea',
+          rows: 4,
+          placeholder: $t('setting.dict.form.modal.placeholder.remark'),
+        },
       },
     ],
-    title: $t('setting.dict.title'),
-    width: 'w-[40%]',
   },
 }
-
-export const dictItemDrawerOpener = { open: (_row: any) => {} }

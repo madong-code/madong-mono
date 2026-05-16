@@ -1,50 +1,8 @@
 {
-  "title": "Scheduled Tasks",
+  "title": "Crontab",
   "table": {
-    "columns": {
-      "id": "ID",
-      "title": "Name",
-      "biz_id": "Business ID",
-      "type": "Type",
-      "task_cycle": "Task Cycle",
-      "rule": "Task Expression",
-      "target": "Call Task",
-      "running_times": "Running Times",
-      "enabled": "Enabled Status"
-    },
-    "actions": {
-      "execute": "Execute",
-      "start": "Start",
-      "stop": "Stop",
-      "logs": "Logs"
-    }
+    "columns": { "title": "Title", "rule": "Rule", "singleton": "Singleton", "rule_name": "Rule Name", "target": "Target", "parameter": "Parameter", "enabled": "Status", "running_status": "Running" },
+    "search": { "title": "Title" }
   },
-  "search": {
-    "title": "Task Name"
-  },
-  "form": {
-    "id": "ID",
-    "title": "Task Name",
-    "biz_id": "Business ID",
-    "type": "Task Type",
-    "task_cycle": "Execution Cycle",
-    "rule": "Expression",
-    "target": "Call Task",
-    "enabled": "Status"
-  },
-  "log": {
-    "title": "Execution Log",
-    "table": {
-      "columns": {
-        "id": "ID",
-        "crontab_id": "Task ID",
-        "name": "Task Name",
-        "target": "Call Target",
-        "status": "Status",
-        "result": "Result",
-        "exception_message": "Exception",
-        "created_at": "Execution Time"
-      }
-    }
-  }
+  "form": { "title": "Title", "rule": "Rule", "target": "Target", "parameter": "Parameter", "singleton": "Singleton", "enabled": "Status", "remark": "Remark" }
 }

@@ -1,24 +1,8 @@
 {
-  "title": "Friend Link Management",
+  "title": "Links",
   "table": {
-    "columns": {
-      "id": "ID",
-      "name": "Name",
-      "url": "URL",
-      "logo": "Logo",
-      "sort": "Sort",
-      "status": "Status"
-    }
+    "columns": { "logo": "Logo", "name": "Name", "url": "URL", "description": "Description", "sort": "Sort", "enabled": "Status" },
+    "search": { "name": "Name", "url": "URL", "enabled": "Status" }
   },
-  "search": {
-    "name": "Link Name"
-  },
-  "form": {
-    "id": "ID",
-    "name": "Name",
-    "url": "URL",
-    "logo": "Logo",
-    "sort": "Sort",
-    "status": "Status"
-  }
+  "form": { "name": "Name", "url": "URL", "logo": "Logo", "sort": "Sort", "enabled": "Status", "description": "Description", "rules_name": "Please enter name", "rules_url": "Please enter URL" }
 }

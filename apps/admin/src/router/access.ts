@@ -70,8 +70,20 @@ async function fetchBackendMenus(): Promise<any[]> {
 
   const backendMenus = await getAllMenusApi();
   
+  // 后端菜单去重（按 name 和 path 去重）
+  const dedup = (menus: any[]): any[] => {
+    const seen = new Set<string>()
+    return menus.filter((m) => {
+      const key = `${m.name || ''}_${m.path || ''}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      if (m.children) m.children = dedup(m.children)
+      return true
+    })
+  }
+  
   // 合并插件定义的后端格式路由
-  return pluginRouter.mergeBackendMenus(backendMenus);
+  return pluginRouter.mergeBackendMenus(dedup(backendMenus));
 }
 
 /**

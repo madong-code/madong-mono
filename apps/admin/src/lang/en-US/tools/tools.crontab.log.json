@@ -1,15 +1,6 @@
 {
-  "title": "Execution Log",
-  "table": {
-    "columns": {
-      "id": "ID",
-      "crontab_id": "Task ID",
-      "name": "Task Name",
-      "target": "Call Target",
-      "status": "Status",
-      "result": "Result",
-      "exception_message": "Exception",
-      "created_at": "Execution Time"
-    }
+  "log": {
+    "title": "Task Logs",
+    "table": { "columns": { "target": "Target", "running_time": "Runtime", "return_code": "Result", "log": "Log", "created_date": "Created" }, "search": { "target": "Target", "return_code": "Result", "placeholder": { "target": "Please enter target", "return_code": "Please select result" } } }
   }
 }

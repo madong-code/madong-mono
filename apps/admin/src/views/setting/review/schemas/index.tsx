@@ -1,6 +1,6 @@
 import type { CrudSchema } from '#/components/crud/components/types'
 
-import { ReviewService } from '#/api/setting'
+import { ReviewService } from '#/api/setting/review'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
@@ -9,74 +9,159 @@ export const crudSchema: CrudSchema = {
     list: ReviewService.list,
     add: ReviewService.create,
     edit: ReviewService.update,
-    remove: ReviewService.remove,
+    remove: ReviewService.delete,
+    batchRemove: ReviewService.remove,
     view: ReviewService.get,
   },
 
-  // 表格配置
   table: {
     hasAdd: false,
     hasEdit: false,
-    hasView: true,
-    hasRemove: true,
+    hasView: false,
+    hasRemove: false,
     permissions: {
+      add: 'setting:review:create',
+      edit: 'setting:review:update',
       remove: 'setting:review:delete',
       view: 'setting:review:read',
     },
+    rowKey: 'id',
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('setting.review.table.columns.id'), minWidth: 60, visible: false },
       { field: 'title', title: $t('setting.review.table.columns.title'), minWidth: 150 },
-      {
-        field: 'reviewable_type',
-        title: $t('setting.review.table.columns.reviewable_type'),
-        minWidth: 100,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.REVIEW_TYPE },
-      },
-      { field: 'applicant', title: $t('setting.review.table.columns.applicant'), minWidth: 100 },
       {
         field: 'status',
         title: $t('setting.review.table.columns.status'),
-        minWidth: 80,
+        minWidth: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.REVIEW_STATUS },
       },
-      { field: 'reviewer_name', title: $t('setting.review.table.columns.reviewer_name'), minWidth: 100 },
-      { field: 'reason', title: $t('setting.review.table.columns.reason'), minWidth: 160 },
-      { field: 'created_at', title: $t('setting.review.table.columns.created_at'), minWidth: 160 },
+      { field: 'applicant', title: $t('setting.review.table.columns.applicant'), minWidth: 100 },
+      { field: 'reviewer.real_name', title: $t('setting.review.table.columns.reviewer'), minWidth: 100 },
+      { field: 'created_at', title: $t('setting.review.table.columns.created_at'), minWidth: 180 },
+      { field: 'reviewed_at', title: $t('setting.review.table.columns.reviewed_at'), minWidth: 180 },
     ],
   },
 
-  // 搜索表单配置
   searchForm: {
     enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
     schema: [
       {
-        fieldName: 'LIKE_title',
-        label: $t('setting.review.search.title'),
         component: 'Input',
+        fieldName: 'LIKE_extra_data',
+        label: $t('setting.review.table.search.title'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('setting.review.table.search.placeholder.title'),
+        },
       },
       {
-        fieldName: 'EQ_reviewable_type',
-        label: $t('setting.review.search.type'),
         component: 'ApiDict',
-        componentProps: { code: DictEnum.REVIEW_TYPE, clearable: true },
+        fieldName: 'EQ_type',
+        label: $t('setting.review.table.search.type'),
+        componentProps: {
+          code: DictEnum.REVIEW_TYPE,
+          clearable: true,
+          placeholder: $t('setting.review.table.search.placeholder.type'),
+        },
       },
       {
+        component: 'ApiDict',
         fieldName: 'EQ_status',
-        label: $t('setting.review.search.status'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.REVIEW_STATUS, clearable: true },
+        label: $t('setting.review.table.search.status'),
+        componentProps: {
+          code: DictEnum.REVIEW_STATUS,
+          clearable: true,
+          placeholder: $t('setting.review.table.search.placeholder.status'),
+        },
+      },
+      {
+        component: 'Input',
+        fieldName: 'LIKE_applicant',
+        label: $t('setting.review.table.search.applicant'),
+        componentProps: {
+          clearable: true,
+          placeholder: $t('setting.review.table.search.placeholder.applicant'),
+        },
       },
     ],
   },
 
-  // 表单弹窗配置
   formDialog: {
-    enabled: false,
-    schema: [],
+    enabled: true,
     title: $t('setting.review.title'),
-    width: 'w-[40%]',
+    width: 'w-[50%]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: {
+      labelWidth: 100,
+      labelAlign: 'right',
+    },
+    schema: [
+      {
+        label: $t('setting.review.form.modal.id'),
+        fieldName: 'id',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        dependencies: { triggerFields: ['id'], show: false },
+      },
+      {
+        label: $t('setting.review.form.modal.title'),
+        fieldName: 'title',
+        component: 'Input',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          placeholder: $t('setting.review.form.modal.placeholder.title'),
+        },
+      },
+      {
+        label: $t('setting.review.form.modal.type'),
+        fieldName: 'type',
+        component: 'ApiDict',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          code: DictEnum.REVIEW_TYPE,
+          clearable: true,
+          placeholder: $t('setting.review.form.modal.placeholder.type'),
+        },
+      },
+      {
+        label: $t('setting.review.form.modal.content'),
+        fieldName: 'content',
+        component: 'Input',
+        rules: 'required',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'textarea',
+          rows: 5,
+          placeholder: $t('setting.review.form.modal.placeholder.content'),
+        },
+      },
+      {
+        label: $t('setting.review.form.modal.status'),
+        fieldName: 'status',
+        component: 'ApiDict',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          code: DictEnum.REVIEW_STATUS,
+          clearable: true,
+          placeholder: $t('setting.review.form.modal.placeholder.status'),
+        },
+      },
+      {
+        label: $t('setting.review.form.modal.review_note'),
+        fieldName: 'review_note',
+        component: 'Input',
+        formItemClass: 'col-span-2',
+        componentProps: {
+          type: 'textarea',
+          rows: 3,
+          placeholder: $t('setting.review.form.modal.placeholder.review_note'),
+        },
+      },
+    ],
   },
 }

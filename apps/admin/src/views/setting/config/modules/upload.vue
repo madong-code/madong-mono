@@ -1,76 +1,88 @@
 <template>
-  <div class="p-4">
+  <div>
     <BasicForm />
-    <div class="mt-4 ml-[130px]">
-      <ElButton type="primary" @click="onSubmit">{{ $t('setting.config.button.submit') }}</ElButton>
-      <ElButton type="primary" @click="handleMoreSetting">{{ $t('setting.config.upload.more_setting') }}</ElButton>
-    </div>
+    <el-row class="ml-[130px] gap-2">
+      <el-button type="primary" @click="onSubmit">{{ $t('common.save') }}</el-button>
+      <el-button type="primary" @click="handleSetting">{{ $t('setting.config.upload.more') }}</el-button>
+    </el-row>
+    <UploadSettingDrawer ref="uploadSettingDrawerRef" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-
-import { ElButton, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useVbenForm } from '#/adapter/form'
 import { $t } from '#/locales'
 import { ConfigService } from '#/api/setting/config'
-import { DictEnum } from '#/enums/dict-enum'
-
-const drawerVisible = ref(false)
-const advancedForm = ref<Record<string, any>>({})
+import { DictEnum } from '#/enums'
+import UploadSettingDrawer from './upload-ext-drawer.vue'
 
 const [BasicForm, formApi] = useVbenForm({
-  layout: 'horizontal',
-  commonConfig: {
-    componentProps: { class: 'w-full' },
-  },
-  wrapperClass: 'grid-cols-1',
+  showDefaultActions: false,
+  commonConfig: { labelWidth: 130 },
   schema: [
-    { component: 'ApiDict', fieldName: 'mode', label: $t('setting.config.upload.mode'),
+    {
+      fieldName: 'mode',
+      label: $t('setting.config.upload.mode'),
+      component: 'ApiDict',
       defaultValue: 'local',
-      componentProps: { renderType: 'RadioGroup', isBtn: true, code: DictEnum.SYS_CLOUD_STORAGE } },
-    { component: 'Input', fieldName: 'single_limit', label: $t('setting.config.upload.single_limit'),
-      componentProps: { placeholder: '1024', style: { width: '50%' } } },
-    { component: 'Input', fieldName: 'total_limit', label: $t('setting.config.upload.total_limit'),
-      componentProps: { placeholder: '1024', style: { width: '50%' } } },
-    { component: 'Input', fieldName: 'nums', label: $t('setting.config.upload.nums'),
-      componentProps: { placeholder: '1', style: { width: '50%' } } },
-    { component: 'Input', fieldName: 'exclude', label: $t('setting.config.upload.exclude'),
-      componentProps: { placeholder: '', style: { width: '50%' } } },
+      componentProps: {
+        renderType: 'RadioGroup',
+        code: DictEnum.SYS_CLOUD_STORAGE,
+        isBtn: true,
+      },
+    },
+    {
+      fieldName: 'single_limit',
+      label: $t('setting.config.upload.single_limit'),
+      component: 'Input',
+      componentProps: { placeholder: '1024' },
+    },
+    {
+      fieldName: 'total_limit',
+      label: $t('setting.config.upload.total_limit'),
+      component: 'Input',
+      componentProps: { placeholder: '1024' },
+    },
+    {
+      fieldName: 'nums',
+      label: $t('setting.config.upload.nums'),
+      component: 'Input',
+      componentProps: { placeholder: '1' },
+    },
+    {
+      fieldName: 'exclude',
+      label: $t('setting.config.upload.exclude'),
+      component: 'Input',
+    },
   ],
 })
+
+const uploadSettingDrawerRef = ref()
 
 async function onSubmit() {
   const { valid } = await formApi.validate()
   if (!valid) return
-  const values = await formApi.getValues()
-  const data = {
+  const content = await formApi.getValues()
+  await ConfigService.update('upload', {
     group_code: 'setting',
     code: 'upload',
     name: '上传设置',
-    content: { ...values, advanced: advancedForm.value },
-  }
-  await ConfigService.update('upload', data)
-  ElMessage.success($t('common.operationSuccess'))
+    content,
+  })
+  ElMessage.success($t('common.operation_success'))
   retrieveData()
 }
 
-async function handleMoreSetting() {
+async function handleSetting() {
   const values = await formApi.getValues()
-  advancedForm.value = values.advanced || {}
-  drawerVisible.value = true
+  uploadSettingDrawerRef.value.show(values)
 }
 
-async function retrieveData() {
-  const record = await ConfigService.getByCode('upload') as any
-  if (record) {
-    if (record.advanced) {
-      advancedForm.value = record.advanced
-      delete record.advanced
-    }
-    await formApi.setValues(record)
-  }
+const retrieveData = async () => {
+  const record = (await ConfigService.getByCode('upload')) as any
+  await formApi.setValues({ ...record })
 }
 
 onMounted(() => {

@@ -12,11 +12,23 @@
       "sort": "排序",
       "is_show": "是否显示",
       "enabled": "是否启用"
+    },
+    "search": {
+      "type": "菜单类型",
+      "enabled": "是否启用",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "path": "路由地址",
+      "placeholder": {
+        "type": "请选择菜单类型",
+        "enabled": "请选择启用状态",
+        "title": "请输入菜单名称",
+        "code": "请输入权限标识",
+        "path": "请输入路由地址"
+      }
     }
   },
-  "search": {
-    "title": "菜单名称"
-  },
+
   "form": {
     "id": "ID",
     "pid": "上级菜单",

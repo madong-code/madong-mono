@@ -1,21 +1,7 @@
 {
-  "title": "Attachment Management",
+  "title": "Files",
   "table": {
-    "columns": {
-      "id": "ID",
-      "original_filename": "Original File Name",
-      "url": "Access Address",
-      "size_info": "File Details",
-      "ext": "Extension",
-      "content_type": "MIME Type",
-      "platform": "Storage Platform",
-      "created_at": "Creation Date"
-    }
-  },
-  "search": {
-    "original_filename": "Original File Name"
-  },
-  "form": {
-    "file": "Upload File"
+    "columns": { "filename": "Filename", "original_filename": "Original Name", "size_info": "Size", "ext": "Extension", "platform": "Platform", "created_date": "Upload Date", "created_name": "Uploader" },
+    "search": { "filename": "Filename", "original_filename": "Original Name", "ext": "Extension", "platform": "Platform" }
   }
 }

@@ -1,50 +1,8 @@
 {
   "title": "定时任务",
   "table": {
-    "columns": {
-      "id": "ID",
-      "title": "名称",
-      "biz_id": "业务ID",
-      "type": "类型",
-      "task_cycle": "任务周期",
-      "rule": "任务表达式",
-      "target": "调用任务",
-      "running_times": "运行次数",
-      "enabled": "启用状态"
-    },
-    "actions": {
-      "execute": "执行",
-      "start": "启动",
-      "stop": "停止",
-      "logs": "日志"
-    }
+    "columns": { "title": "任务名称", "rule": "Cron规则", "singleton": "单例", "rule_name": "规则名称", "target": "目标", "parameter": "参数", "enabled": "状态", "running_status": "运行状态" },
+    "search": { "title": "任务名称" }
   },
-  "search": {
-    "title": "任务名称"
-  },
-  "form": {
-    "id": "ID",
-    "title": "任务名称",
-    "biz_id": "业务ID",
-    "type": "任务类型",
-    "task_cycle": "执行周期",
-    "rule": "表达式",
-    "target": "调用任务",
-    "enabled": "状态"
-  },
-  "log": {
-    "title": "执行日志",
-    "table": {
-      "columns": {
-        "id": "ID",
-        "crontab_id": "任务ID",
-        "name": "任务名称",
-        "target": "调用目标",
-        "status": "执行状态",
-        "result": "执行结果",
-        "exception_message": "异常信息",
-        "created_at": "执行时间"
-      }
-    }
-  }
+  "form": { "title": "任务名称", "rule": "Cron规则", "target": "目标", "parameter": "参数", "singleton": "单例", "enabled": "状态", "remark": "备注" }
 }

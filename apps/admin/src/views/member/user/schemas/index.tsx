@@ -1,116 +1,46 @@
 import type { CrudSchema } from '#/components/crud/components/types'
-
-import { MemberUserService } from '#/api/member'
+import { MemberService } from '#/api/member'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
 export const crudSchema: CrudSchema = {
-  crudApi: {
-    list: MemberUserService.list,
-    add: MemberUserService.create,
-    edit: MemberUserService.update,
-    remove: MemberUserService.remove,
-    view: MemberUserService.get,
-  },
-
-  // 表格配置
+  crudApi: { list: MemberService.list, add: MemberService.create, edit: MemberService.update, remove: MemberService.delete, batchRemove: MemberService.remove, view: MemberService.get },
   table: {
-    hasAdd: true,
-    hasEdit: true,
-    hasView: true,
-    hasRemove: true,
-    permissions: {
-      add: 'member:user:create',
-      edit: 'member:user:update',
-      remove: 'member:user:delete',
-      view: 'member:user:read',
-    },
+    hasAdd: true, hasEdit: true, hasView: true, hasRemove: true,
+    permissions: { add: 'member:user:create', edit: 'member:user:update', remove: 'member:user:delete', view: 'member:user:read' },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('member.user.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'nickname', title: $t('member.user.table.columns.nickname'), minWidth: 120 },
-      { field: 'username', title: $t('member.user.table.columns.username'), minWidth: 120 },
-      {
-        field: 'avatar',
-        title: $t('member.user.table.columns.avatar'),
-        minWidth: 80,
-        viewComponent: 'CellImage',
-      },
-      {
-        field: 'level_id',
-        title: $t('member.user.table.columns.level_id'),
-        minWidth: 100,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.MEMBER_LEVEL },
-      },
-      {
-        field: 'status',
-        title: $t('member.user.table.columns.status'),
-        minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_NORMAL_DISABLE },
-      },
-      { field: 'points', title: $t('member.user.table.columns.points'), minWidth: 80 },
-      { field: 'balance', title: $t('member.user.table.columns.balance'), minWidth: 80 },
-      { field: 'create_time', title: $t('member.user.table.columns.create_time'), minWidth: 160 },
+      { field: 'username', title: $t('member.user.table.columns.username'), minWidth: 100 },
+      { field: 'nickname', title: $t('member.user.table.columns.nickname'), minWidth: 100 },
+      { field: 'phone', title: $t('member.user.table.columns.phone'), minWidth: 120 },
+      { field: 'email', title: $t('member.user.table.columns.email'), minWidth: 150 },
+      { field: 'level.name', title: $t('member.user.table.columns.level_name'), minWidth: 100 },
+      { field: 'points', title: $t('member.user.table.columns.points'), minWidth: 100 },
+      { field: 'enabled', title: $t('member.user.table.columns.enabled'), minWidth: 80, viewComponent: 'ApiDict', viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS } },
+      { field: 'created_at', title: $t('member.user.table.columns.created_at'), minWidth: 160 },
     ],
   },
-
-  // 搜索表单配置
   searchForm: {
-    enabled: true,
+    enabled: true, collapsed: true, collapsedRows: 2,
     schema: [
-      {
-        fieldName: 'LIKE_nickname',
-        label: $t('member.user.search.nickname'),
-        component: 'Input',
-      },
-      {
-        fieldName: 'EQ_status',
-        label: $t('member.user.search.status'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_NORMAL_DISABLE, clearable: true },
-      },
+      { component: 'Input', fieldName: 'username', label: $t('member.user.table.search.username') },
+      { component: 'Input', fieldName: 'nickname', label: $t('member.user.table.search.nickname') },
+      { component: 'Input', fieldName: 'phone', label: $t('member.user.table.search.phone') },
+      { component: 'ApiDict', fieldName: 'EQ_enabled', label: $t('member.user.table.search.enabled'), componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true } },
     ],
   },
-
-  // 表单弹窗配置
   formDialog: {
-    enabled: true,
+    enabled: true, title: $t('member.user.title'), width: 'w-[50%]', wrapperClass: 'grid-cols-2', commonConfig: { labelWidth: 100 },
     schema: [
-      { fieldName: 'id', label: $t('member.user.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
-      {
-        fieldName: 'nickname',
-        label: $t('member.user.form.nickname'),
-        component: 'Input',
-        rules: 'required',
-      },
-      {
-        fieldName: 'username',
-        label: $t('member.user.form.username'),
-        component: 'Input',
-        rules: 'required',
-      },
-      {
-        fieldName: 'avatar',
-        label: $t('member.user.form.avatar'),
-        component: 'Upload',
-      },
-      {
-        fieldName: 'level_id',
-        label: $t('member.user.form.level_id'),
-        component: 'ApiSelect',
-        componentProps: { code: DictEnum.MEMBER_LEVEL, clearable: true },
-      },
-      {
-        fieldName: 'status',
-        label: $t('member.user.form.status'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_NORMAL_DISABLE, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 1,
-      },
+      { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { show: false } },
+      { fieldName: 'username', label: $t('member.user.form.username'), component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
+      { fieldName: 'password', label: $t('member.user.form.password'), component: 'Input', formItemClass: 'col-span-1', componentProps: { type: 'password' }, dependencies: { triggerFields: ['id'], if(v: any) { return !v.id } } },
+      { fieldName: 'nickname', label: $t('member.user.form.nickname'), component: 'Input', formItemClass: 'col-span-1' },
+      { fieldName: 'phone', label: $t('member.user.form.phone'), component: 'Input', formItemClass: 'col-span-1', rules: 'required' },
+      { fieldName: 'email', label: $t('member.user.form.email'), component: 'Input', formItemClass: 'col-span-1' },
+      { fieldName: 'level_id', label: $t('member.user.form.level_id'), component: 'ApiSelect', formItemClass: 'col-span-1', componentProps: { api: '/member/level', requestMethod: 'get', params: { format: 'select' } } },
+      { fieldName: 'enabled', label: $t('member.user.form.enabled'), component: 'ApiDict', defaultValue: 1, formItemClass: 'col-span-1', componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true } },
+      { fieldName: 'remark', label: $t('member.user.form.remark'), component: 'Input', formItemClass: 'col-span-2', componentProps: { type: 'textarea', rows: 3 } },
     ],
-    title: $t('member.user.title'),
-    width: 'w-[40%]',
   },
 }

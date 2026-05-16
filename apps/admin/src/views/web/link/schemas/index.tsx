@@ -9,15 +9,15 @@ export const crudSchema: CrudSchema = {
     list: LinkService.list,
     add: LinkService.create,
     edit: LinkService.update,
-    remove: LinkService.remove,
+    remove: LinkService.delete,
+    batchRemove: LinkService.remove,
     view: LinkService.get,
   },
 
-  // 表格配置
   table: {
     hasAdd: true,
     hasEdit: true,
-    hasView: true,
+    hasView: false,
     hasRemove: true,
     permissions: {
       add: 'web:link:create',
@@ -27,51 +27,46 @@ export const crudSchema: CrudSchema = {
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('web.link.table.columns.id'), minWidth: 60, visible: false },
+      { field: 'logo', title: $t('web.link.table.columns.logo'), width: 80 },
       { field: 'name', title: $t('web.link.table.columns.name'), minWidth: 120 },
       { field: 'url', title: $t('web.link.table.columns.url'), minWidth: 200 },
-      { field: 'logo', title: $t('web.link.table.columns.logo'), minWidth: 80, viewComponent: 'CellImage' },
+      { field: 'description', title: $t('web.link.table.columns.description'), minWidth: 150 },
       { field: 'sort', title: $t('web.link.table.columns.sort'), minWidth: 80 },
       {
-        field: 'status',
-        title: $t('web.link.table.columns.status'),
-        minWidth: 80,
+        field: 'enabled',
+        title: $t('web.link.table.columns.enabled'),
+        minWidth: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
     ],
   },
 
-  // 搜索表单配置
   searchForm: {
     enabled: true,
+    collapsed: true,
+    collapsedRows: 2,
     schema: [
-      {
-        fieldName: 'LIKE_name',
-        label: $t('web.link.search.name'),
-        component: 'Input',
-      },
+      { component: 'Input', fieldName: 'LIKE_name', label: $t('web.link.table.search.name') },
+      { component: 'Input', fieldName: 'LIKE_url', label: $t('web.link.table.search.url') },
+      { component: 'ApiDict', fieldName: 'EQ_enabled', label: $t('web.link.table.search.enabled'), componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true } },
     ],
   },
 
-  // 表单弹窗配置
   formDialog: {
     enabled: true,
+    title: $t('web.link.title'),
+    width: 'w-[500px]',
+    wrapperClass: 'grid-cols-1',
+    commonConfig: { labelWidth: 120 },
     schema: [
-      { fieldName: 'id', label: $t('web.link.form.id'), component: 'Input', dependencies: { triggerFields: [], show: false } },
+      { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { show: false } },
       { fieldName: 'name', label: $t('web.link.form.name'), component: 'Input', rules: 'required' },
       { fieldName: 'url', label: $t('web.link.form.url'), component: 'Input', rules: 'required' },
-      { fieldName: 'logo', label: $t('web.link.form.logo'), component: 'Upload' },
-      { fieldName: 'sort', label: $t('web.link.form.sort'), component: 'InputNumber', defaultValue: 0, componentProps: { min: 0, precision: 0 } },
-      {
-        fieldName: 'status',
-        label: $t('web.link.form.status'),
-        component: 'ApiDict',
-        componentProps: { code: DictEnum.SYS_ENABLED_STATUS, renderType: 'RadioGroup', isBtn: true },
-        defaultValue: 1,
-      },
+      { fieldName: 'logo', label: $t('web.link.form.logo'), component: 'Avatar' },
+      { fieldName: 'sort', label: $t('web.link.form.sort'), component: 'InputNumber', componentProps: { min: 0 } },
+      { fieldName: 'enabled', label: $t('web.link.form.enabled'), component: 'ApiDict', defaultValue: 1, componentProps: { code: DictEnum.SYS_ENABLED_STATUS, isBtn: true, renderType: 'RadioGroup' } },
+      { fieldName: 'description', label: $t('web.link.form.description'), component: 'Input', componentProps: { type: 'textarea', rows: 4 } },
     ],
-    title: $t('web.link.title'),
-    width: 'w-[40%]',
   },
 }
