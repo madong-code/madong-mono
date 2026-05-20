@@ -1,15 +1,5 @@
 export interface RedisMonitorData {
-  uptime_in_seconds: number
-  connected_clients: number
-  used_memory: string
-  memory_fragmentation_ratio: number
-  total_commands_processed: number
-  total_connections_received: number
-  keyspace_hits: number
-  keyspace_misses: number
-  hit_rate: number
-  variable: RedisVariableInfo
-  data: RedisDataEntries
+  [key: string]: any
 }
 
 export interface RedisVariableInfo {
@@ -40,8 +30,17 @@ export interface RedisVariableInfo {
   used_memory_lua: number
   mem_fragmentation_ratio: number
   mem_allocator: string
-}
-
-interface RedisDataEntries {
-  [key: string]: string
+  connected_clients: number
+  total_connections_received: number
+  total_commands_processed: number
+  instantaneous_ops_per_sec: number
+  instantaneous_input_kbps: number
+  instantaneous_output_kbps: number
+  keyspace_hits: number
+  keyspace_misses: number
+  expired_keys: number
+  evicted_keys: number
+  rdb_changes_since_last_save: number
+  aof_enabled: number
+  role: string
 }
