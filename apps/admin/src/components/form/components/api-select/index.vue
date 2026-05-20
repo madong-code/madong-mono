@@ -1,5 +1,5 @@
 <template>
-  <ApiComponent v-model="value" model-prop-name="value" :component="Select" />
+  <ApiComponent v-model="value" model-prop-name="modelValue" :component="Select" />
 </template>
 
 <script setup lang="ts">

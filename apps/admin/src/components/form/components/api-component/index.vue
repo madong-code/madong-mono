@@ -85,7 +85,7 @@ const getOptions = computed(() => {
       return {
         ...objectOmit(item, [labelField, valueField, childrenField]),
         label: getDeep(item, labelField),
-        modelValue: numberToString ? `${value}` : value,
+        value: numberToString ? `${value}` : value,
         ...(childrenField && item[childrenField] ? { children: transformData(item[childrenField]) } : {}),
       }
     })

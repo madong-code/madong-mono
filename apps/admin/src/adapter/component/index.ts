@@ -311,7 +311,7 @@ async function initComponentAdapter() {
     //   inputComponent: ElInput,
     // }),
     Input: withDefaultPlaceholder(ElInput, 'input'),
-    // InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
+    InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
     Textarea: withDefaultPlaceholder(ElInput, 'input', { type: 'textarea' }),
     // RadioGroup: (props, { attrs, slots }) => {
     //   let defaultSlot;
