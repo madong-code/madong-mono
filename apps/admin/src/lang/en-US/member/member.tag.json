@@ -1,5 +1,23 @@
 {
   "title": "Member Tags",
-  "table": { "columns": { "id": "ID", "name": "Tag Name", "description": "Description", "member_count": "Members", "enabled": "Status", "created_at": "Created" }, "search": { "name": "Name", "enabled": "Status" } },
-  "form": { "name": "Tag Name", "description": "Description", "enabled": "Status" }
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Tag Name",
+      "description": "Description",
+      "member_count": "Members",
+      "enabled": "Status",
+      "created_at": "Created"
+    },
+    "search": {
+      "name": "Name",
+      "enabled": "Status"
+    }
+  },
+  "form": {
+    "name": "Tag Name",
+    "description": "Description",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
 }
