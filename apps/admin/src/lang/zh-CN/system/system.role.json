@@ -14,7 +14,9 @@
     }
   },
   "search": {
-    "name": "角色名称"
+    "name": "角色名称",
+    "code": "角色代码",
+    "enabled": "状态"
   },
   "form": {
     "id": "ID",

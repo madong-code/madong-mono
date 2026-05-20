@@ -1,235 +1,286 @@
 import type { CrudSchema } from '#/components/crud/components/types'
 
 import { UserService } from '#/api/system/user'
-import { PostService } from '#/api/setting/post'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema: CrudSchema = {
-  crudApi: {
-    list: UserService.list,
-    add: UserService.create,
-    edit: UserService.update,
-    remove: UserService.delete,
-    batchRemove: UserService.remove,
-    view: UserService.get,
-  },
-
-  table: {
-    hasAdd: true,
-    hasEdit: true,
-    hasView: true,
-    hasRemove: true,
-    permissions: {
-      add: 'system:user:create',
-      edit: 'system:user:update',
-      remove: 'system:user:delete',
-      view: 'system:user:read',
+export const useCrudSchema = (): CrudSchema => {
+  return {
+    crudApi: {
+      list: UserService.list,
+      add: UserService.create,
+      edit: UserService.update,
+      remove: UserService.delete,
+      batchRemove: UserService.remove,
+      view: UserService.get,
     },
-    columns: [
-      { type: 'checkbox', width: 60 },
-      { field: 'user_name', title: $t('system.user.table.columns.user_name'), minWidth: 80 },
-      { field: 'real_name', title: $t('system.user.table.columns.real_name'), minWidth: 130 },
-      { field: 'dept_name', title: $t('system.user.table.columns.dept_name'), minWidth: 100 },
-      { field: 'mobile_phone', title: $t('system.user.table.columns.mobile_phone'), minWidth: 120 },
-      {
-        field: 'enabled',
-        title: $t('system.user.table.columns.enabled'),
-        minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
-      },
-      {
-        field: 'is_locked',
-        title: $t('system.user.table.columns.is_locked'),
-        minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_LOCKED_STATUS },
-      },
-    ],
-  },
 
-  searchForm: {
-    enabled: true,
-    collapsed: true,
-    collapsedRows: 2,
-    schema: [
-      {
-        component: 'Input',
-        fieldName: 'LIKE_user_name',
-        label: $t('system.user.table.search.user_name'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.user.table.search.placeholder.user_name'),
-        },
+    table: {
+      hasAdd: true,
+      hasEdit: true,
+      hasView: true,
+      hasRemove: true,
+      permissions: {
+        add: 'system:user:create',
+        edit: 'system:user:update',
+        remove: 'system:user:delete',
+        view: 'system:user:read',
       },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_real_name',
-        label: $t('system.user.table.search.real_name'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.user.table.search.placeholder.real_name'),
+      columns: [
+        { type: 'checkbox', width: 60 },
+        { field: 'user_name', title: $t('system.user.table.columns.user_name'), minWidth: 80 },
+        { field: 'real_name', title: $t('system.user.table.columns.real_name'), minWidth: 130 },
+        { field: 'dept_name', title: $t('system.user.table.columns.dept_name'), minWidth: 100 },
+        { field: 'mobile_phone', title: $t('system.user.table.columns.mobile_phone'), minWidth: 120 },
+        {
+          field: 'enabled',
+          title: $t('system.user.table.columns.enabled'),
+          minWidth: 80,
+          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
         },
-      },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_mobile_phone',
-        label: $t('system.user.table.search.mobile_phone'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.user.table.search.placeholder.mobile_phone'),
-        },
-      },
-      {
-        component: 'ApiDict',
-        fieldName: 'EQ_is_locked',
-        label: $t('system.user.table.search.is_locked'),
-        componentProps: {
-          clearable: true,
-          code: 'yes_no',
-          placeholder: $t('system.user.table.search.placeholder.is_locked'),
-        },
-      },
-    ],
-  },
 
-  formDialog: {
-    enabled: true,
-    title: $t('system.user.title'),
-    width: 'w-[50%]',
-    dialogType: 'drawer',
-    wrapperClass: 'grid-cols-2',
-    commonConfig: {
-      labelWidth: 100,
-      labelAlign: 'right',
+        {
+          field: 'is_locked',
+          title: $t('system.user.table.columns.is_locked'),
+          minWidth: 80,
+          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_LOCKED_STATUS } },
+        },
+      ],
     },
-    schema: [
-      {
-        label: $t('system.user.form.modal.id'),
-        fieldName: 'id',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        dependencies: { triggerFields: ['id'], show: false },
-      },
-      {
-        label: $t('system.user.form.modal.user_name'),
-        fieldName: 'user_name',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.user.form.placeholder.user_name'),
-        },
-      },
-      {
-        label: $t('system.user.form.modal.password'),
-        fieldName: 'password',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-1',
-        dependencies: {
-          triggerFields: ['id'],
-          if(values) {
-            return values.id === undefined
+
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
+      schema: [
+        {
+          component: 'Input',
+          fieldName: 'LIKE_user_name',
+          label: $t('system.user.table.search.user_name'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.user.table.search.placeholder.user_name'),
           },
         },
-        componentProps: {
-          type: 'password',
-          showPassword: true,
-          placeholder: $t('system.user.form.placeholder.password'),
-        },
-      },
-      {
-        label: $t('system.user.form.modal.real_name'),
-        fieldName: 'real_name',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.user.form.placeholder.real_name'),
-        },
-      },
-      {
-        label: $t('system.user.form.modal.mobile_phone'),
-        fieldName: 'mobile_phone',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.user.form.placeholder.mobile_phone'),
-        },
-      },
-      {
-        label: $t('system.user.form.modal.email'),
-        fieldName: 'email',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.user.form.placeholder.email'),
-        },
-      },
-      {
-        label: $t('system.user.form.modal.sex'),
-        fieldName: 'sex',
-        component: 'ApiDict',
-        defaultValue: 0,
-        formItemClass: 'col-span-1',
-        componentProps: {
-          code: DictEnum.SYS_SEX,
-          renderType: 'RadioGroup',
-          isBtn: true,
-        },
-      },
-      {
-        label: $t('system.user.form.modal.dept_name'),
-        fieldName: 'dept_id',
-        component: 'ApiTreeSelect',
-        formItemClass: 'col-span-1',
-        componentProps: (_values: any) => ({
-          checkStrictly: true,
-          placeholder: $t('system.user.form.placeholder.dept_name'),
-          clearable: true,
-          api: '/org/dept',
-          params: { format: 'tree' },
-          labelField: 'name',
-          valueField: 'id',
-          onChange: () => {
-            _values.post_id_list = []
+        {
+          component: 'Input',
+          fieldName: 'LIKE_real_name',
+          label: $t('system.user.table.search.real_name'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.user.table.search.placeholder.real_name'),
           },
-        }),
-      },
-      {
-        label: $t('system.user.form.modal.post_name'),
-        fieldName: 'post_id_list',
-        component: 'ApiSelect',
-        defaultValue: [],
-        formItemClass: 'col-span-1',
-        componentProps: (_value: any) => ({
-          multiple: true,
-          disabled: !_value?.dept_id,
-          placeholder: $t('system.user.form.placeholder.post_name'),
-          clearable: true,
-          api: '/org/post',
-          requestMethod: 'get',
-          params: {
-            format: 'select',
-            dept_id: _value?.dept_id || undefined,
-          },
-        }),
-      },
-      {
-        label: $t('system.user.form.modal.remark'),
-        fieldName: 'remark',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'textarea',
-          rows: 4,
-          placeholder: $t('system.user.form.placeholder.remark'),
         },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_mobile_phone',
+          label: $t('system.user.table.search.mobile_phone'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.user.table.search.placeholder.mobile_phone'),
+          },
+        },
+        {
+          component: 'ApiDict',
+          fieldName: 'EQ_is_locked',
+          label: $t('system.user.table.search.is_locked'),
+          componentProps: {
+            clearable: true,
+            code: 'yes_no',
+            placeholder: $t('system.user.table.search.placeholder.is_locked'),
+          },
+        },
+      ],
+    },
+
+    formDialog: {
+      enabled: true,
+      title: $t('system.user.title'),
+      width: 'w-[50%]',
+      dialogType: 'drawer',
+      wrapperClass: 'grid-cols-2',
+      commonConfig: {
+        labelWidth: 100,
+        labelAlign: 'right',
       },
-    ],
-  },
-}
+      schema: [
+        {
+          label: $t('system.user.form.id'),
+          fieldName: 'id',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          dependencies: { triggerFields: ['id'], show: false },
+        },
+        {
+          fieldName: 'baseinfo',
+          label: '',
+          component: 'Divider',
+          formItemClass: 'col-span-2 w-full',
+          hideLabel: true,
+          componentProps: {
+            title: $t('system.user.form.base_info'),
+          }
+        },
+        {
+          label: $t('system.user.form.user_name'),
+          fieldName: 'user_name',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.user.form.placeholder.user_name'),
+          },
+        },
+        {
+          label: $t('system.user.form.password'),
+          fieldName: 'password',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1',
+          dependencies: {
+            triggerFields: ['id'],
+            if(values) {
+              return values.id === undefined
+            },
+          },
+          componentProps: {
+            type: 'password',
+            showPassword: true,
+            placeholder: $t('system.user.form.placeholder.password'),
+          },
+        },
+        {
+          label: $t('system.user.form.real_name'),
+          fieldName: 'real_name',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.user.form.placeholder.real_name'),
+          },
+        },
+        {
+          label: $t('system.user.form.mobile_phone'),
+          fieldName: 'mobile_phone',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.user.form.placeholder.mobile_phone'),
+          },
+        },
+        {
+          label: $t('system.user.form.email'),
+          fieldName: 'email',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.user.form.placeholder.email'),
+          },
+        },
+        {
+          label: $t('system.user.form.sex'),
+          fieldName: 'sex',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            code: DictEnum.SYS_SEX,
+            renderType: 'RadioGroup',
+            isBtn: true,
+          },
+        },
+
+         {
+          fieldName: 'outherinfo',
+          label: '',
+          component: 'Divider',
+          formItemClass: 'col-span-2 w-full',
+             hideLabel: true,
+          componentProps: {
+            title: $t('system.user.form.outher_info'),
+          }
+        },
+        // 所属部门
+        {
+          label: $t('system.user.form.dept_name'),
+          fieldName: 'dept_id_list',
+          component: 'ApiSelectDept',
+          formItemClass: 'col-span-2',
+          componentProps: (_values) => {
+             return {
+               multiple: true
+             }
+
+          }
+        },
+        // 所属岗位
+        {
+          label: $t('system.user.form.post_name'),
+          fieldName: 'post_id_list',
+          defaultValue: [],
+          component: 'ApiSelectPosition',
+          formItemClass: 'col-span-2',
+          componentProps: (_value) => {
+
+          }
+        },
+        // 主要部门
+        {
+          label: $t('system.user.form.main_dept_name'),
+          fieldName: 'main_dept_id',
+          component: 'ApiSelectDept',
+          formItemClass: 'col-span-2',
+          componentProps: (_values) => {
+            return {
+              multiple: false
+            }
+
+          }
+        },
+        // 主要岗位
+        {
+          label: $t('system.user.form.main_post_name'),
+          fieldName: 'main_post_id',
+          component: 'ApiSelectPosition',
+          formItemClass: 'col-span-2',
+          componentProps: (_value) => {
+            return {
+              multiple: false
+            }
+
+          }
+        },
+
+        // 所属角色
+        {
+          label: $t('system.user.form.role_name'),
+          fieldName: 'role_id_list',
+          component: 'ApiSelectRole',
+          formItemClass: 'col-span-2',
+          componentProps: {
+          }
+        },
+        {
+          label: $t('system.user.form.avatar'),
+          fieldName: 'avatar',
+          component: 'Avatar',
+          formItemClass: 'col-span-2',
+          componentProps: {}
+        },
+        {
+          label: $t('system.user.form.remark'),
+          fieldName: 'remark',
+          component: 'Input',
+                    formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'textarea',
+            rows: 4,
+            placeholder: $t('system.user.form.placeholder.remark')
+          }
+        }
+      ],
+    },
+  }
+};

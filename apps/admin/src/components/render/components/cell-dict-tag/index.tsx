@@ -5,15 +5,17 @@
 import { defineComponent, ref, onMounted, watch } from 'vue'
 import { ElTag } from 'element-plus'
 import { useDictStore } from '#/store/modules/dict'
+import { preferences } from '@vben/preferences'
 
 const DictTagInner = defineComponent({
   props: {
     code: { type: String, required: true },
     value: { type: [String, Number], default: '' },
+    effect: { type: String as () => 'dark' | 'light' | 'plain', default: 'plain' },
   },
   setup(props) {
     const dictStore = useDictStore()
-    const options = ref<{ label: string; value: string | number; bgColor?: string; textColor?: string }[]>([])
+    const options = ref<{ label: string; value: string | number; color?: string; bgColor?: string; textColor?: string }[]>([])
     const loading = ref(true)
 
     const loadDict = async () => {
@@ -28,16 +30,48 @@ const DictTagInner = defineComponent({
     onMounted(loadDict)
     watch(() => props.code, loadDict)
 
+    const getCssVariableValue = (variable: string): string => {
+      const rootStyles = getComputedStyle(document.documentElement)
+      return rootStyles.getPropertyValue(variable).trim()
+    }
+
+    const hexToRgba = (hex: string, alpha: number = 0.1): string => {
+      const hexColor = hex.replace('#', '')
+      const r = parseInt(hexColor.substr(0, 2), 16)
+      const g = parseInt(hexColor.substr(2, 2), 16)
+      const b = parseInt(hexColor.substr(4, 2), 16)
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`
+    }
+
     const currentItem = () => options.value.find((item) => item.value === props.value)
     const label = () => currentItem()?.label ?? String(props.value ?? '')
-    const bgColor = () => currentItem()?.bgColor
-    const textColor = () => currentItem()?.textColor
+
+    const getTagStyle = () => {
+      const item = currentItem()
+      const customColor = item?.color ?? item?.textColor ?? item?.bgColor
+
+      if (customColor) {
+        return {
+          color: customColor,
+          borderColor: customColor,
+          backgroundColor: hexToRgba(customColor, 0.1),
+        }
+      }
+
+      return {
+        color: getCssVariableValue('--foreground'),
+        borderColor: getCssVariableValue('--border'),
+      }
+    }
 
     return () => {
       if (loading.value) return <span>{String(props.value ?? '')}</span>
+      const style = getTagStyle()
+
       return (
         <ElTag
-          style={bgColor() ? { backgroundColor: bgColor(), color: textColor(), border: 'none' } : undefined}
+          effect={props.effect as any}
+          style={style}
         >
           {label()}
         </ElTag>
@@ -47,12 +81,13 @@ const DictTagInner = defineComponent({
 })
 
 export const CellDictTagRenderer = {
-  renderTableDefault(renderOpts: { attrs?: { code: string } }, params: { column: { field: string }; row: Record<string, any> }) {
+  renderTableDefault(renderOpts: { attrs?: { code: string; effect?: 'dark' | 'light' | 'plain' } }, params: { column: { field: string }; row: Record<string, any> }) {
     const { column, row } = params
     const code = renderOpts?.attrs?.code
+    const effect = renderOpts?.attrs?.effect ?? 'plain'
     if (!code) return <span>{row[column.field] ?? ''}</span>
     return (
-      <DictTagInner code={code} value={row[column.field]} />
+      <DictTagInner code={code} value={row[column.field]} effect={effect} />
     )
   },
 }

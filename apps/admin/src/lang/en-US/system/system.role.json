@@ -14,7 +14,9 @@
     }
   },
   "search": {
-    "name": "Role Name"
+    "name": "Role Name",
+    "code": "Role Code",
+    "enabled": "Status"
   },
   "form": {
     "id": "ID",

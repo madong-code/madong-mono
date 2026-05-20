@@ -239,5 +239,8 @@
   },
   "commentTranslate.hover.enabled": false,
   "commentTranslate.multiLineMerge": true,
-  "vue.server.hybridMode": true
+  "vue.server.hybridMode": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

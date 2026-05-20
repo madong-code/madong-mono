@@ -92,8 +92,8 @@ export const crudSchema: CrudSchema = {
         field: 'is_show',
         title: $t('system.menu.table.columns.is_show'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_YES_NO },
+        cellRender: { name: 'CellDictTag' },
+        componentProps: { code: DictEnum.SYS_YES_NO },
       },
       {
         field: 'enabled',
