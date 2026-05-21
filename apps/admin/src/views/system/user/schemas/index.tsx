@@ -15,38 +15,37 @@ export const useCrudSchema = (): CrudSchema => {
       view: UserService.get,
     },
 
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'system:user:create',
-        edit: 'system:user:update',
-        remove: 'system:user:delete',
-        view: 'system:user:read',
-      },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'user_name', title: $t('system.user.table.columns.user_name'), minWidth: 80 },
-        { field: 'real_name', title: $t('system.user.table.columns.real_name'), minWidth: 130 },
-        { field: 'dept_name', title: $t('system.user.table.columns.dept_name'), minWidth: 100 },
-        { field: 'mobile_phone', title: $t('system.user.table.columns.mobile_phone'), minWidth: 120 },
-        {
-          field: 'enabled',
-          title: $t('system.user.table.columns.enabled'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-        },
-
-        {
-          field: 'is_locked',
-          title: $t('system.user.table.columns.is_locked'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_LOCKED_STATUS } },
-        },
-      ],
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'system:user:create',
+      edit: 'system:user:update',
+      remove: 'system:user:delete',
+      view: 'system:user:read',
     },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'user_name', title: $t('system.user.table.columns.user_name'), minWidth: 80 },
+      { field: 'real_name', title: $t('system.user.table.columns.real_name'), minWidth: 130 },
+      { field: 'dept_name', title: $t('system.user.table.columns.dept_name'), minWidth: 100 },
+      { field: 'mobile_phone', title: $t('system.user.table.columns.mobile_phone'), minWidth: 120 },
+      {
+        field: 'enabled',
+        title: $t('system.user.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+      },
+
+      {
+        field: 'is_locked',
+        title: $t('system.user.table.columns.is_locked'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_LOCKED_STATUS } },
+      },
+    ],
 
     searchForm: {
       enabled: true,

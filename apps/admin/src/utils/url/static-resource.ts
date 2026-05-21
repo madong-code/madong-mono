@@ -8,7 +8,7 @@
  * 优先级：系统配置 > 环境变量 > 默认值
  */
 
-import { useSystemConfigStore } from '@/store/modules/site-config'
+import { useSystemConfigStore } from '#/store/modules/site-config'
 
 // ============================================================================
 // 私有工具函数

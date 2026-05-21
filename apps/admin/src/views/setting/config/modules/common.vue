@@ -11,30 +11,31 @@ import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 import { Page } from '#/components/page'
 
-const crudSchema: CrudSchema = {
-  crudApi: {
-    list: (params: any) =>
-      ConfigService.getItems({ ...params, groupCode: 'common' }),
-    add: (params: any) => {
-      const { group_code, code, name, content, remark } = params
-      return ConfigService.save({ group_code, code, name, content, remark })
+const useCrudSchema = (): CrudSchema => {
+  return {
+    crudApi: {
+      list: (params: any) =>
+        ConfigService.getItems({ ...params, groupCode: 'common' }),
+      add: (params: any) => {
+        const { group_code, code, name, content, remark } = params
+        return ConfigService.save({ group_code, code, name, content, remark })
+      },
+      edit: (params: any) => {
+        const { group_code, code, name, content, remark, enabled } = params
+        return ConfigService.update(code, { group_code, code, name, content, remark, enabled })
+      },
+      remove: (params: any) => {
+        const codes = params.codes || params.code
+        if (Array.isArray(codes)) {
+          return Promise.all(codes.map((c: string) => ConfigService.delete(c)))
+        }
+        return ConfigService.delete(codes)
+      },
+      batchRemove: () => Promise.resolve(),
+      view: ConfigService.getByCode as any,
     },
-    edit: (params: any) => {
-      const { group_code, code, name, content, remark, enabled } = params
-      return ConfigService.update(code, { group_code, code, name, content, remark, enabled })
-    },
-    remove: (params: any) => {
-      const codes = params.codes || params.code
-      if (Array.isArray(codes)) {
-        return Promise.all(codes.map((c: string) => ConfigService.delete(c)))
-      }
-      return ConfigService.delete(codes)
-    },
-    batchRemove: () => Promise.resolve(),
-    view: ConfigService.getByCode as any,
-  },
 
-  table: {
+    // ========== 扁平化表格配置 ==========
     rowKey: 'code',
     hasAdd: false,
     hasEdit: false,
@@ -53,9 +54,8 @@ const crudSchema: CrudSchema = {
       },
       { field: 'updated_at', title: $t('setting.config.common.columns.updated_at'), minWidth: 170 },
     ],
-  },
 
-  searchForm: {
+    searchForm: {
     enabled: true,
     collapsed: true,
     collapsedRows: 2,
@@ -125,7 +125,7 @@ const crudSchema: CrudSchema = {
       },
     ],
   },
-}
+})
 
-const [BasicCrud] = useCrud(crudSchema)
+const [BasicCrud] = useCrud(useCrudSchema())
 </script>

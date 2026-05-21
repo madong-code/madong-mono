@@ -15,53 +15,51 @@ export const useCrudSchema = (): CrudSchema => {
       view: RoleService.get,
     },
 
-    // 表格配置
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'system:role:create',
-        edit: 'system:role:update',
-        remove: 'system:role:delete',
-        view: 'system:role:read',
-      },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'id', title: $t('system.role.table.columns.id'), minWidth: 60, visible: false },
-        { field: 'name', title: $t('system.role.table.columns.name'), minWidth: 120 },
-        { field: 'code', title: $t('system.role.table.columns.code'), minWidth: 120 },
-        {
-          field: 'role_type',
-          title: $t('system.role.table.columns.role_type'),
-          minWidth: 80,
-          viewComponent: 'ApiDict',
-          viewComponentProps: { code: DictEnum.SYS_ROLE_TYPE },
-        },
-        {
-          field: 'data_scope',
-          title: $t('system.role.table.columns.data_scope'),
-          minWidth: 100,
-          viewComponent: 'ApiDict',
-          viewComponentProps: { code: DictEnum.SYS_DATA_PERMISSION },
-        },
-        {
-          field: 'enabled',
-          title: $t('system.role.table.columns.enabled'),
-          minWidth: 80,
-          viewComponent: 'ApiDict',
-          viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
-        },
-        { field: 'sort', title: $t('system.role.table.columns.sort'), minWidth: 60 },
-        { field: 'remark', title: $t('system.role.table.columns.remark'), minWidth: 160 },
-        {
-          field: 'created_date',
-          title: $t('system.role.table.columns.created_date'),
-          minWidth: 160,
-        },
-      ],
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'system:role:create',
+      edit: 'system:role:update',
+      remove: 'system:role:delete',
+      view: 'system:role:read',
     },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'id', title: $t('system.role.table.columns.id'), minWidth: 60, visible: false },
+      { field: 'name', title: $t('system.role.table.columns.name'), minWidth: 120 },
+      { field: 'code', title: $t('system.role.table.columns.code'), minWidth: 120 },
+      {
+        field: 'role_type',
+        title: $t('system.role.table.columns.role_type'),
+        minWidth: 80,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_ROLE_TYPE },
+      },
+      {
+        field: 'data_scope',
+        title: $t('system.role.table.columns.data_scope'),
+        minWidth: 100,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_DATA_PERMISSION },
+      },
+      {
+        field: 'enabled',
+        title: $t('system.role.table.columns.enabled'),
+        minWidth: 80,
+        viewComponent: 'ApiDict',
+        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+      },
+      { field: 'sort', title: $t('system.role.table.columns.sort'), minWidth: 60 },
+      { field: 'remark', title: $t('system.role.table.columns.remark'), minWidth: 160 },
+      {
+        field: 'created_date',
+        title: $t('system.role.table.columns.created_date'),
+        minWidth: 160,
+      },
+    ],
 
     // 搜索表单配置
     searchForm: {

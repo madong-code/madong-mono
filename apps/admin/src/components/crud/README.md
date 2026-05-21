@@ -4,6 +4,10 @@
 
 ## 使用方式
 
+### 基础配置
+
+表格配置项直接定义在顶层，无需嵌套：
+
 ```vue
 <template>
   <Page auto-content-height>
@@ -27,28 +31,25 @@ const crudSchemaDef = (): CrudSchema => {
       remove: UserService.remove,
       view: UserService.get,
     },
-    dialogTitle: '用户管理',
-    dialogWidth: '500px',
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'system:user:create',
-        edit: 'system:user:update',
-        remove: 'system:user:delete',
-        view: 'system:user:read',
-      },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'id', title: 'ID', minWidth: 60, visible: false },
-        { field: 'username', title: '用户名', minWidth: 120 },
-        { field: 'email', title: '邮箱', minWidth: 180 },
-        { field: 'status', title: '状态', minWidth: 80 },
-        { field: 'createdAt', title: '创建时间', minWidth: 160 },
-      ],
+    // 表格配置直接定义在顶层
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'system:user:create',
+      edit: 'system:user:update',
+      remove: 'system:user:delete',
+      view: 'system:user:read',
     },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'id', title: 'ID', minWidth: 60, visible: false },
+      { field: 'username', title: '用户名', minWidth: 120 },
+      { field: 'email', title: '邮箱', minWidth: 180 },
+      { field: 'status', title: '状态', minWidth: 80 },
+      { field: 'createdAt', title: '创建时间', minWidth: 160 },
+    ],
     searchForm: {
       enabled: true,
       schema: [
@@ -59,8 +60,9 @@ const crudSchemaDef = (): CrudSchema => {
         },
       ],
     },
-    formSchema: {
-      enabled: true,
+    formDialog: {
+      title: '用户管理',
+      width: '500px',
       schema: [
         { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { triggerFields: [], show: false } },
         { fieldName: 'username', label: '用户名', component: 'Input', rules: 'required' },
@@ -82,65 +84,69 @@ const [BasicCrud] = useCrud(crudSchemaDef())
 interface CrudSchema {
   /** CRUD API 接口配置 */
   crudApi: CrudApi
-  /** 弹窗标题 */
-  dialogTitle?: string
-  /** 弹窗宽度 */
-  dialogWidth?: string
-  /** 表格配置 */
-  table?: TableConfig
+  
   /** 搜索表单配置 */
   searchForm?: SearchFormConfig
-  /** 表单配置 */
-  formSchema?: FormSchemaConfig
-  /** 行操作按钮 */
-  rowActions?: ActionItem[]
-  /** 下拉操作按钮 */
-  dropDownActions?: ActionItem[]
-}
-```
-
-### table
-
-表格配置，定义表格列、操作按钮等：
-
-```typescript
-interface TableConfig {
+  
+  /** 表单弹窗配置 */
+  formDialog?: FormDialogConfig
+  
+  // ========== 表格配置项 ==========
+  
+  /** 行数据的 key 字段，默认 id */
+  rowKey?: string
+  
+  /** 表格列定义 */
+  columns?: CrudColumn[] | (() => CrudColumn[])
+  
   /** 是否显示新增按钮 */
   hasAdd?: boolean
+  
   /** 是否显示编辑按钮 */
   hasEdit?: boolean
+  
   /** 是否显示删除按钮 */
   hasRemove?: boolean
+  
   /** 是否显示详情按钮 */
   hasView?: boolean
-  /** 权限配置 */
-  permissions?: {
-    add?: string
-    edit?: string
-    remove?: string
-    view?: string
-  }
-  /** 表格列配置 */
-  columns?: any[]
-  /** 请求前处理 */
+  
+  /** 是否显示批量删除按钮 */
+  hasBatchRemove?: boolean
+  
+  /** 操作按钮权限配置 */
+  permissions?: TablePermissionConfig
+  
+  /** 请求前处理参数 */
   beforeFetch?: (params: any) => any
-  /** 数据响应后处理 */
-  afterFetch?: (data: any) => any
-  /** 表格代理配置 */
-  proxyConfig?: TableProxyConfig
+  
+  /** 请求后处理结果 */
+  afterFetch?: (res: any) => any
+  
+  /** 表格行操作按钮 */
+  tableActions?: ActionItem[]
+  
+  /** 表格行下拉操作 */
+  dropDownActions?: ActionItem[]
+  
+  // ... 其他表格配置项（继承自 TableConfig）
 }
 ```
 
-### formSchema
+### formDialog
 
-表单配置：
+表单弹窗配置：
 
 ```typescript
-interface FormSchemaConfig {
+interface FormDialogConfig {
   /** 是否启用 */
   enabled?: boolean
+  /** 弹窗标题 */
+  title?: string
+  /** 弹窗宽度 */
+  width?: string
   /** 表单字段配置 */
-  schema: VbenFormSchema[]
+  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
   /** 提交前转换表单值 */
   transformFormValues?: (values: Record<string, any>) => Record<string, any>
 }
@@ -148,29 +154,15 @@ interface FormSchemaConfig {
 
 ### permissions
 
-权限配置，支持两种方式：
+权限配置：
 
-1. **独立权限配置（table.permissions）**：
 ```typescript
-table: {
-  permissions: {
-    add: 'system:user:create',
-    edit: 'system:user:update',
-    remove: 'system:user:delete',
-    view: 'system:user:read',
-  }
+permissions: {
+  add: 'system:user:create',
+  edit: 'system:user:update',
+  remove: 'system:user:delete',
+  view: 'system:user:read',
 }
-```
-
-2. **列权限配置（columns[i].auth）**：
-```typescript
-columns: [
-  {
-    field: 'id',
-    title: 'ID',
-    auth: 'system:user:read',
-  }
-]
 ```
 
 ### dropDownActions
@@ -275,3 +267,4 @@ interface CrudApi {
 - 权限控制
 - 字段联动
 - 自定义列
+- **扁平化配置**：所有表格配置项直接定义在顶层

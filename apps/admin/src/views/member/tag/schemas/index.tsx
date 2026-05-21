@@ -13,35 +13,34 @@ export const useCrudSchema = (): CrudSchema => {
       batchRemove: MemberTagService.remove as any,
       view: MemberTagService.get,
     },
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'member:tag:create',
-        edit: 'member:tag:update',
-        remove: 'member:tag:delete',
-        view: 'member:tag:read',
-      },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'name', title: $t('member.tag.table.columns.name'), minWidth: 150 },
-        { field: 'description', title: $t('member.tag.table.columns.description'), minWidth: 200 },
-        {
-          field: 'member_count',
-          title: $t('member.tag.table.columns.member_count'),
-          minWidth: 120,
-        },
-        {
-          field: 'enabled',
-          title: $t('member.tag.table.columns.enabled'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-        },
-        { field: 'created_at', title: $t('member.tag.table.columns.created_at'), minWidth: 160 },
-      ],
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'member:tag:create',
+      edit: 'member:tag:update',
+      remove: 'member:tag:delete',
+      view: 'member:tag:read',
     },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'name', title: $t('member.tag.table.columns.name'), minWidth: 150 },
+      { field: 'description', title: $t('member.tag.table.columns.description'), minWidth: 200 },
+      {
+        field: 'member_count',
+        title: $t('member.tag.table.columns.member_count'),
+        minWidth: 120,
+      },
+      {
+        field: 'enabled',
+        title: $t('member.tag.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+      },
+      { field: 'created_at', title: $t('member.tag.table.columns.created_at'), minWidth: 160 },
+    ],
     searchForm: {
       enabled: true,
       collapsed: true,

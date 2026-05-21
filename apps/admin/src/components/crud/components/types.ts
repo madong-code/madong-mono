@@ -1,34 +1,16 @@
 /**
  * CRUD 组件类型定义
  * 提供完整的 CRUD 功能类型支持
+ * 支持扁平化配置：table 配置项可直接定义在顶层
  */
 
 import type { VbenFormProps, VbenFormSchema } from '#/adapter/form'
-import type { ActionItem, PopConfirm } from '#/components/table-action'
+import type { ActionItem, PopConfirm } from '#/components/crud/components/table-action'
 
 // Re-export ActionItem 和 PopConfirm 以确保类型一致性
 export type { ActionItem, PopConfirm }
 
-export interface CrudColumn<T = any> {
-  type?: 'checkbox' | 'expand' | 'index' | 'seq'
-  field?: string
-  title?: string
-  width?: string | number
-  minWidth?: string | number
-  fixed?: boolean | 'left' | 'right'
-  sortable?: boolean | 'custom'
-  align?: 'left' | 'center' | 'right'
-  showOverflow?: boolean | 'tooltip' | 'ellipsis'
-  filters?: any[]
-  filterMethod?: (value: any, row: any) => boolean
-  formatter?: (row: T) => any
-  slots?: Record<string, any>
-  viewComponent?: string
-  viewComponentProps?: Record<string, any>
-  hideInDetail?: boolean
-  vxeColumn?: Record<string, any>
-  [key: string]: any
-}
+// ========== CRUD API ==========
 
 export interface CrudApi {
   list: (params: any) => Promise<any>
@@ -41,186 +23,24 @@ export interface CrudApi {
   view?: (id: any) => Promise<any>
 }
 
-// ========== 分页配置 ==========
+// ========== 搜索表单配置 ==========
 
-export interface PaginationConfig {
-  currentKey?: string
-  sizeKey?: string
-  recordFields?: string[]
-  totalFields?: string[]
+export interface SearchFormConfig {
+  /** 是否启用搜索表单，默认 true */
+  enabled?: boolean
+  /** 搜索表单 schema */
+  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
+  /** 搜索表单通用配置 */
+  commonConfig?: Partial<VbenFormProps>
+  /** 提交方式：change 时立即提交，submit 时按钮提交，默认 submit */
+  submitOnChange?: boolean
+  /** 是否折叠，默认 false */
+  collapsed?: boolean
+  /** 折叠时显示行数，默认 2 */
+  collapsedRows?: number
 }
 
-// ========== Toolbar 配置 ==========
-
-export interface ToolbarConfig {
-  refresh?: boolean
-  custom?: boolean
-  zoom?: boolean
-  export?: boolean
-  print?: boolean
-  search?: boolean
-  tools?: ActionItem[]
-}
-
-// ========== 表格代理配置 ==========
-
-export interface TableProxyConfig {
-  /** 代理查询接口（可覆盖 crudApi.list） */
-  query?: (params: any) => Promise<any>
-  /** 代理新增接口（可覆盖 crudApi.add） */
-  create?: (params: any) => Promise<any>
-  /** 代理编辑接口（可覆盖 crudApi.edit） */
-  update?: (params: any) => Promise<any>
-  /** 代理单个删除接口 */
-  delete?: (params: any) => Promise<any>
-  /** 代理批量删除接口（传入 ids 数组） */
-  deleteBatch?: (params: { ids: any[] }) => Promise<any>
-  /** 代理详情接口（可覆盖 crudApi.view） */
-  get?: (id: any) => Promise<any>
-}
-
-// ========== 树形配置 ==========
-
-export interface TreeConfig {
-  id?: string
-  pid?: string
-  children?: string
-}
-
-// ========== 表格操作权限配置 ==========
-
-export interface TablePermissionConfig {
-  add?: string
-  edit?: string
-  view?: string
-  remove?: string
-}
-
-// ========== 表格按钮文本配置 ==========
-
-export interface TableButtonTextConfig {
-  add?: string
-  edit?: string
-  view?: string
-  remove?: string
-}
-
-// ========== 表格配置 ==========
-
-export interface TableConfig {
-  // --- 基础配置 ---
-  /** 行数据的 key 字段，默认 id */
-  rowKey?: string
-  /** 表格列定义 */
-  columns?: CrudColumn[] | (() => CrudColumn[])
-
-  // --- 分页配置 ---
-  /** 分页配置 */
-  pagination?: PaginationConfig
-  /** Vxe Grid 分页配置 */
-  pagerConfig?: boolean | Record<string, any>
-
-  // --- Toolbar 配置 ---
-  /** Toolbar 配置 */
-  toolbar?: ToolbarConfig
-
-  // --- 操作按钮开关 ---
-  /** 是否显示行编辑按钮，默认 true */
-  hasEdit?: boolean
-  /** 是否显示行详情按钮，默认 false */
-  hasView?: boolean
-  /** 是否显示行删除按钮，默认 true */
-  hasRemove?: boolean
-  /** 是否显示新增按钮，默认 true */
-  hasAdd?: boolean
-  /** 是否显示批量删除按钮，默认 true */
-  hasBatchRemove?: boolean
-
-  // --- 操作按钮权限 ---
-  /** 操作按钮权限配置 */
-  permissions?: TablePermissionConfig
-
-  // --- 操作按钮文本 ---
-  /** 操作按钮文本配置 */
-  buttonText?: TableButtonTextConfig
-
-  // --- 自定义操作按钮 ---
-  /** 工具栏操作按钮 */
-  toolbarActions?: ActionItem[]
-  /** 工具栏下拉操作 */
-  dropDownToolbarActions?: ActionItem[]
-  /** 表格行操作按钮 */
-  tableActions?: ActionItem[]
-  /** 表格行下拉操作 */
-  dropDownActions?: ActionItem[]
-
-  // --- 数据处理 ---
-  /** 请求前处理参数 */
-  beforeFetch?: (params: any) => any
-  /** 请求后处理结果 */
-  afterFetch?: (res: any) => any
-
-  // --- 树形配置 ---
-  /** 树形结构配置（设置后自动启用树形表格模式） */
-  tree?: TreeConfig
-
-  // --- 删除操作路径参数 ---
-  /** 删除时需要携带的路径参数配置，例如 parentId、deptId 等 */
-  pathParams?: {
-    /** 参数名称 */
-    key: string
-    /** 参数值来源：'row' 从行数据获取，'route' 从路由参数获取 */
-    source: 'row' | 'route'
-    /** 当 source 为 'row' 时，指定行数据中的字段名 */
-    field?: string
-    /** 当 source 为 'route' 时，指定路由参数名，默认使用 key */
-    routeKey?: string
-  }[]
-
-  // --- 表格操作列配置 ---
-  tableActionColumn?: Partial<CrudColumn>
-
-  // --- Vxe Grid 常用配置 ---
-  /** 表格高度，默认 'auto' */
-  height?: string | number
-  /** 是否保持源码，默认 true */
-  keepSource?: boolean
-  /** 是否显示边框，默认 'full' */
-  border?: boolean | 'none' | 'full' | 'outer' | 'inner'
-  /** 斑马纹，默认 false */
-  stripe?: boolean
-  /** 鼠标单元格悬停高亮，默认 true */
-  hoverRow?: boolean
-  /** 高亮当前行，默认 true */
-  highlightCurrentRow?: boolean
-  /** 高亮hover列，默认 false */
-  highlightHoverColumn?: boolean
-  /** 行号列宽，默认 60 */
-  seqColumnWidth?: number
-  /** 选择列宽，默认 60 */
-  checkboxColumnWidth?: number
-  /** 是否可选择行，默认 true */
-  checkable?: boolean | ((params: { row: any }) => boolean)
-  /** 工具提示配置 */
-  showOverflow?: boolean | 'tooltip' | 'ellipsis' | 'title' | null
-  /** 排序配置 */
-  sortConfig?: boolean | Record<string, any>
-  /** 筛选配置 */
-  filterConfig?: boolean | Record<string, any>
-  /** 导出配置 */
-  exportConfig?: boolean | Record<string, any>
-  /** 快捷菜单配置 */
-  contextMenuConfig?: boolean | Record<string, any>
-  /** 滚动配置 */
-  scrollY?: boolean | Record<string, any>
-  /** 代理配置（可覆盖 crudApi） */
-  proxyConfig?: TableProxyConfig
-
-  // --- 其他 Vxe Grid 配置 ---
-  [key: string]: any
-}
-
-// ========== 表单相关类型 ==========
+// ========== 表单弹窗配置 ==========
 
 export interface FormDialogCommonConfig {
   /** label 宽度，默认 120 */
@@ -281,25 +101,6 @@ export interface FormDialogOptions extends Omit<Partial<VbenFormProps>, 'schema'
   ) => Record<string, any>
 }
 
-// ========== 搜索表单配置 ==========
-
-export interface SearchFormConfig {
-  /** 是否启用搜索表单，默认 true */
-  enabled?: boolean
-  /** 搜索表单 schema */
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
-  /** 搜索表单通用配置 */
-  commonConfig?: Partial<VbenFormProps>
-  /** 提交方式：change 时立即提交，submit 时按钮提交，默认 submit */
-  submitOnChange?: boolean
-  /** 是否折叠，默认 false */
-  collapsed?: boolean
-  /** 折叠时显示行数，默认 2 */
-  collapsedRows?: number
-}
-
-// ========== 表单弹窗配置 ==========
-
 export interface FormDialogConfig {
   /** 是否启用表单弹窗，默认 true */
   enabled?: boolean
@@ -346,23 +147,22 @@ export interface FormDialogConfig {
 }
 
 // ========== CRUD Schema ==========
+// 扁平化配置：所有表格配置项直接定义在顶层
 
-export interface CrudSchema {
+export interface CrudSchema extends Partial<TableConfig> {
   // --- API 接口 ---
   /** API 接口 */
   crudApi: CrudApi
 
-  // --- 表格配置 ---
-  /** 表格配置（包含列定义、分页、Toolbar、操作按钮、权限、数据处理等） */
-  table?: TableConfig
-
-  // --- 兼容旧版配置 ---
-  /** 行数据的 key 字段，默认 id（旧版顶层配置） */
-  rowKey?: string
-  /** 表格列定义（旧版顶层配置） */
+  // --- 表格列定义 ---
+  /** 表格列定义 */
   columns?: CrudColumn[] | (() => CrudColumn[])
-  /** 删除操作路径参数（旧版顶层配置） */
-  pathParams?: TableConfig['pathParams']
+
+  // --- 数据处理配置 ---
+  /** 请求前处理参数 */
+  beforeFetch?: (params: any) => any
+  /** 请求后处理结果 */
+  afterFetch?: (res: any) => any
 
   // --- 搜索表单配置 ---
   /** 搜索表单配置 */
@@ -403,8 +203,225 @@ export interface CrudApiInstance {
   removeByApi: (row: any) => void
   executeRemove: (row: any) => void
   executeBatchRemove: () => void
+}
 
-  // 状态管理
-  setState: (state: Partial<CrudSchema>) => Promise<void>
-  getState: () => CrudSchema
+// ========== 表格相关类型定义 ==========
+
+/**
+ * 分页配置
+ */
+export interface PaginationConfig {
+  /** 当前页字段名，默认 pageNum */
+  currentKey?: string
+  /** 每页大小字段名，默认 pageSize */
+  sizeKey?: string
+}
+
+/**
+ * 树形结构配置
+ */
+export interface TreeConfig {
+  /** 父级 ID 字段名，默认 parentId */
+  pid?: string
+  /** ID 字段名，默认 id */
+  id?: string
+  /** 子节点字段名，默认 children */
+  children?: string
+}
+
+/**
+ * 工具栏配置
+ */
+export interface ToolbarConfig {
+  /** 是否显示刷新按钮 */
+  refresh?: boolean
+  /** 是否显示自定义按钮区域 */
+  custom?: boolean
+  /** 是否显示缩放按钮 */
+  zoom?: boolean
+  /** 是否显示导出按钮 */
+  export?: boolean
+  /** 是否显示搜索按钮 */
+  search?: boolean
+  /** 是否显示打印按钮 */
+  print?: boolean
+  /** 自定义工具按钮 */
+  tools?: any[]
+}
+
+/**
+ * 表格代理配置
+ */
+export interface TableProxyConfig {
+  /** 查询接口 */
+  query?: (params: any) => Promise<any>
+  /** 创建接口 */
+  create?: (params: any) => Promise<any>
+  /** 更新接口 */
+  update?: (params: any) => Promise<any>
+  /** 删除接口 */
+  delete?: (params: any) => Promise<any>
+  /** 批量删除接口 */
+  deleteBatch?: (params: { ids: any[] }) => Promise<any>
+  /** 获取详情接口 */
+  get?: (id: any) => Promise<any>
+}
+
+/**
+ * 表格权限配置
+ */
+export interface TablePermissionConfig {
+  /** 新增权限 */
+  add?: string
+  /** 编辑权限 */
+  edit?: string
+  /** 删除权限 */
+  remove?: string
+  /** 查看权限 */
+  view?: string
+}
+
+/**
+ * 表格按钮文本配置
+ */
+export interface TableButtonTextConfig {
+  /** 新增按钮文本 */
+  add?: string
+  /** 编辑按钮文本 */
+  edit?: string
+  /** 删除按钮文本 */
+  remove?: string
+  /** 查看按钮文本 */
+  view?: string
+}
+
+/**
+ * 表格列配置
+ */
+export interface CrudColumn {
+  /** 字段名 */
+  field?: string
+  /** 显示标题 */
+  title?: string
+  /** 宽度 */
+  width?: number | string
+  /** 最小宽度 */
+  minWidth?: number | string
+  /** 类型 */
+  type?: 'checkbox' | 'seq' | 'radio' | 'expand' | string
+  /** 是否可见 */
+  visible?: boolean
+  /** 对齐方式 */
+  align?: 'left' | 'center' | 'right'
+  /** 权限标识 */
+  auth?: string
+  /** 自定义单元格渲染 */
+  cellRender?: {
+    name: string
+    props?: Record<string, any>
+  }
+  /** 自定义查看组件 */
+  viewComponent?: any
+  /** 查看组件属性 */
+  viewComponentProps?: Record<string, any>
+  /** 自定义列配置 */
+  vxeColumn?: Record<string, any>
+  /** 其他属性 */
+  [key: string]: any
+}
+
+/**
+ * 路径参数配置项
+ */
+export interface PathParamItem {
+  /** 参数键名 */
+  key: string
+  /** 参数来源：row（行数据）或 route（路由参数） */
+  source: 'row' | 'route'
+  /** 当 source 为 row 时，指定行数据的字段名 */
+  field?: string
+  /** 当 source 为 route 时，指定路由参数的键名（默认使用 key） */
+  routeKey?: string
+}
+
+/**
+ * 表格配置
+ */
+export interface TableConfig {
+  /** 行数据的 key 字段，默认 id */
+  rowKey?: string
+  /** 路径参数配置，用于在请求时携带额外参数 */
+  pathParams?: PathParamItem[]
+  /** 是否显示新增按钮 */
+  hasAdd?: boolean
+  /** 是否显示编辑按钮 */
+  hasEdit?: boolean
+  /** 是否显示删除按钮 */
+  hasRemove?: boolean
+  /** 是否显示详情按钮 */
+  hasView?: boolean
+  /** 是否显示批量删除按钮 */
+  hasBatchRemove?: boolean
+  /** 操作按钮权限配置 */
+  permissions?: TablePermissionConfig
+  /** 表格列定义 */
+  columns?: CrudColumn[] | (() => CrudColumn[])
+  /** 请求前处理参数 */
+  beforeFetch?: (params: any) => any
+  /** 请求后处理结果 */
+  afterFetch?: (res: any) => any
+  /** 表格行操作按钮 */
+  tableActions?: ActionItem[]
+  /** 表格行下拉操作 */
+  dropDownActions?: ActionItem[]
+  /** 工具栏操作按钮 */
+  toolbarActions?: ActionItem[]
+  /** 工具栏下拉操作按钮 */
+  dropDownToolbarActions?: ActionItem[]
+  /** 行操作列配置 */
+  tableActionColumn?: Partial<CrudColumn>
+  /** 分页配置 */
+  pagination?: PaginationConfig
+  /** 树形结构配置 */
+  tree?: TreeConfig
+  /** 工具栏配置 */
+  toolbar?: ToolbarConfig
+  /** 表格代理配置 */
+  proxyConfig?: TableProxyConfig
+  /** 按钮文本配置 */
+  buttonText?: TableButtonTextConfig
+  /** 是否显示边框 */
+  border?: boolean
+  /** 是否显示斑马纹 */
+  stripe?: boolean
+  /** 是否高亮当前行 */
+  highlightCurrentRow?: boolean
+  /** 是否高亮悬停列 */
+  highlightHoverColumn?: boolean
+  /** 是否显示溢出提示 */
+  showOverflow?: boolean | 'tooltip' | 'ellipsis'
+  /** 是否支持多选 */
+  checkable?: boolean
+  /** 多选列宽度 */
+  checkboxColumnWidth?: number
+  /** 序号列宽度 */
+  seqColumnWidth?: number
+  /** 表格高度 */
+  height?: string | number
+  /** 是否保持数据源 */
+  keepSource?: boolean
+  /** 悬停行高亮 */
+  hoverRow?: boolean
+  /** 分页配置 */
+  pagerConfig?: boolean | Record<string, any>
+  /** 排序配置 */
+  sortConfig?: Record<string, any>
+  /** 过滤配置 */
+  filterConfig?: Record<string, any>
+  /** 导出配置 */
+  exportConfig?: Record<string, any>
+  /** 右键菜单配置 */
+  contextMenuConfig?: Record<string, any>
+  /** 垂直滚动配置 */
+  scrollY?: string | number
 }

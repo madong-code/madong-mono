@@ -37,6 +37,7 @@
 <script setup lang="tsx">
 import type { CrudApiInstance, CrudSchema } from './components/types'
 import type { FormActionType } from './components/types'
+import type { VbenFormProps } from '#/adapter/form'
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table'
 import { computed, reactive, ref, useSlots } from 'vue'
@@ -72,24 +73,37 @@ const dialogFormRef = ref<InstanceType<typeof FormDialogComponent> | null>(null)
 const readonlyState = reactive<{ selection: any[] }>({ selection: [] })
 const route = useRoute()
 
-// ============ 兼容旧版配置 ============
+// 动态状态，用于存储通过 setState 设置的配置
+const dynamicState = reactive<Partial<CrudSchema>>({})
+
+// 合并后的 crudSchema，优先使用动态配置
+const mergedCrudSchema = computed(() => ({
+  ...props.crudSchema,
+  ...dynamicState,
+}))
+
+// ============ 表格配置 ============
+// 直接使用扁平化配置
+const tableConfig = computed(() => mergedCrudSchema.value)
+
+// ============ 工具栏动作配置 ============
 const {
   toolbarActions,
   dropDownToolbarActions,
   toolbarToolActions,
   tableActions,
   dropDownActions,
-} = useAction(props.crudSchema, dialogFormRef, props.crudApi!, () => readonlyState.selection)
+} = useAction(mergedCrudSchema.value, dialogFormRef, props.crudApi!, () => readonlyState.selection)
 
-// 获取表格列定义
+// 获取表格列定义（支持顶层和嵌套两种配置方式）
 const tableColumns = computed(() => {
-  const cols = props.crudSchema.table?.columns
+  const cols = tableConfig.value.columns
   if (!cols) return []
   return typeof cols === 'function' ? cols() : cols
 })
 
 const columns = useColumns(
-  { columns: tableColumns.value, tableActionColumn: props.crudSchema.table?.tableActionColumn },
+  { columns: tableColumns.value, tableActionColumn: tableConfig.value.tableActionColumn },
   tableActions,
   dropDownActions,
 )
@@ -106,54 +120,54 @@ const filteredSlots = computed(() => {
 
 // ============ 搜索表单配置 ============
 const searchFormEnabled = computed(() => {
-  return props.crudSchema.searchForm?.enabled !== false
+  return mergedCrudSchema.value.searchForm?.enabled !== false
 })
 
 const searchFormSchema = computed(() => {
-  const schema = props.crudSchema.searchForm?.schema
+  const schema = mergedCrudSchema.value.searchForm?.schema
   if (!schema) return undefined
   return typeof schema === 'function' ? schema() : schema
 })
 
-const mergedFormOptions = computed(() => {
+const mergedFormOptions = computed((): VbenFormProps | undefined => {
   if (!searchFormEnabled.value || !searchFormSchema.value?.length) return undefined
 
-  const sf = props.crudSchema.searchForm
+  const sf = mergedCrudSchema.value.searchForm
 
   return {
     schema: searchFormSchema.value,
     submitOnChange: sf?.submitOnChange ?? false,
     collapsed: sf?.collapsed ?? false,
     collapsedRows: sf?.collapsedRows ?? 2,
-    commonConfig: {
-      ...sf?.commonConfig,
-    },
+    commonConfig: sf?.commonConfig,
+    showDefaultActions: false,
+    compact: true,
   }
 })
 
 // ============ 表单弹窗配置 ============
 const formDialogEnabled = computed(() => {
-  return props.crudSchema.formDialog?.enabled !== false
+  return mergedCrudSchema.value.formDialog?.enabled !== false
 })
 
 const formDialogTitle = computed(() => {
-  return props.crudSchema.formDialog?.title || ''
+  return mergedCrudSchema.value.formDialog?.title || ''
 })
 
 const formDialogWidth = computed(() => {
-  return props.crudSchema.formDialog?.width || 'w-[60%]'
+  return mergedCrudSchema.value.formDialog?.width || 'w-[60%]'
 })
 
 // 默认行1列配置
 const formDialogWrapperClass = computed(() => {
-  return props.crudSchema.formDialog?.wrapperClass || 'grid-cols-1'
+  return mergedCrudSchema.value.formDialog?.wrapperClass || 'grid-cols-1'
 })
 
 // 表单弹窗配置（使用 getter 函数确保 crudInstance 已定义）
 function getFormDialogOptions() {
-  const fd = props.crudSchema.formDialog
-  const { crudApi: api } = props.crudSchema
-  const tableProxy = props.crudSchema.table?.proxyConfig
+  const fd = mergedCrudSchema.value.formDialog
+  const { crudApi: api } = mergedCrudSchema.value
+  const tableProxy = tableConfig.value.proxyConfig
 
   // table.proxyConfig 可覆盖 crudApi
   const finalApi = tableProxy
@@ -174,7 +188,7 @@ function getFormDialogOptions() {
     dialogType: fd?.dialogType || 'modal',
     title: formDialogTitle.value,
     width: formDialogWidth.value,
-    rowKey: props.crudSchema.table?.rowKey || 'id',
+    rowKey: tableConfig.value.rowKey || 'id',
     layout: fd?.layout,
     wrapperClass: formDialogWrapperClass.value,
     commonConfig: fd?.commonConfig,
@@ -194,7 +208,7 @@ function getFormDialogOptions() {
 
 // ============ Grid 配置 ============
 const mergedToolbarConfig = computed(() => {
-  const tc = props.crudSchema.table?.toolbar
+  const tc = tableConfig.value.toolbar
   const hasSearchForm = searchFormEnabled.value && !!searchFormSchema.value?.length
 
   return {
@@ -207,7 +221,7 @@ const mergedToolbarConfig = computed(() => {
 })
 
 const mergedTreeConfig = computed(() => {
-  const tree = props.crudSchema.table?.tree
+  const tree = tableConfig.value.tree
   if (!tree) return undefined
 
   return {
@@ -219,51 +233,51 @@ const mergedTreeConfig = computed(() => {
 })
 
 const mergedGridOptions = computed(() => {
-  const { crudApi: api, table: tableConfig } = props.crudSchema
-  const paginationConfig = tableConfig?.pagination
+  const { crudApi: api } = mergedCrudSchema.value
+  const paginationConfig = tableConfig.value.pagination
   const isTreeMode = !!mergedTreeConfig.value
 
   // 获取最终使用的 API（table.proxyConfig 可覆盖 crudApi）
-  const finalApi = tableConfig?.proxyConfig
+  const finalApi = tableConfig.value.proxyConfig
     ? {
-        list: tableConfig.proxyConfig.query || api.list,
-        add: tableConfig.proxyConfig.create || api.add,
-        edit: tableConfig.proxyConfig.update || api.edit,
-        remove: tableConfig.proxyConfig.delete || api.remove,
-        view: tableConfig.proxyConfig.get || api.view,
+        list: tableConfig.value.proxyConfig.query || api.list,
+        add: tableConfig.value.proxyConfig.create || api.add,
+        edit: tableConfig.value.proxyConfig.update || api.edit,
+        remove: tableConfig.value.proxyConfig.delete || api.remove,
+        view: tableConfig.value.proxyConfig.get || api.view,
       }
     : api
 
   return {
     columns: columns.value,
-    height: tableConfig?.height ?? 'auto',
-    keepSource: tableConfig?.keepSource ?? true,
+    height: tableConfig.value.height ?? 'auto',
+    keepSource: tableConfig.value.keepSource ?? true,
     // 直接使用配置值，由全局配置兜底
-    border: tableConfig?.border,
-    stripe: tableConfig?.stripe,
-    hoverRow: tableConfig?.hoverRow,
-    highlightCurrentRow: tableConfig?.highlightCurrentRow,
-    highlightHoverColumn: tableConfig?.highlightHoverColumn,
-    showOverflow: tableConfig?.showOverflow,
+    border: tableConfig.value.border,
+    stripe: tableConfig.value.stripe,
+    hoverRow: tableConfig.value.hoverRow,
+    highlightCurrentRow: tableConfig.value.highlightCurrentRow,
+    highlightHoverColumn: tableConfig.value.highlightHoverColumn,
+    showOverflow: tableConfig.value.showOverflow,
     // 树形模式下自动禁用分页
     pagerConfig: isTreeMode
       ? { enabled: false }
-      : tableConfig?.pagerConfig ?? true,
-    sortConfig: tableConfig?.sortConfig,
-    filterConfig: tableConfig?.filterConfig,
-    exportConfig: tableConfig?.exportConfig,
-    contextMenuConfig: tableConfig?.contextMenuConfig,
-    scrollY: tableConfig?.scrollY,
+      : tableConfig.value.pagerConfig ?? true,
+    sortConfig: tableConfig.value.sortConfig,
+    filterConfig: tableConfig.value.filterConfig,
+    exportConfig: tableConfig.value.exportConfig,
+    contextMenuConfig: tableConfig.value.contextMenuConfig,
+    scrollY: tableConfig.value.scrollY,
     // 行号列宽
-    seqColumnWidth: tableConfig?.seqColumnWidth ?? (isTreeMode ? 50 : 60),
+    seqColumnWidth: tableConfig.value.seqColumnWidth ?? (isTreeMode ? 50 : 60),
     // 选择列宽
-    checkboxWidth: tableConfig?.checkboxColumnWidth ?? 60,
+    checkboxWidth: tableConfig.value.checkboxColumnWidth ?? 60,
     // 是否可选择（树形模式下默认禁用）
     checkboxConfig: isTreeMode
       ? undefined
-      : tableConfig?.checkable === false
+      : tableConfig.value.checkable === false
         ? undefined
-        : { checkKey: tableConfig?.rowKey || 'id' },
+        : { checkKey: tableConfig.value.rowKey || 'id' },
     treeConfig: mergedTreeConfig.value,
     toolbarConfig: mergedToolbarConfig.value,
     proxyConfig: {
@@ -277,12 +291,16 @@ const mergedGridOptions = computed(() => {
                 [paginationConfig?.sizeKey || 'pageSize']: page.pageSize,
                 ...formValues,
               }
-          const processedParams = props.crudSchema.table?.beforeFetch
-            ? props.crudSchema.table.beforeFetch(params)
+          // 使用合并后的 beforeFetch（优先顶层配置）
+          const beforeFetch = tableConfig.value.beforeFetch
+          const processedParams = beforeFetch
+            ? beforeFetch(params)
             : params
           let result = await finalApi.list(processedParams)
-          if (props.crudSchema.table?.afterFetch) {
-            result = props.crudSchema.table.afterFetch(result)
+          // 使用合并后的 afterFetch（优先顶层配置）
+          const afterFetch = tableConfig.value.afterFetch
+          if (afterFetch) {
+            result = afterFetch(result)
           }
           return result
         },
@@ -310,8 +328,7 @@ const mergedGridEvents = computed(() => {
 // 获取路径参数（用于删除等操作时携带额外参数）
 function getPathParams(row?: any) {
   // 兼容新旧两种配置方式
-  const pathParamsConfig =
-    props.crudSchema.table?.pathParams || (props.crudSchema as any).pathParams
+  const pathParamsConfig = tableConfig.value.pathParams
   if (!pathParamsConfig || !pathParamsConfig.length) return {}
 
   const pathParams: Record<string, any> = {}
@@ -332,13 +349,12 @@ function getPathParams(row?: any) {
 
 // 删除
 async function handleSingleDelete(row: any) {
-  const rowKey =
-    props.crudSchema.table?.rowKey || (props.crudSchema as any).rowKey || 'id'
+  const rowKey = tableConfig.value.rowKey || 'id'
   const id = row[rowKey]
 
   // 优先使用 proxyConfig.delete，其次使用 crudApi.remove（单个删除）
   const removeApi =
-    props.crudSchema.table?.proxyConfig?.delete || props.crudSchema.crudApi.remove
+    tableConfig.value.proxyConfig?.delete || mergedCrudSchema.value.crudApi.remove
 
   if (!removeApi) {
     ElMessage.error('未配置删除接口')
@@ -374,8 +390,7 @@ async function handleSingleDelete(row: any) {
 
 // 批量删除
 async function handleBatchDelete() {
-  const rowKey =
-    props.crudSchema.table?.rowKey || (props.crudSchema as any).rowKey || 'id'
+  const rowKey = tableConfig.value.rowKey || 'id'
   const ids = readonlyState.selection.map((item: any) => item[rowKey])
 
   if (!ids.length) {
@@ -400,8 +415,8 @@ async function handleBatchDelete() {
 
   const pathParams = getPathParams()
   const batchRemoveApi =
-    props.crudSchema.table?.proxyConfig?.deleteBatch ||
-    (props.crudSchema.crudApi as any).batchRemove
+    tableConfig.value.proxyConfig?.deleteBatch ||
+    (mergedCrudSchema.value.crudApi as any).batchRemove
 
   if (!batchRemoveApi) {
     ElMessage.error('未配置批量删除接口')
@@ -478,13 +493,6 @@ const crudInstance: CrudApiInstance = {
   },
   executeBatchRemove: () => {
     handleBatchDelete()
-  },
-
-  setState(_state: Partial<CrudSchema>) {
-    return Promise.resolve()
-  },
-  getState() {
-    return props.crudSchema
   },
 }
 

@@ -17,4 +17,4 @@ export {
   joinUrls,
   staticUrl,
   staticUrls
-} from '@/utils/url/static-resource'
+} from '#/utils/url/static-resource'

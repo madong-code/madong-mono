@@ -14,15 +14,21 @@
 
 import type { Ref } from 'vue'
 
-import type { CrudApiInstance, CrudSchema } from './components/types'
+import type { CrudSchema } from './components/types'
 import type { ActionItem } from './components/table-action'
 
 import { computed } from 'vue'
 
+// useAction 所需的最小 API 接口
+interface UseActionApi {
+  executeBatchRemove: () => void
+  executeRemove: (row: any) => void
+}
+
 export function useAction(
   crudSchema: CrudSchema,
   dialogFormRef: Ref<any>,
-  crudApi: CrudApiInstance,
+  crudApi: UseActionApi,
   getSelection?: () => any[],
 ) {
   // 获取表单弹窗配置
@@ -33,22 +39,18 @@ export function useAction(
   // 表格配置
   const tableConfig = computed(() => {
     return {
-      // 新增按钮
-      hasAdd: crudSchema.table?.hasAdd ?? true,
-      // 批量删除按钮
-      hasBatchRemove: crudSchema.table?.hasBatchRemove ?? true,
-      // 行操作按钮
-      hasEdit: crudSchema.table?.hasEdit ?? true,
-      hasView: crudSchema.table?.hasView ?? false,
-      hasRemove: crudSchema.table?.hasRemove ?? true,
-      // 树形配置
-      tree: crudSchema.table?.tree,
+      hasAdd: crudSchema.hasAdd ?? true,
+      hasBatchRemove: crudSchema.hasBatchRemove ?? true,
+      hasEdit: crudSchema.hasEdit ?? true,
+      hasView: crudSchema.hasView ?? false,
+      hasRemove: crudSchema.hasRemove ?? true,
+      tree: crudSchema.tree,
     }
   })
 
   // 计算下拉菜单中已有的自定义操作数量
   const dropDownToolbarActionsCount = computed(() => {
-    return crudSchema.table?.dropDownToolbarActions?.length || 0
+    return crudSchema.dropDownToolbarActions?.length || 0
   })
 
   // 是否应将批量删除放到下拉菜单中（当下拉菜单已有自定义操作时）
@@ -68,10 +70,10 @@ export function useAction(
 
     if (tableConfig.value.hasAdd && formDialogEnabled.value) {
       actions.push({
-        label: crudSchema.table?.buttonText?.add || '新增',
+        label: crudSchema.buttonText?.add || '新增',
         type: 'primary',
         icon: 'ant-design:plus-outlined',
-        auth: crudSchema.table?.permissions?.add,
+        auth: crudSchema.permissions?.add,
         dialogRef: dialogFormRef,
         dialogParams: {
           type: 'add',
@@ -86,7 +88,7 @@ export function useAction(
           label: '批量删除',
           type: 'danger',
           icon: 'ant-design:delete-outlined',
-          auth: crudSchema.table?.permissions?.remove,
+          auth: crudSchema.permissions?.remove,
           ifShow: () => hasSelection.value,
           onClick: () => {
             crudApi.executeBatchRemove()
@@ -95,13 +97,13 @@ export function useAction(
       }
     }
 
-    actions.push(...(crudSchema.table?.toolbarActions || []))
+    actions.push(...(crudSchema.toolbarActions || []))
     return actions
   })
 
   const toolbarToolActions = computed(() => {
     const actions: ActionItem[] = []
-    const tc = crudSchema.table?.toolbar
+    const tc = crudSchema.toolbar
 
     if (tc?.export) {
       actions.push({
@@ -138,7 +140,7 @@ export function useAction(
           label: '批量删除',
           type: 'danger',
           icon: 'ant-design:delete-outlined',
-          auth: crudSchema.table?.permissions?.remove,
+          auth: crudSchema.permissions?.remove,
           ifShow: () => hasSelection.value,
           onClick: () => {
             crudApi.executeBatchRemove()
@@ -147,7 +149,7 @@ export function useAction(
       }
     }
 
-    actions.push(...(crudSchema.table?.dropDownToolbarActions || []))
+    actions.push(...(crudSchema.dropDownToolbarActions || []))
     return actions
   })
 
@@ -157,11 +159,11 @@ export function useAction(
     if (crudSchema.formDialog?.enabled !== false) {
       if (tableConfig.value.hasView) {
         actions.push({
-          label: crudSchema.table?.buttonText?.view || '详情',
+          label: crudSchema.buttonText?.view || '详情',
           type: 'primary',
           link: true,
           icon: 'ant-design:eye-outlined',
-          auth: crudSchema.table?.permissions?.view,
+          auth: crudSchema.permissions?.view,
           dialogRef: dialogFormRef,
           dialogParams() {
             return { type: 'view' }
@@ -171,11 +173,11 @@ export function useAction(
 
       if (tableConfig.value.hasEdit) {
         actions.push({
-          label: crudSchema.table?.buttonText?.edit || '编辑',
+          label: crudSchema.buttonText?.edit || '编辑',
           type: 'primary',
           link: true,
           icon: 'ant-design:edit-outlined',
-          auth: crudSchema.table?.permissions?.edit,
+          auth: crudSchema.permissions?.edit,
           dialogRef: dialogFormRef,
           dialogParams: {
             type: 'edit',
@@ -184,7 +186,7 @@ export function useAction(
       }
     }
 
-    actions.push(...(crudSchema.table?.tableActions || []))
+    actions.push(...(crudSchema.tableActions || []))
     return actions
   })
 
@@ -195,10 +197,10 @@ export function useAction(
       // 新增子节点（树形）
       if (tableConfig.value.hasAdd && tableConfig.value.tree) {
         actions.push({
-          label: (crudSchema.table?.buttonText?.add || '新增') + '子节点',
+          label: (crudSchema.buttonText?.add || '新增') + '子节点',
           icon: 'ant-design:plus-outlined',
           size: 'small',
-          auth: crudSchema.table?.permissions?.add,
+          auth: crudSchema.permissions?.add,
           dialogRef: dialogFormRef,
           dialogParams: {
             type: 'add',
@@ -209,11 +211,11 @@ export function useAction(
 
       if (tableConfig.value.hasRemove) {
         actions.push({
-          label: crudSchema.table?.buttonText?.remove || '删除',
+          label: crudSchema.buttonText?.remove || '删除',
           type: 'danger',
           icon: 'ant-design:delete-outlined',
           size: 'small',
-          auth: crudSchema.table?.permissions?.remove,
+          auth: crudSchema.permissions?.remove,
           onClick: (_action: any, _record: any) => {
             crudApi.executeRemove(_record)
           },
@@ -221,7 +223,7 @@ export function useAction(
       }
     }
 
-    actions.push(...(crudSchema.table?.dropDownActions || []))
+    actions.push(...(crudSchema.dropDownActions || []))
     return actions
   })
 

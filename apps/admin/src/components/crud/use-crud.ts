@@ -65,13 +65,6 @@ export function useCrud(crudSchema: CrudSchema) {
     executeBatchRemove() {
       crudRef.value?.executeBatchRemove()
     },
-
-    setState(state) {
-      return crudRef.value?.setState(state)
-    },
-    getState() {
-      return crudRef.value?.getState()
-    },
   }
 
   const Crud = defineComponent({

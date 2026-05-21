@@ -15,32 +15,31 @@ export const useCrudSchema = (): CrudSchema => {
       view: PostService.get,
     },
 
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'org:post:create',
-        edit: 'org:post:update',
-        remove: 'org:post:delete',
-        view: 'org:post:read',
-      },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'dept.name', title: $t('setting.dept.table.columns.name'), minWidth: 120 },
-        { field: 'code', title: $t('setting.post.table.columns.code'), minWidth: 120 },
-        { field: 'name', title: $t('setting.post.table.columns.name'), minWidth: 120 },
-        { field: 'sort', title: $t('setting.post.table.columns.sort'), minWidth: 80 },
-         {
-          field: 'enabled',
-          title: $t('setting.post.table.columns.enabled'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-        },
-        { field: 'remark', title: $t('setting.post.table.columns.remark'), minWidth: 160 },
-      ],
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'org:post:create',
+      edit: 'org:post:update',
+      remove: 'org:post:delete',
+      view: 'org:post:read',
     },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'dept.name', title: $t('setting.dept.table.columns.name'), minWidth: 120 },
+      { field: 'code', title: $t('setting.post.table.columns.code'), minWidth: 120 },
+      { field: 'name', title: $t('setting.post.table.columns.name'), minWidth: 120 },
+      { field: 'sort', title: $t('setting.post.table.columns.sort'), minWidth: 80 },
+       {
+        field: 'enabled',
+        title: $t('setting.post.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+      },
+      { field: 'remark', title: $t('setting.post.table.columns.remark'), minWidth: 160 },
+    ],
 
     searchForm: {
       enabled: true,

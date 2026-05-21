@@ -4,17 +4,18 @@ import { GatewayBlacklistService } from '#/api/setting/gateway'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-export const crudSchema: CrudSchema = {
-  crudApi: {
-    list: GatewayBlacklistService.list,
-    add: GatewayBlacklistService.create,
-    edit: GatewayBlacklistService.update,
-    remove: GatewayBlacklistService.delete,
-    batchRemove: GatewayBlacklistService.remove,
-    view: GatewayBlacklistService.get,
-  },
+export const useCrudSchema = (): CrudSchema => {
+  return {
+    crudApi: {
+      list: GatewayBlacklistService.list,
+      add: GatewayBlacklistService.create,
+      edit: GatewayBlacklistService.update,
+      remove: GatewayBlacklistService.delete,
+      batchRemove: GatewayBlacklistService.remove,
+      view: GatewayBlacklistService.get,
+    },
 
-  table: {
+    // ========== 扁平化表格配置 ==========
     hasAdd: true,
     hasEdit: true,
     hasView: true,
@@ -50,200 +51,200 @@ export const crudSchema: CrudSchema = {
       { field: 'end_date', title: $t('setting.gateway.blacklist.table.columns.end_date'), minWidth: 180 },
       { field: 'created_at', title: $t('setting.gateway.blacklist.table.columns.created_date'), minWidth: 180 },
     ],
-  },
 
-  searchForm: {
-    enabled: true,
-    collapsed: true,
-    collapsedRows: 2,
-    schema: [
-      {
-        component: 'Input',
-        fieldName: 'LIKE_name',
-        label: $t('setting.gateway.blacklist.table.search.name'),
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.table.search.placeholder.name'),
-          clearable: true,
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
+      schema: [
+        {
+          component: 'Input',
+          fieldName: 'LIKE_name',
+          label: $t('setting.gateway.blacklist.table.search.name'),
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.table.search.placeholder.name'),
+            clearable: true,
+          },
         },
-      },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_ip',
-        label: $t('setting.gateway.blacklist.table.search.ip'),
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.table.search.placeholder.ip'),
-          clearable: true,
+        {
+          component: 'Input',
+          fieldName: 'LIKE_ip',
+          label: $t('setting.gateway.blacklist.table.search.ip'),
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.table.search.placeholder.ip'),
+            clearable: true,
+          },
         },
-      },
-      {
-        component: 'Input',
-        fieldName: 'path',
-        label: $t('setting.gateway.blacklist.table.search.path'),
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.table.search.placeholder.path'),
-          clearable: true,
+        {
+          component: 'Input',
+          fieldName: 'path',
+          label: $t('setting.gateway.blacklist.table.search.path'),
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.table.search.placeholder.path'),
+            clearable: true,
+          },
         },
-      },
-      {
-        component: 'ApiDict',
-        fieldName: 'EQ_enabled',
-        label: $t('setting.gateway.blacklist.table.search.enabled'),
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          clearable: true,
-          placeholder: $t('setting.gateway.blacklist.table.search.placeholder.enabled'),
+        {
+          component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('setting.gateway.blacklist.table.search.enabled'),
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+            placeholder: $t('setting.gateway.blacklist.table.search.placeholder.enabled'),
+          },
         },
-      },
-    ],
-  },
-
-  formDialog: {
-    enabled: true,
-    title: $t('setting.gateway.blacklist.title'),
-    width: 'w-[50%]',
-    wrapperClass: 'grid-cols-1',
-    commonConfig: {
-      labelWidth: 100,
-      labelAlign: 'right',
+      ],
     },
-    schema: [
-      {
-        label: $t('setting.gateway.blacklist.form.modal.id'),
-        fieldName: 'id',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        dependencies: { triggerFields: ['id'], show: false },
+
+    formDialog: {
+      enabled: true,
+      title: $t('setting.gateway.blacklist.title'),
+      width: 'w-[50%]',
+      wrapperClass: 'grid-cols-1',
+      commonConfig: {
+        labelWidth: 100,
+        labelAlign: 'right',
       },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.name'),
-        fieldName: 'name',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.name'),
-          clearable: true,
+      schema: [
+        {
+          label: $t('setting.gateway.blacklist.form.modal.id'),
+          fieldName: 'id',
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          dependencies: { triggerFields: ['id'], show: false },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.match_type'),
-        fieldName: 'match_type',
-        component: 'Select',
-        defaultValue: 'exact',
-        rules: 'required',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.match_type'),
-          clearable: true,
-          options: [
-            { label: '精确匹配', value: 'exact' },
-            { label: '通配符匹配', value: 'wildcard' },
-            { label: '正则表达式匹配', value: 'regex' },
-          ],
+        {
+          label: $t('setting.gateway.blacklist.form.modal.name'),
+          fieldName: 'name',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.name'),
+            clearable: true,
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.priority'),
-        fieldName: 'priority',
-        component: 'Input',
-        defaultValue: 100,
-        rules: 'required',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'number',
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.priority'),
-          clearable: true,
+        {
+          label: $t('setting.gateway.blacklist.form.modal.match_type'),
+          fieldName: 'match_type',
+          component: 'Select',
+          defaultValue: 'exact',
+          rules: 'required',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.match_type'),
+            clearable: true,
+            options: [
+              { label: '精确匹配', value: 'exact' },
+              { label: '通配符匹配', value: 'wildcard' },
+              { label: '正则表达式匹配', value: 'regex' },
+            ],
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.ip'),
-        fieldName: 'ip',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          placeholder: '留空表示不限 IP',
-          clearable: true,
+        {
+          label: $t('setting.gateway.blacklist.form.modal.priority'),
+          fieldName: 'priority',
+          component: 'Input',
+          defaultValue: 100,
+          rules: 'required',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'number',
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.priority'),
+            clearable: true,
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.methods'),
-        fieldName: 'methods',
-        component: 'ApiDict',
-        rules: 'required',
-        formItemClass: 'col-span-2',
-        componentProps: { code: DictEnum.SYS_REQUEST_MODE },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.path'),
-        fieldName: 'path',
-        component: 'Input',
-        rules: 'required',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.path'),
-          clearable: true,
+        {
+          label: $t('setting.gateway.blacklist.form.modal.ip'),
+          fieldName: 'ip',
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            placeholder: '留空表示不限 IP',
+            clearable: true,
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.start_time'),
-        fieldName: 'start_date',
-        component: 'DatePicker',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'datetime',
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.start_time'),
-          clearable: true,
-          format: 'YYYY-MM-DD HH:mm:ss',
-          valueFormat: 'YYYY-MM-DD HH:mm:ss',
+        {
+          label: $t('setting.gateway.blacklist.form.modal.methods'),
+          fieldName: 'methods',
+          component: 'ApiDict',
+          rules: 'required',
+          formItemClass: 'col-span-2',
+          componentProps: { code: DictEnum.SYS_REQUEST_MODE },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.end_time'),
-        fieldName: 'end_date',
-        component: 'DatePicker',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'datetime',
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.end_time'),
-          clearable: true,
-          format: 'YYYY-MM-DD HH:mm:ss',
-          valueFormat: 'YYYY-MM-DD HH:mm:ss',
+        {
+          label: $t('setting.gateway.blacklist.form.modal.path'),
+          fieldName: 'path',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.path'),
+            clearable: true,
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.enabled'),
-        fieldName: 'enabled',
-        component: 'ApiDict',
-        defaultValue: 1,
-        formItemClass: 'col-span-2',
-        componentProps: {
-          renderType: 'RadioGroup',
-          code: DictEnum.SYS_ENABLED_STATUS,
-          isBtn: true,
+        {
+          label: $t('setting.gateway.blacklist.form.modal.start_time'),
+          fieldName: 'start_date',
+          component: 'DatePicker',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'datetime',
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.start_time'),
+            clearable: true,
+            format: 'YYYY-MM-DD HH:mm:ss',
+            valueFormat: 'YYYY-MM-DD HH:mm:ss',
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.message'),
-        fieldName: 'message',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'textarea',
-          rows: 4,
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.message'),
+        {
+          label: $t('setting.gateway.blacklist.form.modal.end_time'),
+          fieldName: 'end_date',
+          component: 'DatePicker',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'datetime',
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.end_time'),
+            clearable: true,
+            format: 'YYYY-MM-DD HH:mm:ss',
+            valueFormat: 'YYYY-MM-DD HH:mm:ss',
+          },
         },
-      },
-      {
-        label: $t('setting.gateway.blacklist.form.modal.remark'),
-        fieldName: 'remark',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        componentProps: {
-          type: 'textarea',
-          rows: 4,
-          placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.remark'),
+        {
+          label: $t('setting.gateway.blacklist.form.modal.enabled'),
+          fieldName: 'enabled',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-2',
+          componentProps: {
+            renderType: 'RadioGroup',
+            code: DictEnum.SYS_ENABLED_STATUS,
+            isBtn: true,
+          },
         },
-      },
-    ],
-  },
+        {
+          label: $t('setting.gateway.blacklist.form.modal.message'),
+          fieldName: 'message',
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'textarea',
+            rows: 4,
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.message'),
+          },
+        },
+        {
+          label: $t('setting.gateway.blacklist.form.modal.remark'),
+          fieldName: 'remark',
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            type: 'textarea',
+            rows: 4,
+            placeholder: $t('setting.gateway.blacklist.form.modal.placeholder.remark'),
+          },
+        },
+      ],
+    },
+  }
 }

@@ -36,7 +36,8 @@ const coreRoutes: RouteRecordRaw[] = [
     name: 'Root',
     path: '/',
     redirect: preferences.app.defaultHomePath,
-    children: [],
+    children: [
+    ],
   },
   {
     component: AuthPageLayout,
@@ -91,7 +92,7 @@ const coreRoutes: RouteRecordRaw[] = [
         },
       },
     ],
-  },
+  }
 ];
 
 export { coreRoutes, fallbackNotFoundRoute };

@@ -4,20 +4,14 @@ import { MenuService } from '#/api/system'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'
 
-
-/**
- * 将扁平数组转换为树形结构
- */
 function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'children'): any[] {
   const map = new Map<any, any>()
   const roots: any[] = []
 
-  // 建立 id 到节点的映射
   data.forEach((item) => {
     map.set(item[idKey], { ...item, [childrenKey]: [] })
   })
 
-  // 构建树形结构
   data.forEach((item) => {
     const node = map.get(item[idKey])
     if (item[pidKey] === null || item[pidKey] === undefined || item[pidKey] === 0) {
@@ -27,7 +21,6 @@ function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'c
       if (parent) {
         parent[childrenKey].push(node)
       } else {
-        // 找不到父节点，作为根节点
         roots.push(node)
       }
     }
@@ -36,18 +29,18 @@ function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'c
   return roots
 }
 
-export const crudSchema: CrudSchema = {
-  crudApi: {
-    list: MenuService.list,
-    add: MenuService.create,
-    edit: MenuService.update,
-    remove: MenuService.delete,
-    batchRemove: MenuService.remove,
-    view: MenuService.get,
-  },
+export const useCrudSchema = (): CrudSchema => {
+  return {
+    crudApi: {
+      list: MenuService.list,
+      add: MenuService.create,
+      edit: MenuService.update,
+      remove: MenuService.delete,
+      batchRemove: MenuService.remove,
+      view: MenuService.get,
+    },
 
-  // 表格配置
-  table: {
+    // ========== 扁平化表格配置 ==========
     rowKey: 'id',
     hasAdd: true,
     hasEdit: true,
@@ -61,11 +54,9 @@ export const crudSchema: CrudSchema = {
       view: 'system:menu:read',
     },
     tree: { id: 'id', pid: 'pid', children: 'children' },
-    // 请求前处理：树形不分页，设置 page=1 limit=999 一次加载全部
     beforeFetch: (params: any) => {
       return { ...params, page: 1, limit: 999 }
     },
-    // 处理返回数据：扁平数组转树形
     afterFetch: (res: { items?: any[]; total?: number }) => {
       const items = res?.items || []
       return {
@@ -103,337 +94,319 @@ export const crudSchema: CrudSchema = {
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
     ],
-  },
 
-  // 搜索表单配置
-  searchForm: {
-    enabled: true,
-    collapsed: true,
-    collapsedRows: 2,
-    schema: [
-      {
-        component: 'ApiDict',
-        fieldName: 'EQ_type',
-        label: $t('system.menu.table.search.type'),
-        componentProps: {
-          code: DictEnum.SYS_MENU_TYPE,
-          clearable: true,
-          placeholder: $t('system.menu.table.search.placeholder.type'),
+    searchForm: {
+      enabled: true,
+      collapsed: true,
+      collapsedRows: 2,
+      schema: [
+        {
+          component: 'ApiDict',
+          fieldName: 'EQ_type',
+          label: $t('system.menu.table.search.type'),
+          componentProps: {
+            code: DictEnum.SYS_MENU_TYPE,
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.type'),
+          },
         },
-      },
-      {
-        component: 'ApiDict',
-        fieldName: 'EQ_enabled',
-        label: $t('system.menu.table.search.enabled'),
-        componentProps: {
-          code: DictEnum.SYS_ENABLED_STATUS,
-          clearable: true,
-          placeholder: $t('system.menu.table.search.placeholder.enabled'),
+        {
+          component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('system.menu.table.search.enabled'),
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.enabled'),
+          },
         },
-      },
-      {
-        component: 'ApiSelect',
-        fieldName: 'EQ_app',
-        label: $t('system.menu.form.modal.app'),
-        defaultValue: 'admin',
-        componentProps: {
-          api: '/system/menu/app/list',
-          requestMethod: 'GET',
-          placeholder: $t('system.menu.form.placeholder.app'),
-          clearable: true,
-        },
-      },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_title',
-        label: $t('system.menu.table.search.title'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.menu.table.search.placeholder.title'),
-        },
-      },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_code',
-        label: $t('system.menu.table.search.code'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.menu.table.search.placeholder.code'),
-        },
-      },
-      {
-        component: 'Input',
-        fieldName: 'LIKE_path',
-        label: $t('system.menu.table.search.path'),
-        componentProps: {
-          clearable: true,
-          placeholder: $t('system.menu.table.search.placeholder.path'),
-        },
-      },
-    ],
-  },
-
-  // 表单弹窗配置
-  formDialog: {
-    enabled: true,
-    title: $t('system.menu.title'),
-    width: 'w-[60%]',
-    dialogType: 'drawer',
-    wrapperClass: 'grid-cols-2',
-    commonConfig: {
-      labelWidth: 80,
-      labelAlign: 'right',
-    },
-    schema: [
-      // 菜单ID（隐藏字段）
-      {
-        label: $t('system.menu.form.modal.id'),
-        fieldName: 'id',
-        component: 'Input',
-        formItemClass: 'col-span-2',
-        dependencies: {
-          triggerFields: ['id'],
-          show: false,
-        },
-      },
-      // 菜单类型
-      {
-        label: $t('system.menu.form.modal.type'),
-        fieldName: 'type',
-        component: 'ApiDict',
-        defaultValue: 1,
-        formItemClass: 'col-span-2',
-        rules: 'required',
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.type'),
-          code: DictEnum.SYS_MENU_TYPE,
-          isBtn: true,
-          renderType: 'RadioGroup'
-        }
-      },
-      // 所属应用
-      {
-        label: $t('system.menu.form.modal.app'),
-        fieldName: 'app',
-        component: 'ApiTreeSelect',
-        defaultValue: 'admin',
-        formItemClass: 'col-span-2',
-        rules: 'required',
-        componentProps: (_value) => {
-          return {
+        {
+          component: 'ApiSelect',
+          fieldName: 'EQ_app',
+          label: $t('system.menu.form.modal.app'),
+          defaultValue: 'admin',
+          componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'get',
+            requestMethod: 'GET',
             placeholder: $t('system.menu.form.placeholder.app'),
-            style: {
-              width: '330px'
-            },
-            labelField: 'label',
-            valueField: 'value',
-            onChange: (_values: any) => {
-              _value.pid = ''
+            clearable: true,
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_title',
+          label: $t('system.menu.table.search.title'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.title'),
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_code',
+          label: $t('system.menu.table.search.code'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.code'),
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_path',
+          label: $t('system.menu.table.search.path'),
+          componentProps: {
+            clearable: true,
+            placeholder: $t('system.menu.table.search.placeholder.path'),
+          },
+        },
+      ],
+    },
+
+    formDialog: {
+      enabled: true,
+      title: $t('system.menu.title'),
+      width: 'w-[60%]',
+      dialogType: 'drawer',
+      wrapperClass: 'grid-cols-2',
+      commonConfig: {
+        labelWidth: 80,
+        labelAlign: 'right',
+      },
+      schema: [
+        {
+          label: $t('system.menu.form.modal.id'),
+          fieldName: 'id',
+          component: 'Input',
+          formItemClass: 'col-span-2',
+          dependencies: {
+            triggerFields: ['id'],
+            show: false,
+          },
+        },
+        {
+          label: $t('system.menu.form.modal.type'),
+          fieldName: 'type',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-2',
+          rules: 'required',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.type'),
+            code: DictEnum.SYS_MENU_TYPE,
+            isBtn: true,
+            renderType: 'RadioGroup'
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.app'),
+          fieldName: 'app',
+          component: 'ApiTreeSelect',
+          defaultValue: 'admin',
+          formItemClass: 'col-span-2',
+          rules: 'required',
+          componentProps: (_value) => {
+            return {
+              api: '/system/menu/app/list',
+              requestMethod: 'get',
+              placeholder: $t('system.menu.form.placeholder.app'),
+              style: {
+                width: '330px'
+              },
+              labelField: 'label',
+              valueField: 'value',
+              onChange: (_values: any) => {
+                _value.pid = ''
+              }
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.pid'),
+          fieldName: 'pid',
+          component: 'ApiTreeSelect',
+          formItemClass: 'col-span-1',
+          componentProps: (_value) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.pid'),
+              clearable: true,
+              disabled: !_value?.app,
+              checkStrictly: true,
+              api: '/system/menu',
+              requestMethod: 'get',
+              params: {
+                format: 'tree',
+                app: _value.app || 'admin'
+              },
+              labelField: 'name',
+              valueField: 'id'
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.title'),
+          fieldName: 'title',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          rules: 'required',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.title'),
+            clearable: true
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.code'),
+          fieldName: 'code',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          rules: 'required',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.code'),
+            clearable: true
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.path'),
+          fieldName: 'path',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.path'),
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.path'),
+              clearable: true,
+              disabled: ![1, 2, 4].includes(values.type)
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.component'),
+          fieldName: 'component',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.component'),
+              clearable: true,
+              disabled: ![1, 2].includes(values.type)
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.open_type'),
+          fieldName: 'openType',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-1',
+          rules: 'required',
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.open_type'),
+              code: 'sys_menu_open_type',
+              isBtn: true,
+              renderType: 'RadioGroup',
+              disabled: values.type !== 2
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.icon'),
+          fieldName: 'icon',
+          component: 'IconPicker',
+          formItemClass: 'col-span-1',
+          componentProps: (values) => {
+            return {
+              class: 'w-full',
+              placeholder: $t('system.menu.form.placeholder.icon'),
+              clearable: true,
+              disabled: ![1, 2].includes(values.type)
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.link_url'),
+          fieldName: 'url',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.link_url'),
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.link_url'),
+              clearable: true,
+              disabled: ![2, 3].includes(values.openType)
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.sort'),
+          fieldName: 'sort',
+          component: 'InputNumber',
+          formItemClass: 'col-span-1',
+          defaultValue: 999,
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.sort'),
+            clearable: true,
+            min: 0
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.enabled'),
+          fieldName: 'enabled',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.enabled'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup'
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.is_show'),
+          fieldName: 'isShow',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-1',
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.is_show'),
+              code: 'yes_no',
+              isBtn: true,
+              renderType: 'RadioGroup',
+              disabled: ![1, 2].includes(values.type)
+            }
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.is_sync'),
+          fieldName: 'isSync',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.is_sync'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup'
+          }
+        },
+        {
+          label: $t('system.menu.form.modal.is_cache'),
+          fieldName: 'isCache',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: (values) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.is_cache'),
+              code: 'yes_no',
+              isBtn: true,
+              renderType: 'RadioGroup',
+              disabled: ![1, 2].includes(values.type)
             }
           }
         }
-      },
-      // 所属上级
-      {
-        label: $t('system.menu.form.modal.pid'),
-        fieldName: 'pid',
-        component: 'ApiTreeSelect',
-        formItemClass: 'col-span-1',
-        componentProps: (_value) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.pid'),
-            clearable: true,
-            disabled: !_value?.app,
-            checkStrictly: true,
-            api: '/system/menu',
-            requestMethod: 'get',
-            params: {
-              format: 'tree',
-              app: _value.app || 'admin'
-            },
-            labelField: 'name',
-            valueField: 'id'
-          }
-        }
-      },
-      // 菜单名称
-      {
-        label: $t('system.menu.form.modal.title'),
-        fieldName: 'title',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        rules: 'required',
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.title'),
-          clearable: true
-        }
-      },
-      // 唯一编码
-      {
-        label: $t('system.menu.form.modal.code'),
-        fieldName: 'code',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        rules: 'required',
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.code'),
-          clearable: true
-        }
-      },
-      // 路由/接口地址
-      {
-        label: $t('system.menu.form.modal.path'),
-        fieldName: 'path',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        help: $t('system.menu.form.help.path'),
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.path'),
-            clearable: true,
-            disabled: ![1, 2, 4].includes(values.type)
-          }
-        }
-      },
-      // 组件地址
-      {
-        label: $t('system.menu.form.modal.component'),
-        fieldName: 'component',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.component'),
-            clearable: true,
-            disabled: ![1, 2].includes(values.type)
-          }
-        }
-      },
-      // 打开方式
-      {
-        label: $t('system.menu.form.modal.open_type'),
-        fieldName: 'openType',
-        component: 'ApiDict',
-        defaultValue: 1,
-        formItemClass: 'col-span-1',
-        rules: 'required',
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.open_type'),
-            code: 'sys_menu_open_type',
-            isBtn: true,
-            renderType: 'RadioGroup',
-            disabled: values.type !== 2
-          }
-        }
-      },
-      // 图标
-      {
-        label: $t('system.menu.form.modal.icon'),
-        fieldName: 'icon',
-        component: 'IconPicker',
-        formItemClass: 'col-span-1',
-        componentProps: (values) => {
-          return {
-            class: 'w-full',
-            placeholder: $t('system.menu.form.placeholder.icon'),
-            clearable: true,
-            disabled: ![1, 2].includes(values.type)
-          }
-        }
-      },
-      // 内外链地址
-      {
-        label: $t('system.menu.form.modal.link_url'),
-        fieldName: 'url',
-        component: 'Input',
-        formItemClass: 'col-span-1',
-        help: $t('system.menu.form.help.link_url'),
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.link_url'),
-            clearable: true,
-            disabled: ![2, 3].includes(values.openType)
-          }
-        }
-      },
-      // 排序
-      {
-        label: $t('system.menu.form.modal.sort'),
-        fieldName: 'sort',
-        component: 'InputNumber',
-        formItemClass: 'col-span-1',
-        defaultValue: 999,
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.sort'),
-          clearable: true,
-          min: 0
-        }
-      },
-      // 是否启用
-      {
-        label: $t('system.menu.form.modal.enabled'),
-        fieldName: 'enabled',
-        component: 'ApiDict',
-        defaultValue: 1,
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.enabled'),
-          code: 'yes_no',
-          isBtn: true,
-          renderType: 'RadioGroup'
-        }
-      },
-      // 是否显示
-      {
-        label: $t('system.menu.form.modal.is_show'),
-        fieldName: 'isShow',
-        component: 'ApiDict',
-        defaultValue: 1,
-        formItemClass: 'col-span-1',
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.is_show'),
-            code: 'yes_no',
-            isBtn: true,
-            renderType: 'RadioGroup',
-            disabled: ![1, 2].includes(values.type)
-          }
-        }
-      },
-      // 是否同步
-      {
-        label: $t('system.menu.form.modal.is_sync'),
-        fieldName: 'isSync',
-        component: 'ApiDict',
-        defaultValue: 0,
-        formItemClass: 'col-span-1',
-        componentProps: {
-          placeholder: $t('system.menu.form.placeholder.is_sync'),
-          code: 'yes_no',
-          isBtn: true,
-          renderType: 'RadioGroup'
-        }
-      },
-      // 是否缓存
-      {
-        label: $t('system.menu.form.modal.is_cache'),
-        fieldName: 'isCache',
-        component: 'ApiDict',
-        defaultValue: 0,
-        formItemClass: 'col-span-1',
-        componentProps: (values) => {
-          return {
-            placeholder: $t('system.menu.form.placeholder.is_cache'),
-            code: 'yes_no',
-            isBtn: true,
-            renderType: 'RadioGroup',
-            disabled: ![1, 2].includes(values.type)
-          }
-        }
-      }
-    ]
-  },
+      ]
+    },
+  }
 }

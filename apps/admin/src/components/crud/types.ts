@@ -24,7 +24,6 @@ export type {
   FormActionType,
   FormDialogApiConfig,
   FormDialogOptions,
-  FormDialogApi,
 
   // Schema
   CrudSchema,

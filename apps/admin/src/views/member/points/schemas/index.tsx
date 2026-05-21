@@ -13,48 +13,47 @@ export const useCrudSchema = (): CrudSchema => {
       batchRemove: MemberPointsService.remove as any,
       view: MemberPointsService.get,
     },
-    table: {
-      hasAdd: true,
-      hasEdit: false,
-      hasView: true,
-      hasRemove: false,
-      permissions: { add: 'member:points:operate', view: 'member:points:read' },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        {
-          field: 'member.username',
-          title: $t('member.points.table.columns.username'),
-          minWidth: 100,
-        },
-        {
-          field: 'member.nickname',
-          title: $t('member.points.table.columns.nickname'),
-          minWidth: 100,
-        },
-        {
-          field: 'type',
-          title: $t('member.points.table.columns.type'),
-          minWidth: 100,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.MEMBER_POINT_TYPE } },
-        },
-        { field: 'points', title: $t('member.points.table.columns.points'), minWidth: 100 },
-        { field: 'balance', title: $t('member.points.table.columns.balance'), minWidth: 120 },
-        {
-          field: 'source',
-          title: $t('member.points.table.columns.source'),
-          minWidth: 150,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.MEMBER_POINT_SOURCE } },
-        },
-        { field: 'remark', title: $t('member.points.table.columns.remark'), minWidth: 200 },
-        {
-          field: 'created_at',
-          title: $t('member.points.table.columns.create_time'),
-          minWidth: 160,
-          render: (row:any) => row.created_at?.format('YYYY-MM-DD HH:mm:ss') || '-' ,
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: false,
+    hasView: true,
+    hasRemove: false,
+    permissions: { add: 'member:points:operate', view: 'member:points:read' },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      {
+        field: 'member.username',
+        title: $t('member.points.table.columns.username'),
+        minWidth: 100,
+      },
+      {
+        field: 'member.nickname',
+        title: $t('member.points.table.columns.nickname'),
+        minWidth: 100,
+      },
+      {
+        field: 'type',
+        title: $t('member.points.table.columns.type'),
+        minWidth: 100,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.MEMBER_POINT_TYPE } },
+      },
+      { field: 'points', title: $t('member.points.table.columns.points'), minWidth: 100 },
+      { field: 'balance', title: $t('member.points.table.columns.balance'), minWidth: 120 },
+      {
+        field: 'source',
+        title: $t('member.points.table.columns.source'),
+        minWidth: 150,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.MEMBER_POINT_SOURCE } },
+      },
+      { field: 'remark', title: $t('member.points.table.columns.remark'), minWidth: 200 },
+      {
+        field: 'created_at',
+        title: $t('member.points.table.columns.create_time'),
+        minWidth: 160,
+        render: (row:any) => row.created_at?.format('YYYY-MM-DD HH:mm:ss') || '-' ,
 
-        },
-      ],
-    },
+      },
+    ],
     searchForm: {
       enabled: true,
       collapsed: true,

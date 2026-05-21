@@ -43,45 +43,44 @@ export const useCrudSchema = (): CrudSchema => {
       view: DeptService.get,
     },
 
-    table: {
-      hasAdd: true,
-      hasEdit: true,
-      hasView: true,
-      hasRemove: true,
-      permissions: {
-        add: 'org:dept:create',
-        edit: 'org:dept:update',
-        remove: 'org:dept:delete',
-        view: 'org:dept:read',
-      },
-      tree: { id: 'id', pid: 'pid', children: 'children' },
-      beforeFetch: (params: any) => ({ ...params, page: 1, limit: 999 }),
-      afterFetch: (res: { items?: any[]; total?: number }) => {
-        const items = res?.items || [];
-        return {
-          items: arrayToTree(items),
-          total: res?.total ?? items.length,
-        };
-      },
-      columns: [
-         { type: 'checkbox', width: 60 },
-        {
-          field: 'name',
-          title: $t('setting.dept.table.columns.name'),
-          minWidth: 200,
-          treeNode: true,
-          align: 'left',
-        },
-        { field: 'code', title: $t('setting.dept.table.columns.code'), minWidth: 120 },
-        { field: 'sort', title: $t('setting.dept.table.columns.sort'), minWidth: 80 },
-        {
-          field: 'enabled',
-          title: $t('setting.dept.table.columns.enabled'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-        },
-      ],
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true,
+    hasEdit: true,
+    hasView: true,
+    hasRemove: true,
+    permissions: {
+      add: 'org:dept:create',
+      edit: 'org:dept:update',
+      remove: 'org:dept:delete',
+      view: 'org:dept:read',
     },
+    tree: { id: 'id', pid: 'pid', children: 'children' },
+    beforeFetch: (params: any) => ({ ...params, page: 1, limit: 999 }),
+    afterFetch: (res: { items?: any[]; total?: number }) => {
+      const items = res?.items || [];
+      return {
+        items: arrayToTree(items),
+        total: res?.total ?? items.length,
+      };
+    },
+    columns: [
+       { type: 'checkbox', width: 60 },
+      {
+        field: 'name',
+        title: $t('setting.dept.table.columns.name'),
+        minWidth: 200,
+        treeNode: true,
+        align: 'left',
+      },
+      { field: 'code', title: $t('setting.dept.table.columns.code'), minWidth: 120 },
+      { field: 'sort', title: $t('setting.dept.table.columns.sort'), minWidth: 80 },
+      {
+        field: 'enabled',
+        title: $t('setting.dept.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+      },
+    ],
 
     searchForm: {
       enabled: true,

@@ -1,22 +1,35 @@
 <template>
-  <el-drawer v-model="visible" title="任务日志" size="70%" destroy-on-close>
+  <ElDrawer v-model="visible" title="任务日志" size="70%" destroy-on-close>
     <Page auto-content-height>
-      <BasicCrud />
+      <BasicCrud v-if="record.id" />
     </Page>
-  </el-drawer>
+  </ElDrawer>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useCrud } from '#/adapter/crud'
-import { crudSchema } from '../../crontab-log/schemas'
+import { useCrudSchema } from '../crontab-log/schemas'
 import { Page } from '#/components/page'
+import { ElDrawer } from 'element-plus'
+
 
 const visible = ref(false)
-const [BasicCrud] = useCrud(crudSchema)
+const record = ref<any>(null)
+const [BasicCrud, crudApi] = useCrud(useCrudSchema())
 
-const show = (record: any) => {
+const show = (row: any) => {
+  record.value = row
   visible.value = true
+
+  // 动态设置 beforeFetch 来传递 crontab_id
+  crudApi.setState({
+    beforeFetch: (params) => {
+      return {
+        ...params,
+        crontab_id: row.id,
+      };
+    },
+  });
 }
 
 defineExpose({ show })

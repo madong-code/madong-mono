@@ -6,25 +6,24 @@ import { $t } from '#/locales'
 export const useCrudSchema = (): CrudSchema => {
   return {
     crudApi: { list: MemberLevelService.list, add: MemberLevelService.create, edit: MemberLevelService.update, remove: MemberLevelService.delete, batchRemove: MemberLevelService.remove, view: MemberLevelService.get },
-    table: {
-      hasAdd: true, hasEdit: true, hasView: true, hasRemove: true,
-      permissions: { add: 'member:level:create', edit: 'member:level:update', remove: 'member:level:delete', view: 'member:level:read' },
-      columns: [
-        { type: 'checkbox', width: 60 },
-        { field: 'level', title: $t('member.level.table.columns.level'), minWidth: 100 },
-        { field: 'name', title: $t('member.level.table.columns.name'), minWidth: 200 },
-        { field: 'min_points', title: $t('member.level.table.columns.min_points'), minWidth: 100 },
-        { field: 'discount', title: $t('member.level.table.columns.discount'), minWidth: 100 },
-        { field: 'member_count', title: $t('member.level.table.columns.member_count'), minWidth: 100 },
-        {
-          field: 'enabled',
-          title: $t('member.level.table.columns.enabled'),
-          minWidth: 80,
-          cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-        },
-        { field: 'created_at', title: $t('member.level.table.columns.created_at'), minWidth: 160 },
-      ],
-    },
+    // ========== 扁平化表格配置 ==========
+    hasAdd: true, hasEdit: true, hasView: true, hasRemove: true,
+    permissions: { add: 'member:level:create', edit: 'member:level:update', remove: 'member:level:delete', view: 'member:level:read' },
+    columns: [
+      { type: 'checkbox', width: 60 },
+      { field: 'level', title: $t('member.level.table.columns.level'), minWidth: 100 },
+      { field: 'name', title: $t('member.level.table.columns.name'), minWidth: 200 },
+      { field: 'min_points', title: $t('member.level.table.columns.min_points'), minWidth: 100 },
+      { field: 'discount', title: $t('member.level.table.columns.discount'), minWidth: 100 },
+      { field: 'member_count', title: $t('member.level.table.columns.member_count'), minWidth: 100 },
+      {
+        field: 'enabled',
+        title: $t('member.level.table.columns.enabled'),
+        minWidth: 80,
+        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+      },
+      { field: 'created_at', title: $t('member.level.table.columns.created_at'), minWidth: 160 },
+    ],
     searchForm: {
       enabled: true, collapsed: true, collapsedRows: 2,
       schema: [
