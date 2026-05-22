@@ -20,11 +20,10 @@ export default defineConfig(async () => {
           //   target: 'http://127.0.0.1:8500/adminapi',
           //   ws: true,
           // },
-          '/api': {
+          '/adminapi': {
             changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ''),
-            // 后端接口地址
-            target: 'http://127.0.0.1:5320/api',
+            rewrite: (path) => path.replace(/^\/adminapi/, ''),
+            target: 'http://localhost:5320/api/admin',//使用mock 要修改为localhost:5320
             ws: true,
           },
         },
