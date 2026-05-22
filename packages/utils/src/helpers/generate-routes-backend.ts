@@ -22,21 +22,28 @@ function menuHasVisibleWithForbidden(route: RouteRecordRaw): boolean {
 async function generateRoutesByBackend(
   options: GenerateMenuAndRoutesOptions,
 ): Promise<RouteRecordRaw[]> {
-  const { fetchMenuListAsync, layoutMap = {}, pageMap = {}, forbiddenComponent } = options;
+  const { fetchMenuListAsync, layoutMap = {}, pageMap = {}, forbiddenComponent, routes: frontendRoutes = [] } = options;
 
   try {
-    const menuRoutes = await fetchMenuListAsync?.();
-    if (!menuRoutes) {
-      return [];
-    }
+    const menuRoutes = await fetchMenuListAsync?.() || [];
 
     // 规范化页面组件映射表
     const normalizedPageMap = Object.fromEntries(
       Object.entries(pageMap).map(([key, value]) => [normalizeViewPath(key), value]),
     );
 
-    // 转换路由
+    // 转换后端菜单路由
     let routes = convertRoutes(menuRoutes, layoutMap, normalizedPageMap);
+
+    // 处理前端定义的后端模式路由（component为字符串的路由）
+    const frontendBackendRoutes = frontendRoutes.filter((route) => 
+      typeof route.component === 'string'
+    );
+    
+    if (frontendBackendRoutes.length > 0) {
+      const convertedFrontendRoutes = convertRoutes(frontendBackendRoutes, layoutMap, normalizedPageMap);
+      routes = mergeRoutesByPath(routes, convertedFrontendRoutes);
+    }
 
     // 处理可见但禁止访问的路由
     if (forbiddenComponent) {
@@ -53,6 +60,43 @@ async function generateRoutesByBackend(
     console.error('[RouteGenerator] Error:', error);
     throw error;
   }
+}
+
+/**
+ * 根据路径合并路由
+ */
+function mergeRoutesByPath(baseRoutes: RouteRecordRaw[], extraRoutes: RouteRecordRaw[]): RouteRecordRaw[] {
+  const result = [...baseRoutes];
+  const pathMap = new Map<string, RouteRecordRaw>();
+  
+  // 构建路径映射
+  result.forEach((route) => {
+    if (route.path) {
+      pathMap.set(route.path, route);
+    }
+  });
+  
+  // 合并额外路由
+  extraRoutes.forEach((route) => {
+    if (route.path) {
+      const existing = pathMap.get(route.path);
+      if (existing) {
+        // 合并meta
+        existing.meta = { ...existing.meta, ...route.meta };
+        // 合并子路由
+        if (route.children && existing.children) {
+          existing.children = mergeRoutesByPath(existing.children, route.children);
+        } else if (route.children) {
+          existing.children = route.children;
+        }
+      } else {
+        result.push(route);
+        pathMap.set(route.path, route);
+      }
+    }
+  });
+  
+  return result;
 }
 
 /**

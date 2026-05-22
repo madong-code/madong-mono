@@ -36,6 +36,9 @@ export class PluginRouteScanner {
 
     // 扫描所有插件路由文件
     const pluginRouteModules = import.meta.glob('../../plugins/**/routes{.ts,/index.ts}', { eager: true })
+    
+    // 扫描 routes/backend.ts 中的后端模式路由
+    const backendModeRouteModules = import.meta.glob('../routes/backend.ts', { eager: true })
 
     Object.entries(pluginRouteModules).forEach(([filePath, module]) => {
       try {
@@ -72,6 +75,42 @@ export class PluginRouteScanner {
       } catch (error) {
         // 错误隔离：单个插件错误不影响全局
         console.error(`[PluginScanner] ❌ 插件路由扫描失败，文件路径：${filePath}`, error)
+      }
+    })
+
+    // 处理 routes/backend.ts 中的后端模式路由
+    Object.entries(backendModeRouteModules).forEach(([filePath, module]) => {
+      try {
+        const mod = module as { default?: any[]; routes?: any[] }
+        let routes: any[] = []
+        
+        if (Array.isArray(mod)) {
+          routes = mod
+        } else if (Array.isArray(mod.default)) {
+          routes = mod.default
+        } else if (Array.isArray(mod.routes)) {
+          routes = mod.routes
+        }
+
+        if (!Array.isArray(routes) || routes.length === 0) {
+          if (this.isDev) {
+            console.log(`[PluginScanner] ℹ️ routes/backend.ts 未定义路由`)
+          }
+          return
+        }
+
+        // 后端模式路由的 component 为字符串，直接加入后端路由列表
+        routes.forEach((route) => {
+          if (typeof route.component === 'string') {
+            backendRoutes.push(route)
+          }
+        })
+
+        if (this.isDev) {
+          console.log(`[PluginScanner] ✅ routes/backend.ts 扫描完成：后端路由 ${routes.length} 个`)
+        }
+      } catch (error) {
+        console.error(`[PluginScanner] ❌ routes/backend.ts 扫描失败`, error)
       }
     })
 
