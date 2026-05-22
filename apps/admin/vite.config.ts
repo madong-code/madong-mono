@@ -13,11 +13,18 @@ export default defineConfig(async () => {
       ],
       server: {
         proxy: {
-          '/adminapi': {
+          // '/adminapi': {
+          //   changeOrigin: true,
+          //   rewrite: (path) => path.replace(/^\/adminapi/, ''),
+          //   // 后端接口地址
+          //   target: 'http://127.0.0.1:8500/adminapi',
+          //   ws: true,
+          // },
+          '/api': {
             changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/adminapi/, ''),
+            rewrite: (path) => path.replace(/^\/api/, ''),
             // 后端接口地址
-            target: 'http://127.0.0.1:8500/adminapi',
+            target: 'http://127.0.0.1:5320/api',
             ws: true,
           },
         },
