@@ -1,0 +1,79 @@
+{
+  "system": {
+    "user": {
+      "title": "User",
+      "toolbar": {
+        "create": "Create User"
+      },
+      "search": {
+        "user_name": "Username",
+        "real_name": "Real Name",
+        "mobile_phone": "Mobile",
+        "enabled": "Status",
+        "placeholder": {
+          "user_name": "Please enter username",
+          "real_name": "Please enter real name",
+          "mobile_phone": "Please enter mobile",
+          "enabled": "Please select status"
+        }
+      },
+      "table": {
+        "columns": {
+          "user_name": "Username",
+          "real_name": "Real Name",
+          "nick_name": "Nickname",
+          "mobile_phone": "Mobile",
+          "email": "Email",
+          "enabled": "Status",
+          "login_time": "Last Login",
+          "operation": "Operation"
+        }
+      },
+      "action": {
+        "detail": "Detail",
+        "edit": "Edit",
+        "reset_password": "Reset Password",
+        "grant_role": "Grant Role",
+        "play_user": "Play User",
+        "locked": "Lock",
+        "unlocked": "Unlock",
+        "delete": "Delete"
+      },
+      "confirm": {
+        "reset_password": "Are you sure to reset password?",
+        "play_user": "Are you sure to play this user?",
+        "locked": "Are you sure to lock this user?",
+        "unlocked": "Are you sure to unlock this user?",
+        "delete": "Are you sure to delete this user?"
+      },
+      "form": {
+        "user_name": "Username",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "real_name": "Real Name",
+        "nick_name": "Nickname",
+        "sex": "Sex",
+        "mobile_phone": "Mobile",
+        "email": "Email",
+        "dept_id": "Department",
+        "post_name": "Post",
+        "role_name": "Role",
+        "enabled": "Status",
+        "remark": "Remark",
+        "placeholder": {
+          "user_name": "Please enter username",
+          "password": "Please enter password",
+          "confirm_password": "Please confirm password",
+          "real_name": "Please enter real name",
+          "nick_name": "Please enter nickname",
+          "mobile_phone": "Please enter mobile",
+          "email": "Please enter email",
+          "dept_name": "Please select department",
+          "post_name": "Please select post",
+          "role_name": "Please select role",
+          "remark": "Please enter remark"
+        }
+      }
+    }
+  }
+}

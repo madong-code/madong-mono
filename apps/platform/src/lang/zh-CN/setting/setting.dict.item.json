@@ -1,0 +1,26 @@
+{
+  "title": "字典项管理",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "label": "字典项标签",
+      "value": "字典项键值",
+      "code": "字典标识",
+      "sort": "排序",
+      "enabled": "状态",
+      "remark": "备注"
+    }
+  },
+  "search": {
+    "label": "字典标签"
+  },
+  "form": {
+    "id": "ID",
+    "label": "字典标签",
+    "value": "字典键值",
+    "code": "字典标识",
+    "sort": "排序",
+    "enabled": "状态",
+    "remark": "备注"
+  }
+}

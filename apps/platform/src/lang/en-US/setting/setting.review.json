@@ -1,0 +1,5 @@
+{
+  "title": "Review",
+  "table": { "columns": { "id": "ID", "title": "Title", "type": "Type", "status": "Status", "applicant": "Applicant", "reviewer": "Reviewer", "created_at": "Applied", "reviewed_at": "Reviewed" }, "search": { "title": "Title", "type": "Type", "status": "Status", "applicant": "Applicant", "placeholder": { "title": "Please enter title", "type": "Please select type", "status": "Please select status", "applicant": "Please enter applicant" } } },
+  "form": { "modal": { "id": "ID", "title": "Title", "type": "Type", "content": "Content", "status": "Status", "review_note": "Note", "placeholder": { "title": "Please enter title", "type": "Please select type", "content": "Please enter content", "status": "Please select status", "review_note": "Please enter note" } } }
+}

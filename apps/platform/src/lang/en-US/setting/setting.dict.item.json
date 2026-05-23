@@ -1,0 +1,26 @@
+{
+  "title": "Dictionary Item Management",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "label": "Dictionary Item Label",
+      "value": "Dictionary Item Value",
+      "code": "Dictionary Code",
+      "sort": "Sort",
+      "enabled": "Status",
+      "remark": "Remark"
+    }
+  },
+  "search": {
+    "label": "Dictionary Label"
+  },
+  "form": {
+    "id": "ID",
+    "label": "Dictionary Label",
+    "value": "Dictionary Value",
+    "code": "Dictionary Code",
+    "sort": "Sort",
+    "enabled": "Status",
+    "remark": "Remark"
+  }
+}
