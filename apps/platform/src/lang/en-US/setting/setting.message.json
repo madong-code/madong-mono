@@ -1,0 +1,5 @@
+{
+  "title": "Messages",
+  "table": { "columns": { "priority": "Priority", "related_id": "Related ID", "title": "Title", "content": "Content", "status": "Status", "sender": "Sender", "created_date": "Created", "read_date": "Read" }, "search": { "title": "Title", "content": "Content", "status": "Status", "priority": "Priority" } },
+  "form": { "title": "Title", "content": "Content", "status": "Status", "priority": "Priority", "type": "Type", "remark": "Remark" }
+}

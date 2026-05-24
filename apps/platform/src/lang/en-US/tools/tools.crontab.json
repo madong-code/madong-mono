@@ -1,0 +1,74 @@
+{
+  "title": "Crontab",
+  "table": {
+    "columns": {
+      "title": "Title",
+      "rule": "Rule",
+      "singleton": "Singleton",
+      "rule_name": "Rule Name",
+      "target": "Target",
+      "parameter": "Parameter",
+      "enabled": "Status",
+      "running_status": "Running"
+    },
+    "search": {
+      "title": "Title",
+      "type": "Type",
+      "enabled": "Status",
+      "placeholder": {
+        "title": "Please input title",
+        "type": "Please select type",
+        "enabled": "Please select status"
+      }
+    }
+  },
+    "form": {
+    "title": "Title",
+    "type": "Type",
+    "placeholder": {
+      "type": "Please select type"
+    },
+    "task_cycle": "Task Cycle",
+    "second": "Second",
+    "week": "Week",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute",
+    "rule": "Cron Rule",
+    "target": "Target",
+    "parameter": "Parameter",
+    "singleton": "Singleton",
+    "enabled": "Status",
+    "remark": "Remark",
+    "placeholder": {
+      "title": "Please input title",
+      "rule": "Please input rule",
+      "target": "Please input target",
+      "parameter": "Please input parameter",
+      "singleton": "Please select singleton",
+      "enabled": "Status",
+      "type": "Type",
+      "task_cycle": "Please select task cycle",
+      "remark": "Please input remark",
+      "hour": "Hour",
+      "minute": "Minute",
+      "second": "Second",
+      "week": "Week",
+      "year": "Year",
+      "month": "Month",
+      "day": "Day"
+    },
+    "suffix": {
+      "second": "Second",
+      "week": "Week",
+      "year": "Year",
+      "month": "Month",
+      "day": "Day",
+      "hour": "Hour",
+      "minute": "Minute"
+    }
+
+  }
+}
