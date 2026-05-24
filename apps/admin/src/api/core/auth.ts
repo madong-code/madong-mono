@@ -11,6 +11,7 @@ export namespace AuthApi {
     type?: string;
     grant_type?: string;
     key_id?: string;
+    tenant_id?: string | number;
   }
 
   /** 登录接口返回值 */
@@ -28,6 +29,22 @@ export namespace AuthApi {
     expires_in: number;
     expires_at: number;
   }
+
+  /** 租户模式状态 */
+  export interface TenantModeFlag {
+    enabled: boolean;
+    auto_select_first: boolean;
+  }
+
+  /** 租户选项 */
+  export interface TenantOption {
+    id: string | number;
+    name: string;
+    code: string;
+    domain: string;
+    database_mode: string;
+    database_name: string;
+  }
 }
 
 /**
@@ -35,6 +52,20 @@ export namespace AuthApi {
  */
 export async function loginApi(data: AuthApi.LoginParams) {
   return requestClient.post<AuthApi.LoginResult>('/login/login', data);
+}
+
+/**
+ * 获取租户模式状态
+ */
+export async function getTenantModeFlagApi() {
+  return requestClient.get<AuthApi.TenantModeFlag>('/login/tenant-mode');
+}
+
+/**
+ * 获取租户列表（供登录选择）
+ */
+export async function getTenantListApi() {
+  return requestClient.get<AuthApi.TenantOption[]>('/login/tenants');
 }
 
 /**
