@@ -2,11 +2,12 @@
   <Page auto-content-height>
     <BasicCrud />
 
-    <!-- 表单3：关联租户（关联关系表，复选框表格批量选择） -->
+    <!-- 关联租户 -->
     <ElDrawer v-model="bindTenantVisible" title="关联租户" size="600px" :close-on-click-modal="false">
-      <div class="mb-4 text-gray-500">
-        套餐：<span class="font-bold text-black">{{ bindTenantRow?.name }}</span>
-      </div>
+      <template #header>
+        <span class="text-base font-bold">关联租户</span>
+        <span class="ml-2 text-sm text-gray-400">套餐：{{ bindTenantRow?.name }}</span>
+      </template>
       <ElTable
         ref="bindTenantTableRef"
         :data="tenantList"
@@ -26,23 +27,17 @@
       </template>
     </ElDrawer>
 
-    <!-- 表单2：授权（树表） -->
-    <ElDrawer v-model="authorizeVisible" title="授权" size="500px" :close-on-click-modal="false">
-      <div class="mb-4 text-gray-500">
-        套餐：<span class="font-bold text-black">{{ authorizeRow?.name }}</span>
-      </div>
-      <ElTree
-        ref="authorizeTreeRef"
-        :data="moduleTree"
-        show-checkbox
-        node-key="key"
-        default-expand-all
-        :props="{ label: 'label', children: 'children' }"
-      />
+    <!-- 权限授权 -->
+    <ElDrawer v-model="permVisible" title="权限授权" size="800px" :close-on-click-modal="false">
+      <template #header>
+        <span class="text-base font-bold">权限授权</span>
+        <span class="ml-2 text-sm text-gray-400">套餐：{{ permRow?.name }}</span>
+      </template>
+      <PermTable ref="permTableRef" :data="permData" :checked-keys="checkedPermKeys" />
       <template #footer>
-        <ElButton @click="authorizeVisible = false">取消</ElButton>
-        <ElButton type="primary" :loading="authorizeLoading" @click="handleAuthorize">
-          确定（已选 {{ checkedModuleKeys.length }} 个模块）
+        <ElButton @click="permVisible = false">取消</ElButton>
+        <ElButton type="primary" :loading="permLoading" @click="handlePermSubmit">
+          确定
         </ElButton>
       </template>
     </ElDrawer>
@@ -50,27 +45,21 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
-import {
-  ElButton,
-  ElDrawer,
-  ElMessage,
-  ElTable,
-  ElTableColumn,
-  ElTree,
-} from 'element-plus';
-import type { ElTree as ElTreeType } from 'element-plus';
+import { nextTick, ref, shallowRef, watch } from 'vue';
+import { ElButton, ElDrawer, ElMessage, ElTable, ElTableColumn } from 'element-plus';
+import type { ElTable as ElTableType } from 'element-plus';
 
 import { SubscriptionService } from '#/api/saas/subscription';
 import { TenantService } from '#/api/saas/tenant';
 import { useCrud } from '#/adapter/crud';
 import { useCrudSchema } from './schemas';
+import PermTable from './components/perm-table.vue';
 
-// ===== 关联租户（复选框表格） =====
+// ===== 关联租户 =====
 const bindTenantVisible = ref(false);
 const bindTenantRow = ref<any>(null);
 const bindTenantLoading = ref(false);
-const bindTenantTableRef = ref<any>(null);
+const bindTenantTableRef = ref<InstanceType<typeof ElTableType>>();
 const tenantList = ref<any[]>([]);
 const selectedTenantIds = ref<number[]>([]);
 
@@ -87,17 +76,12 @@ const loadTenantData = async (planId: string) => {
     tenantList.value = tenantRes?.data?.list || tenantRes?.data || [];
     const associatedIds: number[] = subRes?.data?.tenant_ids || [];
     selectedTenantIds.value = [...associatedIds];
-
     await nextTick();
-    // 预选已关联的租户
-    const table = bindTenantTableRef.value;
-    if (table) {
-      tenantList.value.forEach((row) => {
-        if (associatedIds.includes(Number(row.id))) {
-          table.toggleRowSelection(row, true);
-        }
-      });
-    }
+    tenantList.value.forEach((row) => {
+      if (associatedIds.includes(Number(row.id))) {
+        bindTenantTableRef.value?.toggleRowSelection(row, true);
+      }
+    });
   } catch {
     tenantList.value = [];
   }
@@ -124,97 +108,159 @@ const handleBindTenant = async () => {
   }
 };
 
-// ===== 授权（树表） =====
-const authorizeVisible = ref(false);
-const authorizeRow = ref<any>(null);
-const authorizeLoading = ref(false);
-const authorizeTreeRef = ref<InstanceType<typeof ElTreeType>>();
-const checkedModuleKeys = ref<string[]>([]);
+// ===== 权限授权 =====
+const permVisible = ref(false);
+const permRow = ref<any>(null);
+const permLoading = ref(false);
+const permTableRef = ref<any>(null);
 
-// 模块树数据
-const moduleTree = [
+const permData = [
   {
-    key: 'user',
-    label: '用户管理',
+    key: 'user', label: '用户管理', type: 'dir',
     children: [
-      { key: 'user.list', label: '用户列表' },
-      { key: 'user.role', label: '角色管理' },
-      { key: 'user.permission', label: '权限配置' },
+      { key: 'user.list', label: '用户列表', type: 'menu',
+        apis: [
+          { key: 'api:user.list:GET',    label: '查询', method: 'GET',    path: 'user.list' },
+          { key: 'api:user.list:POST',   label: '创建', method: 'POST',   path: 'user.list' },
+          { key: 'api:user.list:PUT',    label: '更新', method: 'PUT',    path: 'user.list' },
+          { key: 'api:user.list:DELETE', label: '删除', method: 'DELETE', path: 'user.list' },
+        ],
+        btns: [
+          { key: 'btn:user.list:view', label: '查看' },
+          { key: 'btn:user.list:edit', label: '编辑' },
+          { key: 'btn:user.list:del',  label: '删除' },
+        ],
+      },
+      { key: 'user.role', label: '角色管理', type: 'menu',
+        apis: [
+          { key: 'api:user.role.list:GET',  label: '查询', method: 'GET',  path: 'user.role.list' },
+          { key: 'api:user.role.create:POST', label: '创建', method: 'POST', path: 'user.role.create' },
+        ],
+        btns: [
+          { key: 'btn:user.role:view', label: '查看' },
+          { key: 'btn:user.role:edit', label: '编辑' },
+        ],
+      },
     ],
   },
   {
-    key: 'db',
-    label: '数据库',
+    key: 'db', label: '数据源管理', type: 'dir',
     children: [
-      { key: 'db.setting', label: '数据源配置' },
-      { key: 'db.backup', label: '数据备份' },
+      { key: 'db.setting', label: '数据源配置', type: 'menu',
+        apis: [
+          { key: 'api:db.setting.list:GET',   label: '查询', method: 'GET',  path: 'db.setting.list' },
+          { key: 'api:db.setting.create:POST', label: '创建', method: 'POST', path: 'db.setting.create' },
+        ],
+        btns: [
+          { key: 'btn:db.setting:view', label: '详情' },
+          { key: 'btn:db.setting:edit', label: '编辑' },
+        ],
+      },
+      { key: 'db.backup', label: '数据备份', type: 'menu',
+        apis: [
+          { key: 'api:db.backup.create:POST', label: '备份', method: 'POST', path: 'db.backup.create' },
+        ],
+        btns: [
+          { key: 'btn:db.backup:restore', label: '还原' },
+        ],
+      },
     ],
   },
   {
-    key: 'file',
-    label: '文件管理',
+    key: 'file', label: '文件管理', type: 'dir',
     children: [
-      { key: 'file.upload', label: '文件上传' },
-      { key: 'file.manager', label: '文件管理' },
+      { key: 'file.upload', label: '文件上传', type: 'menu',
+        apis: [
+          { key: 'api:file.upload:POST', label: '上传', method: 'POST', path: 'file.upload' },
+        ],
+        btns: [
+          { key: 'btn:file.upload:batch', label: '批量' },
+        ],
+      },
+      { key: 'file.list', label: '文件管理', type: 'menu',
+        apis: [
+          { key: 'api:file.list:GET',    label: '查询', method: 'GET',    path: 'file.list' },
+          { key: 'api:file.delete:DELETE', label: '删除', method: 'DELETE', path: 'file.delete' },
+        ],
+        btns: [
+          { key: 'btn:file.list:view',  label: '查看' },
+          { key: 'btn:file.list:del',   label: '删除' },
+        ],
+      },
     ],
   },
   {
-    key: 'log',
-    label: '日志',
+    key: 'log', label: '日志', type: 'dir',
     children: [
-      { key: 'log.operate', label: '操作日志' },
-      { key: 'log.login', label: '登录日志' },
+      { key: 'log.operate', label: '操作日志', type: 'menu',
+        apis: [
+          { key: 'api:log.operate:GET', label: '查询', method: 'GET', path: 'log.operate' },
+        ],
+        btns: [
+          { key: 'btn:log.operate:export', label: '导出' },
+        ],
+      },
+      { key: 'log.login', label: '登录日志', type: 'menu',
+        apis: [
+          { key: 'api:log.login:GET', label: '查询', method: 'GET', path: 'log.login' },
+        ],
+      },
     ],
   },
   {
-    key: 'api',
-    label: 'API',
+    key: 'system', label: '系统设置', type: 'dir',
     children: [
-      { key: 'api.doc', label: '接口文档' },
-      { key: 'api.limit', label: '频率限制' },
-    ],
-  },
-  {
-    key: 'system',
-    label: '系统设置',
-    children: [
-      { key: 'system.config', label: '系统配置' },
-      { key: 'system.menu', label: '菜单管理' },
+      { key: 'system.config', label: '系统配置', type: 'menu',
+        apis: [
+          { key: 'api:system.config:GET', label: '查询', method: 'GET', path: 'system.config' },
+          { key: 'api:system.config:PUT', label: '更新', method: 'PUT', path: 'system.config' },
+        ],
+        btns: [
+          { key: 'btn:system.config:save', label: '保存' },
+        ],
+      },
+      { key: 'system.menu', label: '菜单管理', type: 'menu',
+        apis: [
+          { key: 'api:system.menu:GET', label: '查询', method: 'GET', path: 'system.menu' },
+        ],
+        btns: [
+          { key: 'btn:system.menu:add',  label: '新增' },
+          { key: 'btn:system.menu:edit', label: '编辑' },
+        ],
+      },
     ],
   },
 ];
 
-watch(authorizeVisible, async (v) => {
-  if (v && authorizeRow.value?.id) {
-    const currentModules: string[] = authorizeRow.value?.modules || [];
-    checkedModuleKeys.value = [...currentModules];
+const checkedPermKeys = ref<string[]>([]);
+
+watch(permVisible, async (v) => {
+  if (v && permRow.value?.id) {
+    const modules: string[] = permRow.value?.modules || [];
+    checkedPermKeys.value = [...modules];
     await nextTick();
-    authorizeTreeRef.value?.setCheckedKeys(currentModules);
+    permTableRef.value?.setCheckedKeys(modules);
   }
 });
 
-const handleAuthorize = async () => {
-  const keys = authorizeTreeRef.value?.getCheckedKeys() as string[] || [];
-  authorizeLoading.value = true;
+const handlePermSubmit = async () => {
+  const keys = permTableRef.value?.getCheckedKeys() as string[] || [];
+  permLoading.value = true;
   try {
-    await SubscriptionService.authorize(authorizeRow.value.id, {
-      modules: keys,
-      allowed_fields: [],
-    });
+    await SubscriptionService.authorize(permRow.value.id, { modules: keys, allowed_fields: [] });
     ElMessage.success('授权成功');
-    authorizeVisible.value = false;
+    permVisible.value = false;
     crudApi.query();
   } catch (e: any) {
     ElMessage.error(e?.message || '操作失败');
   } finally {
-    authorizeLoading.value = false;
+    permLoading.value = false;
   }
 };
 
+// ===== CRUD =====
 const [BasicCrud, crudApi] = useCrud(useCrudSchema({
-  bindTenantVisible,
-  bindTenantRow,
-  authorizeVisible,
-  authorizeRow,
+  bindTenantVisible, bindTenantRow,
+  permVisible, permRow,
 }));
 </script>

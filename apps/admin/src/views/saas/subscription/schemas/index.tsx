@@ -6,10 +6,10 @@ import { SubscriptionService } from '#/api/saas/subscription';
 export const useCrudSchema = (options: {
   bindTenantVisible: Ref<boolean>;
   bindTenantRow: Ref<any>;
-  authorizeVisible: Ref<boolean>;
-  authorizeRow: Ref<any>;
+  permVisible: Ref<boolean>;
+  permRow: Ref<any>;
 }): CrudSchema => {
-  const { bindTenantVisible, bindTenantRow, authorizeVisible, authorizeRow } = options;
+  const { bindTenantVisible, bindTenantRow, permVisible, permRow } = options;
 
   return {
     crudApi: {
@@ -23,14 +23,16 @@ export const useCrudSchema = (options: {
     hasAdd: true,
     hasEdit: true,
     hasRemove: true,
+    hasView: true,
 
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'name', title: '套餐名称', minWidth: 120 },
+      { field: 'name', title: '套餐名称', minWidth: 140 },
+      { field: 'code', title: '套餐代码', width: 120 },
       {
         field: 'status',
         title: '状态',
-        minWidth: 80,
+        width: 100,
         componentProps: {
           options: [
             { label: '正常', value: 'active' },
@@ -38,7 +40,7 @@ export const useCrudSchema = (options: {
           ],
         },
       },
-      { field: 'price', title: '价格/月', minWidth: 80 },
+      { field: 'price', title: '价格/月', width: 100 },
     ],
 
     searchForm: {
@@ -55,18 +57,12 @@ export const useCrudSchema = (options: {
     },
 
     formDialog: {
-      wrapperClass: 'grid-cols-1',
       dialogType: 'drawer',
       commonConfig: { labelWidth: 90 },
       schema: [
-        {
-          fieldName: 'id',
-          label: 'ID',
-          component: 'Input',
-          formItemClass: 'col-span-1',
-          dependencies: { triggerFields: ['id'], show: false },
-        },
-        { fieldName: 'name', label: '套餐名称', component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
+        { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { triggerFields: ['id'], show: false } },
+        { fieldName: 'name', label: '套餐名称', component: 'Input', rules: 'required' },
+        { fieldName: 'code', label: '套餐代码', component: 'Input', rules: 'required' },
         {
           fieldName: 'status',
           label: '状态',
@@ -79,15 +75,19 @@ export const useCrudSchema = (options: {
               { label: '禁用', value: 'disabled' },
             ],
           },
-          formItemClass: 'col-span-1',
         },
-        { fieldName: 'price', label: '价格/月', component: 'InputNumber', componentProps: { min: 0, precision: 2 }, formItemClass: 'col-span-1' },
+        { fieldName: 'price', label: '价格/月', component: 'InputNumber', componentProps: { min: 0, precision: 2 } },
+        { fieldName: 'price_year', label: '价格/年', component: 'InputNumber', componentProps: { min: 0, precision: 2 } },
+        { fieldName: 'max_users', label: '最大用户', component: 'InputNumber', componentProps: { min: 0 } },
+        { fieldName: 'description', label: '描述', component: 'Textarea', componentProps: { rows: 3 } },
       ],
     },
 
-    tableActions: [
+    // 更多 → 下拉菜单
+    dropDownActions: [
       {
         label: '关联租户',
+        type: null,
         icon: 'ant-design:link-outlined',
         onClick: (_e: any, row: any) => {
           bindTenantRow.value = row;
@@ -95,11 +95,12 @@ export const useCrudSchema = (options: {
         },
       },
       {
-        label: '授权',
+        label: '权限授权',
+        type: null,
         icon: 'ant-design:safety-certificate-outlined',
         onClick: (_e: any, row: any) => {
-          authorizeRow.value = row;
-          authorizeVisible.value = true;
+          permRow.value = row;
+          permVisible.value = true;
         },
       },
     ],
