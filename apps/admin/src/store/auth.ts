@@ -40,6 +40,10 @@ export const useAuthStore = defineStore('auth', () => {
         // 将 accessToken 和 refreshToken 存储到 accessStore 中
         accessStore.setAccessToken(accessToken);
         accessStore.setRefreshToken(refreshToken);
+        // 存储租户ID（多租户模式）
+        if (params.tenant_id) {
+          accessStore.setTenantId(params.tenant_id);
+        }
 
         // 获取用户信息并存储到 accessStore 中
         const [fetchUserInfoResult, accessCodes] = await Promise.all([
