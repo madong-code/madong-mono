@@ -211,9 +211,9 @@ export interface CrudApiInstance {
  * 分页配置
  */
 export interface PaginationConfig {
-  /** 当前页字段名，默认 pageNum */
+  /** 当前页字段名，默认 page */
   currentKey?: string
-  /** 每页大小字段名，默认 pageSize */
+  /** 每页大小字段名，默认 limit */
   sizeKey?: string
 }
 

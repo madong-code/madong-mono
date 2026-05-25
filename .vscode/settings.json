@@ -241,6 +241,6 @@
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

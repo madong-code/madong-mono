@@ -40,7 +40,7 @@ interface AccessState {
    */
   loginExpired: boolean;
   /**
-   * 登录 accessToken
+   * 登录 refreshToken
    */
   refreshToken: AccessToken;
   /**
@@ -48,6 +48,10 @@ interface AccessState {
    * @default ['*']
    */
   superCodes: string[];
+  /**
+   * 租户ID（多租户模式下使用）
+   */
+  tenantId: null | number | string;
 }
 
 /**
@@ -102,6 +106,9 @@ export const useAccessStore = defineStore('core-access', {
     setRefreshToken(token: AccessToken) {
       this.refreshToken = token;
     },
+    setTenantId(tenantId: null | number | string) {
+      this.tenantId = tenantId;
+    },
     unlockScreen() {
       this.isLockScreen = false;
       this.lockScreenPassword = undefined;
@@ -115,6 +122,7 @@ export const useAccessStore = defineStore('core-access', {
       'accessCodes',
       'isLockScreen',
       'lockScreenPassword',
+      'tenantId',
     ],
   },
   state: (): AccessState => ({
@@ -128,6 +136,7 @@ export const useAccessStore = defineStore('core-access', {
     loginExpired: false,
     refreshToken: null,
     superCodes: ['*'],
+    tenantId: null,
   }),
 });
 

@@ -1,18 +1,22 @@
 {
+<<<<<<< HEAD
   "name": "@vben/platform",
+=======
+  "name": "@madong/platform",
+>>>>>>> 42a0a123956a5f6489e121b6ebce290d36a4387f
   "version": "5.7.0",
-  "homepage": "https://vben.pro",
-  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "homepage": "https://madong.tech",
+  "bugs": "https://gitee.com/motion-code/madong/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
-    "directory": "apps/admin"
+    "url": "https://gitee.com/motion-code/madong",
+    "directory": "apps/platform"
   },
   "license": "MIT",
   "author": {
-    "name": "vben",
-    "email": "ann.vben@gmail.com",
-    "url": "https://github.com/anncwb"
+    "name": "madong",
+    "email": "405784684@qq.com",
+    "url": "https://madong.tech"
   },
   "type": "module",
   "scripts": {

@@ -77,6 +77,12 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
       config.headers.Authorization = formatToken(accessStore.accessToken);
       config.headers['Accept-Language'] = preferences.app.locale;
+
+      // 多租户：注入租户ID（SaaS 管理接口跳过）
+      if (accessStore.tenantId && !config.url?.startsWith('/tenant') && !config.url?.startsWith('/db-settings') && !config.url?.startsWith('/db-drivers') && !config.url?.startsWith('/subscription')) {
+        config.headers['X-Tenant-Id'] = String(accessStore.tenantId);
+      }
+
       return config;
     },
   });

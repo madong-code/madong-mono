@@ -148,7 +148,7 @@ const mergedFormOptions = computed((): VbenFormProps | undefined => {
     collapsed: sf?.collapsed ?? false,
     collapsedRows: sf?.collapsedRows ?? 2,
     commonConfig: sf?.commonConfig,
-    showDefaultActions: false,
+    showDefaultActions: true,
     compact: true,
   };
 });
@@ -296,8 +296,8 @@ const mergedGridOptions = computed(() => {
           const params = isTreeMode
             ? { ...formValues }
             : {
-                [paginationConfig?.currentKey || 'pageNum']: page.currentPage,
-                [paginationConfig?.sizeKey || 'pageSize']: page.pageSize,
+                [paginationConfig?.currentKey || 'page']: page.currentPage,
+                [paginationConfig?.sizeKey || 'limit']: page.pageSize,
                 ...formValues,
               };
           // 使用合并后的 beforeFetch（优先顶层配置）
