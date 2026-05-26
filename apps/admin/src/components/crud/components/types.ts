@@ -319,6 +319,7 @@ export interface CrudColumn {
   cellRender?: {
     name: string
     props?: Record<string, any>
+    attrs?: Record<string, any>
   }
   /** 自定义查看组件 */
   viewComponent?: any

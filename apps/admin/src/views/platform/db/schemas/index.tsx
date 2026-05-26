@@ -1,6 +1,6 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
-import { DbSettingService } from '#/api/saas/db-setting';
+import { DbSettingService } from '#/api/platform/db';
 import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {

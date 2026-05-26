@@ -1,14 +1,13 @@
 import { requestClient } from '#/api/request';
-import BaseService from '../core/base';
-
-
+import BaseService from '../../core/base';
+import type { DbSettingRow } from './types';
 
 const baseUrl = '/db-settings'
 
 export const DbSettingService = {
-    ...BaseService<any>({
+  ...BaseService<DbSettingRow>({
     baseUrl,
     allowedMethods: [],
     forbiddenMethods: [],
-  })
+  }),
 };

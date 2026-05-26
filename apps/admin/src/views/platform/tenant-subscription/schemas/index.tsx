@@ -1,15 +1,13 @@
 import type { CrudSchema } from '#/components/crud/components/types';
-import type { Ref } from 'vue';
 
-import { SubscriptionService } from '#/api/saas/subscription';
+import { SubscriptionService } from '#/api/platform/tenant-subscription';
 
 export const useCrudSchema = (options: {
-  bindTenantVisible: Ref<boolean>;
-  bindTenantRow: Ref<any>;
-  permVisible: Ref<boolean>;
-  permRow: Ref<any>;
+  bindTenantDrawerApi: { setData: (data: any) => any; open: () => void };
+  authDrawerApi: { setData: (data: any) => any; open: () => void };
+  onRefresh: () => void;
 }): CrudSchema => {
-  const { bindTenantVisible, bindTenantRow, permVisible, permRow } = options;
+  const { bindTenantDrawerApi, authDrawerApi, onRefresh } = options;
 
   return {
     crudApi: {
@@ -90,8 +88,7 @@ export const useCrudSchema = (options: {
         type: null,
         icon: 'ant-design:link-outlined',
         onClick: (_e: any, row: any) => {
-          bindTenantRow.value = row;
-          bindTenantVisible.value = true;
+          bindTenantDrawerApi.setData({ row, onSuccess: onRefresh }).open();
         },
       },
       {
@@ -99,8 +96,7 @@ export const useCrudSchema = (options: {
         type: null,
         icon: 'ant-design:safety-certificate-outlined',
         onClick: (_e: any, row: any) => {
-          permRow.value = row;
-          permVisible.value = true;
+          authDrawerApi.setData({ row, onSuccess: onRefresh }).open();
         },
       },
     ],

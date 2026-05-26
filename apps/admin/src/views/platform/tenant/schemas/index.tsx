@@ -1,7 +1,8 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
-import { TenantService } from '#/api/saas/tenant';
-import { DbSettingService } from '#/api/saas/db-setting';
+import { TenantService } from '#/api/platform/tenant';
+import { DbSettingService } from '#/api/platform/db';
+import { UserService } from '#/api/system/user';
 import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
@@ -17,6 +18,7 @@ export const useCrudSchema = (): CrudSchema => {
     hasAdd: true,
     hasEdit: true,
     hasRemove: true,
+    hasView: true,
 
     columns: [
       { type: 'checkbox', width: 60 },
@@ -96,6 +98,26 @@ export const useCrudSchema = (): CrudSchema => {
       dialogType: 'drawer',
       schema: [
         {
+          fieldName: 'id',
+          label: 'ID',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+          dependencies: {
+            show: false, triggerFields: ['id']
+          }
+        },
+        {
+          fieldName: 'base_info',
+          hideLabel: true,
+          component: 'Divider',
+          label: '',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            title: '基本信息',
+          }
+
+        },
+        {
           fieldName: 'name',
           label: '租户名称',
           component: 'Input',
@@ -116,29 +138,6 @@ export const useCrudSchema = (): CrudSchema => {
             isBtn: true,
           },
           formItemClass: 'col-span-1',
-        },
-        {
-          fieldName: 'db_setting_id',
-          label: '关联数据源',
-          component: 'Select',
-          help: '请先在"数据源管理"中配置数据源',
-          componentProps: {
-            api: async () => {
-              const res = await DbSettingService.list({ format: 'select' });
-              return (res?.data || res || []).map((item: any) => ({
-                label: `${item.name} (${item.database}@${item.host})`,
-                value: item.id,
-              }));
-            },
-            clearable: true,
-            filterable: true,
-            placeholder: '请选择数据源',
-          },
-          formItemClass: 'col-span-2',
-          dependencies: {
-            triggerFields: ['database_mode'],
-            show: (_value: any) => _value.database_mode === 'database',
-          },
         },
         {
           fieldName: 'code',
@@ -233,6 +232,133 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'Input',
           componentProps: { type: 'number' },
           formItemClass: 'col-span-1',
+        },
+        {
+          fieldName: 'base_info',
+          hideLabel: true,
+          component: 'Divider',
+          label: '',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            title: '账号信息',
+          },
+          dependencies: {
+            show: (values) => {
+              return !values?.id
+            },
+            triggerFields: ['id'],
+          },
+
+        },
+
+        {
+          component: 'Select',
+          fieldName: 'is_create_admin',
+          label: "类型",
+          defaultValue: 0,
+          componentProps: {
+            allowClear: true,
+            options: [{ value: 0, label: "选择管理员" }, { value: 1, label: "新增管理员" }],
+            class: 'w-full',
+          },
+          dependencies: {
+            show: (values) => {
+              return !values?.id
+            },
+            triggerFields: ['id'],
+          },
+          rules: 'selectRequired',
+          formItemClass: "col-span-2",
+        },
+        {
+          fieldName: "admin_id",
+          label: "账号",
+          component: "Select",
+          defaultValue: [],
+          componentProps: {
+            api: async () => {
+              const res = await UserService.list({ limit: 9999, field: 'id,user_name,real_name,mobile_phone' });
+              return (res?.items || []).map((item: any) => ({
+                label: `${item.real_name || item.user_name}${item.mobile_phone ? ` (${item.mobile_phone})` : ''}`,
+                value: item.id,
+              }));
+            },
+            clearable: true,
+            filterable: true,
+            placeholder: '请输入关键字搜索',
+          },
+          dependencies: {
+            show: (values) => {
+              return !values?.id && values?.is_create_admin === 0
+            },
+            triggerFields: ['id', 'is_create_admin'],
+          },
+          formItemClass: "col-span-2",
+          rules: 'selectRequired',
+        },
+        {
+          component: 'Input',
+          fieldName: 'account',
+          label: '账号',
+          rules: 'required',
+          formItemClass: "col-span-2",
+          dependencies: {
+            show: (values) => {
+              return !values?.id && values?.is_create_admin === 1
+            },
+            triggerFields: ['id', 'is_create_admin'],
+          },
+        },
+        {
+          component: 'Password',
+          fieldName: 'password',
+          label: '密码',
+          rules: 'required',
+          formItemClass: "col-span-2",
+          dependencies: {
+            show: (values) => {
+              return !values?.id && values?.is_create_admin === 1
+            },
+            triggerFields: ['id', 'is_create_admin'],
+          },
+        },
+        {
+          fieldName: 'base_info',
+          hideLabel: true,
+          component: 'Divider',
+          label: '',
+          formItemClass: 'col-span-2',
+          componentProps: {
+            title: '数据中心',
+          },
+          dependencies: {
+            triggerFields: ['database_mode'],
+            show: (_value: any) => _value.database_mode === 'database',
+          },
+
+        },
+        {
+          fieldName: 'db_setting_id',
+          label: '关联数据源',
+          component: 'Select',
+          help: '请先在"数据源管理"中配置数据源',
+          componentProps: {
+            api: async () => {
+              const res = await DbSettingService.list({ format: 'select' });
+              return (res?.data || res || []).map((item: any) => ({
+                label: `${item.name} (${item.database}@${item.host})`,
+                value: item.id,
+              }));
+            },
+            clearable: true,
+            filterable: true,
+            placeholder: '请选择数据源',
+          },
+          formItemClass: 'col-span-2',
+          dependencies: {
+            triggerFields: ['database_mode'],
+            show: (_value: any) => _value.database_mode === 'database',
+          },
         },
       ],
     },
