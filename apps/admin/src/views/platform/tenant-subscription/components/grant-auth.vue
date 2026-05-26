@@ -184,6 +184,8 @@ const [Drawer, drawerApi] = useVbenDrawer({
 });
 
 const handleToolCommand = (command: string) => {
+  const expandNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = true; };
+  const collapseNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = false; };
   const traverse = (nodes: TreeNode[], fn: (n: TreeNode) => void) => {
     nodes.forEach((n) => {
       fn(n);
@@ -192,10 +194,10 @@ const handleToolCommand = (command: string) => {
   };
   switch (command) {
     case 'expand-all':
-      traverse(treeData.value, (n) => treeRef.value?.expand(n.key));
+      traverse(treeData.value, (n) => expandNode(n.key));
       break;
     case 'collapse-all':
-      traverse(treeData.value, (n) => treeRef.value?.collapse(n.key));
+      traverse(treeData.value, (n) => collapseNode(n.key));
       break;
     case 'expand-level-1':
       expandToLevel(1);
@@ -216,24 +218,26 @@ const handleToolCommand = (command: string) => {
 };
 
 const expandToLevel = (level: number) => {
+  const expandNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = true; };
+  const collapseNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = false; };
   const traverse = (nodes: TreeNode[], fn: (n: TreeNode) => void) => {
     nodes.forEach((n) => {
       fn(n);
       if (n.children) traverse(n.children, fn);
     });
   };
-  traverse(treeData.value, (n) => treeRef.value?.collapse(n.key));
-  const expandNode = (nodes: TreeNode[], currentLevel: number) => {
+  traverse(treeData.value, (n) => collapseNode(n.key));
+  const expandNodeByLevel = (nodes: TreeNode[], currentLevel: number) => {
     nodes.forEach((node) => {
       if (currentLevel <= level) {
-        treeRef.value?.expand(node.key);
+        expandNode(node.key);
       }
       if (node.children && currentLevel < level) {
-        expandNode(node.children, currentLevel + 1);
+        expandNodeByLevel(node.children, currentLevel + 1);
       }
     });
   };
-  expandNode(treeData.value, 1);
+  expandNodeByLevel(treeData.value, 1);
 };
 
 const selectAll = () => {
