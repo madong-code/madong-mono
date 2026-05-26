@@ -10,8 +10,8 @@ export const SubscriptionService = {
     allowedMethods: [],
     forbiddenMethods: [],
   }),
-  authorize: (id: number, data: { permission_ids: string[] }): Promise<any> =>
-    requestClient.put(`/subscription/${id}/authorize`, { permissions: data.permission_ids }),
+  authorize: (id: number, permissionIds: string[]): Promise<any> =>
+    requestClient.put(`/subscription/${id}/authorize`, { ids: permissionIds }),
   bindTenant: (id: number, tenantIds: string[]): Promise<any> =>
     requestClient.put(`/subscription/${id}/bind-tenant`, { ids: tenantIds }),
   getPermissionTree: (): Promise<any> =>
