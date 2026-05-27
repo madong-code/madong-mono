@@ -47,8 +47,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { ElInput, ElTree, ElMessage, ElRadio } from 'element-plus';
-import { DeptService } from '#/api/setting/dept';
-import type { DeptRow } from '#/api/setting/dept/types';
+import { DeptService } from '#/api/system/dept';
+import type { DeptRow } from '#/api/system/dept/types';
 import { $t } from '#/locales';
 
 const props = withDefaults(

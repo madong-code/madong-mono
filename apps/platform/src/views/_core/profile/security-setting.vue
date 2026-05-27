@@ -2,8 +2,17 @@
 import { computed } from 'vue';
 
 import { ProfileSecuritySetting } from '@vben/common-ui';
+import { useUserStore } from '@vben/stores';
+
+const userStore = useUserStore();
 
 const formSchema = computed(() => {
+  const user = userStore.userInfo;
+  const email = user?.email || '';
+  const mobile = user?.mobile_phone || '';
+  const maskedEmail = email ? email.replace(/(.{3}).+(.{2}@)/, '$1***$2') : '未绑定';
+  const maskedMobile = mobile ? mobile.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : '未绑定';
+
   return [
     {
       value: true,
@@ -12,22 +21,22 @@ const formSchema = computed(() => {
       description: '当前密码强度：强',
     },
     {
-      value: true,
+      value: !!mobile,
       fieldName: 'securityPhone',
       label: '密保手机',
-      description: '已绑定手机：138****8293',
+      description: mobile ? `已绑定手机：${maskedMobile}` : '未绑定手机',
     },
     {
-      value: true,
+      value: false,
       fieldName: 'securityQuestion',
       label: '密保问题',
       description: '未设置密保问题，密保问题可有效保护账户安全',
     },
     {
-      value: true,
+      value: !!email,
       fieldName: 'securityEmail',
       label: '备用邮箱',
-      description: '已绑定邮箱：ant***sign.com',
+      description: email ? `已绑定邮箱：${maskedEmail}` : '未绑定邮箱',
     },
     {
       value: false,

@@ -45,7 +45,7 @@ const fetchList = async () => {
   if (loading.value) return;
   loading.value = true;
   try {
-    const { PostService } = await import('#/api/setting/post');
+    const { PostService } = await import('#/api/system/post');
     const res: any = await PostService.list();
     const list = Array.isArray(res) ? res : res?.items || res?.list || [];
     const map = new Map<string, string>();

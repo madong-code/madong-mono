@@ -47,7 +47,7 @@ const displayValue = computed(() => {
 const fetchTree = async () => {
   loading.value = true;
   try {
-    const { DeptService } = await import('#/api/setting/dept');
+    const { DeptService } = await import('#/api/system/dept');
     const tree: any[] = await DeptService.getTree();
     const map = new Map<string, string>();
     const walk = (nodes: any[]) => {

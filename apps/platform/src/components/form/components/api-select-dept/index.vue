@@ -85,7 +85,7 @@ import {
 import { Icon } from '#/components/icon';
 import { Dialog } from '#/components/dialog';
 import DeptSelectModal from './dept-select-dialog.vue';
-import { DeptService } from '#/api/setting/dept';
+import { DeptService } from '#/api/system/dept';
 import { $t } from '#/locales';
 
 interface Option {

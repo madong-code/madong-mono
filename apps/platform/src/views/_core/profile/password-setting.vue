@@ -7,56 +7,72 @@ import { ProfilePasswordSetting, z } from '@vben/common-ui';
 
 import { ElMessage } from 'element-plus';
 
+import { changePasswordApi } from '#/api';
+import { useAuthStore } from '#/store';
+
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
-      fieldName: 'oldPassword',
+      fieldName: 'old_password',
       label: '旧密码',
       component: 'VbenInputPassword',
+      rules: 'required',
       componentProps: {
         placeholder: '请输入旧密码',
       },
     },
     {
-      fieldName: 'newPassword',
+      fieldName: 'new_password',
       label: '新密码',
       component: 'VbenInputPassword',
+      rules: 'required',
       componentProps: {
         passwordStrength: true,
         placeholder: '请输入新密码',
       },
     },
     {
-      fieldName: 'confirmPassword',
+      fieldName: 'confirm_password',
       label: '确认密码',
       component: 'VbenInputPassword',
+      rules: 'required',
       componentProps: {
         passwordStrength: true,
         placeholder: '请再次输入新密码',
       },
       dependencies: {
         rules(values) {
-          const { newPassword } = values;
+          const { new_password } = values;
           return z
             .string({ required_error: '请再次输入新密码' })
             .min(1, { message: '请再次输入新密码' })
-            .refine((value) => value === newPassword, {
+            .refine((value) => value === new_password, {
               message: '两次输入的密码不一致',
             });
         },
-        triggerFields: ['newPassword'],
+        triggerFields: ['new_password'],
       },
     },
   ];
 });
 
-function handleSubmit() {
-  ElMessage.success('密码修改成功');
+async function handleSubmit(values: Record<string, any>) {
+  try {
+    await changePasswordApi({
+      old_password: values.old_password,
+      new_password: values.new_password,
+    });
+    ElMessage.success('密码修改成功，请重新登录');
+    const authStore = useAuthStore();
+    await authStore.logout();
+  } catch (e: any) {
+    ElMessage.error(e?.message || '密码修改失败');
+  }
 }
 </script>
 <template>
   <ProfilePasswordSetting
-    class="w-1/3"
+    class="w-full"
     :form-schema="formSchema"
     @submit="handleSubmit"
   />

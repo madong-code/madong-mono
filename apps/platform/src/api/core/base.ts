@@ -82,7 +82,7 @@ function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
       params: Record<string, any>,
     ): Promise<any> {
       checkMethod('changStatus');
-      return requestClient.put(`${baseUrl}/${id}/change-status`, params);
+      return requestClient.put(`${baseUrl}/${id}/chang-status`, params);
     },
 
     detail(params: any): Promise<any> {

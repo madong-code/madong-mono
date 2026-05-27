@@ -1,7 +1,7 @@
 // src/store/modules/system-config.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { ConfigService } from '#/api/setting/config'
+import { ConfigService } from '#/api/system/config'
 
 // 定义系统配置接口
 interface SystemConfig {

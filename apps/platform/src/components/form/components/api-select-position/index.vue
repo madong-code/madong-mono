@@ -84,8 +84,8 @@ import {
 } from 'element-plus';
 import { Dialog } from '#/components/dialog';
 import PositionSelectModal from './position-select-dialog.vue';
-import { PostService } from '#/api/setting/post';
-import type { PostRow } from '#/api/setting/post/types';
+import { PostService } from '#/api/system/post';
+import type { PostRow } from '#/api/system/post/types';
 import { $t } from '#/locales';
 
 interface Option {

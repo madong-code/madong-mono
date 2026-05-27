@@ -34,14 +34,14 @@ export namespace AuthApi {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  return requestClient.post<AuthApi.LoginResult>('/login/login', data);
+  return requestClient.post<AuthApi.LoginResult>('/login', data);
 }
 
 /**
  * 刷新accessToken
  */
 export async function refreshTokenApi(refreshToken: string) {
-  return baseRequestClient.post('/system/auth/refresh-token', {
+  return baseRequestClient.post('/login/refresh-token', {
     refresh_token: refreshToken,
   });
 }
@@ -59,5 +59,5 @@ export async function logoutApi() {
  * 获取用户权限码
  */
 export async function getAccessCodesApi() {
-  return requestClient.get<string[]>('/system/auth/perm-code');
+  return requestClient.get<string[]>('/auth/permissions');
 }

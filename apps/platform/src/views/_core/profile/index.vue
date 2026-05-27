@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Profile } from '@vben/common-ui';
 import { useUserStore } from '@vben/stores';
+
+import { getUserInfoApi } from '#/api';
 
 import ProfileBase from './base-setting.vue';
 import ProfileNotificationSetting from './notification-setting.vue';
@@ -31,6 +33,15 @@ const tabs = ref([
     value: 'notice',
   },
 ]);
+
+onMounted(async () => {
+  try {
+    const userInfo = await getUserInfoApi();
+    userStore.setUserInfo(userInfo);
+  } catch {
+    // 用户信息已存在 store 中
+  }
+});
 </script>
 <template>
   <Profile

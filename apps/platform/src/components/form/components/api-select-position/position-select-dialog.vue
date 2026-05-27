@@ -74,9 +74,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { ElInput, ElTag, ElTree, ElMessage, ElRadio } from 'element-plus';
-import { PostService } from '#/api/setting/post';
-import { DeptService } from '#/api/setting/dept';
-import type { PostRow } from '#/api/setting/post/types';
+import { PostService } from '#/api/system/post';
+import { DeptService } from '#/api/system/dept';
+import type { PostRow } from '#/api/system/post/types';
 import { $t } from '#/locales';
 
 const props = withDefaults(
