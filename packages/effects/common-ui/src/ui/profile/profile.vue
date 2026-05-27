@@ -27,17 +27,17 @@ const tabsValue = defineModel<string>('modelValue');
 <template>
   <Page auto-content-height>
     <div class="flex size-full">
-      <Card class="w-1/6 flex-none">
+      <Card class="w-1/3 flex-none">
         <div class="mt-4 flex-col-center h-40 gap-4">
           <VbenAvatar
             :src="userInfo?.avatar ?? preferences.app.defaultAvatar"
             class="size-20"
           />
           <span class="text-lg font-semibold">
-            {{ userInfo?.realName ?? '' }}
+            {{ userInfo?.realName ?? userInfo?.real_name ?? '' }}
           </span>
           <span class="text-sm text-foreground/80">
-            {{ userInfo?.username ?? '' }}
+            {{ userInfo?.username ?? userInfo?.user_name ?? '' }}
           </span>
         </div>
         <Separator class="my-4" />
@@ -54,7 +54,7 @@ const tabsValue = defineModel<string>('modelValue');
           </TabsList>
         </Tabs>
       </Card>
-      <Card class="ml-4 w-5/6 flex-auto p-8">
+      <Card class="ml-4 w-2/3 flex-auto p-8">
         <slot name="content"></slot>
       </Card>
     </div>
