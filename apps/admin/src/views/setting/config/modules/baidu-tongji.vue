@@ -1,13 +1,15 @@
 <template>
   <div>
     <BasicForm />
-    <el-button class="ml-[130px] mt-4" type="primary" @click="onSubmit">{{ $t('common.save') }}</el-button>
+    <div class="flex justify-end mt-4">
+      <ElButton type="primary" @click="onSubmit">{{ $t('common.save') }}</ElButton>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElButton } from 'element-plus'
 import { useVbenForm } from '#/adapter/form'
 import { DictEnum } from '#/enums'
 import { $t } from '#/locales'

@@ -1,17 +1,17 @@
 <template>
   <div>
     <BasicForm />
-    <el-row class="ml-[130px] gap-2">
-      <el-button type="primary" @click="onSubmit">{{ $t('common.save') }}</el-button>
-      <el-button type="primary" @click="handleSetting">{{ $t('setting.config.upload.more') }}</el-button>
-    </el-row>
+    <ElRow class="ml-[130px] gap-2">
+      <ElButton type="primary" @click="onSubmit">{{ $t('common.save') }}</ElButton>
+      <ElButton type="primary" @click="handleSetting">{{ $t('setting.config.upload.more') }}</ElButton>
+    </ElRow>
     <UploadSettingDrawer ref="uploadSettingDrawerRef" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElButton, ElRow } from 'element-plus'
 import { useVbenForm } from '#/adapter/form'
 import { $t } from '#/locales'
 import { ConfigService } from '#/api/setting/config'

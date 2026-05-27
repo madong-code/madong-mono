@@ -1,57 +1,57 @@
 <template>
-  <el-dialog
+  <ElDialog
     v-model="dialogVisible"
     :title="isEdit ? $t('setting.config.common.dialog.edit_title') : $t('setting.config.common.dialog.create_title')"
     width="600px"
     @close="handleClose"
   >
-    <el-form ref="formRef" :model="formData" :rules="rules" label-width="100px">
-      <el-form-item :label="$t('setting.config.common.form.code')" prop="code">
-        <el-input
+    <ElForm ref="formRef" :model="formData" :rules="rules" label-width="100px">
+      <ElFormItem :label="$t('setting.config.common.form.code')" prop="code">
+        <ElInput
           v-model="formData.code"
           :placeholder="$t('setting.config.common.form.placeholder.code')"
           :disabled="isEdit"
         />
-      </el-form-item>
-      <el-form-item :label="$t('setting.config.common.form.name')" prop="name">
-        <el-input
+      </ElFormItem>
+      <ElFormItem :label="$t('setting.config.common.form.name')" prop="name">
+        <ElInput
           v-model="formData.name"
           :placeholder="$t('setting.config.common.form.placeholder.name')"
         />
-      </el-form-item>
-      <el-form-item :label="$t('setting.config.common.form.enabled')" prop="enabled">
-        <el-radio-group v-model="formData.enabled">
-          <el-radio :value="1">{{ $t('common.enabled') }}</el-radio>
-          <el-radio :value="0">{{ $t('common.disabled') }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item :label="$t('setting.config.common.form.content')" prop="content">
-        <el-input
+      </ElFormItem>
+      <ElFormItem :label="$t('setting.config.common.form.enabled')" prop="enabled">
+        <ElRadioGroup v-model="formData.enabled">
+          <ElRadio :value="1">{{ $t('common.enabled') }}</ElRadio>
+          <ElRadio :value="0">{{ $t('common.disabled') }}</ElRadio>
+        </ElRadioGroup>
+      </ElFormItem>
+      <ElFormItem :label="$t('setting.config.common.form.content')" prop="content">
+        <ElInput
           v-model="formData.content"
           type="textarea"
           :rows="10"
           :placeholder="$t('setting.config.common.form.placeholder.content')"
         />
-      </el-form-item>
-      <el-form-item :label="$t('setting.config.common.form.remark')" prop="remark">
-        <el-input
+      </ElFormItem>
+      <ElFormItem :label="$t('setting.config.common.form.remark')" prop="remark">
+        <ElInput
           v-model="formData.remark"
           type="textarea"
           :rows="3"
           :placeholder="$t('setting.config.common.form.placeholder.remark')"
         />
-      </el-form-item>
-    </el-form>
+      </ElFormItem>
+    </ElForm>
     <template #footer>
-      <el-button @click="dialogVisible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</el-button>
+      <ElButton @click="dialogVisible = false">{{ $t('common.cancel') }}</ElButton>
+      <ElButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</ElButton>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElDialog, ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadio, ElButton } from 'element-plus'
 import { $t } from '#/locales'
 import { ConfigService } from '#/api/setting/config'
 

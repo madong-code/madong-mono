@@ -1,20 +1,20 @@
 <template>
-  <el-drawer v-model="visible" :title="$t('setting.config.upload.advanced')" size="500px" @close="handleClose">
-    <el-form :model="formData" label-width="120px">
-      <el-form-item v-for="(label, key) in currentGroupFields" :key="key" :label="label">
-        <el-input v-model="formData[key]" :placeholder="label" clearable />
-      </el-form-item>
-    </el-form>
+  <ElDrawer v-model="visible" :title="$t('setting.config.upload.advanced')" size="500px" @close="handleClose">
+    <ElForm :model="formData" label-width="120px">
+      <ElFormItem v-for="(label, key) in currentGroupFields" :key="key" :label="label">
+        <ElInput v-model="formData[key]" :placeholder="label" clearable />
+      </ElFormItem>
+    </ElForm>
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSave">{{ $t('common.save') }}</el-button>
+      <ElButton @click="visible = false">{{ $t('common.cancel') }}</ElButton>
+      <ElButton type="primary" @click="handleSave">{{ $t('common.save') }}</ElButton>
     </template>
-  </el-drawer>
+  </ElDrawer>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElDrawer, ElForm, ElFormItem, ElInput, ElButton } from 'element-plus'
 import { ConfigService } from '#/api/setting/config'
 import { templateField, convertStringNumbers } from '../schemas'
 import { $t } from '#/locales'

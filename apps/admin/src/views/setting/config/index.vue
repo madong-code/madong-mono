@@ -1,18 +1,22 @@
 <template>
-  <Page auto-content-height>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane v-for="item in settingList" :key="item.key" :name="item.key" :label="item.name">
-        <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
-      </el-tab-pane>
-    </el-tabs>
+  <Page auto-content-height class="p-2">
+      <ElCard >
+        <ElTabs v-model="activeName" @tab-click="handleClick">
+          <ElTabPane v-for="item in settingList" :key="item.key" :name="item.key" :label="item.name">
+            <component :is="item.component" :key="item.loadKey" v-bind="$attrs" />
+          </ElTabPane>
+        </ElTabs>
+      </ElCard>
   </Page>
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref, defineAsyncComponent, markRaw } from 'vue'
+import { ElTabs, ElTabPane, ElCard } from 'element-plus'
 import type { TabsPaneContext } from 'element-plus'
 import { $t } from '#/locales'
-import { Page } from '#/components/page'
+import { Page } from '@vben/common-ui'
+
 
 const activeName = ref('1')
 
