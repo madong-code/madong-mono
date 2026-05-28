@@ -379,7 +379,7 @@ async function initComponentAdapter() {
         slots,
       );
     },
-    // TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
+    TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
     // Upload: ElUpload,
   };
 

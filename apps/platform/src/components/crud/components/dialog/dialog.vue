@@ -191,7 +191,7 @@ function handleOpen() {
     });
   }
 
-  props.options.onOpen?.(viewType.value, currentRow.value);
+  props.options.onOpen?.(viewType.value, currentRow.value, formApi);
 }
 
 async function handleSubmit() {

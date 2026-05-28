@@ -14,7 +14,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     hasAdd: true,
     hasEdit: true,
-    hasRemove: true,
+    hasRemove: false, // 由自定义 dropDownActions 控制
     hasView: true,
 
     permissions: {

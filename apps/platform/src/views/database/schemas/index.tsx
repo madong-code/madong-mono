@@ -71,17 +71,54 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-1',
-         dependencies: {
+          dependencies: {
             triggerFields: ['id'],
             show: false,
           },
         },
-        { fieldName: 'name', label: '名称', component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
-        { fieldName: 'host', label: '主机', component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
-        { fieldName: 'port', label: '端口', component: 'InputNumber', defaultValue: 3306, componentProps: { min: 1, max: 65535 }, formItemClass: 'col-span-1' },
-        { fieldName: 'database', label: '数据库名', component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
-        { fieldName: 'username', label: '用户名', component: 'Input', rules: 'required', formItemClass: 'col-span-1' },
-        { fieldName: 'password', label: '密码', component: 'Password', componentProps: { placeholder: '留空则不修改密码' }, formItemClass: 'col-span-1' },
+        {
+          fieldName: 'name',
+          label: '名称',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1'
+        },
+        {
+          fieldName: 'host',
+          label: '主机',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1'
+        },
+        {
+          fieldName: 'port',
+          label: '端口',
+          component: 'InputNumber',
+          defaultValue: 3306,
+          componentProps: { min: 1, max: 65535 },
+          formItemClass: 'col-span-1'
+        },
+        {
+          fieldName: 'database',
+          label: '数据库名',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1'
+        },
+        {
+          fieldName: 'username',
+          label: '用户名',
+          component: 'Input',
+          rules: 'required',
+          formItemClass: 'col-span-1'
+        },
+        {
+          fieldName: 'password',
+          label: '密码',
+          component: 'Password',
+          componentProps: { placeholder: '留空则不修改密码' },
+          formItemClass: 'col-span-1',
+        },
         {
           fieldName: 'driver',
           label: '驱动',

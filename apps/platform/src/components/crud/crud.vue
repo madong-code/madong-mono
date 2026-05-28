@@ -203,6 +203,8 @@ function getFormDialogOptions() {
     draggable: fd?.draggable,
     fullscreenButton: fd?.fullscreenButton,
     transformFormValues: fd?.transformFormValues,
+    onOpen: fd?.onOpen,
+    beforeSubmit: fd?.beforeSubmit,
     onSuccess: (type: FormActionType) => {
       const api = props.crudApi || crudInstance;
       if (type === 'edit') {

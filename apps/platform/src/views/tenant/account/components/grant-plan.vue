@@ -36,7 +36,7 @@ import { SubscriptionService } from '#/api/tenant/subscription';
 import { TenantService } from '#/api/tenant/account';
 
 interface Plan {
-  id: number | string;
+  id: string;
   name: string;
   code: string;
   status: string;
@@ -44,7 +44,7 @@ interface Plan {
 
 const tableRef = ref<InstanceType<typeof ElTableType>>();
 const planList = ref<Plan[]>([]);
-const selectedIds = ref<(number | string)[]>([]);
+const selectedIds = ref<string[]>([]);
 const currentRow = ref<any>(null);
 const onSuccessRef = ref<(() => void) | null>(null);
 
@@ -74,8 +74,12 @@ const loadData = async (tenantId: string) => {
     ]);
     if (id !== loadId) return; // 已失效，忽略
     // 响应拦截器已剥掉外层 data，formatNormal 返回 { items, total }
-    planList.value = planRes?.items || planRes || [];
-    selectedIds.value = [...(tenantRes?.plan_ids || [])];
+    // 统一转为字符串，避免 snowflake ID 精度丢失
+    planList.value = (planRes?.items || planRes || []).map((p: any) => ({
+      ...p,
+      id: String(p.id),
+    }));
+    selectedIds.value = [...(tenantRes?.plan_ids || [])].map(String);
     await syncTableSelection();
   } catch {
     if (id !== loadId) return;
@@ -85,13 +89,12 @@ const loadData = async (tenantId: string) => {
 };
 
 const onSelectionChange = (rows: Plan[]) => {
-  selectedIds.value = rows.map((r) => r.id);
+  selectedIds.value = rows.map((r) => String(r.id));
 };
 
-const getCheckedIds = (): number[] => {
-  return selectedIds.value
-    .map((id) => (typeof id === 'number' ? id : parseInt(String(id), 10)))
-    .filter((id) => !isNaN(id) && id > 0);
+const getCheckedIds = (): string[] => {
+  // snowflake ID 可能超过 JS 安全整数范围，全部转为字符串
+  return selectedIds.value.map(String);
 };
 
 const [Drawer, drawerApi] = useVbenDrawer({

@@ -104,6 +104,7 @@ export interface FormDialogOptions extends Omit<
   onOpen?: (
     type: FormActionType,
     data: Record<string, any>,
+    formApi?: any,
   ) => void | Promise<void>;
   confirmText?: string;
   cancelText?: string;
@@ -157,6 +158,7 @@ export interface FormDialogConfig {
   onOpen?: (
     type: FormActionType,
     data: Record<string, any>,
+    formApi?: any,
   ) => void | Promise<void>;
   /** 自定义确认文本 */
   confirmText?: string;
@@ -337,6 +339,7 @@ export interface CrudColumn {
   cellRender?: {
     name: string;
     props?: Record<string, any>;
+    [key: string]: any;
   };
   /** 自定义查看组件 */
   viewComponent?: any;

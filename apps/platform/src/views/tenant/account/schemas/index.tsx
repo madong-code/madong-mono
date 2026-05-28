@@ -340,21 +340,19 @@ export const useCrudSchema = (): CrudSchema => {
         {
           fieldName: 'db_setting_id',
           label: '关联数据源',
-          component: 'Select',
+          component: 'ApiSelect',
           help: '请先在"数据源管理"中配置数据源',
           componentProps: {
             api: async () => {
               const res = await DbSettingService.list({ format: 'select' });
-              return (res?.data || res || []).map((item: any) => ({
-                label: `${item.name} (${item.database}@${item.host})`,
-                value: item.id,
-              }));
+              return res || [];
             },
             clearable: true,
             filterable: true,
             placeholder: '请选择数据源',
           },
           formItemClass: 'col-span-2',
+          rules: 'selectRequired',
           dependencies: {
             triggerFields: ['database_mode'],
             show: (_value: any) => _value.database_mode === 'database',

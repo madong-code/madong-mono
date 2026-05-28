@@ -10,8 +10,8 @@ export const TenantService = {
     allowedMethods: [],
     forbiddenMethods: [],
   }),
-  bindPlan: (id: number, planId: number): Promise<any> =>
-    requestClient.put(`/tenant/${id}/bind-plan`, { plan_id: planId }),
+  bindPlan: (id: string | number, planIds: string[]): Promise<any> =>
+    requestClient.put(`/tenant/${id}/bind-plan`, { ids: planIds }),
   syncData: (id: number): Promise<any> =>
     requestClient.put(`/tenant/${id}/sync-data`),
 };

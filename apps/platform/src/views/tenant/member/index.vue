@@ -80,7 +80,7 @@ const handleResetPwd = async (row: TenantMemberRow) => {
 
 // ---- 管理租户 ----
 const handleManagedTenants = (row: TenantMemberRow) => {
-  userTenantDrawerApi.setData({ adminId: row.id, adminName: row.real_name }).open();
+  userTenantDrawerApi.setData({ record: { adminId: row.id, adminName: row.real_name } }).open();
 };
 
 // ---- 获取租户标签颜色 ----
@@ -99,32 +99,43 @@ const [BasicCrud, crudApi] = useCrud({
       type: 'primary',
       link: true,
       icon: 'ant-design:apartment-outlined',
-      show: (row: any) => row.is_super !== 1,
-      onClick: (_e: any, row: any) => handleManagedTenants(row),
+      ifShow: (_e:any,record: any) => {
+        return record.is_super !== 1;
+      },
+      onClick: (_e: any, record: any) => handleManagedTenants(record),
     },
     {
       label: '锁定',
       type: 'warning',
       link: true,
       icon: 'ant-design:lock-outlined',
-      show: (row: any) => row.is_super !== 1 && Number(row.is_locked) !== 1,
-      onClick: (_e: any, row: any) => handleLock(row),
+      ifShow: (_e:any,record: any) => record.is_super !== 1 && Number(record.is_locked) !== 1,
+      onClick: (_e: any, record: any) => handleLock(record),
     },
     {
       label: '解锁',
       type: 'success',
       link: true,
       icon: 'ant-design:unlock-outlined',
-      show: (row: any) => row.is_super !== 1 && Number(row.is_locked) === 1,
-      onClick: (_e: any, row: any) => handleUnlock(row),
+      ifShow: (_e:any,record: any) => record.is_super !== 1 && Number(record.is_locked) === 1,
+      onClick: (_e: any, record: any) => handleUnlock(record),
     },
     {
       label: '重置密码',
       type: 'primary',
       link: true,
       icon: 'ant-design:key-outlined',
-      show: (row: any) => row.is_super !== 1,
-      onClick: (_e: any, row: any) => handleResetPwd(row),
+      onClick: (_e: any, record: any) => handleResetPwd(record),
+    },
+    {
+      label: '删除',
+      type: 'danger',
+      link: true,
+      icon: 'ant-design:delete-outlined',
+      ifShow: (_e:any,record: any) => record.is_super !== 1,
+      onClick: (_e: any, record: any) => {
+        crudApi.executeRemove(record);
+      },
     },
   ],
 });
