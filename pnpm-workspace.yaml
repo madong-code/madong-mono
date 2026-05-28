@@ -104,6 +104,7 @@ catalog:
   dotenv: ^17.4.2
   echarts: ^6.0.0
   element-plus: ^2.13.7
+  '@element-plus/icons-vue': ^2.3.1
   es-toolkit: ^1.45.1
   eslint: ^10.2.0
   eslint-plugin-better-tailwindcss: ^4.4.0
