@@ -66,17 +66,26 @@
       </div>
     </div>
 
-    <!-- 按钮 -->
+    <!-- 安装中/安装结果按钮 -->
+    <div v-if="installing" class="step-actions">
+      <button v-if="installStatus === 'error'" class="btn btn-ghost" @click="goBackForm"><el-icon><ArrowLeft /></el-icon> 返回表单</button>
+      <div v-else></div>
+      <div class="btn-group">
+        <button v-if="installStatus === 'error'" class="btn btn-warning" @click="retryInstallation"><el-icon><Refresh /></el-icon> 重试安装</button>
+      </div>
+    </div>
+
+    <!-- 配置表单按钮 -->
     <div class="step-actions" v-if="!installing">
       <button class="btn btn-ghost" @click="$emit('prev')"><el-icon><ArrowLeft /></el-icon> 上一步</button>
-      <button class="btn btn-primary" :disabled="installStatus !== 'idle'" @click="startInstallation"><el-icon><VideoPlay /></el-icon> 开始安装</button>
+      <button class="btn btn-primary" @click="startInstallation"><el-icon><VideoPlay /></el-icon> 开始安装</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onUnmounted, onMounted, nextTick } from 'vue'
-import { ArrowLeft, VideoPlay, Loading, User, Setting } from '@element-plus/icons-vue'
+import { ArrowLeft, VideoPlay, Loading, User, Setting, Refresh } from '@element-plus/icons-vue'
 import { useInstallStore } from '@/store/module/install'
 import type { FormInstance, FormRules } from 'element-plus'
 
@@ -128,8 +137,25 @@ const startInstallation = async () => {
       })
       installStore.updateTenantConfig({ enable_tenant: installStore.tenantConfig.enable_tenant })
       await installStore.simulateInstallation()
-    } catch (_) { installing.value = false }
+    } catch (_) {
+      // 只有表单验证失败时恢复表单，安装错误保留进度视图
+      if (installStore.install_status === 'idle') {
+        installing.value = false
+      }
+    }
   }
+}
+
+/** 返回配置表单（重置安装状态） */
+const goBackForm = () => {
+  installStore.resetInstall()
+  installing.value = false
+}
+
+/** 重试安装 */
+const retryInstallation = () => {
+  installStore.resetInstall()
+  startInstallation()
 }
 
 onUnmounted(() => { if (installing.value) installStore.resetInstall() })
@@ -206,7 +232,9 @@ const emit = defineEmits<{ prev: []; 'start-install': [config: any] }>()
   .el-icon { font-size: 14px; }
 }
 .btn-ghost { background: var(--btn-ghost-bg); color: var(--btn-ghost-color); &:hover { background: var(--btn-ghost-hover); color: var(--btn-ghost-hover-color); } }
-.btn-primary { background: linear-gradient(135deg,#409eff,#6366f1); color: #fff; margin-left: 8px; box-shadow: 0 3px 12px rgba(64,158,255,.25); &:hover:not(:disabled) { box-shadow: 0 5px 18px rgba(64,158,255,.35); } &:disabled { opacity: .4; cursor: not-allowed; } }
+.btn-primary { background: linear-gradient(135deg,#409eff,#6366f1); color: #fff; box-shadow: 0 3px 12px rgba(64,158,255,.25); &:hover { box-shadow: 0 5px 18px rgba(64,158,255,.35); } }
+.btn-warning { background: linear-gradient(135deg,#e6a23c,#f56c6c); color: #fff; box-shadow: 0 3px 12px rgba(230,162,60,.25); &:hover { box-shadow: 0 5px 18px rgba(230,162,60,.35); } }
+.btn-group { display: flex; gap: 8px; }
 
 .spin { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
 

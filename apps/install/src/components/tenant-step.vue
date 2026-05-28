@@ -26,8 +26,8 @@
       </div>
     </div>
 
-    <!-- 场景2：自动创建默认租户的配置表单 -->
-    <transition name="expand">
+    <!-- 场景2：自动创建默认租户的配置表单（已注释） -->
+    <!-- <transition name="expand">
       <div v-if="activeMode === 'auto'" class="tenant-form-box">
         <div class="tf-header">
           <el-tag color="#e6a23c" effect="dark" size="small">默认租户配置</el-tag>
@@ -48,7 +48,7 @@
           </el-form-item>
         </el-form>
       </div>
-    </transition>
+    </transition> -->
 
     <div class="step-actions">
       <button class="btn btn-ghost" @click="$emit('prev')"><el-icon><ArrowLeft /></el-icon> 上一步</button>
@@ -75,13 +75,13 @@ const scenarios = [
     title: '不启用多租户',
     desc: '单租户模式运行，所有用户共享同一数据空间',
   },
-  {
-    value: 'auto' as TenantMode,
-    icon: 'Switch' as any,
-    color: '#e6a23c',
-    title: '启用并创建默认租户',
-    desc: '安装时自动创建默认租户及管理员账号',
-  },
+  // {
+  //   value: 'auto' as TenantMode,
+  //   icon: 'Switch' as any,
+  //   color: '#e6a23c',
+  //   title: '启用并创建默认租户',
+  //   desc: '安装时自动创建默认租户及管理员账号',
+  // },
   {
     value: 'manual' as TenantMode,
     icon: 'User' as any,
