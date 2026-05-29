@@ -4,10 +4,10 @@ import { computed, ref } from 'vue';
 import { useVbenModal } from '@vben/common-ui';
 import { useAccessStore, useUserStore } from '@vben/stores';
 
+import { ElOption, ElSelect } from 'element-plus';
+
 import { getUserTenantListApi } from '#/api';
 import { useAuthStore } from '#/store';
-
-import { ElOption, ElSelect } from 'element-plus';
 
 defineOptions({ name: 'TenantSwitchModal' });
 
@@ -17,12 +17,12 @@ const userStore = useUserStore();
 
 /** 当前租户名称 */
 const currentTenantName = computed(() => {
-  const info = userStore.userInfo as Record<string, any> | null;
+  const info = userStore.userInfo as null | Record<string, any>;
   return info?.current_tenant?.name ?? '';
 });
 
-const selectedTenantId = ref<string | number>('');
-const tenantOptions = ref<{ id: string | number; name: string }[]>([]);
+const selectedTenantId = ref<number | string>('');
+const tenantOptions = ref<{ id: number | string; name: string }[]>([]);
 
 const [Modal, modalApi] = useVbenModal({
   title: '切换租户',

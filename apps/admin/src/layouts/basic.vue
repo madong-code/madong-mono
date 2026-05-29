@@ -14,9 +14,9 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
 import { NotificationDrawer } from '#/components/notification-drawer';
+import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
-import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 const notifications = ref<NotificationItem[]>([
@@ -89,12 +89,12 @@ const { isDark } = usePreferences();
 
 /** 当前选中的租户名称 */
 const currentTenantName = computed(() => {
-  const info = userStore.userInfo as Record<string, any> | null;
+  const info = userStore.userInfo as null | Record<string, any>;
   return info?.current_tenant?.name ?? '';
 });
 
 /** 租户切换弹窗 ref */
-const tenantSwitchRef = ref<{ open: () => void } | null>(null);
+const tenantSwitchRef = ref<null | { open: () => void }>(null);
 
 function handleSwitchTenant() {
   tenantSwitchRef.value?.open();
@@ -110,7 +110,7 @@ const menus = computed(() => [
   },
   // 切换租户菜单（仅平台级超管才有多租户访问权限）
   ...(accessStore.tenantId !== null &&
-  (userStore.userInfo as Record<string, any> | null)?.is_platform_super
+  (userStore.userInfo as null | Record<string, any>)?.is_platform_super
     ? [
         {
           handler: handleSwitchTenant,
