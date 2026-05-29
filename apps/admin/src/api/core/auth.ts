@@ -11,7 +11,7 @@ export namespace AuthApi {
     type?: string;
     grant_type?: string;
     key_id?: string;
-    tenant_id?: string | number;
+    tenant_id?: number | string;
   }
 
   /** 登录接口返回值 */
@@ -21,6 +21,13 @@ export namespace AuthApi {
     expires_in: number;
     client_id: string;
     expires_time: number;
+    /** 登录/切换后当前租户信息 */
+    tenant?: {
+      code: string;
+      database_mode: string;
+      id: number | string;
+      name: string;
+    };
   }
 
   export interface RefreshTokenResult {
@@ -38,12 +45,13 @@ export namespace AuthApi {
 
   /** 租户选项 */
   export interface TenantOption {
-    id: string | number;
+    id: number | string;
     name: string;
     code: string;
     domain: string;
     database_mode: string;
     database_name: string;
+    is_default?: boolean;
   }
 }
 
@@ -66,6 +74,22 @@ export async function getTenantModeFlagApi() {
  */
 export async function getTenantListApi() {
   return requestClient.get<AuthApi.TenantOption[]>('/login/tenants');
+}
+
+/**
+ * 获取当前登录用户的租户列表（已登录状态下的租户切换用）
+ */
+export async function getUserTenantListApi() {
+  return requestClient.get<AuthApi.TenantOption[]>('/system/auth/tenant-list');
+}
+
+/**
+ * 切换当前登录用户的租户
+ */
+export async function switchTenantApi(tenantId: number | string) {
+  return requestClient.post<AuthApi.LoginResult>('/system/auth/switch-tenant', {
+    tenant_id: tenantId,
+  });
 }
 
 /**

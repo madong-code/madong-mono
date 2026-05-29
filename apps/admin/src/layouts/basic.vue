@@ -8,11 +8,7 @@ import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
 import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
-import {
-  BasicLayout,
-  LockScreen,
-  UserDropdown,
-} from '@vben/layouts';
+import { BasicLayout, LockScreen, UserDropdown } from '@vben/layouts';
 import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
@@ -20,6 +16,7 @@ import { openWindow } from '@vben/utils';
 import { NotificationDrawer } from '#/components/notification-drawer';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
+import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 const notifications = ref<NotificationItem[]>([
@@ -90,6 +87,19 @@ const accessStore = useAccessStore();
 const { destroyWatermark, updateWatermark } = useWatermark();
 const { isDark } = usePreferences();
 
+/** 当前选中的租户名称 */
+const currentTenantName = computed(() => {
+  const info = userStore.userInfo as Record<string, any> | null;
+  return info?.current_tenant?.name ?? '';
+});
+
+/** 租户切换弹窗 ref */
+const tenantSwitchRef = ref<{ open: () => void } | null>(null);
+
+function handleSwitchTenant() {
+  tenantSwitchRef.value?.open();
+}
+
 const menus = computed(() => [
   {
     handler: () => {
@@ -98,6 +108,17 @@ const menus = computed(() => [
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
   },
+  // 切换租户菜单（仅平台级超管才有多租户访问权限）
+  ...(accessStore.tenantId !== null &&
+  (userStore.userInfo as Record<string, any> | null)?.is_platform_super
+    ? [
+        {
+          handler: handleSwitchTenant,
+          icon: 'lucide:building-2',
+          text: `切换租户${currentTenantName.value ? `（${currentTenantName.value}）` : ''}`,
+        },
+      ]
+    : []),
   {
     handler: () => {
       openWindow(VBEN_DOC_URL, {
@@ -229,7 +250,10 @@ watch(
         @remove="(item) => item.id && remove(item.id)"
         @click="handleClick"
         @batch-read="(ids) => ids.forEach((id) => markRead(id))"
-        @batch-remove="(ids) => notifications = notifications.filter((n) => !ids.includes(n.id))"
+        @batch-remove="
+          (ids) =>
+            (notifications = notifications.filter((n) => !ids.includes(n.id)))
+        "
       />
     </template>
     <template #extra>
@@ -244,4 +268,7 @@ watch(
       <LockScreen :avatar @to-login="handleLogout" />
     </template>
   </BasicLayout>
+
+  <!-- 租户切换弹窗（放在 BasicLayout 外面，弹窗 DOM 由 Vben Modal 管理） -->
+  <TenantSwitchModal ref="tenantSwitchRef" />
 </template>

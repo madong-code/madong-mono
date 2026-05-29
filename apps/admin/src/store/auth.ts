@@ -1,5 +1,7 @@
 import type { Recordable, UserInfo } from '@vben/types';
 
+import type { AuthApi } from '#/api/core/auth';
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -10,8 +12,18 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { ElNotification } from 'element-plus';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import {
+  getAccessCodesApi,
+  getUserInfoApi,
+  getUserTenantListApi,
+  loginApi,
+  logoutApi,
+  switchTenantApi,
+} from '#/api';
 import { $t } from '#/locales';
+import { resetRoutes as resetRouterRoutes } from '#/router';
+import { generateAccess } from '#/router/access';
+import { accessRoutes } from '#/router/routes';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -19,6 +31,8 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter();
 
   const loginLoading = ref(false);
+  const tenantList = ref<AuthApi.TenantOption[]>([]);
+  const tenantListLoading = ref(false);
 
   /**
    * 异步处理登录操作
@@ -33,7 +47,9 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const { access_token: accessToken, refresh_token: refreshToken } = await loginApi(params);
+      const loginResult = await loginApi(params);
+      const { access_token: accessToken, refresh_token: refreshToken } =
+        loginResult;
 
       // 如果成功获取到 accessToken
       if (accessToken) {
@@ -53,6 +69,10 @@ export const useAuthStore = defineStore('auth', () => {
 
         userInfo = fetchUserInfoResult;
 
+        // 后端 getUserInfo 不返回 current_tenant，从登录响应中注入
+        if (loginResult.tenant) {
+          (userInfo as Record<string, any>).current_tenant = loginResult.tenant;
+        }
         userStore.setUserInfo(userInfo);
         accessStore.setAccessCodes(accessCodes);
 
@@ -109,15 +129,73 @@ export const useAuthStore = defineStore('auth', () => {
     return userInfo;
   }
 
+  /**
+   * 获取当前用户的租户列表（已登录状态下的租户切换）
+   */
+  async function fetchTenantList() {
+    tenantListLoading.value = true;
+    try {
+      tenantList.value = await getUserTenantListApi();
+      return tenantList.value;
+    } finally {
+      tenantListLoading.value = false;
+    }
+  }
+
+  /**
+   * 切换当前租户
+   * @param tenantId 目标租户ID
+   */
+  async function switchTenant(tenantId: number | string): Promise<void> {
+    const result = await switchTenantApi(tenantId);
+
+    // 更新 token
+    accessStore.setAccessToken(result.access_token);
+    accessStore.setRefreshToken(result.refresh_token);
+    accessStore.setTenantId(String(tenantId));
+
+    // 重新加载用户信息和权限（新租户上下文）
+    const [userInfo, accessCodes] = await Promise.all([
+      fetchUserInfo(),
+      getAccessCodesApi(),
+    ]);
+
+    // 后端 getUserInfo 不返回 current_tenant，从切换响应中注入
+    if (result.tenant) {
+      (userInfo as Record<string, any>).current_tenant = result.tenant;
+    }
+    userStore.setUserInfo(userInfo);
+    accessStore.setAccessCodes(accessCodes);
+
+    // 重置路由后重新生成新租户的菜单和路由
+    resetRouterRoutes();
+
+    const userRoles = userInfo.roles ?? [];
+    const { accessibleMenus, accessibleRoutes: newAccessRoutes } =
+      await generateAccess({
+        roles: userRoles,
+        router,
+        routes: accessRoutes,
+      });
+
+    accessStore.setAccessMenus(accessibleMenus);
+    accessStore.setAccessRoutes(newAccessRoutes);
+  }
+
   function $reset() {
     loginLoading.value = false;
+    tenantList.value = [];
   }
 
   return {
     $reset,
     authLogin,
+    fetchTenantList,
     fetchUserInfo,
     loginLoading,
     logout,
+    switchTenant,
+    tenantList,
+    tenantListLoading,
   };
 });
