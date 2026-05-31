@@ -25,7 +25,7 @@ catalogs:
       specifier: ^20.5.0
       version: 20.5.0
     '@element-plus/icons-vue':
-      specifier: ^2.3.1
+      specifier: ^2.3.2
       version: 2.3.2
     '@eslint-community/eslint-plugin-eslint-comments':
       specifier: ^4.7.1
@@ -37,7 +37,7 @@ catalogs:
       specifier: ^10.4.0
       version: 10.4.0
     '@iconify/json':
-      specifier: ^2.2.460
+      specifier: ^2.2.466
       version: 2.2.466
     '@iconify/tailwind4':
       specifier: ^1.2.3
@@ -527,6 +527,22 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@element-plus/icons-vue':
+        specifier: 'catalog:'
+        version: 2.3.2(vue@3.5.33(typescript@6.0.3))
+      '@iconify/json':
+        specifier: 'catalog:'
+        version: 2.2.466
+      '@iconify/vue':
+        specifier: 'catalog:'
+        version: 5.0.0(vue@3.5.33(typescript@6.0.3))
+      echarts:
+        specifier: 'catalog:'
+        version: 6.0.0
+      lucide-vue-next:
+        specifier: 'catalog:'
+        version: 0.577.0(vue@3.5.33(typescript@6.0.3))
     devDependencies:
       '@changesets/changelog-github':
         specifier: 'catalog:'

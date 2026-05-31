@@ -98,5 +98,12 @@
     "node": "^20.19.0 || ^22.18.0 || ^24.0.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "dependencies": {
+    "@element-plus/icons-vue": "catalog:",
+    "@iconify/json": "catalog:",
+    "@iconify/vue": "catalog:",
+    "echarts": "catalog:",
+    "lucide-vue-next": "catalog:"
+  }
 }

@@ -1,11 +1,11 @@
-import type { RouteRecord, RouteRecordRaw } from 'vue-router';
+import type { RouteRecord } from 'vue-router';
 
 /**
  * 后端模式路由定义
- * 
+ *
  * 此文件专门用于定义后端菜单模式下的前端路由。
  * 路由使用字符串形式的 component，由后端菜单系统动态加载。
- * 
+ *
  * 路由特点：
  * - component 为字符串路径，如 'views/system/user-center/index.vue'
  * - hideInMenu: true 表示不在前端菜单中显示，但可通过URL访问
@@ -20,7 +20,7 @@ const backendRoutes: RouteRecord[] = [
   {
     name: 'Profile',
     path: '/profile',
-    component: 'views/system/user-center/index',
+    component: 'views/_core/profile/index',
     meta: {
       hideInMenu: true,
       hideInBreadcrumb: false,
