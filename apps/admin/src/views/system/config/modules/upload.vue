@@ -87,15 +87,11 @@ onMounted(() => {
     <BasicForm />
     <ElRow class="ml-[130px] gap-2">
       <ElButton type="primary" @click="onSubmit">
-{{
-        $t('common.save')
-      }}
-</ElButton>
+        {{ $t('common.save') }}
+      </ElButton>
       <ElButton type="primary" @click="handleSetting">
-{{
-        $t('setting.config.upload.more')
-      }}
-</ElButton>
+        {{ $t('setting.config.upload.more') }}
+      </ElButton>
     </ElRow>
     <UploadSettingDrawer ref="uploadSettingDrawerRef" />
   </div>

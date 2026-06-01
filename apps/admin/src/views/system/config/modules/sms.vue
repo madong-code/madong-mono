@@ -87,10 +87,8 @@ onMounted(() => {
     <BasicForm />
     <div class="flex justify-end mt-4">
       <ElButton type="primary" @click="onSubmit">
-{{
-        $t('common.save')
-      }}
-</ElButton>
+        {{ $t('common.save') }}
+      </ElButton>
     </div>
   </div>
 </template>

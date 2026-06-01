@@ -93,10 +93,8 @@ defineExpose({ show });
     <template #footer>
       <ElButton @click="visible = false">{{ $t('common.cancel') }}</ElButton>
       <ElButton type="primary" @click="handleSave">
-{{
-        $t('common.save')
-      }}
-</ElButton>
+        {{ $t('common.save') }}
+      </ElButton>
     </template>
   </ElDrawer>
 </template>
