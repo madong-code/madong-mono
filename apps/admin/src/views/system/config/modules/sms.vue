@@ -1,20 +1,11 @@
-<template>
-  <div>
-    <BasicForm />
-    <div class="flex justify-end mt-4">
-      <ElButton type="primary" @click="onSubmit">{{
-        $t('common.save')
-      }}</ElButton>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { ElMessage, ElButton } from 'element-plus';
+
+import { ElButton, ElMessage } from 'element-plus';
+
 import { useVbenForm } from '#/adapter/form';
-import { $t } from '#/locales';
 import { ConfigService } from '#/api/system/config';
+import { $t } from '#/locales';
 
 const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,
@@ -90,3 +81,16 @@ onMounted(() => {
   retrieveData();
 });
 </script>
+
+<template>
+  <div>
+    <BasicForm />
+    <div class="flex justify-end mt-4">
+      <ElButton type="primary" @click="onSubmit">
+{{
+        $t('common.save')
+      }}
+</ElButton>
+    </div>
+  </div>
+</template>

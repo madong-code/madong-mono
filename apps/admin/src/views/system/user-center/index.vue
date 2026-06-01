@@ -1,3 +1,350 @@
+<script setup lang="ts">
+import type { FormInstance, FormRules } from 'element-plus';
+
+import { computed, onMounted, reactive, ref } from 'vue';
+
+import { useUserStore } from '@vben/stores';
+
+import {
+  ElButton,
+  ElCol,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElLoading,
+  ElMessage,
+  ElMessageBox,
+  ElOption,
+  ElRow,
+  ElSelect,
+} from 'element-plus';
+
+import { useCrud } from '#/adapter/crud';
+import { ProfileService } from '#/api/auth/profile';
+import defaultAvatar from '#/assets/images/avatar/default-avatar.webp';
+import { Avatar } from '#/components/form';
+import Icon from '#/components/icon/index.vue';
+import { Page } from '#/components/page';
+import { $t } from '#/locales';
+
+import { useCrudSchema } from './schemas';
+
+defineOptions({ name: 'UserCenter' });
+
+const userStore = useUserStore();
+const userInfo = computed(() => {
+  const info = userStore.userInfo;
+  return info || {};
+});
+
+// 格式化部门信息（从 depts 数组中获取 name）
+const formatDepts = (depts: any[] | undefined): string => {
+  if (!depts || depts.length === 0) return '';
+  return depts.map((dept) => dept.name).join(', ');
+};
+
+// 头像更新（Avatar 组件调用）
+const handleAvatarUpdate = (_newAvatarUrl: string) => {
+  // 这里可以更新本地状态，如果需要的话
+};
+
+// 头像上传成功回调
+const handleAvatarSuccess = async (avatarUrl: string) => {
+  try {
+    // 调用专用头像更新接口
+    await ProfileService.updateAvatar({ avatar: avatarUrl });
+
+    // 更新本地 store 中的用户头像
+    const currentUser = userStore.userInfo;
+    if (currentUser) {
+      userStore.setUserInfo({
+        ...(currentUser as any),
+        avatar: avatarUrl,
+      } as any);
+    }
+
+    ElMessage.success('头像更新成功');
+  } catch (error) {
+    console.error('头像更新失败:', error);
+    ElMessage.error('头像更新失败');
+  }
+};
+
+// 基本设置表单相关
+const isEdit = ref(false);
+const profileFormRef = ref<FormInstance>();
+const form = ref({
+  real_name: '',
+  nick_name: '',
+  email: '',
+  mobile_phone: '',
+  signed: '',
+  sex: 0,
+  address: '',
+  avatar: '',
+});
+
+const options = reactive([
+  { value: 1, label: '男' },
+  { value: 2, label: '女' },
+  { value: 0, label: '未知' },
+]);
+
+const profileRules = reactive<FormRules>({
+  real_name: [
+    { required: true, message: '请输入真实姓名', trigger: 'blur' },
+    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+  ],
+  nick_name: [
+    { required: true, message: '请输入昵称', trigger: 'blur' },
+    { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
+  ],
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    {
+      type: 'email',
+      message: '请输入正确的邮箱格式',
+      trigger: ['blur', 'change'],
+    },
+  ],
+  mobile_phone: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: '请输入正确的手机号码',
+      trigger: 'blur',
+    },
+  ],
+  sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
+});
+
+// 密码修改表单相关
+const isEditPwd = ref(false);
+const pwdFormRef = ref<FormInstance>();
+const pwdForm = reactive({
+  password: '',
+  new_password: '',
+  confirm_password: '',
+});
+
+const validateConfirmPassword = (_rule: any, value: string, callback: any) => {
+  if (value === pwdForm.new_password) {
+    callback();
+  } else {
+    callback(new Error('两次输入的密码不一致'));
+  }
+};
+
+const pwdRules = reactive<FormRules>({
+  password: [
+    { required: true, message: '请输入当前密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码长度在6到20个字符', trigger: 'blur' },
+  ],
+  new_password: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码长度在6到20个字符', trigger: 'blur' },
+    // {
+    //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,20}$/,
+    //   message: "密码需包含大小写字母和数字",
+    //   trigger: "blur"
+    // }
+  ],
+  confirm_password: [
+    { required: true, message: '请确认新密码', trigger: 'blur' },
+    { validator: validateConfirmPassword, trigger: 'blur' },
+  ],
+});
+
+// 加载用户信息
+async function loadProfile() {
+  try {
+    const resp = (await ProfileService.getProfile()) as any;
+    form.value = {
+      real_name: resp.real_name || '',
+      nick_name: resp.nick_name || '',
+      email: resp.email || '',
+      mobile_phone: resp.mobile_phone || '',
+      signed: resp.signed || '',
+      sex: resp.sex || 0,
+      address: resp.address || '',
+      avatar: resp.avatar || '',
+    };
+  } catch (error) {
+    console.error('加载用户信息失败:', error);
+    ElMessage.error('加载用户信息失败');
+  }
+}
+
+// 基本设置表单处理
+const handleProfileEdit = async () => {
+  if (!isEdit.value) {
+    isEdit.value = true;
+    return;
+  }
+
+  try {
+    // 表单验证
+    await profileFormRef.value?.validate();
+
+    // 确认提交
+    await ElMessageBox.confirm('确定要保存个人信息吗？', '确认操作', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    });
+
+    // 更新用户数据
+    await ProfileService.updateProfile(form.value as any);
+
+    // 获取新的用户数据
+    const newUser = (await ProfileService.getProfile()) as any;
+
+    // 更新store中的用户信息
+    const userStore = useUserStore();
+    userStore.setUserInfo(newUser);
+
+    ElMessage.success('个人信息更新成功');
+    isEdit.value = false;
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('保存失败:', error);
+      ElMessage.error('保存失败，请稍后重试');
+    }
+  } finally {
+    ElMessage.closeAll();
+  }
+};
+
+// 密码修改表单处理
+const handlePwdEdit = async () => {
+  if (!isEditPwd.value) {
+    isEditPwd.value = true;
+    return;
+  }
+  // 表单验证
+  await pwdFormRef.value?.validate();
+  // 确认提交
+  await ElMessageBox.confirm('确定要修改密码吗？', '确认操作', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  });
+
+  // 调用修改密码API
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在修改密码...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  });
+
+  try {
+    await ProfileService.updatePassword({
+      old_password: pwdForm.password,
+      new_password: pwdForm.new_password,
+      confirm_password: pwdForm.confirm_password,
+    });
+
+    // 显示成功消息并开始倒计时
+    let seconds = 5;
+    let messageHandler: any = null;
+
+    const updateMessage = () => {
+      if (messageHandler) {
+        messageHandler.close();
+      }
+      messageHandler = ElMessage.success({
+        message: `密码修改成功，${seconds}秒后将自动跳转到登录页面`,
+        duration: 0,
+        showClose: true,
+      });
+    };
+
+    updateMessage();
+
+    // 倒计时定时器
+    const timer = setInterval(() => {
+      seconds--;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        if (messageHandler) {
+          messageHandler.close();
+        }
+        // 强制重新登录
+        const authStore = useAuthStore();
+        authStore.logout();
+      } else {
+        updateMessage();
+      }
+    }, 1000);
+
+    // 重置表单
+    pwdForm.password = '';
+    pwdForm.new_password = '';
+    pwdForm.confirm_password = '';
+    isEditPwd.value = false;
+  } catch (error) {
+    if (error !== 'cancel') {
+      // noop
+    }
+  } finally {
+    loading.close();
+  }
+};
+
+const [BasicCrud, crudApi] = useCrud({
+  ...useCrudSchema(),
+  // 左侧工具栏
+  toolbarActions: [
+    {
+      label: $t('system.files.list.table.columns.actions.delete.label'),
+      type: 'danger',
+      icon: 'ant-design:delete-outlined',
+      auth: 'system:files:delete',
+      ifShow: () => crudApi.getReadonlyState().selection.length > 0,
+      confirm: {
+        title: $t('system.files.list.table.columns.actions.delete.title'),
+        content: $t('system.files.list.table.columns.actions.delete.confirm'),
+        ok() {
+          crudApi.removeByApi({});
+        },
+      },
+    },
+  ],
+  // 左侧栏工具-下拉菜单
+  dropDownToolbarActions: [],
+  // 表格行操作
+  tableActions: [
+    {
+      label: $t(
+        'system.user.center.online_device.table.columns.actions.force_offline.label',
+      ),
+      type: 'danger',
+      sort: 1020,
+      link: true,
+      icon: 'ant-design:stop-outlined',
+      // auth: "system:recycle_bin:recover",
+      onClick: (_e: Event, record: any) => {
+        ProfileService.kickoutSession(record.jti);
+        crudApi.refreshData();
+      },
+    },
+  ],
+  toolbarConfig: {
+    fullscreen: false,
+  },
+  tableActionColumn: {
+    fixed: false,
+    width: 120,
+  },
+  // 表格行操作-下拉菜单
+  dropDownActions: [],
+});
+
+onMounted(() => {
+  loadProfile();
+});
+</script>
+
 <template>
   <Page>
     <div class="flex h-full gap-5 p-5 max-md:flex-col" v-if="userInfo">
@@ -235,333 +582,3 @@
     </div>
   </Page>
 </template>
-
-<script setup lang="ts">
-import { ProfileService } from '#/api/auth/profile';
-import { useCrud } from '#/adapter/crud';
-import { $t } from '#/locales';
-import { useUserStore } from '@vben/stores';
-import { ElButton, ElCol, ElForm, ElFormItem, ElInput, ElLoading, ElMessage, ElMessageBox, ElOption, ElRow, ElSelect } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
-import { useCrudSchema } from './schemas';
-import { Avatar } from '#/components/form';
-import Icon from '#/components/icon/index.vue';
-import defaultAvatar from '#/assets/images/avatar/default-avatar.webp';
-import { computed, onMounted, reactive, ref } from 'vue';
-import { Page } from '#/components/page';
-
-defineOptions({ name: 'UserCenter' });
-
-const userStore = useUserStore();
-const userInfo = computed(() => {
-  const info = userStore.userInfo;
-  return info || {};
-});
-
-// 格式化部门信息（从 depts 数组中获取 name）
-const formatDepts = (depts: any[] | undefined): string => {
-  if (!depts || depts.length === 0) return '';
-  return depts.map((dept) => dept.name).join(', ');
-};
-
-// 头像更新（Avatar 组件调用）
-const handleAvatarUpdate = (_newAvatarUrl: string) => {
-  // 这里可以更新本地状态，如果需要的话
-};
-
-// 头像上传成功回调
-const handleAvatarSuccess = async (avatarUrl: string) => {
-  try {
-    // 调用专用头像更新接口
-    await ProfileService.updateAvatar({ avatar: avatarUrl });
-
-    // 更新本地 store 中的用户头像
-    const currentUser = userStore.userInfo;
-    if (currentUser) {
-      userStore.setUserInfo({
-        ...(currentUser as any),
-        avatar: avatarUrl,
-      } as any);
-    }
-
-    ElMessage.success('头像更新成功');
-  } catch (error) {
-    console.error('头像更新失败:', error);
-    ElMessage.error('头像更新失败');
-  }
-};
-
-// 基本设置表单相关
-const isEdit = ref(false);
-const profileFormRef = ref<FormInstance>();
-const form = ref({
-  real_name: '',
-  nick_name: '',
-  email: '',
-  mobile_phone: '',
-  signed: '',
-  sex: 0,
-  address: '',
-  avatar: '',
-});
-
-const options = reactive([
-  { value: 1, label: '男' },
-  { value: 2, label: '女' },
-  { value: 0, label: '未知' },
-]);
-
-const profileRules = reactive<FormRules>({
-  real_name: [
-    { required: true, message: '请输入真实姓名', trigger: 'blur' },
-    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-  ],
-  nick_name: [
-    { required: true, message: '请输入昵称', trigger: 'blur' },
-    { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
-  ],
-  email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    {
-      type: 'email',
-      message: '请输入正确的邮箱格式',
-      trigger: ['blur', 'change'],
-    },
-  ],
-  mobile_phone: [
-    { required: true, message: '请输入手机号码', trigger: 'blur' },
-    {
-      pattern: /^1[3-9]\d{9}$/,
-      message: '请输入正确的手机号码',
-      trigger: 'blur',
-    },
-  ],
-  sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
-});
-
-// 密码修改表单相关
-const isEditPwd = ref(false);
-const pwdFormRef = ref<FormInstance>();
-const pwdForm = reactive({
-  password: '',
-  new_password: '',
-  confirm_password: '',
-});
-
-const validateConfirmPassword = (_rule: any, value: string, callback: any) => {
-  if (value !== pwdForm.new_password) {
-    callback(new Error('两次输入的密码不一致'));
-  } else {
-    callback();
-  }
-};
-
-const pwdRules = reactive<FormRules>({
-  password: [
-    { required: true, message: '请输入当前密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在6到20个字符', trigger: 'blur' },
-  ],
-  new_password: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在6到20个字符', trigger: 'blur' },
-    // {
-    //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,20}$/,
-    //   message: "密码需包含大小写字母和数字",
-    //   trigger: "blur"
-    // }
-  ],
-  confirm_password: [
-    { required: true, message: '请确认新密码', trigger: 'blur' },
-    { validator: validateConfirmPassword, trigger: 'blur' },
-  ],
-});
-
-// 加载用户信息
-async function loadProfile() {
-  try {
-    const resp = (await ProfileService.getProfile()) as any;
-    form.value = {
-      real_name: resp.real_name || '',
-      nick_name: resp.nick_name || '',
-      email: resp.email || '',
-      mobile_phone: resp.mobile_phone || '',
-      signed: resp.signed || '',
-      sex: resp.sex || 0,
-      address: resp.address || '',
-      avatar: resp.avatar || '',
-    };
-  } catch (error) {
-    console.error('加载用户信息失败:', error);
-    ElMessage.error('加载用户信息失败');
-  }
-}
-
-// 基本设置表单处理
-const handleProfileEdit = async () => {
-  if (!isEdit.value) {
-    isEdit.value = true;
-    return;
-  }
-
-  try {
-    // 表单验证
-    await profileFormRef.value?.validate();
-
-    // 确认提交
-    await ElMessageBox.confirm('确定要保存个人信息吗？', '确认操作', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    });
-
-    //更新用户数据
-    await ProfileService.updateProfile(form.value as any);
-
-    //获取新的用户数据
-    const newUser = (await ProfileService.getProfile()) as any;
-
-    // 更新store中的用户信息
-    const userStore = useUserStore();
-    userStore.setUserInfo(newUser);
-
-    ElMessage.success('个人信息更新成功');
-    isEdit.value = false;
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('保存失败:', error);
-      ElMessage.error('保存失败，请稍后重试');
-    }
-  } finally {
-    ElMessage.closeAll();
-  }
-};
-
-// 密码修改表单处理
-const handlePwdEdit = async () => {
-  if (!isEditPwd.value) {
-    isEditPwd.value = true;
-    return;
-  }
-  // 表单验证
-  await pwdFormRef.value?.validate();
-  // 确认提交
-  await ElMessageBox.confirm('确定要修改密码吗？', '确认操作', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  });
-
-  // 调用修改密码API
-  const loading = ElLoading.service({
-    lock: true,
-    text: '正在修改密码...',
-    background: 'rgba(0, 0, 0, 0.7)',
-  });
-
-  try {
-    await ProfileService.updatePassword({
-      old_password: pwdForm.password,
-      new_password: pwdForm.new_password,
-      confirm_password: pwdForm.confirm_password,
-    });
-
-    // 显示成功消息并开始倒计时
-    let seconds = 5;
-    let messageHandler: any = null;
-
-    const updateMessage = () => {
-      if (messageHandler) {
-        messageHandler.close();
-      }
-      messageHandler = ElMessage.success({
-        message: `密码修改成功，${seconds}秒后将自动跳转到登录页面`,
-        duration: 0,
-        showClose: true,
-      });
-    };
-
-    updateMessage();
-
-    // 倒计时定时器
-    const timer = setInterval(() => {
-      seconds--;
-      if (seconds <= 0) {
-        clearInterval(timer);
-        if (messageHandler) {
-          messageHandler.close();
-        }
-        // 强制重新登录
-        const authStore = useAuthStore();
-        authStore.logout();
-      } else {
-        updateMessage();
-      }
-    }, 1000);
-
-    // 重置表单
-    pwdForm.password = '';
-    pwdForm.new_password = '';
-    pwdForm.confirm_password = '';
-    isEditPwd.value = false;
-  } catch (error) {
-    if (error !== 'cancel') {
-      // noop
-    }
-  } finally {
-    loading.close();
-  }
-};
-
-const [BasicCrud, crudApi] = useCrud({
-  ...useCrudSchema(),
-  // 左侧工具栏
-  toolbarActions: [
-    {
-      label: $t('system.files.list.table.columns.actions.delete.label'),
-      type: 'danger',
-      icon: 'ant-design:delete-outlined',
-      auth: 'system:files:delete',
-      ifShow: () => crudApi.getReadonlyState().selection.length > 0,
-      confirm: {
-        title: $t('system.files.list.table.columns.actions.delete.title'),
-        content: $t('system.files.list.table.columns.actions.delete.confirm'),
-        ok() {
-          crudApi.removeByApi({});
-        },
-      },
-    },
-  ],
-  // 左侧栏工具-下拉菜单
-  dropDownToolbarActions: [],
-  // 表格行操作
-  tableActions: [
-    {
-      label: $t(
-        'system.user.center.online_device.table.columns.actions.force_offline.label',
-      ),
-      type: 'danger',
-      sort: 1020,
-      link: true,
-      icon: 'ant-design:stop-outlined',
-      // auth: "system:recycle_bin:recover",
-      onClick: (_e: Event, record: any) => {
-        ProfileService.kickoutSession(record.jti);
-        crudApi.refreshData();
-      },
-    },
-  ],
-  toolbarConfig: {
-    fullscreen: false,
-  },
-  tableActionColumn: {
-    fixed: false,
-    width: 120,
-  },
-  // 表格行操作-下拉菜单
-  dropDownActions: [],
-});
-
-onMounted(() => {
-  loadProfile();
-});
-</script>

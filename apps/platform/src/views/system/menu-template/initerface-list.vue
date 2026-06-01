@@ -274,9 +274,7 @@ defineExpose({
                       margin: 0;
                     "
                   >
-                    <span style="flex-shrink: 0; margin-right: 8px"
-                      >{{ $t('system.menu.api.route_info.name') }}：</span
-                    >
+                    <span style="flex-shrink: 0; margin-right: 8px">{{ $t('system.menu.api.route_info.name') }}：</span>
                     <span class="ellipsis-text" :title="item.name">{{
                       item.name
                     }}</span>
@@ -289,9 +287,7 @@ defineExpose({
                       margin: 0;
                     "
                   >
-                    <span style="flex-shrink: 0; margin-right: 8px"
-                      >{{ $t('system.menu.api.route_info.method') }}：</span
-                    >
+                    <span style="flex-shrink: 0; margin-right: 8px">{{ $t('system.menu.api.route_info.method') }}：</span>
                     <span class="ellipsis-text" :title="item.method">{{
                       item.method
                     }}</span>
@@ -304,9 +300,7 @@ defineExpose({
                       margin: 0;
                     "
                   >
-                    <span style="flex-shrink: 0; margin-right: 8px"
-                      >{{ $t('system.menu.api.route_info.path') }}：</span
-                    >
+                    <span style="flex-shrink: 0; margin-right: 8px">{{ $t('system.menu.api.route_info.path') }}：</span>
                     <span class="ellipsis-text" :title="item.path">{{
                       item.path
                     }}</span>
@@ -320,9 +314,7 @@ defineExpose({
                       margin: 0;
                     "
                   >
-                    <span style="flex-shrink: 0; margin-right: 8px"
-                      >{{ $t('system.menu.api.route_info.code') }}：</span
-                    >
+                    <span style="flex-shrink: 0; margin-right: 8px">{{ $t('system.menu.api.route_info.code') }}：</span>
                     <span class="ellipsis-text" :title="item.code">{{
                       item.code
                     }}</span>

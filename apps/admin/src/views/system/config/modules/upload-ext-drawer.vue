@@ -1,41 +1,19 @@
-<template>
-  <ElDrawer
-    v-model="visible"
-    :title="$t('setting.config.upload.advanced')"
-    size="500px"
-    @close="handleClose"
-  >
-    <ElForm :model="formData" label-width="120px">
-      <ElFormItem
-        v-for="(label, key) in currentGroupFields"
-        :key="key"
-        :label="label"
-      >
-        <ElInput v-model="formData[key]" :placeholder="label" clearable />
-      </ElFormItem>
-    </ElForm>
-    <template #footer>
-      <ElButton @click="visible = false">{{ $t('common.cancel') }}</ElButton>
-      <ElButton type="primary" @click="handleSave">{{
-        $t('common.save')
-      }}</ElButton>
-    </template>
-  </ElDrawer>
-</template>
-
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { computed, reactive, ref } from 'vue';
+
 import {
-  ElMessage,
+  ElButton,
   ElDrawer,
   ElForm,
   ElFormItem,
   ElInput,
-  ElButton,
+  ElMessage,
 } from 'element-plus';
+
 import { ConfigService } from '#/api/system/config';
-import { templateField, convertStringNumbers } from '../schemas';
 import { $t } from '#/locales';
+
+import { convertStringNumbers, templateField } from '../schemas';
 
 const visible = ref(false);
 const formData = reactive<Record<string, any>>({});
@@ -95,3 +73,30 @@ const handleSave = async () => {
 
 defineExpose({ show });
 </script>
+
+<template>
+  <ElDrawer
+    v-model="visible"
+    :title="$t('setting.config.upload.advanced')"
+    size="500px"
+    @close="handleClose"
+  >
+    <ElForm :model="formData" label-width="120px">
+      <ElFormItem
+        v-for="(label, key) in currentGroupFields"
+        :key="key"
+        :label="label"
+      >
+        <ElInput v-model="formData[key]" :placeholder="label" clearable />
+      </ElFormItem>
+    </ElForm>
+    <template #footer>
+      <ElButton @click="visible = false">{{ $t('common.cancel') }}</ElButton>
+      <ElButton type="primary" @click="handleSave">
+{{
+        $t('common.save')
+      }}
+</ElButton>
+    </template>
+  </ElDrawer>
+</template>

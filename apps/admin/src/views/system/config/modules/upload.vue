@@ -1,25 +1,13 @@
-<template>
-  <div>
-    <BasicForm />
-    <ElRow class="ml-[130px] gap-2">
-      <ElButton type="primary" @click="onSubmit">{{
-        $t('common.save')
-      }}</ElButton>
-      <ElButton type="primary" @click="handleSetting">{{
-        $t('setting.config.upload.more')
-      }}</ElButton>
-    </ElRow>
-    <UploadSettingDrawer ref="uploadSettingDrawerRef" />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElMessage, ElButton, ElRow } from 'element-plus';
+import { onMounted, ref } from 'vue';
+
+import { ElButton, ElMessage, ElRow } from 'element-plus';
+
 import { useVbenForm } from '#/adapter/form';
-import { $t } from '#/locales';
 import { ConfigService } from '#/api/system/config';
 import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
+
 import UploadSettingDrawer from './upload-ext-drawer.vue';
 
 const [BasicForm, formApi] = useVbenForm({
@@ -93,3 +81,22 @@ onMounted(() => {
   retrieveData();
 });
 </script>
+
+<template>
+  <div>
+    <BasicForm />
+    <ElRow class="ml-[130px] gap-2">
+      <ElButton type="primary" @click="onSubmit">
+{{
+        $t('common.save')
+      }}
+</ElButton>
+      <ElButton type="primary" @click="handleSetting">
+{{
+        $t('setting.config.upload.more')
+      }}
+</ElButton>
+    </ElRow>
+    <UploadSettingDrawer ref="uploadSettingDrawerRef" />
+  </div>
+</template>
