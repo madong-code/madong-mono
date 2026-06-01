@@ -1,15 +1,18 @@
+import type { TenantMemberApi } from '#/api/tenant/member-for-tenant';
 import type { CrudSchema } from '#/components/crud/components/types';
 
-import { TenantMemberApi } from '#/api/tenant/member-admin';
 import { DictEnum } from '#/enums';
 
-export const useCrudSchema = (): CrudSchema => {
+export const useCrudSchema = (
+  api: ReturnType<typeof TenantMemberApi>,
+): CrudSchema => {
   return {
     crudApi: {
-      list: TenantMemberApi.list,
-      add: TenantMemberApi.create,
-      edit: TenantMemberApi.update,
-      remove: TenantMemberApi.delete,
+      list: api.list,
+      add: api.create,
+      edit: api.update,
+      remove: api.delete,
+      view: api.get,
     },
 
     hasAdd: true,
@@ -17,22 +20,10 @@ export const useCrudSchema = (): CrudSchema => {
     hasRemove: false, // 由自定义 dropDownActions 控制
     hasView: true,
 
-    permissions: {
-      add: 'platform:tenant_member:create',
-      edit: 'platform:tenant_member:edit',
-      remove: 'platform:tenant_member:delete',
-    },
-
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'user_name', title: '账号', minWidth: 100,align: 'left'},
-      { field: 'real_name', title: '用户昵称', minWidth: 100,align: 'left'},
-      {
-        field: 'managed_tenants',
-        title: '授权租户',
-        minWidth: 180,
-        slots: { default: 'managed_tenants' },
-      },
+      { field: 'user_name', title: '账号', minWidth: 100, align: 'left' },
+      { field: 'real_name', title: '用户昵称', minWidth: 100, align: 'left' },
       { field: 'mobile_phone', title: '手机号', minWidth: 120 },
       {
         field: 'enabled',
@@ -44,9 +35,11 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'is_locked',
         title: '锁定状态',
         width: 90,
-        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_YES_NO } },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_YES_NO },
+        },
       },
-
       {
         field: 'created_date',
         title: '创建时间',
@@ -89,16 +82,11 @@ export const useCrudSchema = (): CrudSchema => {
             clearable: true,
           },
         },
-        // {
-        //   component: 'RangePicker',
-        //   fieldName: 'BETWEEN_created_at',
-        //   label: '创建时间',
-        // },
       ],
     },
 
     formDialog: {
-      dialogType: 'drawer',
+      dialogType: 'modal',
       commonConfig: { labelWidth: 90 },
       schema: [
         {
@@ -111,16 +99,19 @@ export const useCrudSchema = (): CrudSchema => {
           label: '用户名',
           component: 'Input',
           rules: 'required',
-          componentProps: { placeholder: '请输入用户名' },
+          componentProps: (_values: any) => ({
+            placeholder: '请输入用户名',
+          }),
         },
         {
           fieldName: 'password',
           label: '密码',
           component: 'Password',
-          componentProps: (__value: any) => ({
-            placeholder: __value?.id ? '留空则不修改密码' : '请输入密码',
+          componentProps: (values: any) => ({
+            placeholder: values?.id ? '留空则不修改密码' : '请输入密码',
           }),
           dependencies: {
+            show: (values: any) => !values?.id,
             triggerFields: ['id'],
           },
         },
@@ -129,48 +120,67 @@ export const useCrudSchema = (): CrudSchema => {
           label: '姓名',
           component: 'Input',
           rules: 'required',
-          componentProps: { placeholder: '请输入姓名' },
+          componentProps: (_values: any) => ({
+            placeholder: '请输入姓名',
+          }),
         },
         {
           fieldName: 'mobile_phone',
           label: '手机号',
           component: 'Input',
-          componentProps: { placeholder: '请输入手机号' },
+          componentProps: (_values: any) => ({
+            placeholder: '请输入手机号',
+          }),
         },
         {
           fieldName: 'email',
           label: '邮箱',
           component: 'Input',
-          componentProps: { placeholder: '请输入邮箱' },
+          componentProps: (_values: any) => ({
+            placeholder: '请输入邮箱',
+          }),
+        },
+        {
+          fieldName: 'is_super',
+          label: '类型',
+          component: 'Select',
+          defaultValue: 0,
+          componentProps: (_values: any) => ({
+            options: [
+              { label: '普通用户', value: 0 },
+              { label: '管理员', value: 1 },
+            ],
+          }),
         },
         {
           fieldName: 'sex',
           label: '性别',
           component: 'ApiDict',
           defaultValue: 0,
-          componentProps: {
+          componentProps: (_values: any) => ({
             code: DictEnum.SYS_SEX,
             isBtn: true,
             renderType: 'RadioGroup',
-
-          },
+          }),
         },
         {
           fieldName: 'enabled',
           label: '状态',
           component: 'ApiDict',
           defaultValue: 1,
-          componentProps: {
-           code: DictEnum.SYS_ENABLED_STATUS,
+          componentProps: (_values: any) => ({
+            code: DictEnum.SYS_ENABLED_STATUS,
             isBtn: true,
             renderType: 'RadioGroup',
-          },
+          }),
         },
         {
           fieldName: 'remark',
           label: '备注',
           component: 'Textarea',
-          componentProps: { placeholder: '请输入备注' },
+          componentProps: (_values: any) => ({
+            placeholder: '请输入备注',
+          }),
         },
       ],
     },

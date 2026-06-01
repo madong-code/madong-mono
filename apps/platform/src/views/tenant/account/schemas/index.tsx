@@ -1,9 +1,7 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
-import { TenantService } from '#/api/tenant/account';
 import { DbSettingService } from '#/api/database';
-import { UserService } from '#/api/system/user';
-import { $t } from '#/locales';
+import { TenantService } from '#/api/tenant/account';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -103,8 +101,9 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'Input',
           formItemClass: 'col-span-1',
           dependencies: {
-            show: false, triggerFields: ['id']
-          }
+            show: false,
+            triggerFields: ['id'],
+          },
         },
         {
           fieldName: 'base_info',
@@ -114,8 +113,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             title: '基本信息',
-          }
-
+          },
         },
         {
           fieldName: 'name',
@@ -137,6 +135,10 @@ export const useCrudSchema = (): CrudSchema => {
             ],
             isBtn: true,
           },
+          dependencies: {
+            triggerFields: ['id'],
+            disabled: (_value: any) => _value.id > 0,
+          },
           formItemClass: 'col-span-1',
         },
         {
@@ -146,7 +148,12 @@ export const useCrudSchema = (): CrudSchema => {
           rules: 'required',
           formItemClass: 'col-span-1',
         },
-        { fieldName: 'domain', label: '绑定域名', component: 'Input', formItemClass: 'col-span-1' },
+        {
+          fieldName: 'domain',
+          label: '绑定域名',
+          component: 'Input',
+          formItemClass: 'col-span-1',
+        },
         {
           fieldName: 'contact_name',
           label: '联系人',
@@ -240,73 +247,25 @@ export const useCrudSchema = (): CrudSchema => {
           label: '',
           formItemClass: 'col-span-2',
           componentProps: {
-            title: '账号信息',
+            title: '管理员信息',
           },
           dependencies: {
             show: (values) => {
-              return !values?.id
+              return !values?.id;
             },
             triggerFields: ['id'],
           },
-
         },
 
-        {
-          component: 'Select',
-          fieldName: 'is_create_admin',
-          label: "类型",
-          defaultValue: 0,
-          componentProps: {
-            allowClear: true,
-            options: [{ value: 0, label: "选择管理员" }, { value: 1, label: "新增管理员" }],
-            class: 'w-full',
-          },
-          dependencies: {
-            show: (values) => {
-              return !values?.id
-            },
-            triggerFields: ['id'],
-          },
-          rules: 'selectRequired',
-          formItemClass: "col-span-2",
-        },
-        {
-          fieldName: "admin_id",
-          label: "账号",
-          component: "Select",
-          defaultValue: [],
-          componentProps: {
-            api: async () => {
-              const res = await UserService.list({ limit: 9999, field: 'id,user_name,real_name,mobile_phone' });
-              return (res?.items || []).map((item: any) => ({
-                label: `${item.real_name || item.user_name}${item.mobile_phone ? ` (${item.mobile_phone})` : ''}`,
-                value: item.id,
-              }));
-            },
-            clearable: true,
-            filterable: true,
-            placeholder: '请输入关键字搜索',
-          },
-          dependencies: {
-            show: (values) => {
-              return !values?.id && values?.is_create_admin === 0
-            },
-            triggerFields: ['id', 'is_create_admin'],
-          },
-          formItemClass: "col-span-2",
-          rules: 'selectRequired',
-        },
         {
           component: 'Input',
           fieldName: 'account',
           label: '账号',
           rules: 'required',
-          formItemClass: "col-span-2",
+          formItemClass: 'col-span-2',
           dependencies: {
-            show: (values) => {
-              return !values?.id && values?.is_create_admin === 1
-            },
-            triggerFields: ['id', 'is_create_admin'],
+            show: (values) => !values?.id,
+            triggerFields: ['id'],
           },
         },
         {
@@ -314,12 +273,10 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'password',
           label: '密码',
           rules: 'required',
-          formItemClass: "col-span-2",
+          formItemClass: 'col-span-2',
           dependencies: {
-            show: (values) => {
-              return !values?.id && values?.is_create_admin === 1
-            },
-            triggerFields: ['id', 'is_create_admin'],
+            show: (values) => !values?.id,
+            triggerFields: ['id'],
           },
         },
         {
@@ -335,7 +292,6 @@ export const useCrudSchema = (): CrudSchema => {
             triggerFields: ['database_mode'],
             show: (_value: any) => _value.database_mode === 'database',
           },
-
         },
         {
           fieldName: 'db_setting_id',

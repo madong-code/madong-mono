@@ -1,68 +1,43 @@
-<template>
-  <div class="bg-card h-full flex flex-col">
-    <VxeGrid
-      :grid-options="(mergedGridOptions as any)"
-      :form-options="mergedFormOptions"
-      v-bind="$attrs"
-    >
-      <template #toolbar-actions>
-        <slot name="toolbar-actions" :actions="toolbarActions">
-          <TableAction :actions="toolbarActions" :drop-down-actions="[]" />
-        </slot>
-      </template>
-      <template #toolbar-tools>
-        <slot name="toolbar-tools" :actions="dropDownToolbarActions">
-          <TableAction
-            :actions="toolbarToolActions"
-            :drop-down-actions="dropDownToolbarActions"
-          />
-        </slot>
-      </template>
-      <template v-for="(_, name) in filteredSlots" #[name]="slotData">
-        <slot :name="name" v-bind="slotData ?? {}" />
-      </template>
-    </VxeGrid>
-  </div>
-  <!-- 表单弹窗：仅在启用时渲染 -->
-  <FormDialogComponent
-    v-if="formDialogEnabled"
-    ref="dialogFormRef"
-    :options="getFormDialogOptions()"
-  />
-</template>
-
 <script setup lang="tsx">
-import type { CrudApiInstance, CrudSchema } from './components/types';
-import type { FormActionType } from './components/types';
+import type {
+  CrudApiInstance,
+  CrudSchema,
+  FormActionType,
+} from './components/types';
+
 import type { VbenFormProps } from '#/adapter/form';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { computed, reactive, ref, useSlots } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { TableAction } from './components/table-action';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+
 import FormDialogComponent from './components/dialog/dialog.vue';
+import { TableAction } from './components/table-action';
 import { useAction } from './use-action';
 import { useColumns } from './use-columns';
 
-const EXCLUDED_SLOTS = ['toolbar-actions', 'toolbar-tools'];
-
 const props = withDefaults(
   defineProps<{
-    crudSchema: CrudSchema;
     /** CRUD API 实例（可选，内部会自动创建） */
     crudApi?: CrudApiInstance;
+    crudSchema: CrudSchema;
     /** 是否内置表单弹窗，默认 true */
     embeddedFormDialog?: boolean;
   }>(),
   {
     embeddedFormDialog: true,
+    crudApi: undefined,
   },
 );
 
 const emit = defineEmits<{
   register: [instance: any];
 }>();
+
+const EXCLUDED_SLOTS = new Set(['toolbar-actions', 'toolbar-tools']);
 
 const slots = useSlots();
 
@@ -95,7 +70,10 @@ const {
 } = useAction(
   mergedCrudSchema.value,
   dialogFormRef,
-  props.crudApi!,
+  props.crudApi ?? {
+    executeBatchRemove: () => {},
+    executeRemove: () => {},
+  },
   () => readonlyState.selection,
 );
 
@@ -118,7 +96,7 @@ const columns = useColumns(
 const filteredSlots = computed(() => {
   const result: Record<string, any> = {};
   for (const name of Object.keys(slots)) {
-    if (!EXCLUDED_SLOTS.includes(name)) {
+    if (!EXCLUDED_SLOTS.has(name)) {
       result[name] = slots[name];
     }
   }
@@ -136,7 +114,7 @@ const searchFormSchema = computed(() => {
   return typeof schema === 'function' ? schema() : schema;
 });
 
-const mergedFormOptions = computed((): VbenFormProps | undefined => {
+const mergedFormOptions = computed((): undefined | VbenFormProps => {
   if (!searchFormEnabled.value || !searchFormSchema.value?.length)
     return undefined;
 
@@ -286,9 +264,9 @@ const mergedGridOptions = computed(() => {
     // 是否可选择（树形模式下默认禁用）
     checkboxConfig: isTreeMode
       ? undefined
-      : tableConfig.value.checkable === false
+      : (tableConfig.value.checkable === false
         ? undefined
-        : { checkKey: tableConfig.value.rowKey || 'id' },
+        : { checkKey: tableConfig.value.rowKey || 'id' }),
     treeConfig: mergedTreeConfig.value,
     toolbarConfig: mergedToolbarConfig.value,
     proxyConfig: {
@@ -338,7 +316,7 @@ const mergedGridEvents = computed(() => {
 function getPathParams(row?: any) {
   // 兼容新旧两种配置方式
   const pathParamsConfig = tableConfig.value.pathParams;
-  if (!pathParamsConfig || !pathParamsConfig.length) return {};
+  if (!pathParamsConfig || pathParamsConfig.length === 0) return {};
 
   const pathParams: Record<string, any> = {};
 
@@ -391,8 +369,6 @@ async function handleSingleDelete(row: any) {
     await removeApi(id);
     ElMessage.success(`删除${formDialogTitle.value}成功`);
     crudInstance.refreshRemove();
-  } catch {
-    ElMessage.error(`删除${formDialogTitle.value}失败`);
   } finally {
     crudInstance.setLoading(false);
   }
@@ -403,7 +379,7 @@ async function handleBatchDelete() {
   const rowKey = tableConfig.value.rowKey || 'id';
   const ids = readonlyState.selection.map((item: any) => item[rowKey]);
 
-  if (!ids.length) {
+  if (ids.length === 0) {
     ElMessage.warning('请先勾选要删除的数据');
     return;
   }
@@ -440,8 +416,6 @@ async function handleBatchDelete() {
     readonlyState.selection = [];
     gridApi.grid?.clearCheckboxRow();
     crudInstance.refreshRemove();
-  } catch {
-    ElMessage.error(`删除${formDialogTitle.value}失败`);
   } finally {
     crudInstance.setLoading(false);
   }
@@ -516,3 +490,36 @@ const [VxeGrid, gridApi] = useVbenVxeGrid({
 emit('register', crudInstance);
 defineExpose(crudInstance);
 </script>
+
+<template>
+  <div class="bg-card h-full flex flex-col">
+    <VxeGrid
+      :grid-options="mergedGridOptions as any"
+      :form-options="mergedFormOptions"
+      v-bind="$attrs"
+    >
+      <template #toolbar-actions>
+        <slot name="toolbar-actions" :actions="toolbarActions">
+          <TableAction :actions="toolbarActions" :drop-down-actions="[]" />
+        </slot>
+      </template>
+      <template #toolbar-tools>
+        <slot name="toolbar-tools" :actions="dropDownToolbarActions">
+          <TableAction
+            :actions="toolbarToolActions"
+            :drop-down-actions="dropDownToolbarActions"
+          />
+        </slot>
+      </template>
+      <template v-for="(_, name) in filteredSlots" #[name]="slotData">
+        <slot :name="name" v-bind="slotData ?? {}"></slot>
+      </template>
+    </VxeGrid>
+  </div>
+  <!-- 表单弹窗：仅在启用时渲染 -->
+  <FormDialogComponent
+    v-if="formDialogEnabled"
+    ref="dialogFormRef"
+    :options="getFormDialogOptions()"
+  />
+</template>

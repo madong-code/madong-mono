@@ -3,8 +3,8 @@ import type { CrudSchema } from '#/components/crud/components/types';
 import { SubscriptionService } from '#/api/tenant/subscription';
 
 export const useCrudSchema = (options: {
-  bindTenantDrawerApi: { setData: (data: any) => any; open: () => void };
-  authDrawerApi: { setData: (data: any) => any; open: () => void };
+  authDrawerApi: { open: () => void; setData: (data: any) => any; };
+  bindTenantDrawerApi: { open: () => void; setData: (data: any) => any; };
   onRefresh: () => void;
 }): CrudSchema => {
   const { bindTenantDrawerApi, authDrawerApi, onRefresh } = options;
@@ -25,8 +25,14 @@ export const useCrudSchema = (options: {
 
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'name', title: '套餐名称', minWidth: 140 },
-      { field: 'code', title: '套餐代码', width: 120 },
+      {
+        field: 'code',
+        title: '套餐代码',
+        minWidth: 100,
+        width: 200,
+        align: 'left',
+      },
+      { field: 'name', title: '套餐名称', align: 'left' },
       {
         field: 'status',
         title: '状态',
@@ -38,6 +44,7 @@ export const useCrudSchema = (options: {
           ],
         },
       },
+      { field: 'max_users', title: '最大用户', align: 'right' },
       { field: 'price', title: '价格/月', width: 100 },
     ],
 
@@ -58,9 +65,24 @@ export const useCrudSchema = (options: {
       dialogType: 'drawer',
       commonConfig: { labelWidth: 90 },
       schema: [
-        { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { triggerFields: ['id'], show: false } },
-        { fieldName: 'name', label: '套餐名称', component: 'Input', rules: 'required' },
-        { fieldName: 'code', label: '套餐代码', component: 'Input', rules: 'required' },
+        {
+          fieldName: 'id',
+          label: 'ID',
+          component: 'Input',
+          dependencies: { triggerFields: ['id'], show: false },
+        },
+        {
+          fieldName: 'name',
+          label: '套餐名称',
+          component: 'Input',
+          rules: 'required',
+        },
+        {
+          fieldName: 'code',
+          label: '套餐代码',
+          component: 'Input',
+          rules: 'required',
+        },
         {
           fieldName: 'status',
           label: '状态',
@@ -74,10 +96,30 @@ export const useCrudSchema = (options: {
             ],
           },
         },
-        { fieldName: 'price', label: '价格/月', component: 'InputNumber', componentProps: { min: 0, precision: 2 } },
-        { fieldName: 'price_year', label: '价格/年', component: 'InputNumber', componentProps: { min: 0, precision: 2 } },
-        { fieldName: 'max_users', label: '最大用户', component: 'InputNumber', componentProps: { min: 0 } },
-        { fieldName: 'description', label: '描述', component: 'Textarea', componentProps: { rows: 3 } },
+        {
+          fieldName: 'price',
+          label: '价格/月',
+          component: 'InputNumber',
+          componentProps: { min: 0, precision: 2 },
+        },
+        {
+          fieldName: 'price_year',
+          label: '价格/年',
+          component: 'InputNumber',
+          componentProps: { min: 0, precision: 2 },
+        },
+        {
+          fieldName: 'max_users',
+          label: '最大用户',
+          component: 'InputNumber',
+          componentProps: { min: 0 },
+        },
+        {
+          fieldName: 'description',
+          label: '描述',
+          component: 'Textarea',
+          componentProps: { rows: 3 },
+        },
       ],
     },
 
