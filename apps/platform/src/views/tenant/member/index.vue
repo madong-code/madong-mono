@@ -34,7 +34,8 @@ const handleStatusChange = async (
     ElMessage.success(`已${statusText}`);
     crudApi.query();
   } catch (error: any) {
-    if (error !== 'cancel' && error?.message) ElMessage.error(error.message || '操作失败');
+    if (error !== 'cancel' && error?.message)
+      ElMessage.error(error.message || '操作失败');
   }
 };
 
@@ -52,7 +53,8 @@ const handleLock = async (row: TenantMemberRow) => {
     ElMessage.success('已锁定');
     crudApi.query();
   } catch (error: any) {
-    if (error !== 'cancel' && error?.message) ElMessage.error(error.message || '锁定失败');
+    if (error !== 'cancel' && error?.message)
+      ElMessage.error(error.message || '锁定失败');
   }
 };
 
@@ -70,7 +72,8 @@ const handleUnlock = async (row: TenantMemberRow) => {
     ElMessage.success('已解锁');
     crudApi.query();
   } catch (error: any) {
-    if (error !== 'cancel' && error?.message) ElMessage.error(error.message || '解锁失败');
+    if (error !== 'cancel' && error?.message)
+      ElMessage.error(error.message || '解锁失败');
   }
 };
 
@@ -86,7 +89,8 @@ const handleResetPwd = async (row: TenantMemberRow) => {
     ElMessage.success('密码已重置');
     crudApi.query();
   } catch (error: any) {
-    if (error !== 'cancel' && error?.message) ElMessage.error(error.message || '重置失败');
+    if (error !== 'cancel' && error?.message)
+      ElMessage.error(error.message || '重置失败');
   }
 };
 

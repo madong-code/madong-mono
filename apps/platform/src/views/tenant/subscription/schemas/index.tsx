@@ -3,8 +3,8 @@ import type { CrudSchema } from '#/components/crud/components/types';
 import { SubscriptionService } from '#/api/tenant/subscription';
 
 export const useCrudSchema = (options: {
-  authDrawerApi: { open: () => void; setData: (data: any) => any; };
-  bindTenantDrawerApi: { open: () => void; setData: (data: any) => any; };
+  authDrawerApi: { open: () => void; setData: (data: any) => any };
+  bindTenantDrawerApi: { open: () => void; setData: (data: any) => any };
   onRefresh: () => void;
 }): CrudSchema => {
   const { bindTenantDrawerApi, authDrawerApi, onRefresh } = options;

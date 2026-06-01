@@ -20,7 +20,7 @@ const backendRoutes: RouteRecord[] = [
   {
     name: 'Profile',
     path: '/profile',
-    component: 'views/_core/profile/index',
+    component: 'views/auth/profile/index',
     meta: {
       hideInMenu: true,
       hideInBreadcrumb: false,

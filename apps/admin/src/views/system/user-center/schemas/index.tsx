@@ -1,7 +1,8 @@
-import { type CrudSchema } from '#/adapter/crud'
-import { $t } from '#/locales'
-import { ProfileService } from '#/api/system/profile'
-import { formatDateTime } from '#/utils'
+import type { CrudSchema } from '#/adapter/crud';
+
+import { ProfileService } from '#/api/auth/profile';
+import { $t } from '#/locales';
+import { formatDateTime } from '#/utils';
 // crud配置
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -9,7 +10,7 @@ export const useCrudSchema = (): CrudSchema => {
     crudApi: {
       list: ProfileService.getOnlineDevices,
     },
-    rowKey:'jti',
+    rowKey: 'jti',
     // 使用crud
     // 是否有新增
     hasAdd: false,
@@ -21,7 +22,6 @@ export const useCrudSchema = (): CrudSchema => {
     hasView: false,
     permissions: {
       view: 'system:user_center:read',
-
     },
     // 表格列定义
     columns: [
@@ -31,32 +31,32 @@ export const useCrudSchema = (): CrudSchema => {
 
       {
         label: $t('system.user.center.online_device.table.columns.user_name'),
-        fieldName: 'user_name'
+        fieldName: 'user_name',
       },
       {
         label: $t('system.user.center.online_device.table.columns.ip'),
-        fieldName: 'ip'
+        fieldName: 'ip',
       },
       {
         label: $t('system.user.center.online_device.table.columns.ip_location'),
-        fieldName: 'ip_location'
+        fieldName: 'ip_location',
       },
       {
         label: $t('system.user.center.online_device.table.columns.browser'),
-        fieldName: 'browser'
+        fieldName: 'browser',
       },
       {
         label: $t('system.user.center.online_device.table.columns.os'),
-        fieldName: 'os'
+        fieldName: 'os',
       },
       {
         label: $t('system.user.center.online_device.table.columns.login_time'),
         fieldName: 'login_time',
         minWidth: 170,
         formatter: (row: any) => {
-          return formatDateTime(row.login_time)
-        }
-      }
+          return formatDateTime(row.login_time);
+        },
+      },
     ],
-  }
-}
+  };
+};

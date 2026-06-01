@@ -1,15 +1,17 @@
+import { ref } from 'vue';
+
 // src/store/modules/system-config.ts
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { ConfigService } from '#/api/setting/config'
+import { defineStore } from 'pinia';
+
+import { ConfigService } from '#/api/system/config';
 
 // 定义系统配置接口
 interface SystemConfig {
-  logo?: string
-  title?: string
-  favicon?: string
-  copyright?: string
-  [key: string]: any // 允许其他自定义字段
+  logo?: string;
+  title?: string;
+  favicon?: string;
+  copyright?: string;
+  [key: string]: any; // 允许其他自定义字段
 }
 
 /**
@@ -18,29 +20,29 @@ interface SystemConfig {
  */
 export const useSystemConfigStore = defineStore('systemConfig', () => {
   // 系统配置信息
-  const config = ref<SystemConfig>({})
+  const config = ref<SystemConfig>({});
 
   // 加载状态
-  const loading = ref(false)
+  const loading = ref(false);
 
   // 错误信息
-  const error = ref<string | null>(null)
+  const error = ref<null | string>(null);
 
   // 是否已从服务器加载
-  const isLoaded = ref(false)
+  const isLoaded = ref(false);
 
   /**
    * 获取系统配置（使用 code 获取）
    * @param code 配置编码，默认为 'site_setting'
    */
   const fetchSystemConfig = async (code = 'site_setting') => {
-    if (loading.value) return
+    if (loading.value) return;
 
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = null;
 
     try {
-      const response = await ConfigService.getByCode(code) as any
+      const response = (await ConfigService.getByCode(code)) as any;
 
       // 格式化配置数据，将接口返回的字段映射到统一的字段名
       const formattedConfig: SystemConfig = {
@@ -56,26 +58,26 @@ export const useSystemConfigStore = defineStore('systemConfig', () => {
         site_network_security_url: response?.site_network_security_url,
         site_description: response?.site_description,
         // 保留其他所有字段
-        ...response
-      }
+        ...response,
+      };
 
-      config.value = formattedConfig
-      isLoaded.value = true
-    } catch (err: any) {
-      error.value = err.message || '获取系统配置失败'
-      console.error('获取系统配置失败:', err)
+      config.value = formattedConfig;
+      isLoaded.value = true;
+    } catch (error_: any) {
+      error.value = error_.message || '获取系统配置失败';
+      console.error('获取系统配置失败:', error_);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   /**
    * 更新系统配置（本地）
    * @param newConfig 新的配置信息
    */
   const updateSystemConfig = (newConfig: Partial<SystemConfig>) => {
-    config.value = { ...config.value, ...newConfig }
-  }
+    config.value = { ...config.value, ...newConfig };
+  };
 
   /**
    * 获取特定配置项
@@ -83,17 +85,17 @@ export const useSystemConfigStore = defineStore('systemConfig', () => {
    * @returns 配置项值
    */
   const getConfigItem = (key: string): any => {
-    return config.value[key]
-  }
+    return config.value[key];
+  };
 
   /**
    * 重置配置
    */
   const resetConfig = () => {
-    config.value = {}
-    error.value = null
-    isLoaded.value = false
-  }
+    config.value = {};
+    error.value = null;
+    isLoaded.value = false;
+  };
 
   return {
     config,
@@ -103,6 +105,6 @@ export const useSystemConfigStore = defineStore('systemConfig', () => {
     fetchSystemConfig,
     updateSystemConfig,
     getConfigItem,
-    resetConfig
-  }
-})
+    resetConfig,
+  };
+});
