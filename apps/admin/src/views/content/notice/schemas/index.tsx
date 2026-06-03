@@ -30,33 +30,33 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'type',
-        title: $t('setting.notice.table.columns.type'),
+        title: $t('content.notice.table.columns.type'),
         width: 120,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_NOTICE_TYPE },
       },
       {
         field: 'title',
-        title: $t('setting.notice.table.columns.title'),
+        title: $t('content.notice.table.columns.title'),
         minWidth: 110,
         align: 'left',
       },
       {
         field: 'content',
-        title: $t('setting.notice.table.columns.content'),
+        title: $t('content.notice.table.columns.content'),
         minWidth: 200,
         align: 'left',
       },
       {
         field: 'enabled',
-        title: $t('setting.notice.table.columns.enabled'),
+        title: $t('content.notice.table.columns.enabled'),
         width: 120,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_YES_NO },
       },
       {
         field: 'created_date',
-        title: $t('setting.notice.table.columns.created_date'),
+        title: $t('content.notice.table.columns.created_date'),
         minWidth: 160,
       },
     ],
@@ -69,20 +69,20 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_title',
-          label: $t('setting.notice.table.search.title'),
+          label: $t('content.notice.table.search.title'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.notice.table.search.placeholder.title'),
+            placeholder: $t('content.notice.table.search.placeholder.title'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_type',
-          label: $t('setting.notice.table.search.type'),
+          label: $t('content.notice.table.search.type'),
           componentProps: {
             code: DictEnum.SYS_NOTICE_TYPE,
             clearable: true,
-            placeholder: $t('setting.notice.table.search.placeholder.type'),
+            placeholder: $t('content.notice.table.search.placeholder.type'),
           },
         },
       ],
@@ -90,7 +90,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.notice.title'),
+      title: $t('content.notice.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -99,14 +99,14 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.notice.form.modal.id'),
+          label: $t('content.notice.form.modal.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
-          label: $t('setting.notice.form.modal.type'),
+          label: $t('content.notice.form.modal.type'),
           fieldName: 'type',
           component: 'ApiDict',
           rules: 'required',
@@ -116,14 +116,14 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.notice.form.modal.title'),
+          label: $t('content.notice.form.modal.title'),
           fieldName: 'title',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
         },
         {
-          label: $t('setting.notice.form.modal.content'),
+          label: $t('content.notice.form.modal.content'),
           fieldName: 'content',
           component: 'Input',
           rules: 'required',
@@ -134,7 +134,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.notice.form.modal.enabled'),
+          label: $t('content.notice.form.modal.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,

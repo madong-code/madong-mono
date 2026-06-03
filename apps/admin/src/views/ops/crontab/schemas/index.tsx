@@ -30,47 +30,47 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'title',
-        title: $t('tools.crontab.table.columns.title'),
+        title: $t('ops.crontab.table.columns.title'),
         minWidth: 150,
         align: 'left',
       },
       {
         field: 'rule',
-        title: $t('tools.crontab.table.columns.rule'),
+        title: $t('ops.crontab.table.columns.rule'),
         minWidth: 100,
       },
       {
         field: 'singleton',
-        title: $t('tools.crontab.table.columns.singleton'),
+        title: $t('ops.crontab.table.columns.singleton'),
         minWidth: 80,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_MONITOR_CRONTAB_MODE },
       },
       {
         field: 'rule_name',
-        title: $t('tools.crontab.table.columns.rule_name'),
+        title: $t('ops.crontab.table.columns.rule_name'),
         minWidth: 120,
       },
       {
         field: 'target',
-        title: $t('tools.crontab.table.columns.target'),
+        title: $t('ops.crontab.table.columns.target'),
         minWidth: 150,
       },
       {
         field: 'parameter',
-        title: $t('tools.crontab.table.columns.parameter'),
+        title: $t('ops.crontab.table.columns.parameter'),
         minWidth: 120,
       },
       {
         field: 'enabled',
-        title: $t('tools.crontab.table.columns.enabled'),
+        title: $t('ops.crontab.table.columns.enabled'),
         minWidth: 80,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
       {
         field: 'running_status',
-        title: $t('tools.crontab.table.columns.running_status'),
+        title: $t('ops.crontab.table.columns.running_status'),
         minWidth: 100,
       },
     ],
@@ -83,18 +83,18 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_title',
-          label: $t('tools.crontab.table.search.title'),
+          label: $t('ops.crontab.table.search.title'),
           componentProps: {
-            placeholder: $t('tools.crontab.table.search.placeholder.title'),
+            placeholder: $t('ops.crontab.table.search.placeholder.title'),
             clearable: true,
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_type',
-          label: $t('tools.crontab.table.search.type'),
+          label: $t('ops.crontab.table.search.type'),
           componentProps: {
-            placeholder: $t('tools.crontab.table.search.placeholder.type'),
+            placeholder: $t('ops.crontab.table.search.placeholder.type'),
             clearable: true,
             code: DictEnum.SYS_MONITOR_CRONTAB_TYPE,
           },
@@ -102,9 +102,9 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
-          label: $t('tools.crontab.table.search.enabled'),
+          label: $t('ops.crontab.table.search.enabled'),
           componentProps: {
-            placeholder: $t('tools.crontab.table.search.placeholder.enabled'),
+            placeholder: $t('ops.crontab.table.search.placeholder.enabled'),
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
           },
@@ -114,23 +114,23 @@ export const useCrudSchema = (): CrudSchema => {
     formDialog: {
       enabled: true,
       dialogType: 'drawer',
-      title: $t('tools.crontab.title'),
+      title: $t('ops.crontab.title'),
       width: 'w-[60%]',
       wrapperClass: 'grid-cols-24',
       commonConfig: { labelWidth: 120 },
       schema: [
         {
           fieldName: 'id',
-          label: $t('tools.crontab.form.id'),
+          label: $t('ops.crontab.form.id'),
           component: 'Input',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
           fieldName: 'title',
-          label: $t('tools.crontab.form.title'),
+          label: $t('ops.crontab.form.title'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('tools.crontab.form.placeholder.title'),
+            placeholder: $t('ops.crontab.form.placeholder.title'),
             clearable: true,
           },
           rules: 'required',
@@ -138,11 +138,11 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'type',
-          label: $t('tools.crontab.form.type'),
+          label: $t('ops.crontab.form.type'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
-            placeholder: $t('tools.crontab.form.type'),
+            placeholder: $t('ops.crontab.form.type'),
             code: DictEnum.SYS_MONITOR_CRONTAB_TYPE,
           },
           formItemClass: 'col-span-24 w-full',
@@ -150,10 +150,10 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'rule',
-          label: $t('tools.crontab.form.rule'),
+          label: $t('ops.crontab.form.rule'),
           component: 'Input',
           componentProps: {
-            placeholder: $t('tools.crontab.form.placeholder.rule'),
+            placeholder: $t('ops.crontab.form.placeholder.rule'),
             clearable: true,
           },
           dependencies: {
@@ -170,11 +170,11 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'task_cycle',
-          label: $t('tools.crontab.form.task_cycle'),
+          label: $t('ops.crontab.form.task_cycle'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
-            placeholder: $t('tools.crontab.form.placeholder.task_cycle'),
+            placeholder: $t('ops.crontab.form.placeholder.task_cycle'),
             code: DictEnum.SYS_MONITOR_CRONTAB_CYCLE,
           },
           rules: 'required',
@@ -193,7 +193,7 @@ export const useCrudSchema = (): CrudSchema => {
             min: 1,
             max: 12,
             suffixIcon: (_values: any) => {
-              return $t('tools.crontab.form.suffix.month');
+              return $t('ops.crontab.form.suffix.month');
             },
           },
           formItemClass: 'col-span-4',
@@ -212,7 +212,7 @@ export const useCrudSchema = (): CrudSchema => {
             min: 1,
             max: 31,
             suffixIcon: (_values: any) => {
-              return $t('tools.crontab.form.suffix.day'); // 日
+              return $t('ops.crontab.form.suffix.day'); // 日
             },
           },
           formItemClass: 'col-span-4',
@@ -231,7 +231,7 @@ export const useCrudSchema = (): CrudSchema => {
             code: DictEnum.SYS_MONITOR_CRONTAB_WEEK,
             placeholder: '',
             suffixIcon: (_values: any) => {
-              return $t('tools.crontab.form.suffix.day'); // 日
+              return $t('ops.crontab.form.suffix.day'); // 日
             },
           },
           formItemClass: 'col-span-4',
@@ -248,7 +248,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
           componentProps: {
             type: 'number',
-            suffixIcon: () => $t('tools.crontab.form.suffix.hour'), // 时
+            suffixIcon: () => $t('ops.crontab.form.suffix.hour'), // 时
             min: 1,
             max: 23,
           },
@@ -267,7 +267,7 @@ export const useCrudSchema = (): CrudSchema => {
             type: 'number',
             min: 0,
             max: 59,
-            suffixIcon: () => $t('tools.crontab.form.suffix.minute'), // 分
+            suffixIcon: () => $t('ops.crontab.form.suffix.minute'), // 分
           },
           formItemClass: 'col-span-4',
         },
@@ -283,17 +283,17 @@ export const useCrudSchema = (): CrudSchema => {
             type: 'number',
             min: 0,
             max: 59,
-            suffixIcon: () => $t('tools.crontab.form.suffix.second'), // 秒
+            suffixIcon: () => $t('ops.crontab.form.suffix.second'), // 秒
           },
           formItemClass: 'col-span-4',
         },
         {
           fieldName: 'target',
-          label: $t('tools.crontab.form.target'),
+          label: $t('ops.crontab.form.target'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
-            placeholder: $t('tools.crontab.form.placeholder.target'),
+            placeholder: $t('ops.crontab.form.placeholder.target'),
             rows: 4,
             clearable: true,
           },
@@ -302,7 +302,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'singleton',
-          label: $t('tools.crontab.form.singleton'),
+          label: $t('ops.crontab.form.singleton'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -315,7 +315,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'enabled',
-          label: $t('tools.crontab.form.enabled'),
+          label: $t('ops.crontab.form.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -328,10 +328,10 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'remark',
-          label: $t('tools.crontab.form.remark'),
+          label: $t('ops.crontab.form.remark'),
           component: 'Textarea',
           componentProps: {
-            placeholder: $t('tools.crontab.form.placeholder.remark'),
+            placeholder: $t('ops.crontab.form.placeholder.remark'),
             rows: 5,
           },
           formItemClass: 'col-span-24 w-full',

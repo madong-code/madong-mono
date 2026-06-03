@@ -30,46 +30,46 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'priority',
-        title: $t('setting.message.table.columns.priority'),
+        title: $t('content.message.table.columns.priority'),
         width: 70,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_MESSAGE_PRIORITY },
       },
       {
         field: 'related_id',
-        title: $t('setting.message.table.columns.related_id'),
+        title: $t('content.message.table.columns.related_id'),
         minWidth: 100,
       },
       {
         field: 'title',
-        title: $t('setting.message.table.columns.title'),
+        title: $t('content.message.table.columns.title'),
         minWidth: 150,
       },
       {
         field: 'content',
-        title: $t('setting.message.table.columns.content'),
+        title: $t('content.message.table.columns.content'),
         minWidth: 200,
       },
       {
         field: 'status',
-        title: $t('setting.message.table.columns.status'),
+        title: $t('content.message.table.columns.status'),
         minWidth: 80,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_MESSAGE_STATUS },
       },
       {
         field: 'sender.real_name',
-        title: $t('setting.message.table.columns.sender'),
+        title: $t('content.message.table.columns.sender'),
         minWidth: 100,
       },
       {
         field: 'created_date',
-        title: $t('setting.message.table.columns.created_date'),
+        title: $t('content.message.table.columns.created_date'),
         minWidth: 160,
       },
       {
         field: 'read_date',
-        title: $t('setting.message.table.columns.read_date'),
+        title: $t('content.message.table.columns.read_date'),
         minWidth: 160,
       },
     ],
@@ -82,17 +82,17 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_title',
-          label: $t('setting.message.table.search.title'),
+          label: $t('content.message.table.search.title'),
         },
         {
           component: 'Input',
           fieldName: 'LIKE_content',
-          label: $t('setting.message.table.search.content'),
+          label: $t('content.message.table.search.content'),
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_status',
-          label: $t('setting.message.table.search.status'),
+          label: $t('content.message.table.search.status'),
           componentProps: {
             code: DictEnum.SYS_MESSAGE_STATUS,
             clearable: true,
@@ -101,7 +101,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           fieldName: 'EQ_priority',
-          label: $t('setting.message.table.search.priority'),
+          label: $t('content.message.table.search.priority'),
           componentProps: {
             code: DictEnum.SYS_MESSAGE_PRIORITY,
             clearable: true,
@@ -112,7 +112,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.message.title'),
+      title: $t('content.message.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 100 },
@@ -125,19 +125,19 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'title',
-          label: $t('setting.message.form.title'),
+          label: $t('content.message.form.title'),
           component: 'Input',
           rules: 'required',
         },
         {
           fieldName: 'content',
-          label: $t('setting.message.form.content'),
+          label: $t('content.message.form.content'),
           component: 'Input',
           componentProps: { type: 'textarea', rows: 6 },
         },
         {
           fieldName: 'status',
-          label: $t('setting.message.form.status'),
+          label: $t('content.message.form.status'),
           component: 'ApiDict',
           defaultValue: 0,
           componentProps: {
@@ -148,7 +148,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'priority',
-          label: $t('setting.message.form.priority'),
+          label: $t('content.message.form.priority'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -159,7 +159,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'type',
-          label: $t('setting.message.form.type'),
+          label: $t('content.message.form.type'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -170,7 +170,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'remark',
-          label: $t('setting.message.form.remark'),
+          label: $t('content.message.form.remark'),
           component: 'Input',
           componentProps: { type: 'textarea', rows: 3 },
         },

@@ -14,7 +14,7 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'baidu_open',
-      label: $t('setting.config.baidu_tongji.open'),
+      label: $t('system.config.baidu_tongji.open'),
       component: 'ApiDict',
       defaultValue: 0,
       componentProps: {
@@ -25,12 +25,12 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'baidu_tongji_code',
-      label: $t('setting.config.baidu_tongji.code'),
+      label: $t('system.config.baidu_tongji.code'),
       component: 'Input',
       componentProps: {
         type: 'textarea',
         rows: 8,
-        placeholder: $t('setting.config.baidu_tongji.placeholder.code'),
+        placeholder: $t('system.config.baidu_tongji.placeholder.code'),
       },
     },
   ],
@@ -43,7 +43,7 @@ async function onSubmit() {
   await ConfigService.update('baidu_tongji', {
     group_code: 'system',
     code: 'baidu_tongji',
-    name: $t('setting.config.baidu_tongji.title'),
+    name: $t('system.config.baidu_tongji.title'),
     content,
   });
   ElMessage.success($t('common.operation_success'));

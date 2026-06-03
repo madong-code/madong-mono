@@ -30,27 +30,27 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'code',
-        title: $t('setting.dict.item.table.columns.code'),
+        title: $t('system.dict.item.table.columns.code'),
         minWidth: 150,
       },
       {
         field: 'label',
-        title: $t('setting.dict.item.table.columns.label'),
+        title: $t('system.dict.item.table.columns.label'),
         minWidth: 120,
       },
       {
         field: 'value',
-        title: $t('setting.dict.item.table.columns.value'),
+        title: $t('system.dict.item.table.columns.value'),
         minWidth: 120,
       },
       {
         field: 'sort',
-        title: $t('setting.dict.item.table.columns.sort'),
+        title: $t('system.dict.item.table.columns.sort'),
         minWidth: 80,
       },
       {
         field: 'enabled',
-        title: $t('setting.dict.item.table.columns.enabled'),
+        title: $t('system.dict.item.table.columns.enabled'),
         minWidth: 80,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
@@ -65,19 +65,19 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_label',
-          label: $t('setting.dict.item.table.search.label'),
+          label: $t('system.dict.item.table.search.label'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.dict.item.table.search.placeholder.label'),
+            placeholder: $t('system.dict.item.table.search.placeholder.label'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_value',
-          label: $t('setting.dict.item.table.search.value'),
+          label: $t('system.dict.item.table.search.value'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.dict.item.table.search.placeholder.value'),
+            placeholder: $t('system.dict.item.table.search.placeholder.value'),
           },
         },
       ],
@@ -85,7 +85,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.dict.item.title'),
+      title: $t('system.dict.item.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -94,52 +94,52 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.dict.item.form.modal.id'),
+          label: $t('system.dict.item.form.modal.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
-          label: $t('setting.dict.item.form.modal.id'),
+          label: $t('system.dict.item.form.modal.id'),
           fieldName: 'dict_id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['dict_id'], show: false },
         },
         {
-          label: $t('setting.dict.item.form.modal.code'),
+          label: $t('system.dict.item.form.modal.code'),
           fieldName: 'code',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: { disabled: true },
         },
         {
-          label: $t('setting.dict.item.form.modal.color'),
+          label: $t('system.dict.item.form.modal.color'),
           fieldName: 'color',
           component: 'Input',
           formItemClass: 'col-span-2',
         },
         {
-          label: $t('setting.dict.item.form.modal.label'),
+          label: $t('system.dict.item.form.modal.label'),
           fieldName: 'label',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.dict.item.form.modal.placeholder.label'),
+            placeholder: $t('system.dict.item.form.modal.placeholder.label'),
           },
         },
         {
-          label: $t('setting.dict.item.form.modal.value'),
+          label: $t('system.dict.item.form.modal.value'),
           fieldName: 'value',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.dict.item.form.modal.placeholder.value'),
+            placeholder: $t('system.dict.item.form.modal.placeholder.value'),
           },
         },
         {
-          label: $t('setting.dict.item.form.modal.other_class'),
+          label: $t('system.dict.item.form.modal.other_class'),
           fieldName: 'other_class',
           component: 'Input',
           formItemClass: 'col-span-2',
@@ -150,7 +150,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.dict.item.form.modal.enabled'),
+          label: $t('system.dict.item.form.modal.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
@@ -162,7 +162,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.dict.item.form.modal.sort'),
+          label: $t('system.dict.item.form.modal.sort'),
           fieldName: 'sort',
           component: 'InputNumber',
           defaultValue: 0,
@@ -170,14 +170,14 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: { min: 0 },
         },
         {
-          label: $t('setting.dict.item.form.modal.remark'),
+          label: $t('system.dict.item.form.modal.remark'),
           fieldName: 'remark',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
             type: 'textarea',
             rows: 4,
-            placeholder: $t('setting.dict.item.form.modal.placeholder.remark'),
+            placeholder: $t('system.dict.item.form.modal.placeholder.remark'),
           },
         },
       ],

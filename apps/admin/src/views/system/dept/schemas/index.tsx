@@ -76,24 +76,24 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'name',
-        title: $t('setting.dept.table.columns.name'),
+        title: $t('system.dept.table.columns.name'),
         minWidth: 200,
         treeNode: true,
         align: 'left',
       },
       {
         field: 'code',
-        title: $t('setting.dept.table.columns.code'),
+        title: $t('system.dept.table.columns.code'),
         minWidth: 120,
       },
       {
         field: 'sort',
-        title: $t('setting.dept.table.columns.sort'),
+        title: $t('system.dept.table.columns.sort'),
         minWidth: 80,
       },
       {
         field: 'enabled',
-        title: $t('setting.dept.table.columns.enabled'),
+        title: $t('system.dept.table.columns.enabled'),
         minWidth: 80,
         cellRender: {
           name: 'CellDictTag',
@@ -110,29 +110,29 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'code',
-          label: $t('setting.dept.table.search.code'),
+          label: $t('system.dept.table.search.code'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.dept.table.search.placeholder.code'),
+            placeholder: $t('system.dept.table.search.placeholder.code'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_name',
-          label: $t('setting.dept.table.search.name'),
+          label: $t('system.dept.table.search.name'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.dept.table.search.placeholder.name'),
+            placeholder: $t('system.dept.table.search.placeholder.name'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
-          label: $t('setting.dept.table.search.enabled'),
+          label: $t('system.dept.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_YES_NO,
             clearable: true,
-            placeholder: $t('setting.dept.table.search.placeholder.enabled'),
+            placeholder: $t('system.dept.table.search.placeholder.enabled'),
           },
         },
       ],
@@ -140,7 +140,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.dept.title'),
+      title: $t('system.dept.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -149,49 +149,49 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.dept.form.id'),
+          label: $t('system.dept.form.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
-          label: $t('setting.dept.form.parent_dept'),
+          label: $t('system.dept.form.parent_dept'),
           fieldName: 'pid',
           component: 'ApiTreeSelect',
           defaultValue: '0',
           formItemClass: 'col-span-2',
           componentProps: {
-            api: '/org/dept',
+            api: '/system/dept',
             params: { format: 'tree' },
             requestMethod: 'get',
             checkStrictly: true,
             clearable: true,
-            placeholder: $t('setting.dept.form.placeholder.parent_dept'),
+            placeholder: $t('system.dept.form.placeholder.parent_dept'),
           },
         },
         {
-          label: $t('setting.dept.form.name'),
+          label: $t('system.dept.form.name'),
           fieldName: 'name',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.dept.form.placeholder.name'),
+            placeholder: $t('system.dept.form.placeholder.name'),
           },
         },
         {
-          label: $t('setting.dept.form.code'),
+          label: $t('system.dept.form.code'),
           fieldName: 'code',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.dept.form.placeholder.code'),
+            placeholder: $t('system.dept.form.placeholder.code'),
           },
         },
         {
-          label: $t('setting.dept.form.sort'),
+          label: $t('system.dept.form.sort'),
           fieldName: 'sort',
           component: 'InputNumber',
           defaultValue: 0,
@@ -199,7 +199,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: { min: 0, max: 9999 },
         },
         {
-          label: $t('setting.dept.form.enabled'),
+          label: $t('system.dept.form.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
@@ -211,7 +211,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.dept.form.leader'),
+          label: $t('system.dept.form.leader'),
           fieldName: 'leader_id_list',
           component: 'ApiSelect',
           formItemClass: 'col-span-2',
@@ -220,19 +220,19 @@ export const useCrudSchema = (): CrudSchema => {
             api: '/system/admin',
             requestMethod: 'get',
             params: { format: 'select' },
-            placeholder: $t('setting.dept.form.placeholder.leader'),
+            placeholder: $t('system.dept.form.placeholder.leader'),
             multiple: true,
           },
         },
         {
-          label: $t('setting.dept.form.remark'),
+          label: $t('system.dept.form.remark'),
           fieldName: 'remark',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
             type: 'textarea',
             rows: 3,
-            placeholder: $t('setting.dept.form.placeholder.remark'),
+            placeholder: $t('system.dept.form.placeholder.remark'),
           },
         },
       ],

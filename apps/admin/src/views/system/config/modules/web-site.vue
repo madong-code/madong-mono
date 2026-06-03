@@ -14,7 +14,7 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'web_open',
-      label: $t('setting.config.web_site.open'),
+      label: $t('system.config.web_site.open'),
       component: 'ApiDict',
       defaultValue: 1,
       componentProps: {
@@ -25,49 +25,49 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'web_url',
-      label: $t('setting.config.web_site.url'),
+      label: $t('system.config.web_site.url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.web_site.placeholder.url'),
+        placeholder: $t('system.config.web_site.placeholder.url'),
       },
     },
     {
       fieldName: 'web_name',
-      label: $t('setting.config.web_site.name'),
+      label: $t('system.config.web_site.name'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.web_site.placeholder.name'),
+        placeholder: $t('system.config.web_site.placeholder.name'),
       },
     },
     {
       fieldName: 'web_logo',
-      label: $t('setting.config.web_site.logo'),
+      label: $t('system.config.web_site.logo'),
       component: 'Avatar',
     },
     {
       fieldName: 'web_network_security',
-      label: $t('setting.config.web_site.network_security'),
+      label: $t('system.config.web_site.network_security'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.web_site.placeholder.network_security'),
+        placeholder: $t('system.config.web_site.placeholder.network_security'),
       },
     },
     {
       fieldName: 'web_record_no',
-      label: $t('setting.config.web_site.record_no'),
+      label: $t('system.config.web_site.record_no'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.web_site.placeholder.record_no'),
+        placeholder: $t('system.config.web_site.placeholder.record_no'),
       },
     },
     {
       fieldName: 'web_description',
-      label: $t('setting.config.web_site.description'),
+      label: $t('system.config.web_site.description'),
       component: 'Input',
       componentProps: {
         type: 'textarea',
         rows: 4,
-        placeholder: $t('setting.config.web_site.placeholder.description'),
+        placeholder: $t('system.config.web_site.placeholder.description'),
       },
     },
   ],
@@ -80,7 +80,7 @@ async function onSubmit() {
   await ConfigService.update('web_site_setting', {
     group_code: 'system',
     code: 'web_site_setting',
-    name: $t('setting.config.web_site.title'),
+    name: $t('system.config.web_site.title'),
     content,
   });
   ElMessage.success($t('common.operation_success'));

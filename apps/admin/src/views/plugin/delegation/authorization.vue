@@ -15,13 +15,13 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'auth_code',
-      label: $t('tools.delegation.dialog.auth_code'),
+      label: $t('plugin.delegation.dialog.auth_code'),
       component: 'Input',
       rules: 'required',
     },
     {
       fieldName: 'auth_secret',
-      label: $t('tools.delegation.dialog.auth_secret'),
+      label: $t('plugin.delegation.dialog.auth_secret'),
       component: 'Input',
       rules: 'required',
       componentProps: { type: 'password' },
@@ -53,7 +53,7 @@ defineExpose({ openDialog });
 <template>
   <el-dialog
     v-model="visible"
-    :title="$t('tools.delegation.dialog.title')"
+    :title="$t('plugin.delegation.dialog.title')"
     width="500px"
     @close="handleClose"
   >

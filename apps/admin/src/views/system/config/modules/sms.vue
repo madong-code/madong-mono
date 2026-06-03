@@ -13,7 +13,7 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'platform',
-      label: $t('setting.config.sms.platform'),
+      label: $t('system.config.sms.platform'),
       component: 'Select',
       defaultValue: 'aliyun',
       componentProps: {
@@ -25,34 +25,34 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'app_id',
-      label: $t('setting.config.sms.app_id'),
+      label: $t('system.config.sms.app_id'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.sms.placeholder.app_id'),
+        placeholder: $t('system.config.sms.placeholder.app_id'),
       },
     },
     {
       fieldName: 'app_key',
-      label: $t('setting.config.sms.app_key'),
+      label: $t('system.config.sms.app_key'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.sms.placeholder.app_key'),
+        placeholder: $t('system.config.sms.placeholder.app_key'),
       },
     },
     {
       fieldName: 'sign_name',
-      label: $t('setting.config.sms.sign_name'),
+      label: $t('system.config.sms.sign_name'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.sms.placeholder.sign_name'),
+        placeholder: $t('system.config.sms.placeholder.sign_name'),
       },
     },
     {
       fieldName: 'template_code',
-      label: $t('setting.config.sms.template_code'),
+      label: $t('system.config.sms.template_code'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.sms.placeholder.template_code'),
+        placeholder: $t('system.config.sms.placeholder.template_code'),
       },
     },
   ],

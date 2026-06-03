@@ -13,43 +13,43 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'Host',
-      label: $t('setting.config.email.host'),
+      label: $t('system.config.email.host'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.host'),
+        placeholder: $t('system.config.email.placeholder.host'),
       },
     },
     {
       fieldName: 'Port',
-      label: $t('setting.config.email.port'),
+      label: $t('system.config.email.port'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.port'),
+        placeholder: $t('system.config.email.placeholder.port'),
       },
     },
     {
       fieldName: 'Username',
-      label: $t('setting.config.email.username'),
+      label: $t('system.config.email.username'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.username'),
+        placeholder: $t('system.config.email.placeholder.username'),
       },
     },
     {
       fieldName: 'Password',
-      label: $t('setting.config.email.password'),
+      label: $t('system.config.email.password'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.password'),
+        placeholder: $t('system.config.email.placeholder.password'),
       },
     },
     {
       fieldName: 'SMTPSecure',
-      label: $t('setting.config.email.smtp_secure'),
+      label: $t('system.config.email.smtp_secure'),
       component: 'Select',
       defaultValue: 'ssl',
       rules: 'required',
@@ -62,20 +62,20 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'From',
-      label: $t('setting.config.email.from'),
+      label: $t('system.config.email.from'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.from'),
+        placeholder: $t('system.config.email.placeholder.from'),
       },
     },
     {
       fieldName: 'FromName',
-      label: $t('setting.config.email.from_name'),
+      label: $t('system.config.email.from_name'),
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: $t('setting.config.email.placeholder.from_name'),
+        placeholder: $t('system.config.email.placeholder.from_name'),
       },
     },
   ],

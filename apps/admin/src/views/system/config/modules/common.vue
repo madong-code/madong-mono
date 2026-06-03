@@ -45,29 +45,29 @@ const useCrudSchema = (): CrudSchema => {
     columns: [
       {
         field: 'name',
-        title: $t('setting.config.common.columns.name'),
+        title: $t('system.config.common.columns.name'),
         width: 180,
       },
       {
         field: 'code',
-        title: $t('setting.config.common.columns.code'),
+        title: $t('system.config.common.columns.code'),
         width: 200,
       },
       {
         field: 'content',
-        title: $t('setting.config.common.columns.content'),
+        title: $t('system.config.common.columns.content'),
         minWidth: 250,
       },
       {
         field: 'enabled',
-        title: $t('setting.config.common.columns.enabled'),
+        title: $t('system.config.common.columns.enabled'),
         width: 80,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
       {
         field: 'updated_at',
-        title: $t('setting.config.common.columns.updated_at'),
+        title: $t('system.config.common.columns.updated_at'),
         minWidth: 170,
       },
     ],
@@ -82,7 +82,7 @@ const useCrudSchema = (): CrudSchema => {
           fieldName: 'keyword',
           label: '',
           componentProps: {
-            placeholder: $t('setting.config.common.search.keyword'),
+            placeholder: $t('system.config.common.search.keyword'),
           },
         },
       ],
@@ -90,42 +90,42 @@ const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.config.common.title'),
+      title: $t('system.config.common.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 100, labelAlign: 'right' },
       schema: [
         {
           fieldName: 'code',
-          label: $t('setting.config.common.form.code'),
+          label: $t('system.config.common.form.code'),
           component: 'Input',
           rules: 'required',
           componentProps: {
-            placeholder: $t('setting.config.common.form.placeholder.code'),
+            placeholder: $t('system.config.common.form.placeholder.code'),
           },
         },
         {
           fieldName: 'name',
-          label: $t('setting.config.common.form.name'),
+          label: $t('system.config.common.form.name'),
           component: 'Input',
           rules: 'required',
           componentProps: {
-            placeholder: $t('setting.config.common.form.placeholder.name'),
+            placeholder: $t('system.config.common.form.placeholder.name'),
           },
         },
         {
           fieldName: 'content',
-          label: $t('setting.config.common.form.content'),
+          label: $t('system.config.common.form.content'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
             rows: 10,
-            placeholder: $t('setting.config.common.form.placeholder.content'),
+            placeholder: $t('system.config.common.form.placeholder.content'),
           },
         },
         {
           fieldName: 'enabled',
-          label: $t('setting.config.common.form.enabled'),
+          label: $t('system.config.common.form.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: {
@@ -136,12 +136,12 @@ const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'remark',
-          label: $t('setting.config.common.form.remark'),
+          label: $t('system.config.common.form.remark'),
           component: 'Input',
           componentProps: {
             type: 'textarea',
             rows: 3,
-            placeholder: $t('setting.config.common.form.placeholder.remark'),
+            placeholder: $t('system.config.common.form.placeholder.remark'),
           },
         },
       ],

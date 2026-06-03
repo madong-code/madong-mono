@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'lucide:wrench',
       order: 60,
-      title: $t('tools.files.title'),
+      title: $t('devtools.files.title'),
     },
     name: 'DevTools',
     path: '/devtools',
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/devtools/files/index.vue'),
         meta: {
           icon: 'lucide:folder',
-          title: $t('tools.files.title'),
+          title: $t('devtools.files.title'),
         },
       },
     ],

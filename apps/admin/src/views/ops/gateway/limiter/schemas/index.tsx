@@ -30,58 +30,58 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'priority',
-        title: $t('setting.gateway.limiter.table.columns.priority'),
+        title: $t('ops.gateway.limiter.table.columns.priority'),
         width: 60,
       },
       {
         field: 'name',
-        title: $t('setting.gateway.limiter.table.columns.name'),
+        title: $t('ops.gateway.limiter.table.columns.name'),
         minWidth: 150,
         align: 'left',
       },
       {
         field: 'match_type',
-        title: $t('setting.gateway.limiter.table.columns.match_type'),
+        title: $t('ops.gateway.limiter.table.columns.match_type'),
         width: 110,
       },
       {
         field: 'methods',
-        title: $t('setting.gateway.limiter.table.columns.methods'),
+        title: $t('ops.gateway.limiter.table.columns.methods'),
         minWidth: 90,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_REQUEST_MODE },
       },
       {
         field: 'path',
-        title: $t('setting.gateway.limiter.table.columns.path'),
+        title: $t('ops.gateway.limiter.table.columns.path'),
         minWidth: 100,
         align: 'left',
       },
       {
         field: 'enabled',
-        title: $t('setting.gateway.limiter.table.columns.enabled'),
+        title: $t('ops.gateway.limiter.table.columns.enabled'),
         width: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
       {
         field: 'limit_type',
-        title: $t('setting.gateway.limiter.table.columns.limit_type'),
+        title: $t('ops.gateway.limiter.table.columns.limit_type'),
         width: 100,
       },
       {
         field: 'limit_value',
-        title: $t('setting.gateway.limiter.table.columns.limit_value'),
+        title: $t('ops.gateway.limiter.table.columns.limit_value'),
         width: 100,
       },
       {
         field: 'period',
-        title: $t('setting.gateway.limiter.table.columns.period'),
+        title: $t('ops.gateway.limiter.table.columns.period'),
         width: 110,
       },
       {
         field: 'ttl',
-        title: $t('setting.gateway.limiter.table.columns.ttl'),
+        title: $t('ops.gateway.limiter.table.columns.ttl'),
         width: 80,
       },
     ],
@@ -94,7 +94,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_name',
-          label: $t('setting.gateway.limiter.table.search.name'),
+          label: $t('ops.gateway.limiter.table.search.name'),
           componentProps: {
             placeholder: $t(
               'setting.gateway.limiter.table.search.placeholder.name',
@@ -105,7 +105,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'path',
-          label: $t('setting.gateway.limiter.table.search.path'),
+          label: $t('ops.gateway.limiter.table.search.path'),
           componentProps: {
             placeholder: $t(
               'setting.gateway.limiter.table.search.placeholder.path',
@@ -116,7 +116,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
-          label: $t('setting.gateway.limiter.table.search.enabled'),
+          label: $t('ops.gateway.limiter.table.search.enabled'),
           componentProps: {
             code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
@@ -130,7 +130,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.gateway.limiter.title'),
+      title: $t('ops.gateway.limiter.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -139,7 +139,7 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.gateway.limiter.form.modal.name'),
+          label: $t('ops.gateway.limiter.form.modal.name'),
           fieldName: 'name',
           component: 'Input',
           formItemClass: 'col-span-2',
@@ -151,7 +151,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.match_type'),
+          label: $t('ops.gateway.limiter.form.modal.match_type'),
           fieldName: 'match_type',
           component: 'Select',
           defaultValue: 'exact',
@@ -170,7 +170,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.limit_type'),
+          label: $t('ops.gateway.limiter.form.modal.limit_type'),
           fieldName: 'limit_type',
           component: 'Select',
           defaultValue: 'ip',
@@ -188,14 +188,14 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.methods'),
+          label: $t('ops.gateway.limiter.form.modal.methods'),
           fieldName: 'methods',
           component: 'ApiDict',
           formItemClass: 'col-span-2',
           componentProps: { code: DictEnum.SYS_REQUEST_MODE },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.path'),
+          label: $t('ops.gateway.limiter.form.modal.path'),
           fieldName: 'path',
           component: 'Input',
           formItemClass: 'col-span-2',
@@ -207,7 +207,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.limit_value'),
+          label: $t('ops.gateway.limiter.form.modal.limit_value'),
           fieldName: 'limit_value',
           component: 'Input',
           rules: 'required',
@@ -220,7 +220,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.period'),
+          label: $t('ops.gateway.limiter.form.modal.period'),
           fieldName: 'period',
           component: 'Input',
           defaultValue: 1,
@@ -235,7 +235,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.ttl'),
+          label: $t('ops.gateway.limiter.form.modal.ttl'),
           fieldName: 'ttl',
           component: 'Input',
           defaultValue: 60,
@@ -249,7 +249,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.enabled'),
+          label: $t('ops.gateway.limiter.form.modal.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
@@ -261,7 +261,7 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.gateway.limiter.form.modal.message'),
+          label: $t('ops.gateway.limiter.form.modal.message'),
           fieldName: 'message',
           component: 'Input',
           formItemClass: 'col-span-2',

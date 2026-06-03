@@ -31,34 +31,34 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'title',
-        title: $t('setting.review.table.columns.title'),
+        title: $t('content.review.table.columns.title'),
         minWidth: 150,
       },
       {
         field: 'status',
-        title: $t('setting.review.table.columns.status'),
+        title: $t('content.review.table.columns.status'),
         minWidth: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.REVIEW_STATUS },
       },
       {
         field: 'applicant',
-        title: $t('setting.review.table.columns.applicant'),
+        title: $t('content.review.table.columns.applicant'),
         minWidth: 100,
       },
       {
         field: 'reviewer.real_name',
-        title: $t('setting.review.table.columns.reviewer'),
+        title: $t('content.review.table.columns.reviewer'),
         minWidth: 100,
       },
       {
         field: 'created_at',
-        title: $t('setting.review.table.columns.created_at'),
+        title: $t('content.review.table.columns.created_at'),
         minWidth: 180,
       },
       {
         field: 'reviewed_at',
-        title: $t('setting.review.table.columns.reviewed_at'),
+        title: $t('content.review.table.columns.reviewed_at'),
         minWidth: 180,
       },
     ],
@@ -71,36 +71,36 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_extra_data',
-          label: $t('setting.review.table.search.title'),
+          label: $t('content.review.table.search.title'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.review.table.search.placeholder.title'),
+            placeholder: $t('content.review.table.search.placeholder.title'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_type',
-          label: $t('setting.review.table.search.type'),
+          label: $t('content.review.table.search.type'),
           componentProps: {
             code: DictEnum.REVIEW_TYPE,
             clearable: true,
-            placeholder: $t('setting.review.table.search.placeholder.type'),
+            placeholder: $t('content.review.table.search.placeholder.type'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_status',
-          label: $t('setting.review.table.search.status'),
+          label: $t('content.review.table.search.status'),
           componentProps: {
             code: DictEnum.REVIEW_STATUS,
             clearable: true,
-            placeholder: $t('setting.review.table.search.placeholder.status'),
+            placeholder: $t('content.review.table.search.placeholder.status'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_applicant',
-          label: $t('setting.review.table.search.applicant'),
+          label: $t('content.review.table.search.applicant'),
           componentProps: {
             clearable: true,
             placeholder: $t(
@@ -113,7 +113,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.review.title'),
+      title: $t('content.review.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -122,24 +122,24 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.review.form.modal.id'),
+          label: $t('content.review.form.modal.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
-          label: $t('setting.review.form.modal.title'),
+          label: $t('content.review.form.modal.title'),
           fieldName: 'title',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.review.form.modal.placeholder.title'),
+            placeholder: $t('content.review.form.modal.placeholder.title'),
           },
         },
         {
-          label: $t('setting.review.form.modal.type'),
+          label: $t('content.review.form.modal.type'),
           fieldName: 'type',
           component: 'ApiDict',
           rules: 'required',
@@ -147,11 +147,11 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             code: DictEnum.REVIEW_TYPE,
             clearable: true,
-            placeholder: $t('setting.review.form.modal.placeholder.type'),
+            placeholder: $t('content.review.form.modal.placeholder.type'),
           },
         },
         {
-          label: $t('setting.review.form.modal.content'),
+          label: $t('content.review.form.modal.content'),
           fieldName: 'content',
           component: 'Input',
           rules: 'required',
@@ -159,22 +159,22 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             type: 'textarea',
             rows: 5,
-            placeholder: $t('setting.review.form.modal.placeholder.content'),
+            placeholder: $t('content.review.form.modal.placeholder.content'),
           },
         },
         {
-          label: $t('setting.review.form.modal.status'),
+          label: $t('content.review.form.modal.status'),
           fieldName: 'status',
           component: 'ApiDict',
           formItemClass: 'col-span-2',
           componentProps: {
             code: DictEnum.REVIEW_STATUS,
             clearable: true,
-            placeholder: $t('setting.review.form.modal.placeholder.status'),
+            placeholder: $t('content.review.form.modal.placeholder.status'),
           },
         },
         {
-          label: $t('setting.review.form.modal.review_note'),
+          label: $t('content.review.form.modal.review_note'),
           fieldName: 'review_note',
           component: 'Input',
           formItemClass: 'col-span-2',

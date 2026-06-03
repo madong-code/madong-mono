@@ -37,7 +37,7 @@ onMounted(async () => {
   <Page auto-content-height>
     <el-card>
       <div class="title text-base font-bold text-gray-900 mb-8">
-        {{ $t('tools.delegation.title') }}
+        {{ $t('plugin.delegation.title') }}
       </div>
       <div class="flex items-center">
         <div class="w-24 h-24 rounded-lg flex justify-center items-center mr-5">
@@ -45,19 +45,19 @@ onMounted(async () => {
         </div>
         <div class="flex flex-col justify-between font-medium">
           <div class="flex flex-wrap items-center mb-3">
-            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('tools.delegation.company') }}：</span>
+            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('plugin.delegation.company') }}：</span>
             <span class="text-sm text-gray-800">{{
               authInfo.company_name || '--'
             }}</span>
           </div>
           <div class="flex flex-wrap items-center mb-3">
-            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('tools.delegation.domain') }}：</span>
+            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('plugin.delegation.domain') }}：</span>
             <span class="text-sm text-gray-800">{{
               authInfo.domain || '--'
             }}</span>
           </div>
           <div class="flex flex-wrap items-center">
-            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('tools.delegation.auth_code') }}：</span>
+            <span class="mr-1.5 text-sm text-gray-600 w-25 text-left">{{ $t('plugin.delegation.auth_code') }}：</span>
             <span class="text-sm text-gray-800">
               <span class="mr-2.5">{{
                 isCodeVisible
