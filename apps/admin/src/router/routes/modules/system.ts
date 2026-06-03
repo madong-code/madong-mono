@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/dept/index.vue'),
         meta: {
           icon: 'lucide:network',
-          title: $t('setting.dept.title'),
+          title: $t('system.dept.title'),
         },
       },
       {
@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/post/index.vue'),
         meta: {
           icon: 'lucide:briefcase',
-          title: $t('setting.post.title'),
+          title: $t('system.post.title'),
         },
       },
       {
@@ -63,7 +63,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/dict/index.vue'),
         meta: {
           icon: 'lucide:book-open',
-          title: $t('setting.dict.title'),
+          title: $t('system.dict.title'),
         },
       },
       {
@@ -72,7 +72,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/dict-item/index.vue'),
         meta: {
           icon: 'lucide:list',
-          title: $t('setting.dict.item.title'),
+          title: $t('system.dict.item.title'),
         },
       },
       {
@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/config/index.vue'),
         meta: {
           icon: 'lucide:wrench',
-          title: $t('setting.config.title'),
+          title: $t('system.config.title'),
         },
       },
       {
@@ -90,7 +90,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/recycle/index.vue'),
         meta: {
           icon: 'lucide:trash-2',
-          title: $t('tools.recycle.title'),
+          title: $t('system.recycle.title'),
         },
       },
     ],

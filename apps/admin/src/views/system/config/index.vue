@@ -26,7 +26,7 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/site.vue')),
     ),
     key: '1',
-    name: $t('setting.config.site.title'),
+    name: $t('system.config.site.title'),
     loadKey: 0,
   },
   {
@@ -34,7 +34,7 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/web-site.vue')),
     ),
     key: '6',
-    name: $t('setting.config.web_site.title'),
+    name: $t('system.config.web_site.title'),
     loadKey: 0,
   },
   {
@@ -42,7 +42,7 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/baidu-tongji.vue')),
     ),
     key: '7',
-    name: $t('setting.config.baidu_tongji.title'),
+    name: $t('system.config.baidu_tongji.title'),
     loadKey: 0,
   },
   {
@@ -50,7 +50,7 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/upload.vue')),
     ),
     key: '2',
-    name: $t('setting.config.upload.title'),
+    name: $t('system.config.upload.title'),
     loadKey: 0,
   },
   {
@@ -58,13 +58,13 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/email.vue')),
     ),
     key: '3',
-    name: $t('setting.config.email.title'),
+    name: $t('system.config.email.title'),
     loadKey: 0,
   },
   {
     component: markRaw(defineAsyncComponent(() => import('./modules/sms.vue'))),
     key: '4',
-    name: $t('setting.config.sms.title'),
+    name: $t('system.config.sms.title'),
     loadKey: 0,
   },
   {
@@ -72,7 +72,7 @@ const settingList = ref([
       defineAsyncComponent(() => import('./modules/common.vue')),
     ),
     key: '5',
-    name: $t('setting.config.common.title'),
+    name: $t('system.config.common.title'),
     loadKey: 0,
   },
 ]);

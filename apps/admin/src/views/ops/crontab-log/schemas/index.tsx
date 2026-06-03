@@ -35,29 +35,29 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'target',
-        title: $t('tools.crontab.log.table.columns.target'),
+        title: $t('ops.crontab.log.table.columns.target'),
         width: 170,
       },
       {
         field: 'running_time',
-        title: $t('tools.crontab.log.table.columns.running_time'),
+        title: $t('ops.crontab.log.table.columns.running_time'),
         minWidth: 100,
       },
       {
         field: 'return_code',
-        title: $t('tools.crontab.log.table.columns.return_code'),
+        title: $t('ops.crontab.log.table.columns.return_code'),
         minWidth: 100,
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_OPERATION_RESULT },
       },
       {
         field: 'log',
-        title: $t('tools.crontab.log.table.columns.log'),
+        title: $t('ops.crontab.log.table.columns.log'),
         minWidth: 200,
       },
       {
         field: 'created_date',
-        title: $t('tools.crontab.log.table.columns.created_date'),
+        title: $t('ops.crontab.log.table.columns.created_date'),
         minWidth: 140,
       },
     ],
@@ -69,12 +69,12 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_target',
-          label: $t('tools.crontab.log.table.search.target'),
+          label: $t('ops.crontab.log.table.search.target'),
         },
         {
           component: 'ApiDict',
           fieldName: 'return_code',
-          label: $t('tools.crontab.log.table.search.return_code'),
+          label: $t('ops.crontab.log.table.search.return_code'),
           componentProps: {
             code: DictEnum.SYS_OPERATION_RESULT,
             clearable: true,

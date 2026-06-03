@@ -77,7 +77,7 @@ defineExpose({ show });
 <template>
   <ElDrawer
     v-model="visible"
-    :title="$t('setting.config.upload.advanced')"
+    :title="$t('system.config.upload.advanced')"
     size="500px"
     @close="handleClose"
   >

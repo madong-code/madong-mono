@@ -18,7 +18,7 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'site_open',
-      label: $t('setting.config.site.open'),
+      label: $t('system.config.site.open'),
       component: 'ApiDict',
       defaultValue: 1,
       componentProps: {
@@ -29,78 +29,78 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'site_url',
-      label: $t('setting.config.site.url'),
+      label: $t('system.config.site.url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.url'),
+        placeholder: $t('system.config.site.placeholder.url'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_name',
-      label: $t('setting.config.site.name'),
+      label: $t('system.config.site.name'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.name'),
+        placeholder: $t('system.config.site.placeholder.name'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_logo',
-      label: $t('setting.config.site.logo'),
+      label: $t('system.config.site.logo'),
       component: 'Avatar',
     },
     {
       fieldName: 'site_network_security',
-      label: $t('setting.config.site.network_security'),
+      label: $t('system.config.site.network_security'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.network_security'),
+        placeholder: $t('system.config.site.placeholder.network_security'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_keywords',
-      label: $t('setting.config.site.keywords'),
+      label: $t('system.config.site.keywords'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.keywords'),
+        placeholder: $t('system.config.site.placeholder.keywords'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_record_no',
-      label: $t('setting.config.site.record_no'),
+      label: $t('system.config.site.record_no'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.record_no'),
+        placeholder: $t('system.config.site.placeholder.record_no'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_icp_url',
-      label: $t('setting.config.site.icp_url'),
+      label: $t('system.config.site.icp_url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.icp_url'),
+        placeholder: $t('system.config.site.placeholder.icp_url'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_network_security_url',
-      label: $t('setting.config.site.network_security_url'),
+      label: $t('system.config.site.network_security_url'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.network_security_url'),
+        placeholder: $t('system.config.site.placeholder.network_security_url'),
         clearable: true,
       },
     },
     {
       fieldName: 'site_description',
-      label: $t('setting.config.site.description'),
+      label: $t('system.config.site.description'),
       component: 'Input',
       componentProps: {
-        placeholder: $t('setting.config.site.placeholder.description'),
+        placeholder: $t('system.config.site.placeholder.description'),
         clearable: true,
         type: 'textarea',
         rows: 4,
@@ -117,7 +117,7 @@ async function onSubmit() {
   const values = {
     group_code: groupCode,
     code: 'site_setting',
-    name: $t('setting.config.site.title'),
+    name: $t('system.config.site.title'),
     content,
   };
   await ConfigService.update('site_setting', values);

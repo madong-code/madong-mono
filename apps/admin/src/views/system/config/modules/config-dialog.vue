@@ -77,28 +77,28 @@ defineExpose({ show });
     v-model="dialogVisible"
     :title="
       isEdit
-        ? $t('setting.config.common.dialog.edit_title')
-        : $t('setting.config.common.dialog.create_title')
+        ? $t('system.config.common.dialog.edit_title')
+        : $t('system.config.common.dialog.create_title')
     "
     width="600px"
     @close="handleClose"
   >
     <ElForm ref="formRef" :model="formData" :rules="rules" label-width="100px">
-      <ElFormItem :label="$t('setting.config.common.form.code')" prop="code">
+      <ElFormItem :label="$t('system.config.common.form.code')" prop="code">
         <ElInput
           v-model="formData.code"
-          :placeholder="$t('setting.config.common.form.placeholder.code')"
+          :placeholder="$t('system.config.common.form.placeholder.code')"
           :disabled="isEdit"
         />
       </ElFormItem>
-      <ElFormItem :label="$t('setting.config.common.form.name')" prop="name">
+      <ElFormItem :label="$t('system.config.common.form.name')" prop="name">
         <ElInput
           v-model="formData.name"
-          :placeholder="$t('setting.config.common.form.placeholder.name')"
+          :placeholder="$t('system.config.common.form.placeholder.name')"
         />
       </ElFormItem>
       <ElFormItem
-        :label="$t('setting.config.common.form.enabled')"
+        :label="$t('system.config.common.form.enabled')"
         prop="enabled"
       >
         <ElRadioGroup v-model="formData.enabled">
@@ -107,25 +107,22 @@ defineExpose({ show });
         </ElRadioGroup>
       </ElFormItem>
       <ElFormItem
-        :label="$t('setting.config.common.form.content')"
+        :label="$t('system.config.common.form.content')"
         prop="content"
       >
         <ElInput
           v-model="formData.content"
           type="textarea"
           :rows="10"
-          :placeholder="$t('setting.config.common.form.placeholder.content')"
+          :placeholder="$t('system.config.common.form.placeholder.content')"
         />
       </ElFormItem>
-      <ElFormItem
-        :label="$t('setting.config.common.form.remark')"
-        prop="remark"
-      >
+      <ElFormItem :label="$t('system.config.common.form.remark')" prop="remark">
         <ElInput
           v-model="formData.remark"
           type="textarea"
           :rows="3"
-          :placeholder="$t('setting.config.common.form.placeholder.remark')"
+          :placeholder="$t('system.config.common.form.placeholder.remark')"
         />
       </ElFormItem>
     </ElForm>

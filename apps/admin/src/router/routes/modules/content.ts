@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'lucide:list-checks',
       order: 31,
-      title: $t('setting.review.title'),
+      title: $t('content.review.title'),
     },
     name: 'Content',
     path: '/content',
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/content/review/index.vue'),
         meta: {
           icon: 'lucide:check-circle',
-          title: $t('setting.review.title'),
+          title: $t('content.review.title'),
         },
       },
       {
@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/content/notice/index.vue'),
         meta: {
           icon: 'lucide:megaphone',
-          title: $t('setting.notice.title'),
+          title: $t('content.notice.title'),
         },
       },
       {
@@ -36,7 +36,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/content/message/index.vue'),
         meta: {
           icon: 'lucide:mail',
-          title: $t('setting.message.title'),
+          title: $t('content.message.title'),
         },
       },
     ],

@@ -45,11 +45,11 @@ function setNestedValue(
 
   let current: LocaleMessages = obj;
   for (let i = 0; i < keys.length - 1; i++) {
-    const key = keys[i]!;
+    const key = keys[i] as string;
     if (!current[key]) current[key] = {};
     current = current[key] as LocaleMessages;
   }
-  const lastKey = keys.at(-1)!;
+  const lastKey = keys[keys.length - 1] as string;
   const existing = current[lastKey];
   if (
     existing &&
@@ -66,7 +66,7 @@ function setNestedValue(
 function extractLocaleAndFileKeys(
   path: string,
   langDirName: string,
-): { localeDir: string; fileKeys: string[] } | null {
+): null | { fileKeys: string[]; localeDir: string; } {
   const parts = path.split('/');
   const langIndex = parts.lastIndexOf(langDirName);
   if (langIndex === -1 || langIndex + 1 >= parts.length) return null;
@@ -74,25 +74,14 @@ function extractLocaleAndFileKeys(
   const localeDir = parts[langIndex + 1];
   if (!localeDir) return null;
 
-  const filePathParts = parts.slice(langIndex + 2);
-  const fileName = filePathParts.pop()?.replace('.json', '') || '';
-  const nameKeys = fileName.split('.');
-
-  if (filePathParts.length > 0 && nameKeys.length > 0 && filePathParts[filePathParts.length - 1] === nameKeys[0]) {
-    filePathParts.pop();
-  }
-
-  const fileKeys = [...filePathParts, ...nameKeys];
+  // 目录仅归档用途，不参与 key 生成；文件名即为 key，支持 . 层级分隔
+  const fileName = parts.at(-1)?.replace('.json', '') || '';
+  const fileKeys = fileName.split('.');
 
   return { localeDir, fileKeys };
 }
 
-/** 仅用于归类的目录，不作为 i18n key 前缀 */
-const CATEGORY_DIRS = new Set(['common'])
-
-function loadAppLangLocales(
-  localeDir: string,
-): LocaleMessages {
+function loadAppLangLocales(localeDir: string): LocaleMessages {
   const messages: LocaleMessages = {};
 
   const langModules = import.meta.glob<{ default: LocaleMessages }>(
@@ -104,18 +93,13 @@ function loadAppLangLocales(
     const result = extractLocaleAndFileKeys(path, 'lang');
     if (!result || result.localeDir !== localeDir) continue;
 
-    // 去除仅归类用途的目录前缀
-    const fileKeys = result.fileKeys.filter((k) => !CATEGORY_DIRS.has(k));
-
-    setNestedValue(messages, fileKeys, module.default);
+    setNestedValue(messages, result.fileKeys, module.default);
   }
 
   return messages;
 }
 
-function loadLocalesLangs(
-  localeDir: string,
-): LocaleMessages {
+function loadLocalesLangs(localeDir: string): LocaleMessages {
   const messages: LocaleMessages = {};
 
   const localesModules = import.meta.glob<{ default: LocaleMessages }>(
@@ -136,9 +120,7 @@ function loadLocalesLangs(
   return messages;
 }
 
-function loadPluginLocales(
-  localeDir: string,
-): LocaleMessages {
+function loadPluginLocales(localeDir: string): LocaleMessages {
   const messages: LocaleMessages = {};
 
   const pluginModules = import.meta.glob<{ default: LocaleMessages }>(

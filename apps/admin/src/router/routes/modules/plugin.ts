@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'lucide:puzzle',
       order: 70,
-      title: $t('tools.delegation.title'),
+      title: $t('plugin.delegation.title'),
     },
     name: 'Plugin',
     path: '/plugin',
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/plugin/delegation/index.vue'),
         meta: {
           icon: 'lucide:key',
-          title: $t('tools.delegation.title'),
+          title: $t('plugin.delegation.title'),
         },
       },
     ],

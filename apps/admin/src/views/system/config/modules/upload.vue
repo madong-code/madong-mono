@@ -16,7 +16,7 @@ const [BasicForm, formApi] = useVbenForm({
   schema: [
     {
       fieldName: 'mode',
-      label: $t('setting.config.upload.mode'),
+      label: $t('system.config.upload.mode'),
       component: 'ApiDict',
       defaultValue: 'local',
       componentProps: {
@@ -27,25 +27,25 @@ const [BasicForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'single_limit',
-      label: $t('setting.config.upload.single_limit'),
+      label: $t('system.config.upload.single_limit'),
       component: 'Input',
       componentProps: { placeholder: '1024' },
     },
     {
       fieldName: 'total_limit',
-      label: $t('setting.config.upload.total_limit'),
+      label: $t('system.config.upload.total_limit'),
       component: 'Input',
       componentProps: { placeholder: '1024' },
     },
     {
       fieldName: 'nums',
-      label: $t('setting.config.upload.nums'),
+      label: $t('system.config.upload.nums'),
       component: 'Input',
       componentProps: { placeholder: '1' },
     },
     {
       fieldName: 'exclude',
-      label: $t('setting.config.upload.exclude'),
+      label: $t('system.config.upload.exclude'),
       component: 'Input',
     },
   ],
@@ -90,7 +90,7 @@ onMounted(() => {
         {{ $t('common.save') }}
       </ElButton>
       <ElButton type="primary" @click="handleSetting">
-        {{ $t('setting.config.upload.more') }}
+        {{ $t('system.config.upload.more') }}
       </ElButton>
     </ElRow>
     <UploadSettingDrawer ref="uploadSettingDrawerRef" />

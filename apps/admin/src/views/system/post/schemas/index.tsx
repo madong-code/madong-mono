@@ -30,27 +30,27 @@ export const useCrudSchema = (): CrudSchema => {
       { type: 'checkbox', width: 60 },
       {
         field: 'dept.name',
-        title: $t('setting.dept.table.columns.name'),
+        title: $t('system.dept.table.columns.name'),
         minWidth: 120,
       },
       {
         field: 'code',
-        title: $t('setting.post.table.columns.code'),
+        title: $t('system.post.table.columns.code'),
         minWidth: 120,
       },
       {
         field: 'name',
-        title: $t('setting.post.table.columns.name'),
+        title: $t('system.post.table.columns.name'),
         minWidth: 120,
       },
       {
         field: 'sort',
-        title: $t('setting.post.table.columns.sort'),
+        title: $t('system.post.table.columns.sort'),
         minWidth: 80,
       },
       {
         field: 'enabled',
-        title: $t('setting.post.table.columns.enabled'),
+        title: $t('system.post.table.columns.enabled'),
         minWidth: 80,
         cellRender: {
           name: 'CellDictTag',
@@ -59,7 +59,7 @@ export const useCrudSchema = (): CrudSchema => {
       },
       {
         field: 'remark',
-        title: $t('setting.post.table.columns.remark'),
+        title: $t('system.post.table.columns.remark'),
         minWidth: 160,
       },
     ],
@@ -72,44 +72,44 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'ApiTreeSelect',
           fieldName: 'EQ_dept_id',
-          label: $t('setting.post.form.dept_name'),
+          label: $t('system.post.form.dept_name'),
           componentProps: {
             clearable: true,
             checkStrictly: true,
-            api: '/org/dept',
+            api: '/system/dept',
             params: { format: 'tree' },
             labelField: 'name',
             valueField: 'id',
             childrenField: 'children',
-            placeholder: $t('setting.post.form.placeholder.dept_name'),
+            placeholder: $t('system.post.form.placeholder.dept_name'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_code',
-          label: $t('setting.post.table.search.code'),
+          label: $t('system.post.table.search.code'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.post.table.search.placeholder.code'),
+            placeholder: $t('system.post.table.search.placeholder.code'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_name',
-          label: $t('setting.post.table.search.name'),
+          label: $t('system.post.table.search.name'),
           componentProps: {
             clearable: true,
-            placeholder: $t('setting.post.table.search.placeholder.name'),
+            placeholder: $t('system.post.table.search.placeholder.name'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
-          label: $t('setting.post.table.search.enabled'),
+          label: $t('system.post.table.search.enabled'),
           componentProps: {
             clearable: true,
             code: DictEnum.SYS_ENABLED_STATUS,
-            placeholder: $t('setting.post.table.search.placeholder.enabled'),
+            placeholder: $t('system.post.table.search.placeholder.enabled'),
           },
         },
       ],
@@ -117,7 +117,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     formDialog: {
       enabled: true,
-      title: $t('setting.post.title'),
+      title: $t('system.post.title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: {
@@ -126,14 +126,14 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: $t('setting.post.form.id'),
+          label: $t('system.post.form.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
-          label: $t('setting.post.form.dept_name'),
+          label: $t('system.post.form.dept_name'),
           fieldName: 'dept_id',
           component: 'ApiTreeSelect',
           rules: 'required',
@@ -141,37 +141,37 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             clearable: true,
             checkStrictly: true,
-            api: '/org/dept',
+            api: '/system/dept',
             requestMethod: 'get',
             params: { format: 'tree' },
             labelField: 'name',
             valueField: 'id',
             childrenField: 'children',
-            placeholder: $t('setting.post.form.placeholder.dept_name'),
+            placeholder: $t('system.post.form.placeholder.dept_name'),
           },
         },
         {
-          label: $t('setting.post.form.name'),
+          label: $t('system.post.form.name'),
           fieldName: 'name',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.post.form.placeholder.name'),
+            placeholder: $t('system.post.form.placeholder.name'),
           },
         },
         {
-          label: $t('setting.post.form.code'),
+          label: $t('system.post.form.code'),
           fieldName: 'code',
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-2',
           componentProps: {
-            placeholder: $t('setting.post.form.placeholder.code'),
+            placeholder: $t('system.post.form.placeholder.code'),
           },
         },
         {
-          label: $t('setting.post.form.sort'),
+          label: $t('system.post.form.sort'),
           fieldName: 'sort',
           component: 'InputNumber',
           defaultValue: 0,
@@ -179,7 +179,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: { min: 0 },
         },
         {
-          label: $t('setting.post.form.enabled'),
+          label: $t('system.post.form.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
@@ -191,13 +191,13 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: $t('setting.post.form.remark'),
+          label: $t('system.post.form.remark'),
           fieldName: 'remark',
           component: 'Input',
           formItemClass: 'col-span-2',
           componentProps: {
             type: 'textarea',
-            placeholder: $t('setting.post.form.placeholder.remark'),
+            placeholder: $t('system.post.form.placeholder.remark'),
           },
         },
       ],
