@@ -66,7 +66,7 @@ function setNestedValue(
 function extractLocaleAndFileKeys(
   path: string,
   langDirName: string,
-): null | { fileKeys: string[]; localeDir: string; } {
+): null | { fileKeys: string[]; localeDir: string } {
   const parts = path.split('/');
   const langIndex = parts.lastIndexOf(langDirName);
   if (langIndex === -1 || langIndex + 1 >= parts.length) return null;
