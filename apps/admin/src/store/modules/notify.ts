@@ -18,7 +18,7 @@ export interface MessageTypeItem {
   key: string;
   name: string;
   description?: string;
-  modules?: { description?: string; key: string; name: string; }[];
+  modules?: { description?: string; key: string; name: string }[];
   category_subscribed: boolean;
   modules_subscribed: Record<string, boolean>;
 }

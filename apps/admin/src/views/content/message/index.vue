@@ -430,8 +430,7 @@ watch(searchKeyword, () => {
                       ? 'text-muted-foreground'
                       : 'text-foreground font-medium'
                   "
-                  >{{ item.title }}</span
-                >
+                  >{{ item.title }}</span>
               </td>
               <td class="px-2 py-2.5">
                 <span class="text-sm text-muted-foreground truncate">{{
