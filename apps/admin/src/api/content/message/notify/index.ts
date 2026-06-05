@@ -1,8 +1,8 @@
-import { requestClient } from '../request';
+import { requestClient } from '#/api/request';
 
-const base = '/notification';
+const base = '/content/message/notify';
 
-export const NotificationApi = {
+export const MessageNotifyApi = {
   getList: (params: any) => requestClient.get(`${base}`, { params }),
   getDetail: (id: number | string) => requestClient.get(`${base}/${id}`),
   markRead: (id: number | string) => requestClient.put(`${base}/${id}/read`),
@@ -15,20 +15,14 @@ export const NotificationApi = {
   getUnreadCount: () => requestClient.get(`${base}/unread-count`),
 };
 
-export const NotificationCategoryApi = {
+export const MessageCategoryApi = {
   getAll: () => requestClient.get(`${base}/category/list`),
   getModules: (key: string) =>
     requestClient.get(`${base}/category/${key}/modules`),
-  create: (data: any) => requestClient.post(`${base}/category`, data),
-  update: (id: number | string, data: any) =>
-    requestClient.put(`${base}/category/${id}`, data),
-  delete: (id: number | string) =>
-    requestClient.delete(`${base}/category/${id}`),
 };
 
-export const NotificationSubscribeApi = {
+export const MessageSubscribeApi = {
   getMine: () => requestClient.get(`${base}/subscribe`),
-  set: (data: any) => requestClient.put(`${base}/subscribe/set`, data),
   batchSet: (settings: any[]) =>
     requestClient.post(`${base}/subscribe/batch-set`, { settings }),
   init: () => requestClient.post(`${base}/subscribe/init`),

@@ -39,6 +39,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('content.message.title'),
         },
       },
+      {
+        name: 'ContentMessageSubscribe',
+        path: '/content/message/subscribe',
+        component: () => import('#/views/content/message/subscribe-page.vue'),
+        meta: {
+          icon: 'lucide:settings',
+          title: '消息订阅',
+        },
+      },
     ],
   },
 ];

@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import type { NotificationItem } from '#/components/notification-drawer/types';
-
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
@@ -13,72 +11,24 @@ import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
-import { NotificationDrawer } from '#/components/notification-drawer';
+import { Bell } from 'lucide-vue-next';
+
 import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import { $t } from '#/locales';
-import { useAuthStore } from '#/store';
+import { useAuthStore, useNotifyStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import MessageDrawer from '#/views/content/message/components/message-drawer.vue';
 
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    category: 'daily',
-    date: '3小时前',
-    isRead: true,
-    content: '收到了 14 份新周报，请及时查收',
-    title: '收到了 14 份新周报',
-  },
-  {
-    id: 2,
-    category: 'daily',
-    date: '刚刚',
-    isRead: false,
-    content: '朱偏右 在项目讨论中回复了你',
-    title: '朱偏右 回复了你',
-  },
-  {
-    id: 3,
-    category: 'daily',
-    date: '2024-01-01',
-    isRead: false,
-    content: '曲丽丽 评论了你的工作日志',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    id: 4,
-    category: 'attendance',
-    date: '1天前',
-    isRead: false,
-    content: '你有一条待审批的加班申请',
-    title: '加班申请待审批',
-  },
-  {
-    id: 5,
-    category: 'attendance',
-    date: '2天前',
-    isRead: true,
-    content: '本月考勤异常汇总，请查看详情',
-    title: '考勤异常提醒',
-  },
-  {
-    id: 6,
-    category: 'approval',
-    date: '30分钟前',
-    isRead: false,
-    content: '张三提交了请假申请，请尽快审批',
-    title: '请假申请待审批',
-    link: '/workspace',
-  },
-  {
-    id: 7,
-    category: 'approval',
-    date: '2小时前',
-    isRead: false,
-    content: '李四提交了报销申请，金额 ¥2,500.00',
-    title: '报销申请待审批',
-    actionText: '去审批',
-  },
-]);
+const notifyStore = useNotifyStore();
+const messageDrawerRef = ref<InstanceType<typeof MessageDrawer> | null>(null);
+
+function openMessageDrawer() {
+  messageDrawerRef.value?.open();
+}
+
+onMounted(() => {
+  notifyStore.initPush();
+});
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -156,40 +106,6 @@ async function handleLogout() {
   await authStore.logout(false);
 }
 
-function markRead(id: number | string) {
-  const item = notifications.value.find((item) => item.id === id);
-  if (item) {
-    item.isRead = true;
-  }
-}
-
-function remove(id: number | string) {
-  notifications.value = notifications.value.filter((item) => item.id !== id);
-}
-
-function handleMakeAll() {
-  notifications.value.forEach((item) => (item.isRead = true));
-}
-
-const handleClick = (item: NotificationItem) => {
-  markRead(item.id);
-  if (item.link) {
-    navigateTo(item.link, item.query);
-  }
-};
-
-function navigateTo(
-  link: string,
-  query?: Record<string, any>,
-  state?: Record<string, any>,
-) {
-  if (link.startsWith('http://') || link.startsWith('https://')) {
-    window.open(link, '_blank');
-  } else {
-    router.push({ path: link, query: query || {}, state });
-  }
-}
-
 watch(
   () => ({
     enable: preferences.app.watermark,
@@ -243,18 +159,25 @@ watch(
       />
     </template>
     <template #notification>
-      <NotificationDrawer
-        :notifications="notifications"
-        @read="(item) => item.id && markRead(item.id)"
-        @read-all="handleMakeAll"
-        @remove="(item) => item.id && remove(item.id)"
-        @click="handleClick"
-        @batch-read="(ids) => ids.forEach((id) => markRead(id))"
-        @batch-remove="
-          (ids) =>
-            (notifications = notifications.filter((n) => !ids.includes(n.id)))
-        "
-      />
+      <div
+        class="relative flex items-center cursor-pointer"
+        @click="openMessageDrawer"
+      >
+        <Bell
+          class="size-[18px] text-foreground hover:text-primary transition-colors"
+        />
+        <span
+          v-if="notifyStore.unreadCount.total > 0"
+          class="absolute -right-0.5 -top-0.5 flex size-[16px] items-center justify-center rounded-full bg-red-500 text-[10px] text-white"
+        >
+          {{
+            notifyStore.unreadCount.total > 99
+              ? '99+'
+              : notifyStore.unreadCount.total
+          }}
+        </span>
+      </div>
+      <MessageDrawer ref="messageDrawerRef" />
     </template>
     <template #extra>
       <AuthenticationLoginExpiredModal
