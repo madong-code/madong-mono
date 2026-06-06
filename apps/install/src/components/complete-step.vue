@@ -1,3 +1,36 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+
+import { useInstallStore } from '@/store/module/install';
+import {
+  ChatDotRound,
+  CircleCheckFilled,
+  House,
+  Monitor,
+  Odometer,
+  WarningFilled,
+} from '@element-plus/icons-vue';
+
+defineProps<{ installData: any }>();
+const installStore = useInstallStore();
+const currentOrigin = ref('');
+const installTime = computed(() => new Date().toLocaleString('zh-CN'));
+const installDuration = computed(() => installStore.formattedDuration);
+const saasMode = computed(() => installStore.saas_mode);
+
+onMounted(() => {
+  if (typeof window !== 'undefined')
+    currentOrigin.value = window.location.origin;
+});
+
+const goToAdmin = () => window.open('/admin', '_blank');
+const goToPlatform = () => window.open('/platform', '_blank');
+const goToCommunity = () =>
+  window.open('https://madong.tech/question/', '_blank');
+const goToFrontend = () => window.open('/', '_blank');
+
+</script>
+
 <template>
   <div class="complete-step">
     <div class="success-wrap">
@@ -21,15 +54,28 @@
         </div>
         <div class="sc-divider"></div>
         <div class="sc-stat">
-          <span class="scv" style="font-size:13px">{{ currentOrigin }}</span>
+          <span class="scv" style="font-size: 13px">{{ currentOrigin }}</span>
           <span class="scl">访问地址</span>
         </div>
       </div>
 
       <div class="sc-links">
-        <el-button @click="goToAdmin" class="sc-btn"><el-icon><Monitor /></el-icon> 进入后台</el-button>
-        <el-button @click="goToFrontend" class="sc-btn sc-green"><el-icon><House /></el-icon> 前端首页</el-button>
-        <el-button @click="goToCommunity" class="sc-btn sc-yellow"><el-icon><ChatDotRound /></el-icon> 技术社区</el-button>
+        <el-button
+          v-if="saasMode"
+          @click="goToPlatform"
+          class="sc-btn sc-purple"
+          >
+<el-icon><Odometer /></el-icon> 进入平台
+</el-button>
+        <el-button @click="goToAdmin" class="sc-btn">
+<el-icon><Monitor /></el-icon> 进入后台
+</el-button>
+        <el-button @click="goToFrontend" class="sc-btn sc-green">
+<el-icon><House /></el-icon> 前端首页
+</el-button>
+        <el-button @click="goToCommunity" class="sc-btn sc-yellow">
+<el-icon><ChatDotRound /></el-icon> 技术社区
+</el-button>
       </div>
 
       <div class="sc-security">
@@ -40,74 +86,154 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { CircleCheckFilled, Monitor, ChatDotRound, House, WarningFilled } from '@element-plus/icons-vue'
-import { useInstallStore } from '@/store/module/install'
-
-const installStore = useInstallStore()
-const currentOrigin = ref('')
-const installTime = computed(() => new Date().toLocaleString('zh-CN'))
-const installDuration = computed(() => installStore.formattedDuration)
-
-onMounted(() => { if (typeof window !== 'undefined') currentOrigin.value = window.location.origin })
-
-const goToAdmin = () => window.open('/admin', '_blank')
-const goToCommunity = () => window.open('https://madong.tech/question/', '_blank')
-const goToFrontend = () => window.open('/', '_blank')
-
-defineProps<{ installData: any }>()
-</script>
-
 <style lang="scss" scoped>
-.complete-step { display: flex; align-items: center; justify-content: center; min-height: 300px; }
+.complete-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
 
-.success-wrap { text-align: center; max-width: 560px; }
+.success-wrap {
+  max-width: 560px;
+  text-align: center;
+}
 
 .check-circle {
-  position: relative; display: inline-block; margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
 
   .cc-bg {
-    position: absolute; inset: -8px; border-radius: 50%;
-    border: 2px solid var(--success-color); opacity: .2;
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    position: absolute;
+    inset: -8px;
+    border: 2px solid var(--success-color);
+    border-radius: 50%;
+    opacity: 0.2;
     animation: pulse 2s ease-in-out infinite;
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
   }
 }
 
-.sc-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
-.sc-desc { font-size: 14px; color: var(--text-tertiary); margin-bottom: 24px; }
-
-.sc-stats {
-  display: inline-flex; align-items: center; gap: 24px;
-  padding: 16px 28px; border-radius: 10px; background: var(--btn-ghost-bg); margin-bottom: 28px;
-
-  .sc-stat { text-align: center; }
-  .scv { display: block; font-size: 14px; font-weight: 600; color: var(--text-primary); }
-  .scl { display: block; font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
-  .sc-divider { width: 1px; height: 30px; background: var(--border-subtle); }
+.sc-title {
+  margin-bottom: 6px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.sc-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.sc-desc {
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+
+.sc-stats {
+  display: inline-flex;
+  gap: 24px;
+  align-items: center;
+  padding: 16px 28px;
+  margin-bottom: 28px;
+  background: var(--btn-ghost-bg);
+  border-radius: 10px;
+
+  .sc-stat {
+    text-align: center;
+  }
+
+  .scv {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .scl {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  .sc-divider {
+    width: 1px;
+    height: 30px;
+    background: var(--border-subtle);
+  }
+}
+
+.sc-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
 
 .sc-btn {
-  border-radius: 8px; font-weight: 500; height: 40px; padding: 0 18px;
-  background: var(--btn-ghost-bg); color: var(--btn-ghost-color);
-  transition: all .2s;
-  &:hover { background: linear-gradient(135deg,#409eff,#6366f1); color: #fff; }
+  height: 40px;
+  padding: 0 18px;
+  font-weight: 500;
+  color: var(--btn-ghost-color);
+  background: var(--btn-ghost-bg);
+  border-radius: 8px;
+  transition: all 0.2s;
 
-  &.sc-green:hover { background: #67c23a; border-color: #67c23a; }
-  &.sc-yellow:hover { background: #e6a23c; border-color: #e6a23c; }
+  &:hover {
+    color: #fff;
+    background: linear-gradient(135deg, #409eff, #6366f1);
+  }
+
+  &.sc-green:hover {
+    background: #67c23a;
+    border-color: #67c23a;
+  }
+
+  &.sc-yellow:hover {
+    background: #e6a23c;
+    border-color: #e6a23c;
+  }
+
+  &.sc-purple:hover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-color: #6366f1;
+  }
 }
 
 .sc-security {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; color: var(--text-tertiary); padding: 8px 16px; border-radius: 8px;
-  background: rgba(230,162,60,.08);
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  background: rgb(230 162 60 / 8%);
+  border-radius: 8px;
 }
 
 @media (max-width: 600px) {
-  .sc-stats { flex-direction: column; gap: 12px; .sc-divider { display: none; } }
-  .sc-links { flex-direction: column; align-items: center; }
+  .sc-stats {
+    flex-direction: column;
+    gap: 12px;
+
+    .sc-divider {
+      display: none;
+    }
+  }
+
+  .sc-links {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

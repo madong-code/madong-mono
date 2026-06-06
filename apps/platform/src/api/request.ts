@@ -16,8 +16,128 @@ import { useAccessStore } from '@vben/stores';
 import { ElMessage } from 'element-plus';
 
 import { useAuthStore } from '#/store';
-
 import { refreshTokenApi } from './core';
+
+// SSE 连接缓存，确保相同 URL 只保持一个活跃连接
+const sseConnections = new Map<string, { close: () => void }>();
+
+/**
+ * SSE (Server-Sent Events) 请求方法
+ *
+ * 基于原生 EventSource 封装，自动注入认证 Token 和 BaseURL
+ * 支持注册自定义事件监听（如 success / error / progress 等）
+ */
+export function sse(
+  url: string,
+  eventHandlers: {
+    [customEvent: string]:
+      | ((data: any, event?: MessageEvent) => void)
+      | undefined;
+    connectionError?: (event: Event) => void;
+    onError?: (event: Event) => void;
+    onMessage?: (data: any) => void;
+    onOpen?: () => void;
+  } = {},
+  extraParams?: Record<string, string | undefined>,
+) {
+  // 构建完整 URL
+  let fullUrl = url;
+  if (!/^https?:\/\//i.test(url)) {
+    const base = apiURL.endsWith('/') ? apiURL.slice(0, -1) : apiURL;
+    fullUrl = `${base}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+
+  // 关闭同 URL 的旧连接，防止多个 Timer
+  const existing = sseConnections.get(fullUrl);
+  if (existing) {
+    existing.close();
+    sseConnections.delete(fullUrl);
+  }
+
+  // 注入额外参数（如 uuid）
+  if (extraParams) {
+    const searchParams = new URLSearchParams();
+    Object.entries(extraParams).forEach(([key, value]) => {
+      if (value !== undefined) {
+        searchParams.append(key, value);
+      }
+    });
+    const qs = searchParams.toString();
+    if (qs) {
+      fullUrl += (fullUrl.includes('?') ? '&' : '?') + qs;
+    }
+  }
+
+  // 注入认证 Token（EventSource 不支持自定义 headers，通过 URL 参数传递）
+  const accessStore = useAccessStore();
+  const token = accessStore.accessToken;
+  if (token) {
+    const bearerToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+    fullUrl += `${
+      fullUrl.includes('?') ? '&' : '?'
+    }token=${encodeURIComponent(bearerToken)}`;
+  }
+
+  const eventSource = new EventSource(fullUrl, { withCredentials: true });
+
+  // 注册 onOpen
+  if (eventHandlers.onOpen) {
+    eventSource.addEventListener('open', () => eventHandlers.onOpen());
+  }
+
+  // 注册默认 message 事件
+  if (eventHandlers.onMessage) {
+    eventSource.addEventListener('message', (event) => {
+      try {
+        eventHandlers.onMessage(JSON.parse(event.data));
+      } catch {
+        eventHandlers.onMessage(event.data);
+      }
+    });
+  }
+
+  // 注册自定义事件（success / error / progress / heartbeat 等）
+  Object.entries(eventHandlers).forEach(([eventName, handler]) => {
+    if (
+      ['connectionError', 'onError', 'onMessage', 'onOpen'].includes(
+        eventName,
+      ) ||
+      typeof handler !== 'function'
+    )
+      return;
+    eventSource.addEventListener(eventName, (event: Event) => {
+      try {
+        (handler as (data: any, event?: MessageEvent) => void)(
+          JSON.parse((event as MessageEvent).data),
+          event as MessageEvent,
+        );
+      } catch {
+        (handler as (data: any) => void)((event as MessageEvent).data);
+      }
+    });
+  });
+
+  // 注册连接错误
+  eventSource.addEventListener('error', (event) => {
+    if (eventHandlers.onError) {
+      eventHandlers.onError(event);
+    }
+  });
+
+  const cleanup = {
+    eventSource,
+    close: () => {
+      sseConnections.delete(fullUrl);
+      eventSource.close();
+    },
+    readyState: () => eventSource.readyState,
+  };
+
+  // 注册到缓存（防重复创建）
+  sseConnections.set(fullUrl, cleanup);
+
+  return cleanup;
+}
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
@@ -107,7 +227,8 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? responseData?.msg ?? '';
+      const errorMessage =
+        responseData?.error ?? responseData?.message ?? responseData?.msg ?? '';
       // 如果没有错误信息，则会根据状态码进行提示
       ElMessage.error(errorMessage || msg);
     }),
