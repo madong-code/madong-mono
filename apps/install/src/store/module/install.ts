@@ -1,11 +1,12 @@
+import type {
+  AdminConfig,
+  DatabaseConfig,
+  TenantConfig,
+} from '@/types/install';
+
 import { installApi } from '@/api/install';
 import { getConfig } from '@/utils/config';
 import { defineStore } from 'pinia';
-import type {
-  TenantConfig,
-  DatabaseConfig,
-  AdminConfig,
-} from '@/types/install';
 
 export const useInstallStore = defineStore('install', {
   state: () => ({
@@ -62,7 +63,7 @@ export const useInstallStore = defineStore('install', {
     // 安装日志
     install_logs: [] as string[],
     // 安装状态
-    install_status: 'idle' as 'idle' | 'installing' | 'success' | 'error',
+    install_status: 'idle' as 'error' | 'idle' | 'installing' | 'success',
     // 安装开始时间
     install_start_time: null as Date | null,
     // 安装是否完成
@@ -73,6 +74,8 @@ export const useInstallStore = defineStore('install', {
     install_end_time: null as Date | null,
     // SaaS多租户模式
     saas_mode: false,
+    // 从install.lock读取的安装日期
+    install_time: '',
   }),
 
   getters: {
@@ -148,6 +151,7 @@ export const useInstallStore = defineStore('install', {
       const data = res.data || {};
       this.installation_completed = data.installed || false;
       this.saas_mode = data.saas_mode || false;
+      this.install_time = data.install_time || '';
       return this.installation_completed;
     },
 
@@ -240,14 +244,14 @@ export const useInstallStore = defineStore('install', {
             try {
               const response = JSON.parse((event as MessageEvent).data);
               const data = response.data || {};
-              if (data.progress !== undefined) {
+              if (data.progress === undefined) {
+                this.install_logs.push(
+                  `[${new Date().toLocaleTimeString()}] ${data.message || '安装进行中...'}`,
+                );
+              } else {
                 this.updateProgress(
                   data.progress,
                   data.message || '安装进行中...',
-                );
-              } else {
-                this.install_logs.push(
-                  `[${new Date().toLocaleTimeString()}] ${data.message || '安装进行中...'}`,
                 );
               }
             } catch (error) {
@@ -305,7 +309,7 @@ export const useInstallStore = defineStore('install', {
               eventSource.close();
               reject(new Error('安装超时'));
             }
-          }, 1000000);
+          }, 1_000_000);
 
           eventSource.addEventListener('completed', () => {
             clearTimeout(timeout);
@@ -370,6 +374,8 @@ export const useInstallStore = defineStore('install', {
       this.install_status = 'success';
       this.install_end_time = new Date();
       this.install_progress = 100;
+      this.install_time = new Date().toLocaleString('zh-CN');
+      this.saas_mode = this.tenantConfig.enable_tenant || false;
       this.install_logs.push(`安装完成，耗时: ${this.formattedDuration}`);
     },
 

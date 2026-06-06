@@ -14,7 +14,9 @@ import {
 defineProps<{ installData: any }>();
 const installStore = useInstallStore();
 const currentOrigin = ref('');
-const installTime = computed(() => new Date().toLocaleString('zh-CN'));
+const installTime = computed(
+  () => installStore.install_time || new Date().toLocaleString('zh-CN'),
+);
 const installDuration = computed(() => installStore.formattedDuration);
 const saasMode = computed(() => installStore.saas_mode);
 
@@ -28,7 +30,6 @@ const goToPlatform = () => window.open('/platform', '_blank');
 const goToCommunity = () =>
   window.open('https://madong.tech/question/', '_blank');
 const goToFrontend = () => window.open('/', '_blank');
-
 </script>
 
 <template>
@@ -64,18 +65,18 @@ const goToFrontend = () => window.open('/', '_blank');
           v-if="saasMode"
           @click="goToPlatform"
           class="sc-btn sc-purple"
-          >
-<el-icon><Odometer /></el-icon> 进入平台
-</el-button>
+        >
+          <el-icon><Odometer /></el-icon> 进入平台
+        </el-button>
         <el-button @click="goToAdmin" class="sc-btn">
-<el-icon><Monitor /></el-icon> 进入后台
-</el-button>
+          <el-icon><Monitor /></el-icon> 进入后台
+        </el-button>
         <el-button @click="goToFrontend" class="sc-btn sc-green">
-<el-icon><House /></el-icon> 前端首页
-</el-button>
+          <el-icon><House /></el-icon> 前端首页
+        </el-button>
         <el-button @click="goToCommunity" class="sc-btn sc-yellow">
-<el-icon><ChatDotRound /></el-icon> 技术社区
-</el-button>
+          <el-icon><ChatDotRound /></el-icon> 技术社区
+        </el-button>
       </div>
 
       <div class="sc-security">

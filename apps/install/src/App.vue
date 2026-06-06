@@ -52,7 +52,8 @@ onMounted(async () => {
   await initConfig();
   await installStore.fetchInstallationStatus();
   const config = getConfig();
-  logoUrl.value = config.siteInfo?.logo || defaultLogo;
+  const configLogo = config.siteInfo?.logo;
+  logoUrl.value = configLogo || defaultLogo;
   siteInfo.value = config.siteInfo || {};
   if (installStore.checkInstallationStatus()) currentStep.value = 6;
 });
@@ -95,19 +96,19 @@ watch(
             :href="siteInfo.officialWebsite"
             target="_blank"
             class="nav-item"
-            >
-官方网站
-</el-link>
+          >
+            官方网站
+          </el-link>
           <el-link :href="siteInfo.community" target="_blank" class="nav-item">
-技术论坛
-</el-link>
+            技术论坛
+          </el-link>
           <el-link
             :href="siteInfo.documentation"
             target="_blank"
             class="nav-item"
-            >
-开发文档
-</el-link>
+          >
+            开发文档
+          </el-link>
           <div
             class="theme-toggle"
             @click="toggleTheme"
@@ -137,8 +138,8 @@ watch(
             <div class="sn-indicator">
               <div class="sn-dot">
                 <el-icon v-if="currentStep > step.id" :size="14">
-<Check />
-</el-icon>
+                  <Check />
+                </el-icon>
                 <span v-else class="sn-num">{{ step.id }}</span>
               </div>
               <div class="sn-label">{{ step.title }}</div>
