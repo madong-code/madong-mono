@@ -241,6 +241,18 @@ export const useNotifyStore = defineStore('notify', () => {
     }
   }
 
+  // ========== 重置状态（用于登出时清空） ==========
+  function $reset() {
+    unreadCount.value = { total: 0, categories: [] };
+    messageList.value = [];
+    totalItems.value = 0;
+    loading.value = false;
+    pushConnected.value = false;
+    subscribeList.value = [];
+    subscribeLoading.value = false;
+    pushClient = null;
+  }
+
   // ========== 工具函数 ==========
   function normalizeItem(item: any): any {
     return {
@@ -269,6 +281,7 @@ export const useNotifyStore = defineStore('notify', () => {
   }
 
   return {
+    $reset,
     unreadCount,
     messageList,
     totalItems,
