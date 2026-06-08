@@ -262,7 +262,7 @@ const handleToolCommand = (command: string) => {
           <ElButton size="small" text>
             操作
             <ElIcon>
-<svg
+              <svg
                 viewBox="0 0 24 24"
                 width="1em"
                 height="1em"
@@ -270,8 +270,9 @@ const handleToolCommand = (command: string) => {
                 stroke="currentColor"
                 stroke-width="2"
               >
-                <path d="M6 9l6 6 6-6" /></svg>
-</ElIcon>
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </ElIcon>
           </ElButton>
           <template #dropdown>
             <ElDropdownMenu>

@@ -136,18 +136,21 @@ defineExpose(methods);
       <slot name="footer">
         <slot name="prepend-footer"></slot>
         <div class="footer-right">
-          <ElButton v-if="dialogPropsRef.showCancelButton" @click="handleCancel">
-取消
-</ElButton>
+          <ElButton
+            v-if="dialogPropsRef.showCancelButton"
+            @click="handleCancel"
+          >
+            取消
+          </ElButton>
           <slot name="center-footer"></slot>
           <ElButton
             v-if="dialogPropsRef.showConfirmButton"
             type="primary"
             @click="handleSubmit"
             v-loading="dialogPropsRef.confirmLoading ?? false"
-            >
-确定
-</ElButton>
+          >
+            确定
+          </ElButton>
         </div>
         <slot name="append-footer"></slot>
       </slot>

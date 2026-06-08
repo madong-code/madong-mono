@@ -45,5 +45,5 @@ export interface MyDialogInstance {
 }
 export interface DialogEmits {
   (e: 'register', dialogInstance: any): void;
-  (e: 'confirm' | 'cancel'): void;
+  (e: 'cancel' | 'confirm'): void;
 }
