@@ -17,7 +17,7 @@ export const useCrudSchema = (): CrudSchema => {
 
     // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    hasEdit: true,
+    hasEdit: false,
     hasView: true,
     hasRemove: true,
     permissions: {
@@ -28,9 +28,22 @@ export const useCrudSchema = (): CrudSchema => {
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: $t('system.role.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'name', title: $t('system.role.table.columns.name'), minWidth: 120 },
-      { field: 'code', title: $t('system.role.table.columns.code'), minWidth: 120 },
+      {
+        field: 'id',
+        title: $t('system.role.table.columns.id'),
+        minWidth: 60,
+        visible: false,
+      },
+      {
+        field: 'name',
+        title: $t('system.role.table.columns.name'),
+        minWidth: 120,
+      },
+      {
+        field: 'code',
+        title: $t('system.role.table.columns.code'),
+        minWidth: 120,
+      },
       {
         field: 'role_type',
         title: $t('system.role.table.columns.role_type'),
@@ -52,8 +65,16 @@ export const useCrudSchema = (): CrudSchema => {
         viewComponent: 'ApiDict',
         viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
       },
-      { field: 'sort', title: $t('system.role.table.columns.sort'), minWidth: 60 },
-      { field: 'remark', title: $t('system.role.table.columns.remark'), minWidth: 160 },
+      {
+        field: 'sort',
+        title: $t('system.role.table.columns.sort'),
+        minWidth: 60,
+      },
+      {
+        field: 'remark',
+        title: $t('system.role.table.columns.remark'),
+        minWidth: 160,
+      },
       {
         field: 'created_date',
         title: $t('system.role.table.columns.created_date'),
@@ -70,17 +91,20 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('system.role.search.name'),
           component: 'Input',
         },
-         {
+        {
           fieldName: 'LIKE_code',
           label: $t('system.role.search.code'),
           component: 'Input',
         },
-         {
+        {
           fieldName: 'LIKE_enabled',
           label: $t('system.role.search.enabled'),
           component: 'ApiDict',
-          componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
-        }
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+          },
+        },
       ],
     },
 
@@ -88,6 +112,7 @@ export const useCrudSchema = (): CrudSchema => {
     formDialog: {
       enabled: true,
       dialogType: 'modal',
+
       schema: [
         {
           fieldName: 'id',
@@ -141,5 +166,5 @@ export const useCrudSchema = (): CrudSchema => {
         labelAlign: 'right',
       },
     },
-  }
+  };
 };

@@ -1,38 +1,42 @@
 <script setup lang="ts">
-import type { FormActionType, FormDialogOptions } from './types'
+import type { FormActionType, FormDialogOptions } from './types';
 
-import { useVbenForm } from '#/adapter/form'
-import { useVbenModal, useVbenDrawer } from '@vben/common-ui'
-import { computed, nextTick, ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { DetailViewer } from '../viewer'
+import { computed, nextTick, ref } from 'vue';
+
+import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
+
+import { ElMessage } from 'element-plus';
+
+import { useVbenForm } from '#/adapter/form';
+
+import { DetailViewer } from '../viewer';
 
 const props = defineProps<{
-  options: FormDialogOptions
-}>()
+  options: FormDialogOptions;
+}>();
 
-const viewType = ref<FormActionType>('view')
-const currentRow = ref<Record<string, any>>({})
+const viewType = ref<FormActionType>('view');
+const currentRow = ref<Record<string, any>>({});
 
 // 解析 schema：支持函数和数组
 const formSchema = computed(() => {
   const schema =
     typeof props.options.schema === 'function'
       ? props.options.schema()
-      : props.options.schema
-  return schema || []
-})
+      : props.options.schema;
+  return schema || [];
+});
 
 // 对齐方式转 CSS 类（默认右对齐）
 function alignToClass(align?: 'left' | 'right'): string {
-  if (!align) return 'text-right'
-  return align === 'left' ? 'text-left' : 'text-right'
+  if (!align) return 'text-right';
+  return align === 'left' ? 'text-left' : 'text-right';
 }
 
 // DetailViewer 的 commonConfig：从 FormDialogOptions 的 commonConfig 中提取
 const detailCommonConfig = computed(() => {
-  const common = props.options.commonConfig
-  if (!common) return undefined
+  const common = props.options.commonConfig;
+  if (!common) return undefined;
   return {
     labelClass: alignToClass(common.detailLabelAlign ?? common.labelAlign),
     labelWidth: common.labelWidth,
@@ -41,14 +45,17 @@ const detailCommonConfig = computed(() => {
     wrapperClass: common.wrapperClass,
     hideLabel: common.hideLabel,
     hideRequiredMark: common.hideRequiredMark,
-    formItemClass: typeof common.formItemClass === 'function' ? undefined : common.formItemClass,
-  }
-})
+    formItemClass:
+      typeof common.formItemClass === 'function'
+        ? undefined
+        : common.formItemClass,
+  };
+});
 
 // 表单的 commonConfig：从 FormDialogOptions 的 commonConfig 中提取
 const formCommonConfig = computed(() => {
-  const common = props.options.commonConfig
-  if (!common) return undefined
+  const common = props.options.commonConfig;
+  if (!common) return undefined;
   return {
     labelWidth: common.labelWidth,
     labelClass: alignToClass(common.formLabelAlign ?? common.labelAlign),
@@ -56,8 +63,8 @@ const formCommonConfig = computed(() => {
     hideRequiredMark: common.hideRequiredMark,
     controlClass: common.controlClass,
     wrapperClass: common.wrapperClass,
-  }
-})
+  };
+});
 
 // 构建 useVbenForm 的完整参数，兼容所有 VbenFormProps
 const formOptions = computed(() => {
@@ -79,7 +86,7 @@ const formOptions = computed(() => {
     transformFormValues: _transformFormValues,
     // useVbenForm 参数
     ...formProps
-  } = props.options
+  } = props.options;
 
   return {
     ...formProps,
@@ -90,165 +97,175 @@ const formOptions = computed(() => {
       ...formCommonConfig.value,
       ...formProps.commonConfig,
       // 顶层 wrapperClass 优先级最高
-      wrapperClass: props.options.wrapperClass || formProps.commonConfig?.wrapperClass,
+      wrapperClass:
+        props.options.wrapperClass || formProps.commonConfig?.wrapperClass,
     },
-  }
-})
+  };
+});
 
-const [BasicForm, formApi] = useVbenForm(formOptions.value)
+const [BasicForm, formApi] = useVbenForm(formOptions.value);
 
 const dialogTitle = computed(() => {
-  const title = props.options.title || ''
-  if (viewType.value === 'add') return `新增${title}`
-  if (viewType.value === 'edit') return `编辑${title}`
-  return `${title}详情`
-})
+  const title = props.options.title || '';
+  if (viewType.value === 'add') return `新增${title}`;
+  if (viewType.value === 'edit') return `编辑${title}`;
+  return `${title}详情`;
+});
 
-const dialogWidth = computed(() => props.options.width || 'w-[50%]')
-const rowKey = computed(() => props.options.rowKey || 'id')
-const isView = computed(() => viewType.value === 'view')
+const dialogWidth = computed(() => props.options.width || 'w-[50%]');
+const dialogClass = computed(() => {
+  const cls = [dialogWidth.value];
+  if (props.options.class) cls.push(props.options.class);
+  return cls.join(' ');
+});
+const rowKey = computed(() => props.options.rowKey || 'id');
+const isView = computed(() => viewType.value === 'view');
 
 // DetailViewer 的 layout：从 FormDialogOptions 的 layout 映射
 const detailLayout = computed(() => {
-  return (props.options.layout as 'horizontal' | 'vertical' | 'inline') || 'horizontal'
-})
+  return (
+    (props.options.layout as 'horizontal' | 'inline' | 'vertical') ||
+    'horizontal'
+  );
+});
 
 // DetailViewer 的 wrapperClass：从 formOptions 的 wrapperClass 映射（用于网格布局）
 const detailWrapperClass = computed(() => {
-  return props.options.wrapperClass || ''
-})
+  return props.options.wrapperClass || '';
+});
 
 // === Modal ===
 const [Modal, modalApi] = useVbenModal({
   draggable: props.options.draggable !== false,
   fullscreenButton: props.options.fullscreenButton !== false,
+  zIndex: props.options.zIndex,
   confirmText: props.options.confirmText,
   cancelText: props.options.cancelText,
   async onConfirm() {
-    await handleSubmit()
+    await handleSubmit();
   },
   onOpenChange(isOpen: boolean) {
-    if (isOpen) handleOpen()
+    if (isOpen) handleOpen();
   },
-})
+});
 
 // === Drawer ===
 const [Drawer, drawerApi] = useVbenDrawer({
   confirmText: props.options.confirmText,
   cancelText: props.options.cancelText,
   async onConfirm() {
-    await handleSubmit()
+    await handleSubmit();
   },
   onOpenChange(isOpen: boolean) {
-    if (isOpen) handleOpen()
+    if (isOpen) handleOpen();
   },
-})
+});
 
 const currentApi = computed(() =>
   props.options.dialogType === 'drawer' ? drawerApi : modalApi,
-)
+);
 
 function handleOpen() {
-  const data = currentApi.value.getData<Record<string, any>>()
-  if (data) currentRow.value = data
+  const data = currentApi.value.getData<Record<string, any>>();
+  if (data) currentRow.value = data;
 
   if (viewType.value === 'view') {
-    currentApi.value.setState({ footer: false, closeOnClickModal: true })
+    currentApi.value.setState({ footer: false, closeOnClickModal: true });
   } else {
-    currentApi.value.setState({ footer: true, closeOnClickModal: false })
+    currentApi.value.setState({ footer: true, closeOnClickModal: false });
   }
 
   if (viewType.value === 'edit' || viewType.value === 'view') {
-    const api = props.options.api
+    const api = props.options.api;
     if (api?.view) {
       api.view(currentRow.value[rowKey.value]).then((res: any) => {
-        currentRow.value = { ...currentRow.value, ...res }
+        currentRow.value = { ...currentRow.value, ...res };
         if (viewType.value !== 'view') {
           nextTick(() => {
-            formApi.setValues(currentRow.value)
-          })
+            formApi.setValues(currentRow.value);
+          });
         }
-      })
+      });
     } else {
       if (viewType.value !== 'view') {
         nextTick(() => {
-          formApi.setValues(currentRow.value)
-        })
+          formApi.setValues(currentRow.value);
+        });
       }
     }
   } else {
     nextTick(() => {
       // 先重置清空旧数据，再设置新值（树形新增子节点时会带 pid）
-      formApi.resetForm()
-      formApi.setValues(currentRow.value)
-    })
+      formApi.resetForm();
+      formApi.setValues(currentRow.value);
+    });
   }
 
-  props.options.onOpen?.(viewType.value, currentRow.value)
+  props.options.onOpen?.(viewType.value, currentRow.value);
 }
 
 async function handleSubmit() {
   if (viewType.value === 'view') {
-    currentApi.value.close()
-    return
+    currentApi.value.close();
+    return;
   }
 
-  const { valid } = await formApi.validate()
-  if (!valid) return
+  const { valid } = await formApi.validate();
+  if (!valid) return;
 
-  currentApi.value.lock()
+  currentApi.value.lock();
   try {
-    let values = await formApi.getValues()
+    let values = await formApi.getValues();
 
     // 提交前转换
     if (props.options.transformFormValues) {
       values = props.options.transformFormValues(
         values,
         viewType.value === 'edit' ? 'edit' : 'add',
-      )
+      );
     }
 
     // 提交前回调
     if (props.options.beforeSubmit) {
-      const result = await props.options.beforeSubmit(values, viewType.value)
-      if (result === false) return
-      if (result && typeof result === 'object') values = result
+      const result = await props.options.beforeSubmit(values, viewType.value);
+      if (result === false) return;
+      if (result && typeof result === 'object') values = result;
     }
 
-    const api = props.options.api
-    const submitApi = viewType.value === 'edit' ? api?.edit : api?.add
+    const api = props.options.api;
+    const submitApi = viewType.value === 'edit' ? api?.edit : api?.add;
     if (submitApi) {
-      await submitApi(values)
-      ElMessage.success(viewType.value === 'edit' ? '编辑成功' : '新增成功')
+      await submitApi(values);
+      ElMessage.success(viewType.value === 'edit' ? '编辑成功' : '新增成功');
     }
 
-    currentApi.value.close()
-    props.options.onSuccess?.(viewType.value, values)
+    currentApi.value.close();
+    props.options.onSuccess?.(viewType.value, values);
   } finally {
-    currentApi.value.unlock()
+    currentApi.value.unlock();
   }
 }
 
 function openAdd(data: Record<string, any> = {}) {
-  viewType.value = 'add'
-  currentRow.value = data
-  currentApi.value.setData(data).open()
+  viewType.value = 'add';
+  currentRow.value = data;
+  currentApi.value.setData(data).open();
 }
 
 function openEdit(row: Record<string, any>) {
-  viewType.value = 'edit'
-  currentRow.value = row
-  currentApi.value.setData(row).open()
+  viewType.value = 'edit';
+  currentRow.value = row;
+  currentApi.value.setData(row).open();
 }
 
 function openView(row: Record<string, any>) {
-  viewType.value = 'view'
-  currentRow.value = row
-  currentApi.value.setData(row).open()
+  viewType.value = 'view';
+  currentRow.value = row;
+  currentApi.value.setData(row).open();
 }
 
 function close() {
-  currentApi.value.close()
+  currentApi.value.close();
 }
 
 /**
@@ -256,11 +273,11 @@ function close() {
  */
 function show({ data, type }: { data: any; type: FormActionType }) {
   if (type === 'add') {
-    openAdd(data)
+    openAdd(data);
   } else if (type === 'edit') {
-    openEdit(data)
+    openEdit(data);
   } else {
-    openView(data)
+    openView(data);
   }
 }
 
@@ -273,11 +290,15 @@ defineExpose({
   getFormApi: () => formApi,
   getActionType: () => viewType.value,
   getCurrentRow: () => currentRow.value,
-})
+});
 </script>
 
 <template>
-  <Modal v-if="options.dialogType !== 'drawer'" :title="dialogTitle" :class="dialogWidth">
+  <Modal
+    v-if="options.dialogType !== 'drawer'"
+    :title="dialogTitle"
+    :class="dialogClass"
+  >
     <!-- 查看模式：使用 DetailViewer 详情组件 -->
     <DetailViewer
       v-if="isView"
@@ -291,7 +312,7 @@ defineExpose({
     <!-- 新增/编辑模式：使用 Form 表单 -->
     <BasicForm v-else class="p-4" :show-default-actions="false" />
   </Modal>
-  <Drawer v-else :title="dialogTitle" :class="dialogWidth">
+  <Drawer v-else :title="dialogTitle" :class="dialogClass">
     <!-- 查看模式：使用 DetailViewer 详情组件 -->
     <DetailViewer
       v-if="isView"

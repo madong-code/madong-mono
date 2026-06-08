@@ -210,7 +210,8 @@ defineExpose({
             <ElCol v-for="(item, index) in routeList" :key="index" :span="12">
               <ElCard
                 shadow="hover"
-                class="route-card" :class="[{ selected: isSelected(item) }]"
+                class="route-card"
+                :class="[{ selected: isSelected(item) }]"
                 @click="handleCardClick(item)"
               >
                 <div class="card-head">
@@ -249,11 +250,11 @@ defineExpose({
   padding: 20px;
 
   .tips-sub {
-    margin: 0;
     padding: 1px 0;
+    margin: 0;
     font-size: 13px;
-    color: var(--el-text-color-secondary);
     line-height: 1.6;
+    color: var(--el-text-color-secondary);
   }
 }
 
@@ -279,9 +280,9 @@ defineExpose({
     flex-shrink: 0;
     width: 220px;
     padding: 6px 0;
+    background: var(--el-bg-color);
     border: 1px solid var(--el-border-color-lighter);
     border-radius: 6px;
-    background: var(--el-bg-color);
   }
 
   // 右侧卡片（overflow hidden 裁剪 ElRow gutter 负边距）
@@ -294,8 +295,8 @@ defineExpose({
 
 // 卡片
 .route-card {
-  cursor: pointer;
   margin-bottom: 8px;
+  cursor: pointer;
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 6px;
   transition: all 0.2s;
@@ -310,39 +311,39 @@ defineExpose({
   }
 
   &.selected {
-    border-color: var(--el-color-primary);
     background: var(--el-color-primary-light-9);
+    border-color: var(--el-color-primary);
   }
 
   .card-head {
     display: flex;
-    align-items: center;
     gap: 8px;
+    align-items: center;
     margin-bottom: 6px;
 
     .el-tag {
       flex-shrink: 0;
       min-width: 50px;
-      text-align: center;
-      font-weight: 600;
       font-family: monospace;
+      font-weight: 600;
+      text-align: center;
     }
 
     .card-name {
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
       font-size: 13px;
       font-weight: 500;
+      white-space: nowrap;
     }
   }
 
   .card-body {
     .route-item {
       display: flex;
-      align-items: center;
       gap: 4px;
+      align-items: center;
       padding: 1px 0;
       font-size: 12px;
       line-height: 1.6;
@@ -354,13 +355,13 @@ defineExpose({
 
       .val {
         flex: 1;
+        padding: 0 6px;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
         font-family: monospace;
         color: var(--el-text-color-regular);
+        white-space: nowrap;
         background: var(--el-fill-color-light);
-        padding: 0 6px;
         border-radius: 3px;
       }
     }

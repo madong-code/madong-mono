@@ -4,146 +4,168 @@
  * 支持扁平化配置：table 配置项可直接定义在顶层
  */
 
-import type { VbenFormProps, VbenFormSchema } from '#/adapter/form'
-import type { ActionItem, PopConfirm } from '#/components/crud/components/table-action'
+import type { VbenFormProps, VbenFormSchema } from '#/adapter/form';
+import type {
+  ActionItem,
+  PopConfirm,
+} from '#/components/crud/components/table-action';
 
 // Re-export ActionItem 和 PopConfirm 以确保类型一致性
-export type { ActionItem, PopConfirm }
+export type { ActionItem, PopConfirm };
 
 // ========== CRUD API ==========
 
 export interface CrudApi {
-  list: (params: any) => Promise<any>
-  add?: (params: any) => Promise<any>
-  edit?: (params: any) => Promise<any>
+  list: (params: any) => Promise<any>;
+  add?: (params: any) => Promise<any>;
+  edit?: (params: any) => Promise<any>;
   /** 单个删除接口 */
-  remove?: (params: any) => Promise<any>
+  remove?: (params: any) => Promise<any>;
   /** 批量删除接口（传入 ids 数组） */
-  batchRemove?: (params: { ids: any[] }) => Promise<any>
-  view?: (id: any) => Promise<any>
+  batchRemove?: (params: { ids: any[] }) => Promise<any>;
+  view?: (id: any) => Promise<any>;
 }
 
 // ========== 搜索表单配置 ==========
 
 export interface SearchFormConfig {
   /** 是否启用搜索表单，默认 true */
-  enabled?: boolean
+  enabled?: boolean;
   /** 搜索表单 schema */
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
+  schema?: (() => VbenFormSchema[]) | VbenFormSchema[];
   /** 搜索表单通用配置 */
-  commonConfig?: Partial<VbenFormProps>
+  commonConfig?: Partial<VbenFormProps>;
   /** 提交方式：change 时立即提交，submit 时按钮提交，默认 submit */
-  submitOnChange?: boolean
+  submitOnChange?: boolean;
   /** 是否折叠，默认 false */
-  collapsed?: boolean
+  collapsed?: boolean;
   /** 折叠时显示行数，默认 2 */
-  collapsedRows?: number
+  collapsedRows?: number;
 }
 
 // ========== 表单弹窗配置 ==========
 
 export interface FormDialogCommonConfig {
   /** label 宽度，默认 120 */
-  labelWidth?: number
+  labelWidth?: number;
   /** label 对齐方式 */
-  labelAlign?: 'left' | 'right'
+  labelAlign?: 'left' | 'right';
   /** 表单 label 对齐方式（仅表单生效） */
-  formLabelAlign?: 'left' | 'right'
+  formLabelAlign?: 'left' | 'right';
   /** 详情 label 对齐方式（仅详情页生效） */
-  detailLabelAlign?: 'left' | 'right'
+  detailLabelAlign?: 'left' | 'right';
   /** label class */
-  labelClass?: string
+  labelClass?: string;
   /** control class */
-  controlClass?: string
+  controlClass?: string;
   /** wrapper class */
-  wrapperClass?: string
+  wrapperClass?: string;
   /** 是否隐藏 label */
-  hideLabel?: boolean
+  hideLabel?: boolean;
   /** 是否隐藏必填标记 */
-  hideRequiredMark?: boolean
+  hideRequiredMark?: boolean;
   /** 表单项 class */
-  formItemClass?: string | (() => string)
+  formItemClass?: (() => string) | string;
   /** 组件默认 props */
-  componentProps?: Record<string, any>
+  componentProps?: Record<string, any>;
 }
 
-export type FormDialogType = 'modal' | 'drawer'
+export type FormDialogType = 'drawer' | 'modal';
 
-export type FormActionType = 'add' | 'edit' | 'view'
+export type FormActionType = 'add' | 'edit' | 'view';
 
 export interface FormDialogApiConfig {
-  add?: (params: any) => Promise<any>
-  edit?: (params: any) => Promise<any>
-  view?: (id: any) => Promise<any>
+  add?: (params: any) => Promise<any>;
+  edit?: (params: any) => Promise<any>;
+  view?: (id: any) => Promise<any>;
 }
 
-export interface FormDialogOptions extends Omit<Partial<VbenFormProps>, 'schema'> {
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
-  commonConfig?: FormDialogCommonConfig
-  api?: FormDialogApiConfig
-  dialogType?: FormDialogType
-  title?: string
-  width?: string
-  rowKey?: string
-  draggable?: boolean
-  fullscreenButton?: boolean
-  onSuccess?: (type: FormActionType, values: Record<string, any>) => void | Promise<void>
+export interface FormDialogOptions extends Omit<
+  Partial<VbenFormProps>,
+  'schema'
+> {
+  schema?: (() => VbenFormSchema[]) | VbenFormSchema[];
+  commonConfig?: FormDialogCommonConfig;
+  api?: FormDialogApiConfig;
+  dialogType?: FormDialogType;
+  title?: string;
+  width?: string;
+  rowKey?: string;
+  draggable?: boolean;
+  fullscreenButton?: boolean;
+  onSuccess?: (
+    type: FormActionType,
+    values: Record<string, any>,
+  ) => Promise<void> | void;
   beforeSubmit?: (
     values: Record<string, any>,
     type: FormActionType,
-  ) => Record<string, any> | false | Promise<Record<string, any> | false>
-  onOpen?: (type: FormActionType, data: Record<string, any>) => void | Promise<void>
-  confirmText?: string
-  cancelText?: string
+  ) => false | Promise<false | Record<string, any>> | Record<string, any>;
+  onOpen?: (
+    type: FormActionType,
+    data: Record<string, any>,
+  ) => Promise<void> | void;
+  confirmText?: string;
+  cancelText?: string;
   transformFormValues?: (
     values: Record<string, any>,
     type: FormActionType,
-  ) => Record<string, any>
+  ) => Record<string, any>;
 }
 
 export interface FormDialogConfig {
   /** 是否启用表单弹窗，默认 true */
-  enabled?: boolean
+  enabled?: boolean;
   /** 表单 schema */
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[])
+  schema?: (() => VbenFormSchema[]) | VbenFormSchema[];
   /** 表单通用配置 */
-  commonConfig?: FormDialogCommonConfig
+  commonConfig?: FormDialogCommonConfig;
   /** API 接口配置 */
-  api?: FormDialogApiConfig
+  api?: FormDialogApiConfig;
   /** 弹窗类型，默认 modal */
-  dialogType?: FormDialogType
+  dialogType?: FormDialogType;
   /** 弹窗标题前缀 */
-  title?: string
+  title?: string;
   /** 弹窗宽度 */
-  width?: string
+  width?: string;
   /** 表单布局 */
-  layout?: 'horizontal' | 'vertical' | 'inline'
+  layout?: 'horizontal' | 'inline' | 'vertical';
   /** Grid 布局 class，用于控制表单列数，如 'grid-cols-1' 一列，'grid-cols-2' 两列，'grid-cols-3' 三列 */
-  wrapperClass?: string
+  wrapperClass?: string;
   /** 行数据的 key 字段，默认 id */
-  rowKey?: string
+  rowKey?: string;
   /** 是否可拖拽（仅 modal 有效），默认 true */
-  draggable?: boolean
+  draggable?: boolean;
   /** 是否显示全屏按钮，默认 true */
-  fullscreenButton?: boolean
+  fullscreenButton?: boolean;
+  /** 弹窗组件的 CSS class，如 'top-0' 让弹窗靠顶部显示 */
+  class?: string;
+  /** 弹窗层级，默认 undefined（使用组件默认值），嵌套使用时需设更高值 */
+  zIndex?: number;
   /** 提交成功回调 */
-  onSuccess?: (type: FormActionType, values: Record<string, any>) => void | Promise<void>
+  onSuccess?: (
+    type: FormActionType,
+    values: Record<string, any>,
+  ) => Promise<void> | void;
   /** 提交前回调 */
   beforeSubmit?: (
     values: Record<string, any>,
     type: FormActionType,
-  ) => Record<string, any> | false | Promise<Record<string, any> | false>
+  ) => false | Promise<false | Record<string, any>> | Record<string, any>;
   /** 提交前数据转换 */
   transformFormValues?: (
     values: Record<string, any>,
     type: FormActionType,
-  ) => Record<string, any>
+  ) => Record<string, any>;
   /** 打开弹窗后的回调 */
-  onOpen?: (type: FormActionType, data: Record<string, any>) => void | Promise<void>
+  onOpen?: (
+    type: FormActionType,
+    data: Record<string, any>,
+  ) => Promise<void> | void;
   /** 自定义确认文本 */
-  confirmText?: string
+  confirmText?: string;
   /** 自定义取消文本 */
-  cancelText?: string
+  cancelText?: string;
 }
 
 // ========== CRUD Schema ==========
@@ -152,57 +174,57 @@ export interface FormDialogConfig {
 export interface CrudSchema extends Partial<TableConfig> {
   // --- API 接口 ---
   /** API 接口 */
-  crudApi: CrudApi
+  crudApi: CrudApi;
 
   // --- 表格列定义 ---
   /** 表格列定义 */
-  columns?: CrudColumn[] | (() => CrudColumn[])
+  columns?: (() => CrudColumn[]) | CrudColumn[];
 
   // --- 数据处理配置 ---
   /** 请求前处理参数 */
-  beforeFetch?: (params: any) => any
+  beforeFetch?: (params: any) => any;
   /** 请求后处理结果 */
-  afterFetch?: (res: any) => any
+  afterFetch?: (res: any) => any;
 
   // --- 搜索表单配置 ---
   /** 搜索表单配置 */
-  searchForm?: SearchFormConfig
+  searchForm?: SearchFormConfig;
 
   // --- 表单弹窗配置 ---
   /** 表单弹窗配置 */
-  formDialog?: FormDialogConfig
+  formDialog?: FormDialogConfig;
 }
 
 // ========== 状态和 API ==========
 
 export interface CrudReadonlyState {
-  selection: any[]
+  selection: any[];
 }
 
 export interface CrudApiInstance {
   // 数据操作
-  query: (params?: Record<string, any>) => Promise<void>
-  reload: (params?: Record<string, any>) => Promise<void>
-  setLoading: (loading: boolean) => void
-  getGridInstance: () => any
-  getFormApi: () => any
-  getRowSelection: () => any[]
-  getReadonlyState: () => CrudReadonlyState
-  refreshData: () => void
-  refreshSoft: () => void
-  refreshCreate: () => void
-  refreshUpdate: () => void
-  refreshRemove: () => void
+  query: (params?: Record<string, any>) => Promise<void>;
+  reload: (params?: Record<string, any>) => Promise<void>;
+  setLoading: (loading: boolean) => void;
+  getGridInstance: () => any;
+  getFormApi: () => any;
+  getRowSelection: () => any[];
+  getReadonlyState: () => CrudReadonlyState;
+  refreshData: () => void;
+  refreshSoft: () => void;
+  refreshCreate: () => void;
+  refreshUpdate: () => void;
+  refreshRemove: () => void;
 
   // 弹窗操作
-  openAddDialog: (data?: Record<string, any>) => void
-  openEditDialog: (row: any) => void
-  openViewDialog: (row: any) => void
+  openAddDialog: (data?: Record<string, any>) => void;
+  openEditDialog: (row: any) => void;
+  openViewDialog: (row: any) => void;
 
   // 删除操作
-  removeByApi: (row: any) => void
-  executeRemove: (row: any) => void
-  executeBatchRemove: () => void
+  removeByApi: (row: any) => void;
+  executeRemove: (row: any) => void;
+  executeBatchRemove: () => void;
 }
 
 // ========== 表格相关类型定义 ==========
@@ -212,9 +234,9 @@ export interface CrudApiInstance {
  */
 export interface PaginationConfig {
   /** 当前页字段名，默认 page */
-  currentKey?: string
+  currentKey?: string;
   /** 每页大小字段名，默认 limit */
-  sizeKey?: string
+  sizeKey?: string;
 }
 
 /**
@@ -222,11 +244,11 @@ export interface PaginationConfig {
  */
 export interface TreeConfig {
   /** 父级 ID 字段名，默认 parentId */
-  pid?: string
+  pid?: string;
   /** ID 字段名，默认 id */
-  id?: string
+  id?: string;
   /** 子节点字段名，默认 children */
-  children?: string
+  children?: string;
 }
 
 /**
@@ -234,19 +256,19 @@ export interface TreeConfig {
  */
 export interface ToolbarConfig {
   /** 是否显示刷新按钮 */
-  refresh?: boolean
+  refresh?: boolean;
   /** 是否显示自定义按钮区域 */
-  custom?: boolean
+  custom?: boolean;
   /** 是否显示缩放按钮 */
-  zoom?: boolean
+  zoom?: boolean;
   /** 是否显示导出按钮 */
-  export?: boolean
+  export?: boolean;
   /** 是否显示搜索按钮 */
-  search?: boolean
+  search?: boolean;
   /** 是否显示打印按钮 */
-  print?: boolean
+  print?: boolean;
   /** 自定义工具按钮 */
-  tools?: any[]
+  tools?: any[];
 }
 
 /**
@@ -254,17 +276,17 @@ export interface ToolbarConfig {
  */
 export interface TableProxyConfig {
   /** 查询接口 */
-  query?: (params: any) => Promise<any>
+  query?: (params: any) => Promise<any>;
   /** 创建接口 */
-  create?: (params: any) => Promise<any>
+  create?: (params: any) => Promise<any>;
   /** 更新接口 */
-  update?: (params: any) => Promise<any>
+  update?: (params: any) => Promise<any>;
   /** 删除接口 */
-  delete?: (params: any) => Promise<any>
+  delete?: (params: any) => Promise<any>;
   /** 批量删除接口 */
-  deleteBatch?: (params: { ids: any[] }) => Promise<any>
+  deleteBatch?: (params: { ids: any[] }) => Promise<any>;
   /** 获取详情接口 */
-  get?: (id: any) => Promise<any>
+  get?: (id: any) => Promise<any>;
 }
 
 /**
@@ -272,13 +294,13 @@ export interface TableProxyConfig {
  */
 export interface TablePermissionConfig {
   /** 新增权限 */
-  add?: string
+  add?: string;
   /** 编辑权限 */
-  edit?: string
+  edit?: string;
   /** 删除权限 */
-  remove?: string
+  remove?: string;
   /** 查看权限 */
-  view?: string
+  view?: string;
 }
 
 /**
@@ -286,13 +308,13 @@ export interface TablePermissionConfig {
  */
 export interface TableButtonTextConfig {
   /** 新增按钮文本 */
-  add?: string
+  add?: string;
   /** 编辑按钮文本 */
-  edit?: string
+  edit?: string;
   /** 删除按钮文本 */
-  remove?: string
+  remove?: string;
   /** 查看按钮文本 */
-  view?: string
+  view?: string;
 }
 
 /**
@@ -300,35 +322,35 @@ export interface TableButtonTextConfig {
  */
 export interface CrudColumn {
   /** 字段名 */
-  field?: string
+  field?: string;
   /** 显示标题 */
-  title?: string
+  title?: string;
   /** 宽度 */
-  width?: number | string
+  width?: number | string;
   /** 最小宽度 */
-  minWidth?: number | string
+  minWidth?: number | string;
   /** 类型 */
-  type?: 'checkbox' | 'seq' | 'radio' | 'expand' | string
+  type?: 'checkbox' | 'expand' | 'radio' | 'seq' | string;
   /** 是否可见 */
-  visible?: boolean
+  visible?: boolean;
   /** 对齐方式 */
-  align?: 'left' | 'center' | 'right'
+  align?: 'center' | 'left' | 'right';
   /** 权限标识 */
-  auth?: string
+  auth?: string;
   /** 自定义单元格渲染 */
   cellRender?: {
-    name: string
-    props?: Record<string, any>
-    attrs?: Record<string, any>
-  }
+    attrs?: Record<string, any>;
+    name: string;
+    props?: Record<string, any>;
+  };
   /** 自定义查看组件 */
-  viewComponent?: any
+  viewComponent?: any;
   /** 查看组件属性 */
-  viewComponentProps?: Record<string, any>
+  viewComponentProps?: Record<string, any>;
   /** 自定义列配置 */
-  vxeColumn?: Record<string, any>
+  vxeColumn?: Record<string, any>;
   /** 其他属性 */
-  [key: string]: any
+  [key: string]: any;
 }
 
 /**
@@ -336,13 +358,13 @@ export interface CrudColumn {
  */
 export interface PathParamItem {
   /** 参数键名 */
-  key: string
+  key: string;
   /** 参数来源：row（行数据）或 route（路由参数） */
-  source: 'row' | 'route'
+  source: 'route' | 'row';
   /** 当 source 为 row 时，指定行数据的字段名 */
-  field?: string
+  field?: string;
   /** 当 source 为 route 时，指定路由参数的键名（默认使用 key） */
-  routeKey?: string
+  routeKey?: string;
 }
 
 /**
@@ -350,79 +372,79 @@ export interface PathParamItem {
  */
 export interface TableConfig {
   /** 行数据的 key 字段，默认 id */
-  rowKey?: string
+  rowKey?: string;
   /** 路径参数配置，用于在请求时携带额外参数 */
-  pathParams?: PathParamItem[]
+  pathParams?: PathParamItem[];
   /** 是否显示新增按钮 */
-  hasAdd?: boolean
+  hasAdd?: boolean;
   /** 是否显示编辑按钮 */
-  hasEdit?: boolean
+  hasEdit?: boolean;
   /** 是否显示删除按钮 */
-  hasRemove?: boolean
+  hasRemove?: boolean;
   /** 是否显示详情按钮 */
-  hasView?: boolean
+  hasView?: boolean;
   /** 是否显示批量删除按钮 */
-  hasBatchRemove?: boolean
+  hasBatchRemove?: boolean;
   /** 操作按钮权限配置 */
-  permissions?: TablePermissionConfig
+  permissions?: TablePermissionConfig;
   /** 表格列定义 */
-  columns?: CrudColumn[] | (() => CrudColumn[])
+  columns?: (() => CrudColumn[]) | CrudColumn[];
   /** 请求前处理参数 */
-  beforeFetch?: (params: any) => any
+  beforeFetch?: (params: any) => any;
   /** 请求后处理结果 */
-  afterFetch?: (res: any) => any
+  afterFetch?: (res: any) => any;
   /** 表格行操作按钮 */
-  tableActions?: ActionItem[]
+  tableActions?: ActionItem[];
   /** 表格行下拉操作 */
-  dropDownActions?: ActionItem[]
+  dropDownActions?: ActionItem[];
   /** 工具栏操作按钮 */
-  toolbarActions?: ActionItem[]
+  toolbarActions?: ActionItem[];
   /** 工具栏下拉操作按钮 */
-  dropDownToolbarActions?: ActionItem[]
+  dropDownToolbarActions?: ActionItem[];
   /** 行操作列配置 */
-  tableActionColumn?: Partial<CrudColumn>
+  tableActionColumn?: Partial<CrudColumn>;
   /** 分页配置 */
-  pagination?: PaginationConfig
+  pagination?: PaginationConfig;
   /** 树形结构配置 */
-  tree?: TreeConfig
+  tree?: TreeConfig;
   /** 工具栏配置 */
-  toolbar?: ToolbarConfig
+  toolbar?: ToolbarConfig;
   /** 表格代理配置 */
-  proxyConfig?: TableProxyConfig
+  proxyConfig?: TableProxyConfig;
   /** 按钮文本配置 */
-  buttonText?: TableButtonTextConfig
+  buttonText?: TableButtonTextConfig;
   /** 是否显示边框 */
-  border?: boolean
+  border?: boolean;
   /** 是否显示斑马纹 */
-  stripe?: boolean
+  stripe?: boolean;
   /** 是否高亮当前行 */
-  highlightCurrentRow?: boolean
+  highlightCurrentRow?: boolean;
   /** 是否高亮悬停列 */
-  highlightHoverColumn?: boolean
+  highlightHoverColumn?: boolean;
   /** 是否显示溢出提示 */
-  showOverflow?: boolean | 'tooltip' | 'ellipsis'
+  showOverflow?: 'ellipsis' | 'tooltip' | boolean;
   /** 是否支持多选 */
-  checkable?: boolean
+  checkable?: boolean;
   /** 多选列宽度 */
-  checkboxColumnWidth?: number
+  checkboxColumnWidth?: number;
   /** 序号列宽度 */
-  seqColumnWidth?: number
+  seqColumnWidth?: number;
   /** 表格高度 */
-  height?: string | number
+  height?: number | string;
   /** 是否保持数据源 */
-  keepSource?: boolean
+  keepSource?: boolean;
   /** 悬停行高亮 */
-  hoverRow?: boolean
+  hoverRow?: boolean;
   /** 分页配置 */
-  pagerConfig?: boolean | Record<string, any>
+  pagerConfig?: boolean | Record<string, any>;
   /** 排序配置 */
-  sortConfig?: Record<string, any>
+  sortConfig?: Record<string, any>;
   /** 过滤配置 */
-  filterConfig?: Record<string, any>
+  filterConfig?: Record<string, any>;
   /** 导出配置 */
-  exportConfig?: Record<string, any>
+  exportConfig?: Record<string, any>;
   /** 右键菜单配置 */
-  contextMenuConfig?: Record<string, any>
+  contextMenuConfig?: Record<string, any>;
   /** 垂直滚动配置 */
-  scrollY?: string | number
+  scrollY?: number | string;
 }

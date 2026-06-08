@@ -26,6 +26,29 @@
     "data_scope": "数据权限",
     "sort": "排序",
     "enabled": "状态",
-    "remark": "备注"
+    "remark": "备注",
+    "data_scope_form": {
+      "role_code": "角色编码",
+      "role_name": "角色名称",
+      "data_permission": "数据权限",
+      "dept_list": "部门列表",
+      "assign_permission": "分配数据权限",
+      "assign_success": "分配成功"
+    }
+  },
+  "member": {
+    "manage": "【{name}】成员管理",
+    "add_user": "添加用户",
+    "remove_user": "移除用户",
+    "add_user_title": "添加用户",
+    "confirm": {
+      "title": "提示",
+      "content": "确定删除吗？"
+    },
+    "message": {
+      "delete_success": "删除成功",
+      "save_success": "保存成功",
+      "select_user": "请选择用户"
+    }
   }
 }
