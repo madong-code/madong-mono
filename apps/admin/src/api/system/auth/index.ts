@@ -28,14 +28,14 @@ export const AuthService = {
 
   /** 保存用户角色关联 */
   saveUserRole(
-    data: { admin_id: number; role_id: number | string; }[],
+    data: { admin_id: number; role_id: number | string }[],
   ): Promise<void> {
     return requestClient.post(`${baseUrl}/save-user-role`, data);
   },
 
   /** 移除用户角色 */
   removeUserRole(
-    data: { admin_id: number; role_id: number | string; }[],
+    data: { admin_id: number; role_id: number | string }[],
   ): Promise<void> {
     return requestClient.post(`${baseUrl}/remove-user-role`, data);
   },

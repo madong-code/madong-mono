@@ -63,6 +63,24 @@
       "remark": "Please enter remark"
     }
   },
-  "action": { "edit": "Edit", "delete": "Delete", "detail": "Detail", "reset_password": "Reset Password", "play_user": "Play User", "unplay_user": "Cancel Play", "grant_role": "Grant Role", "locked": "Lock", "unlocked": "Unlock" },
-  "confirm": { "delete": "Are you sure to delete this user?", "reset_password": "Are you sure to reset password?", "play_user": "Are you sure to play this user?", "unplay_user": "Are you sure to cancel play?", "locked": "Are you sure to lock this user?", "unlocked": "Are you sure to unlock this user?" }
+  "action": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "detail": "Detail",
+    "reset_password": "Reset Password",
+    "play_user": "Play User",
+    "unplay_user": "Cancel Play",
+    "grant_role": "Grant Role",
+    "locked": "Lock",
+    "unlocked": "Unlock"
+  },
+  "confirm": {
+    "delete": "Are you sure to delete this user?",
+    "reset_password": "Are you sure to reset password?",
+    "play_user": "Are you sure to play this user?",
+    "unplay_user": "Are you sure to cancel play?",
+    "locked": "Are you sure to lock this user?",
+    "unlocked": "Are you sure to unlock this user?",
+    "grant_role_success": "Role granted successfully"
+  }
 }
