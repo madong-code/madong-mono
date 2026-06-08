@@ -35,6 +35,17 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'data',
         title: $t('system.recycle.table.columns.data'),
         minWidth: 300,
+        formatter: ({ cellValue }: any) => {
+          if (!cellValue) return '--';
+          try {
+            const obj =
+              typeof cellValue === 'string' ? JSON.parse(cellValue) : cellValue;
+            const json = JSON.stringify(obj, null, 2);
+            return json.length > 500 ? `${json.slice(0, 500)  }\n...` : json;
+          } catch {
+            return cellValue;
+          }
+        },
       },
       { field: 'ip', title: 'IP', minWidth: 130 },
       {
@@ -71,6 +82,7 @@ export const useCrudSchema = (): CrudSchema => {
       enabled: true,
       title: $t('system.recycle.title'),
       width: 'w-[50%]',
+      dialogType: 'drawer',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 100 },
       schema: [
@@ -117,8 +129,8 @@ export const useCrudSchema = (): CrudSchema => {
         {
           fieldName: 'data',
           label: $t('system.recycle.form.modal.data'),
-          component: 'Input',
-          componentProps: { type: 'textarea', readOnly: true, rows: 15 },
+          component: 'Textarea',
+          componentProps: { readOnly: true, rows: 20, formatJson: true },
         },
       ],
     },
