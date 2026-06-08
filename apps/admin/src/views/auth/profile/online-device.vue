@@ -14,7 +14,7 @@ import {
 } from 'element-plus';
 
 import { ProfileService } from '#/api/auth/profile';
-import { formatDateTime } from '#/utils';
+import { formatDate } from '#/utils';
 
 const loading = ref(false);
 const deviceList = ref<UserSession[]>([]);
@@ -126,7 +126,7 @@ onMounted(() => {
         </ElTableColumn>
         <ElTableColumn label="登录时间" prop="login_time" min-width="170">
           <template #default="{ row }">
-            <span>{{ formatDateTime(row.login_time) }}</span>
+            <span>{{ formatDate(row.login_time) }}</span>
           </template>
         </ElTableColumn>
         <ElTableColumn label="状态" prop="status" width="80" align="center">

@@ -28,6 +28,17 @@ const backendRoutes: RouteRecord[] = [
       module: 'system',
     },
   },
+  {
+    name: 'ConfigCommon',
+    path: '/system/config-common',
+    component: 'views/system/config/components/common',
+    meta: {
+      hideInMenu: true,
+      hideInBreadcrumb: false,
+      title: '通用配置',
+      module: 'system',
+    },
+  },
 ];
 
 export default backendRoutes;

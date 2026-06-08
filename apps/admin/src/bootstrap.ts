@@ -3,7 +3,7 @@ import { createApp, watchEffect } from 'vue';
 import { registerAccessDirective } from '@vben/access';
 import { registerLoadingDirective } from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
-import { initStores, useAccessStore } from '@vben/stores';
+import { initStores, useAccessStore, useTimezoneStore } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/ele';
 
@@ -32,7 +32,6 @@ async function bootstrap(namespace: string) {
   // 初始化表单组件
   await initSetupVbenForm();
 
-
   const app = createApp(App);
 
   // 注册Element Plus提供的v-loading指令
@@ -49,6 +48,9 @@ async function bootstrap(namespace: string) {
 
   // 配置 pinia-tore
   await initStores(app, { namespace });
+
+  // 初始化时区（设置 dayjs 默认时区）
+  useTimezoneStore();
 
   // 配置超级权限码，拥有这些权限码的用户拥有所有权限
   // 默认为 ['*']，可在此处自定义，例如 ['*', 'admin']

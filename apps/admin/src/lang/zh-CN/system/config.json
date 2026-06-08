@@ -1,17 +1,15 @@
 {
   "title": "系统配置",
-  "button": {
-    "submit": "保存"
-  },
   "tab": {
     "site": "站点设置",
     "web_site": "前台站点",
     "baidu_tongji": "百度统计",
     "upload": "上传设置",
     "email": "邮箱设置",
-    "sms": "短信设置",
-    "common": "通用设置"
+    "sms": "短信设置"
   },
+  "save": "保存",
+  "save_success": "保存成功",
   "site": {
     "title": "站点设置",
     "open": "站点开关",
@@ -91,6 +89,8 @@
   "sms": {
     "title": "短信设置",
     "platform": "短信平台",
+    "platform_aliyun": "阿里云",
+    "platform_tencent": "腾讯云",
     "app_id": "应用ID",
     "app_key": "应用密钥",
     "sign_name": "签名名称",
@@ -103,7 +103,9 @@
     }
   },
   "common": {
-    "title": "通用设置",
+    "title": "通用配置",
+    "entry_desc": "管理系统中的自定义配置，支持新增、编辑、删除等操作",
+    "enter": "进入管理",
     "columns": {
       "name": "配置名称",
       "code": "配置编码",
@@ -118,14 +120,31 @@
       "code": "配置编码",
       "name": "配置名称",
       "content": "配置内容",
+      "content_type": "内容类型",
+      "content_type_kv": "JSON 对象 (Key-Value)",
+      "content_type_string": "字符串",
+      "kv_label": "Key-Value 配置",
+      "add_kv": "添加 Key-Value",
+      "group_code": "配置分组",
       "enabled": "启用状态",
-      "remark": "备注",
+      "remark": "描述",
       "placeholder": {
         "code": "请输入配置编码",
+        "code_unique": "请输入配置代码（英文，唯一）",
         "name": "请输入配置名称",
         "content": "请输入配置内容",
-        "remark": "请输入备注信息"
+        "content_string": "请输入配置内容",
+        "group_code": "请选择配置分组",
+        "kv_key": "Key",
+        "kv_value": "Value",
+        "remark": "请输入配置描述"
       }
+    },
+    "value_type": {
+      "string": "字符串",
+      "number": "数字",
+      "boolean": "布尔",
+      "json": "JSON"
     },
     "dialog": {
       "edit_title": "编辑配置",
