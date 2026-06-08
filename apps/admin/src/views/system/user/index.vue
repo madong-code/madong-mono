@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
+
 import { useCrud } from '#/adapter/crud';
 import { Page } from '#/components/page';
-
 import { $t } from '#/locales';
 
-import { useCrudSchema } from './schemas';
 import GrantRole from './grant-role.vue';
+import { useCrudSchema } from './schemas';
 
 const grantRoleRef = ref();
 
@@ -18,7 +18,7 @@ const [BasicCrud, crudApi] = useCrud({
       icon: 'ant-design:team-outlined',
       type: 'primary',
       link: true,
-      auth:"system:user:grant_role",
+      auth: 'system:user:grant_role',
       ifShow(_action, record) {
         return record?.is_super !== 1;
       },

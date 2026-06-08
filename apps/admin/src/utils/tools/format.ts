@@ -14,7 +14,7 @@ export function timestampToTime(
 
 // 数字格式化（千位分隔符）
 export function commafy(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return num.toString().replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 // 生成随机数
@@ -28,7 +28,7 @@ export function randomNum(min: number, max?: number): number {
 
 // 移除HTML标签
 export function removeHtmlTags(str: string = ''): string {
-  return str.replace(/<[^>]*>/g, '');
+  return str.replaceAll(/<[^>]*>/g, '');
 }
 
 /**
@@ -45,7 +45,7 @@ export function removeHtmlTags(str: string = ''): string {
  * @param format 格式化模板，默认 'YYYY-MM-DD HH:mm:ss'
  */
 export function formatDate(
-  time: string | number | Date | null | undefined,
+  time: Date | null | number | string | undefined,
   format: string = 'YYYY-MM-DD HH:mm:ss',
 ): string {
   if (time === undefined || time === null) return '';
@@ -75,10 +75,10 @@ export function formatISODate(
  * @param fmt 格式化方式，默认：yyyy-mm-dd hh:MM:ss
  */
 export const timestampFormat = (
-  dateTime: string | number | null = null,
+  dateTime: null | number | string = null,
   fmt = 'yyyy-mm-dd hh:MM:ss',
 ) => {
-  if (!dateTime) dateTime = Number(new Date());
+  if (!dateTime) dateTime = Date.now();
   if (dateTime.toString().length === 10) {
     dateTime = +dateTime * 1000;
   }
@@ -94,7 +94,7 @@ export const timestampFormat = (
     's+': date.getSeconds().toString(), // 秒
   };
   for (const k in opt) {
-    ret = new RegExp(`(${  k  })`).exec(fmt);
+    ret = new RegExp(`(${k})`).exec(fmt);
     if (ret) {
       fmt = fmt.replace(
         ret[1],

@@ -14,12 +14,11 @@ import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
-
 import App from './app.vue';
 import { router } from './router';
 
 (async () => {
-  //加载离线图标
+  // 加载离线图标
   if ((import.meta as any).env.VITE_APP_ICON_OFFLINE === 'true') {
     await import('#/components/icon/load-offline');
   }

@@ -2,7 +2,7 @@ import type { CrudSchema } from '#/adapter/crud';
 
 import { ProfileService } from '#/api/auth/profile';
 import { $t } from '#/locales';
-import { formatDateTime } from '#/utils';
+import { formatDate } from '#/utils';
 // crud配置
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -54,7 +54,7 @@ export const useCrudSchema = (): CrudSchema => {
         fieldName: 'login_time',
         minWidth: 170,
         formatter: (row: any) => {
-          return formatDateTime(row.login_time);
+          return formatDate(row.login_time);
         },
       },
     ],
