@@ -53,9 +53,12 @@ function deepMerge(target: any, source: any) {
   const result = { ...target };
 
   for (const key in source) {
-    result[key] = source[key] &&
+    result[key] =
+      source[key] &&
       typeof source[key] === 'object' &&
-      !Array.isArray(source[key]) ? deepMerge(result[key] || {}, source[key]) : source[key];
+      !Array.isArray(source[key])
+        ? deepMerge(result[key] || {}, source[key])
+        : source[key];
   }
 
   return result;
