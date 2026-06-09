@@ -41,7 +41,7 @@ export const useCrudSchema = (): CrudSchema => {
             const obj =
               typeof cellValue === 'string' ? JSON.parse(cellValue) : cellValue;
             const json = JSON.stringify(obj, null, 2);
-            return json.length > 500 ? `${json.slice(0, 500)  }\n...` : json;
+            return json.length > 500 ? `${json.slice(0, 500)}\n...` : json;
           } catch {
             return cellValue;
           }

@@ -60,16 +60,16 @@ const textareaStyle = computed(() => {
   overflow-y: auto;
 
   pre {
-    margin: 0;
     padding: 0;
-    white-space: pre-wrap;
-    word-break: break-all;
+    margin: 0;
     line-height: 1.6;
+    word-break: break-all;
+    white-space: pre-wrap;
   }
 
   .empty-value {
-    color: #94a3b8;
     line-height: 1.6;
+    color: #94a3b8;
   }
 }
 </style>
