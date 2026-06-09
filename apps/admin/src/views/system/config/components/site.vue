@@ -5,12 +5,12 @@ import { ElButton, ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
 import { ConfigService } from '#/api/system/config';
+import { Page } from '#/components/page';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 import { useSiteConfigStore } from '#/store/modules/site-config';
 
 import { convertStringNumbers } from '../schemas';
-import {Page} from '#/components/page';
 
 const groupCode = 'system';
 
@@ -58,8 +58,7 @@ const [BasicForm, formApi] = useVbenForm({
       label: $t('system.config.site.logo'),
       component: 'Avatar',
       formItemClass: 'col-span-2 w-1/2',
-      componentProps: {
-      },
+      componentProps: {},
     },
     {
       fieldName: 'site_network_security',
@@ -156,7 +155,7 @@ onMounted(() => {
 </script>
 
 <template>
-   <Page :title="$t('system.config.site.title')" auto-content-height>
+  <Page :title="$t('system.config.site.title')" auto-content-height>
     <BasicForm />
     <div class="flex mt-4 ml-[130px]">
       <ElButton type="primary" @click="onSubmit">

@@ -9,18 +9,18 @@ import {
   ElIcon,
   ElInput,
   ElMessage,
+  ElOption,
   ElRadio,
   ElRadioGroup,
   ElSelect,
-  ElOption,
 } from 'element-plus';
 
 import { ConfigService } from '#/api/system/config';
 import { $t } from '#/locales';
 
-type KVRows = Array<{ key: string; value: string; type: ValueType }>;
+type KVRows = Array<{ key: string; type: ValueType; value: string }>;
 
-type ValueType = 'string' | 'number' | 'boolean' | 'json';
+type ValueType = 'boolean' | 'json' | 'number' | 'string';
 
 const dialogVisible = ref(false);
 const isEdit = ref(false);
@@ -73,12 +73,10 @@ function buildJsonString() {
     if (!row.key) continue;
     let val: any;
     switch (row.type) {
-      case 'number':
-        val = Number(row.value || 0);
-        break;
-      case 'boolean':
+      case 'boolean': {
         val = row.value === 'true';
         break;
+      }
       case 'json': {
         try {
           val = row.value ? JSON.parse(row.value) : null;
@@ -87,8 +85,13 @@ function buildJsonString() {
         }
         break;
       }
-      default:
+      case 'number': {
+        val = Number(row.value || 0);
+        break;
+      }
+      default: {
         val = row.value ?? '';
+      }
     }
     obj[row.key] = val;
   }
@@ -103,23 +106,22 @@ function parseJsonString() {
   }
   try {
     const obj = JSON.parse(formData.content_string);
-    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
-      formData.content_kv = Object.entries(obj).map(([k, v]) => {
-        let type: ValueType = 'string';
-        let val = String(v);
-        if (typeof v === 'number') type = 'number';
-        else if (typeof v === 'boolean') {
-          type = 'boolean';
-          val = String(v);
-        } else if (v !== null && typeof v === 'object') {
-          type = 'json';
-          val = JSON.stringify(v);
-        }
-        return { key: k, value: val, type };
-      });
-    } else {
-      formData.content_kv = [];
-    }
+    formData.content_kv =
+      obj && typeof obj === 'object' && !Array.isArray(obj)
+        ? Object.entries(obj).map(([k, v]) => {
+            let type: ValueType = 'string';
+            let val = String(v);
+            if (typeof v === 'number') type = 'number';
+            else if (typeof v === 'boolean') {
+              type = 'boolean';
+              val = String(v);
+            } else if (v !== null && typeof v === 'object') {
+              type = 'json';
+              val = JSON.stringify(v);
+            }
+            return { key: k, value: val, type };
+          })
+        : [];
   } catch {
     // 非 JSON 字符串，保留原内容
   }
@@ -245,10 +247,7 @@ defineExpose({ show });
       label-width="100px"
       label-position="right"
     >
-      <ElFormItem
-        :label="$t('system.config.common.form.name')"
-        prop="name"
-      >
+      <ElFormItem :label="$t('system.config.common.form.name')" prop="name">
         <ElInput
           v-model="formData.name"
           :placeholder="$t('system.config.common.form.placeholder.name')"
@@ -309,7 +308,9 @@ defineExpose({ show });
             />
             <ElInput
               v-model="row.value"
-              :placeholder="$t('system.config.common.form.placeholder.kv_value')"
+              :placeholder="
+                $t('system.config.common.form.placeholder.kv_value')
+              "
               class="kv-value"
             />
             <ElSelect v-model="row.type" class="kv-type">
@@ -328,20 +329,39 @@ defineExpose({ show });
               @click="removeKVRow(idx)"
             >
               <ElIcon>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 6H5H21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6H5H21"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </ElIcon>
             </ElButton>
           </div>
-          <ElButton
-            type="primary"
-            plain
-            class="kv-add"
-            @click="addKVRow"
-          >
+          <ElButton type="primary" plain class="kv-add" @click="addKVRow">
             + {{ $t('system.config.common.form.add_kv') }}
           </ElButton>
         </div>
@@ -380,7 +400,7 @@ defineExpose({ show });
   </ElDialog>
 </template>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .kv-wrapper {
   display: flex;
   flex-direction: column;

@@ -2,10 +2,10 @@
 import { onMounted } from 'vue';
 
 import { ElButton, ElMessage } from 'element-plus';
-import {Page} from '#/components/page';
 
 import { useVbenForm } from '#/adapter/form';
 import { ConfigService } from '#/api/system/config';
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const [BasicForm, formApi] = useVbenForm({
@@ -115,7 +115,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <Page :title="$t('system.config.email.title')" auto-content-height :height-offset="150">
+  <Page
+    :title="$t('system.config.email.title')"
+    auto-content-height
+    :height-offset="150"
+  >
     <BasicForm />
     <div class="flex mt-4 ml-[130px]">
       <ElButton type="primary" @click="onSubmit">

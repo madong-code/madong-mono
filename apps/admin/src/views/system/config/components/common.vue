@@ -3,13 +3,14 @@ import type { CrudSchema } from '#/adapter/crud';
 
 import { ref } from 'vue';
 
+import { Page } from '@vben/common-ui';
+
+import { ElMessage, ElMessageBox } from 'element-plus';
+
 import { useCrud } from '#/adapter/crud';
 import { ConfigService } from '#/api/system/config';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
-import { Page } from '@vben/common-ui';
-
-import { ElMessage, ElMessageBox } from 'element-plus';
 
 import ConfigDialog from './config-dialog.vue';
 

@@ -49,21 +49,27 @@ pre-commit:
     lint-md:
       run: pnpm oxfmt {staged_files}
       glob: '*.md'
+      stage_fixed: true
     lint-vue:
       run: pnpm oxfmt {staged_files} && pnpm oxlint --fix {staged_files} && pnpm eslint --cache --fix {staged_files} && pnpm stylelint --fix --allow-empty-input {staged_files}
       glob: '*.vue'
+      stage_fixed: true
     lint-js:
       run: pnpm oxfmt {staged_files} && pnpm oxlint --fix {staged_files} && pnpm eslint --cache --fix {staged_files}
       glob: '*.{js,jsx,ts,tsx}'
+      stage_fixed: true
     lint-style:
       run: pnpm oxfmt {staged_files} && pnpm stylelint --fix --allow-empty-input {staged_files}
       glob: '*.{scss,less,styl,css}'
+      stage_fixed: true
     lint-package:
       run: pnpm oxfmt {staged_files}
       glob: 'package.json'
+      stage_fixed: true
     lint-json:
       run: pnpm oxfmt {staged_files}
       glob: '{!(package)*.json,*.code-snippets,.!(browserslist)*rc}'
+      stage_fixed: true
 
 post-merge:
   commands:

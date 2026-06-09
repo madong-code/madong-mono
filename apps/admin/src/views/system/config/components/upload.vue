@@ -2,10 +2,10 @@
 import { onMounted, ref } from 'vue';
 
 import { ElButton, ElMessage, ElRow } from 'element-plus';
-import {Page} from '#/components/page';
 
 import { useVbenForm } from '#/adapter/form';
 import { ConfigService } from '#/api/system/config';
+import { Page } from '#/components/page';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 
@@ -91,7 +91,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <Page :title="$t('system.config.upload.title')" auto-content-height :height-offset="150">
+  <Page
+    :title="$t('system.config.upload.title')"
+    auto-content-height
+    :height-offset="150"
+  >
     <BasicForm />
     <ElRow class="ml-[130px] gap-2">
       <ElButton type="primary" @click="onSubmit">
