@@ -8,44 +8,45 @@
  * 优先级：系统配置 > 环境变量 > 默认值
  */
 
-import { useSiteConfigStore } from '#/store/modules/site-config'
+import { useSiteConfigStore } from '#/store/modules/site-config';
 
 // ============================================================================
 // 常量
 // ============================================================================
 
 /** API 前缀列表（用于 `extractRelativePath` 剥离路径） */
-const API_PREFIXES = ['/adminapi', '/webapi', '/api', '/sys']
+const API_PREFIXES = ['/adminapi', '/webapi', '/api', '/sys'];
 
 // ============================================================================
 // 私有工具函数
 // ============================================================================
 
 /** 是否是完整 URL（http/https 开头） */
-const isFullUrl = (url: string): boolean => /^https?:\/\//i.test(url)
+const isFullUrl = (url: string): boolean => /^https?:\/\//i.test(url);
 
 /** 是否是 Data URL */
-const isDataUrl = (url: string): boolean => /^data:/i.test(url)
+const isDataUrl = (url: string): boolean => /^data:/i.test(url);
 
 /** 是否是 Blob URL */
-const isBlobUrl = (url: string): boolean => /^blob:/i.test(url)
+const isBlobUrl = (url: string): boolean => /^blob:/i.test(url);
 
 /** 是否是协议相对 URL（// 开头，如 //cdn.example.com/img.png） */
-const isProtocolRelativeUrl = (url: string): boolean => /^\/\//.test(url)
+const isProtocolRelativeUrl = (url: string): boolean => url.startsWith('//');
 
 /** 去除末尾斜杠，空串原样返回 */
-const trimTrailingSlash = (url: string): string => (url ? url.replace(/\/+$/, '') : url)
+const trimTrailingSlash = (url: string): string =>
+  url ? url.replace(/\/+$/, '') : url;
 
 /** 去除开头斜杠 */
-const stripLeadingSlash = (path: string): string => path.replace(/^\/+/, '')
+const stripLeadingSlash = (path: string): string => path.replace(/^\/+/, '');
 
 /** 剥离 API 前缀，返回去除前缀后的路径 */
 const stripApiPrefix = (path: string): string => {
   for (const prefix of API_PREFIXES) {
-    if (path.startsWith(prefix)) return path.slice(prefix.length)
+    if (path.startsWith(prefix)) return path.slice(prefix.length);
   }
-  return path
-}
+  return path;
+};
 
 /**
  * 获取静态资源基础 URL
@@ -59,19 +60,19 @@ const stripApiPrefix = (path: string): string => {
  */
 const getStaticBaseUrl = (domain?: string): string => {
   // 1. 手动传入的 domain 优先级最高
-  if (domain) return trimTrailingSlash(domain)
+  if (domain) return trimTrailingSlash(domain);
 
   // 2. 系统配置（后台动态配置）
-  const siteConfigStore = useSiteConfigStore()
-  const configStaticUrl = siteConfigStore.getCurrentConfig().static_url
-  if (configStaticUrl) return trimTrailingSlash(configStaticUrl)
+  const siteConfigStore = useSiteConfigStore();
+  const configStaticUrl = siteConfigStore.getCurrentConfig().static_url;
+  if (configStaticUrl) return trimTrailingSlash(configStaticUrl);
 
   // 3. 环境变量
-  const envStaticUrl = import.meta.env.VITE_STATIC_URL
-  if (!envStaticUrl || envStaticUrl.trim() === '') return ''
-  if (envStaticUrl === 'useCurrentDomain') return window.location.origin
-  return trimTrailingSlash(envStaticUrl)
-}
+  const envStaticUrl = import.meta.env.VITE_STATIC_URL;
+  if (!envStaticUrl || envStaticUrl.trim() === '') return '';
+  if (envStaticUrl === 'useCurrentDomain') return window.location.origin;
+  return trimTrailingSlash(envStaticUrl);
+};
 
 // ============================================================================
 // 公共 API
@@ -98,26 +99,30 @@ const getStaticBaseUrl = (domain?: string): string => {
  * buildStaticUrl('/storage/image.jpg', 'https://mycdn.com')
  * // => 'https://mycdn.com/storage/image.jpg'
  */
-export const buildStaticUrl = (path: string, domain?: string, addParams: boolean = true): string => {
-  if (!path) return ''
+export const buildStaticUrl = (
+  path: string,
+  domain?: string,
+  addParams: boolean = true,
+): string => {
+  if (!path) return '';
 
-  const trimmed = path.trim()
+  const trimmed = path.trim();
 
   // 完整 URL、协议相对 URL、Data URL、Blob URL → 无需加工直接返回
-  if (isFullUrl(trimmed)) return addParams ? addCdnParams(trimmed) : trimmed
-  if (isProtocolRelativeUrl(trimmed)) return trimmed
-  if (isDataUrl(trimmed) || isBlobUrl(trimmed)) return trimmed
+  if (isFullUrl(trimmed)) return addParams ? addCdnParams(trimmed) : trimmed;
+  if (isProtocolRelativeUrl(trimmed)) return trimmed;
+  if (isDataUrl(trimmed) || isBlobUrl(trimmed)) return trimmed;
 
-  const baseUrl = getStaticBaseUrl(domain)
-  const cleaned = stripLeadingSlash(trimmed)
+  const baseUrl = getStaticBaseUrl(domain);
+  const cleaned = stripLeadingSlash(trimmed);
 
   // 同域访问：返回以 / 开头的相对路径
-  if (!baseUrl) return `/${cleaned}`
+  if (!baseUrl) return `/${cleaned}`;
 
   // CDN 访问：拼接完整 URL
-  const fullUrl = `${baseUrl}/${cleaned}`
-  return addParams ? addCdnParams(fullUrl) : fullUrl
-}
+  const fullUrl = `${baseUrl}/${cleaned}`;
+  return addParams ? addCdnParams(fullUrl) : fullUrl;
+};
 
 /**
  * 批量构建静态资源 URL
@@ -134,12 +139,18 @@ export const buildStaticUrl = (path: string, domain?: string, addParams: boolean
  * buildStaticUrls(['/img/1.jpg'], 'https://mycdn.com')
  * // => ['https://mycdn.com/img/1.jpg']
  */
-export const buildStaticUrls = (paths: string | string[], domain?: string): string[] => {
+export const buildStaticUrls = (
+  paths: string | string[],
+  domain?: string,
+): string[] => {
   if (typeof paths === 'string') {
-    return paths.split(',').filter(Boolean).map(p => buildStaticUrl(p.trim(), domain))
+    return paths
+      .split(',')
+      .filter(Boolean)
+      .map((p) => buildStaticUrl(p.trim(), domain));
   }
-  return paths.filter(Boolean).map(p => buildStaticUrl(p, domain))
-}
+  return paths.filter(Boolean).map((p) => buildStaticUrl(p, domain));
+};
 
 /**
  * 移除 URL 中的公共路径前缀（支持 CDN 参数移除）
@@ -156,47 +167,52 @@ export const buildStaticUrls = (paths: string | string[], domain?: string): stri
  * // => 'upload/image.jpg'
  */
 export const extractRelativePath = (url: string, domain?: string): string => {
-  if (!url) return ''
+  if (!url) return '';
 
   // Data / Blob URL，直接返回
-  if (isDataUrl(url) || isBlobUrl(url)) return url
+  if (isDataUrl(url) || isBlobUrl(url)) return url;
 
-  const siteConfigStore = useSiteConfigStore()
-  const baseDomain = domain || siteConfigStore.getCurrentConfig().cdnUrl || getStaticBaseUrl()
+  const siteConfigStore = useSiteConfigStore();
+  const baseDomain =
+    domain || siteConfigStore.getCurrentConfig().cdnUrl || getStaticBaseUrl();
 
   // 如果有指定的域名，尝试移除
   if (baseDomain) {
-    const normalizedDomain = trimTrailingSlash(baseDomain)
+    const normalizedDomain = trimTrailingSlash(baseDomain);
     let result = url
-      .replace(new RegExp(`^https?:\\/\\/${escapeRegex(normalizedDomain)}\\/?`), '')
-      .replace(new RegExp(`^${escapeRegex(normalizedDomain)}\\/?`), '')
+      .replace(
+        new RegExp(String.raw`^https?:\/\/${escapeRegex(normalizedDomain)}\/?`),
+        '',
+      )
+      .replace(new RegExp(String.raw`^${escapeRegex(normalizedDomain)}\/?`), '');
 
     // 移除 CDN 参数（如果来自同一 CDN）
-    const cfg = siteConfigStore.getCurrentConfig()
+    const cfg = siteConfigStore.getCurrentConfig();
     if (normalizedDomain === cfg.cdnUrl && cfg.cdnUrlParams) {
-      const paramStr = `[?&]${escapeRegex(cfg.cdnUrlParams)}`
-      result = result.replace(new RegExp(`${paramStr}(?:&|$)`), '')
+      const paramStr = `[?&]${escapeRegex(cfg.cdnUrlParams)}`;
+      result = result.replace(new RegExp(`${paramStr}(?:&|$)`), '');
     }
 
-    url = result
+    url = result;
   }
 
   // 完整 URL → 用 URL API 提取路径
   if (isFullUrl(url)) {
     try {
-      const path = stripApiPrefix(new URL(url).pathname)
-      return stripLeadingSlash(path)
+      const path = stripApiPrefix(new URL(url).pathname);
+      return stripLeadingSlash(path);
     } catch {
-      return url
+      return url;
     }
   }
 
   // 相对路径 → 剥离 API 前缀
-  return stripLeadingSlash(stripApiPrefix(url))
-}
+  return stripLeadingSlash(stripApiPrefix(url));
+};
 
 /** 转义正则特殊字符 */
-const escapeRegex = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const escapeRegex = (str: string): string =>
+  str.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 /**
  * 检查当前是否使用 CDN 模式
@@ -204,9 +220,9 @@ const escapeRegex = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, 
  * @returns true 表示使用 CDN，false 表示同域访问
  */
 export const isCdnMode = (): boolean => {
-  const baseUrl = getStaticBaseUrl()
-  return baseUrl !== ''
-}
+  const baseUrl = getStaticBaseUrl();
+  return baseUrl !== '';
+};
 
 /**
  * 获取静态资源基础 URL（公共 API）
@@ -225,8 +241,8 @@ export const isCdnMode = (): boolean => {
  * // => 'https://mycdn.com'
  */
 export const getStaticUrlBase = (domain?: string): string => {
-  return getStaticBaseUrl(domain)
-}
+  return getStaticBaseUrl(domain);
+};
 
 /**
  * 添加 CDN URL 参数
@@ -235,18 +251,18 @@ export const getStaticUrlBase = (domain?: string): string => {
  * @returns 添加参数后的 URL
  */
 const addCdnParams = (url: string): string => {
-  const siteConfigStore = useSiteConfigStore()
-  const cdnUrl = siteConfigStore.getCurrentConfig().cdnUrl
-  const cdnParams = siteConfigStore.getCurrentConfig().cdnUrlParams
+  const siteConfigStore = useSiteConfigStore();
+  const cdnUrl = siteConfigStore.getCurrentConfig().cdnUrl;
+  const cdnParams = siteConfigStore.getCurrentConfig().cdnUrlParams;
 
   // 只有当使用 CDN 且配置了参数时才添加
   if (!cdnUrl || !cdnParams || !url.includes(cdnUrl)) {
-    return url
+    return url;
   }
 
-  const separator = url.includes('?') ? '&' : '?'
-  return `${url}${separator}${cdnParams}`
-}
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${cdnParams}`;
+};
 
 /**
  * 拼接多个 URL 路径
@@ -263,13 +279,13 @@ const addCdnParams = (url: string): string => {
  * // => 'https://example.com/api/users'
  */
 export const joinUrls = (base: string, ...paths: string[]): string => {
-  return [base.replace(/\/+$/, ''), ...paths.map(p => p.replace(/^\/+/, ''))]
+  return [base.replace(/\/+$/, ''), ...paths.map((p) => p.replace(/^\/+/, ''))]
     .filter(Boolean)
-    .join('/')
-}
+    .join('/');
+};
 
 // ============================================================================
 // 导出别名，方便使用
 // ============================================================================
-export const staticUrl = buildStaticUrl
-export const staticUrls = buildStaticUrls
+export const staticUrl = buildStaticUrl;
+export const staticUrls = buildStaticUrls;

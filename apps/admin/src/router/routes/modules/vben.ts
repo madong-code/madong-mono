@@ -104,8 +104,7 @@ const routes: RouteRecordRaw[] = [
       title: $t('demos.vben.about'),
       order: 9999,
     },
-  }
-
+  },
 ];
 
 export default routes;

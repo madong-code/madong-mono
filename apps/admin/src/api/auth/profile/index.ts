@@ -1,5 +1,4 @@
 import type {
-  UpdateAvatarParam,
   UpdatePasswordParam,
   UpdateUserInfoParam,
   UserSession,
@@ -18,8 +17,17 @@ export const ProfileService = {
     return requestClient.put(BASE_URL, data);
   },
 
-  updateAvatar(data: UpdateAvatarParam) {
-    return requestClient.put(`${BASE_URL}/avatar`, data);
+  /**
+   * 上传头像文件到专用端点，后端自动保存到 avatar/ 目录并更新用户头像
+   * @param file 头像 File 对象
+   * @returns Promise<{ avatar: string }>
+   */
+  uploadAvatarFile(file: File): Promise<{ avatar: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return requestClient.put(`${BASE_URL}/avatar`, formData, {
+      headers: { 'Content-Type': undefined },
+    });
   },
 
   updatePassword(data: UpdatePasswordParam) {
