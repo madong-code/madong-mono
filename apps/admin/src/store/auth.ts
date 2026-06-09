@@ -24,6 +24,7 @@ import { $t } from '#/locales';
 import { resetRoutes as resetRouterRoutes } from '#/router';
 import { generateAccess } from '#/router/access';
 import { accessRoutes } from '#/router/routes';
+import { useSiteConfigStore } from '#/store/modules/site-config';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -76,6 +77,10 @@ export const useAuthStore = defineStore('auth', () => {
         userStore.setUserInfo(userInfo);
         accessStore.setAccessCodes(accessCodes);
 
+        // 登录成功后获取租户配置并同步到 preferences（logo/标题/favicon）
+        const siteConfigStore = useSiteConfigStore();
+        await siteConfigStore.syncTenantPreferences();
+
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
         } else {
@@ -109,10 +114,18 @@ export const useAuthStore = defineStore('auth', () => {
     } catch {
       // 不做任何处理
     }
-    resetAllStores();
-    accessStore.setLoginExpired(false);
 
-    // 回登录页带上当前路由地址
+    // 1. 重置所有 store（access/user/siteConfig/tabbar...），siteConfig.$reset 已包含 clearTenantConfig
+    resetAllStores();
+
+    // 2. 强制清除 token 并写入 storage，防止 pinia-plugin-persistedstate 在 $reset 后恢复旧 token
+    accessStore.$patch({
+      accessToken: null,
+      refreshToken: null,
+      tenantId: null,
+    });
+
+    // 3. 回登录页（路由守卫检测 accessToken 为空 → 放行）
     await router.replace({
       path: LOGIN_PATH,
       query: redirect
@@ -166,6 +179,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
     userStore.setUserInfo(userInfo);
     accessStore.setAccessCodes(accessCodes);
+
+    // 切换后重新获取租户配置并同步到 preferences（logo/标题/favicon）
+    const siteConfigStore = useSiteConfigStore();
+    await siteConfigStore.syncTenantPreferences();
 
     // 重置路由后重新生成新租户的菜单和路由
     resetRouterRoutes();

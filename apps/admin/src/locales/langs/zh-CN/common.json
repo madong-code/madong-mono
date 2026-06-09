@@ -74,7 +74,9 @@
     "no": "否"
   },
 
-  "confirm": {
+  "confirm": "确认",
+  "cancel": "取消",
+  "confirm_dialog": {
     "delete": "确认删除？",
     "delete_desc": "删除后数据不可恢复，请谨慎操作",
     "batch_delete": "确认批量删除选中的 {count} 条数据？",

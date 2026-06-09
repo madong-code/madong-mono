@@ -72,3 +72,11 @@ export async function logoutApi() {
     withCredentials: true,
   });
 }
+
+/**
+ * 获取平台站点信息（登录前使用）
+ * 返回平台级站点配置（code=site_setting_platform）
+ */
+export async function getSiteInfoApi() {
+  return requestClient.get('/auth/site-info');
+}

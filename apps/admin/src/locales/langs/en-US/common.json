@@ -74,7 +74,10 @@
     "no": "No"
   },
 
-  "confirm": {
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+
+  "confirm_dialog": {
     "delete": "Are you sure you want to delete?",
     "delete_desc": "Data cannot be recovered after deletion. Proceed with caution.",
     "batch_delete": "Are you sure you want to batch delete the selected {count} items?",
