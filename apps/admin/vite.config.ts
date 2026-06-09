@@ -20,6 +20,11 @@ export default defineConfig(async () => {
             target: 'http://127.0.0.1:8500/adminapi',
             ws: true,
           },
+          // 上传文件静态资源代理（对应 storage.php 中的 domain 配置）
+          '/upload': {
+            changeOrigin: true,
+            target: 'http://127.0.0.1:8500',
+          },
         },
       },
     },

@@ -7,17 +7,23 @@
     list-type="picture-card"
     v-bind="$attrs"
   >
-    <div v-if="displayUrl" class="m-avatar-wrap" :class="`is-${shape}`">
+    <div v-if="mValue" class="m-avatar-wrap" :class="`is-${shape}`">
       <span class="m-avatar-icon-delete" @click="handleRemove">✕</span>
-      <img :src="displayUrl" width="100%" />
+      <img :src="mValue" width="100%" />
     </div>
     <span v-else>+</span>
   </ElUpload>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { useVModel } from '@vueuse/core'
 import { ElUpload, ElMessage } from 'element-plus'
+
+import { ProfileService } from '#/api/auth/profile'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const props = withDefaults(
   defineProps<{
@@ -32,26 +38,36 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:modelValue': [modelValue: string]
+  'success': [url: string]
 }>()
 
-const displayUrl = computed(() => props.modelValue)
+const mValue = useVModel(props, 'modelValue', emit, {
+  defaultValue: props.modelValue,
+  passive: true,
+})
 
-const customRequest = async (e: any) => {
-  try {
-    const { requestClient } = await import('#/api/request')
-    const formData = new FormData()
-    formData.append('file', e.file)
-    const data = await requestClient.post('/file/upload', formData)
-    const url = data?.base_path || data?.url || ''
-    emit('update:modelValue', url)
-  } catch {
-    ElMessage.error('头像上传失败')
-  }
+const customRequest = (e: any) => {
+  return new Promise<void>((resolve, reject) => {
+    ProfileService.uploadAvatarFile(e.file)
+      .then((data) => {
+        // 后端返回 { avatar: '/upload/avatar/...' } 相对路径
+        const avatar = data?.avatar || ''
+        if (avatar) {
+          mValue.value = avatar
+          emit('success', avatar)
+        }
+        resolve()
+      })
+      .catch((err) => {
+        ElMessage.error('头像上传失败')
+        reject(err)
+      })
+  })
 }
 
 const handleRemove = (e: Event) => {
   e.stopPropagation()
-  emit('update:modelValue', '')
+  mValue.value = ''
 }
 </script>
 

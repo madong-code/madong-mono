@@ -93,6 +93,7 @@ import { ElMessage } from 'element-plus'
 import { Icon } from '#/components/icon'
 import { requestClient } from '#/api/request'
 import { $t } from '#/locales'
+import { buildStaticUrl } from '#/utils/url'
 
 interface Props {
   modelValue: boolean
@@ -180,7 +181,7 @@ const handleCurrentChange = (current: number) => {
 
 const getImageUrl = (image: any) => {
   if (!image.base_path) return ''
-  return image.base_path
+  return buildStaticUrl(image.base_path)
 }
 
 const formatFileSize = (bytes?: number) => {

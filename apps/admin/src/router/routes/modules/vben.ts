@@ -104,17 +104,8 @@ const routes: RouteRecordRaw[] = [
       title: $t('demos.vben.about'),
       order: 9999,
     },
-  },
-  {
-    name: 'Profile',
-    path: '/profile',
-    component: () => import('#/views/auth/profile/index.vue'),
-    meta: {
-      icon: 'lucide:user',
-      hideInMenu: true,
-      title: $t('page.auth.profile'),
-    },
-  },
+  }
+
 ];
 
 export default routes;
