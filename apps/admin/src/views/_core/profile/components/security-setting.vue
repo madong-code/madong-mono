@@ -3,11 +3,11 @@ import { ref } from 'vue';
 
 import { ElButton, ElLoading, ElMessage } from 'element-plus';
 
-import { $t } from '#/locales';
 import { useVbenForm, z } from '#/adapter/form';
 import { ProfileService } from '#/api/auth/profile';
 import { Icon } from '#/components/icon';
 import { Page } from '#/components/page';
+import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 
 const isEdit = ref(false);
@@ -26,8 +26,12 @@ const [PasswordForm, formApi] = useVbenForm({
       component: 'Password',
       formItemClass: 'col-span-2 md:w-1/2',
       disabled: true,
-      rules: z.string().min(1, $t('system.profile.security.rules_old_password')),
-      componentProps: { placeholder: $t('system.profile.security.placeholder_old_password') },
+      rules: z
+        .string()
+        .min(1, $t('system.profile.security.rules_old_password')),
+      componentProps: {
+        placeholder: $t('system.profile.security.placeholder_old_password'),
+      },
     },
     {
       fieldName: 'newPassword',
@@ -35,8 +39,14 @@ const [PasswordForm, formApi] = useVbenForm({
       component: 'Password',
       formItemClass: 'col-span-2 md:w-1/2',
       disabled: true,
-      componentProps: { passwordStrength: true, placeholder: $t('system.profile.security.placeholder_new_password') },
-      rules: z.string().min(6, $t('system.profile.security.rules_new_password')).max(30, $t('system.profile.security.rules_new_password_max')),
+      componentProps: {
+        passwordStrength: true,
+        placeholder: $t('system.profile.security.placeholder_new_password'),
+      },
+      rules: z
+        .string()
+        .min(6, $t('system.profile.security.rules_new_password'))
+        .max(30, $t('system.profile.security.rules_new_password_max')),
     },
     {
       fieldName: 'confirmPassword',
@@ -44,13 +54,21 @@ const [PasswordForm, formApi] = useVbenForm({
       component: 'Password',
       formItemClass: 'col-span-2 md:w-1/2',
       disabled: true,
-      componentProps: { placeholder: $t('system.profile.security.placeholder_confirm_password') },
+      componentProps: {
+        placeholder: $t('system.profile.security.placeholder_confirm_password'),
+      },
       dependencies: {
         rules(values: any) {
           const { newPassword } = values;
           return z
-            .string({ required_error: $t('system.profile.security.rules_confirm_required') })
-            .min(1, { message: $t('system.profile.security.rules_confirm_required') })
+            .string({
+              required_error: $t(
+                'system.profile.security.rules_confirm_required',
+              ),
+            })
+            .min(1, {
+              message: $t('system.profile.security.rules_confirm_required'),
+            })
             .refine((value: string) => value === newPassword, {
               message: $t('system.profile.security.rules_confirm_not_match'),
             });
@@ -140,12 +158,18 @@ function handleCancel() {
     <PasswordForm />
     <div class="flex items-center gap-3 pt-2">
       <ElButton v-if="isEdit" @click="handleCancel">
-        <Icon icon="ant-design:close-outlined" class="mr-1" />{{ $t('system.profile.security.cancel') }}
+        <Icon icon="ant-design:close-outlined" class="mr-1" />{{
+          $t('system.profile.security.cancel')
+        }}
       </ElButton>
       <ElButton type="primary" :loading="loading" @click="handleSave">
         <Icon v-if="isEdit" icon="ant-design:check-outlined" class="mr-1" />
         <Icon v-else icon="ant-design:edit-outlined" class="mr-1" />
-        {{ isEdit ? $t('system.profile.security.save') : $t('system.profile.security.edit') }}
+        {{
+          isEdit
+            ? $t('system.profile.security.save')
+            : $t('system.profile.security.edit')
+        }}
       </ElButton>
     </div>
   </Page>

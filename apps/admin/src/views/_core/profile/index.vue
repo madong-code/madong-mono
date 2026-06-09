@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Page } from '#/components/page';
 import { useUserStore } from '@vben/stores';
 
 import { ElMessage } from 'element-plus';
 
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 import BaseSetting from './components/base-setting.vue';
@@ -29,13 +29,19 @@ function handleAvatarSuccess(newUrl: string) {
       <ProfileCard @avatar-success="handleAvatarSuccess" />
 
       <div class="flex-1 min-w-0 space-y-4">
-        <div class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5">
+        <div
+          class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5"
+        >
           <BaseSetting />
         </div>
-        <div class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5">
+        <div
+          class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5"
+        >
           <SecuritySetting />
         </div>
-        <div class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5">
+        <div
+          class="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-5"
+        >
           <OnlineDevice />
         </div>
       </div>
