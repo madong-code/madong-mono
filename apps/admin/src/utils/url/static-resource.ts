@@ -184,7 +184,10 @@ export const extractRelativePath = (url: string, domain?: string): string => {
         new RegExp(String.raw`^https?:\/\/${escapeRegex(normalizedDomain)}\/?`),
         '',
       )
-      .replace(new RegExp(String.raw`^${escapeRegex(normalizedDomain)}\/?`), '');
+      .replace(
+        new RegExp(String.raw`^${escapeRegex(normalizedDomain)}\/?`),
+        '',
+      );
 
     // 移除 CDN 参数（如果来自同一 CDN）
     const cfg = siteConfigStore.getCurrentConfig();
