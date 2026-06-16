@@ -228,10 +228,10 @@ export function sse(
     });
   }
 
-  // 注册自定义事件（success / error / progress / heartbeat 等）
+  // 注册自定义事件（progress / completed / heartbeat 等，排除 error 由原生处理）
   Object.entries(eventHandlers).forEach(([eventName, handler]) => {
     if (
-      ['connectionError', 'onError', 'onMessage', 'onOpen'].includes(
+      ['connectionError', 'error', 'onError', 'onMessage', 'onOpen'].includes(
         eventName,
       ) ||
       typeof handler !== 'function'
@@ -249,9 +249,22 @@ export function sse(
     });
   });
 
-  // 注册连接错误（后端 Timer 保持连接，不干预）
+  // 原生 error 事件同时由两类场景触发，通过 event.data 区分：
+  // 1) 服务器主动发 event: error + data → 调用 eventHandlers.error（业务错误）
+  // 2) 连接断开（data 为空）→ 调用 eventHandlers.onError（连接异常）
   eventSource.addEventListener('error', (event) => {
-    if (eventHandlers.onError) {
+    const me = event as MessageEvent;
+    if (me.data) {
+      // 服务器发送的 event: error 事件
+      if (eventHandlers.error) {
+        try {
+          eventHandlers.error(JSON.parse(me.data));
+        } catch {
+          eventHandlers.error(me.data);
+        }
+      }
+    } else if (eventHandlers.onError) {
+      // 连接断开（非服务器主动错误）
       eventHandlers.onError(event);
     }
   });
