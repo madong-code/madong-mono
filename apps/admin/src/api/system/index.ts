@@ -3,6 +3,7 @@ export * from './config';
 export * from './dept';
 
 export * from './dict';
+export * from './files';
 export * from './menu';
 export type * from './menu/types';
 export * from './post';
