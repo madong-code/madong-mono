@@ -43,6 +43,9 @@ export const DictEnum = {
 
   REVIEW_TYPE: 'review.ReviewType',
   REVIEW_STATUS: 'review.ReviewStatus',
-} as const
 
-export type DictEnumKey = keyof typeof DictEnum
+  MSG_TEMPLATE_TYPE: 'content.MessageTemplateType',
+  MSG_TEMPLATE_PUSH_RULE: 'content.MessageTemplatePushRule',
+} as const;
+
+export type DictEnumKey = keyof typeof DictEnum;
