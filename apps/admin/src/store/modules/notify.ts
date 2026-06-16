@@ -6,22 +6,10 @@ import { useUserStore } from '@vben/stores';
 
 import { defineStore } from 'pinia';
 
-import {
-  MessageCategoryApi,
-  MessageNotifyApi,
-  MessageSubscribeApi,
-} from '#/api/content/message/notify';
+import { CategoryService } from '#/api/content/message/category';
+import { NotifyService } from '#/api/content/message/notify';
 // @ts-expect-error: push-vue.js has no type declarations
 import { Push } from '#/utils/push/push-vue.js';
-
-export interface MessageTypeItem {
-  key: string;
-  name: string;
-  description?: string;
-  modules?: { description?: string; key: string; name: string }[];
-  category_subscribed: boolean;
-  modules_subscribed: Record<string, boolean>;
-}
 
 // 全局 Push 连接（Store 多次创建时复用）
 let pushClient: InstanceType<typeof Push> | null = null;
@@ -34,8 +22,7 @@ export const useNotifyStore = defineStore('notify', () => {
   const loading = ref(false);
   const pushConnected = ref(false);
 
-  const subscribeList = ref<MessageTypeItem[]>([]);
-  const subscribeLoading = ref(false);
+  // ========== 订阅相关已移除：subscribe-page 直接调用 API ==========
 
   // ========== Push 连接管理 ==========
   function initPush() {
@@ -87,7 +74,8 @@ export const useNotifyStore = defineStore('notify', () => {
 
   // ========== 数据加载 ==========
   async function loadMessages(params: {
-    category_key?: string;
+    category_id?: number;
+    definition_id?: number;
     keyword?: string;
     page: number;
     pageSize: number;
@@ -95,11 +83,12 @@ export const useNotifyStore = defineStore('notify', () => {
   }) {
     loading.value = true;
     try {
-      const resp = await MessageNotifyApi.getList({
+      const resp = await NotifyService.getList({
         page: params.page,
         limit: params.pageSize,
         status: params.status,
-        category_key: params.category_key,
+        category_id: params.category_id,
+        definition_id: params.definition_id,
         keyword: params.keyword,
       });
       messageList.value = (resp.list ?? []).map((item) => normalizeItem(item));
@@ -113,7 +102,7 @@ export const useNotifyStore = defineStore('notify', () => {
 
   async function loadUnreadCount() {
     try {
-      unreadCount.value = await MessageNotifyApi.getUnreadCount();
+      unreadCount.value = await NotifyService.getUnreadCount();
     } catch (error) {
       console.error('[NotifyStore] 加载未读数失败:', error);
     }
@@ -121,7 +110,7 @@ export const useNotifyStore = defineStore('notify', () => {
 
   async function loadCategories() {
     try {
-      return await MessageCategoryApi.getAll();
+      return await CategoryService.getAll();
     } catch (error) {
       console.error('[NotifyStore] 加载分类失败:', error);
       return [];
@@ -131,7 +120,7 @@ export const useNotifyStore = defineStore('notify', () => {
   // ========== 消息操作 ==========
   async function markRead(id: number | string) {
     try {
-      await MessageNotifyApi.markRead(id);
+      await NotifyService.markRead(id);
       await loadUnreadCount();
     } catch (error) {
       console.error('[NotifyStore] 标记已读失败:', error);
@@ -140,7 +129,7 @@ export const useNotifyStore = defineStore('notify', () => {
 
   async function batchMarkRead(ids: (number | string)[]) {
     try {
-      await MessageNotifyApi.batchMarkRead(ids);
+      await NotifyService.batchMarkRead(ids);
       await loadUnreadCount();
     } catch (error) {
       console.error('[NotifyStore] 批量标记已读失败:', error);
@@ -149,7 +138,7 @@ export const useNotifyStore = defineStore('notify', () => {
 
   async function markAllRead() {
     try {
-      await MessageNotifyApi.markAllRead();
+      await NotifyService.markAllRead();
       messageList.value.forEach((n) => (n.isRead = true));
       await loadUnreadCount();
     } catch (error) {
@@ -159,85 +148,11 @@ export const useNotifyStore = defineStore('notify', () => {
 
   async function batchDelete(ids: (number | string)[]) {
     try {
-      await MessageNotifyApi.batchDelete(ids);
+      await NotifyService.batchDelete(ids);
       messageList.value = messageList.value.filter((n) => !ids.includes(n.id));
       await loadUnreadCount();
     } catch (error) {
       console.error('[NotifyStore] 批量删除失败:', error);
-    }
-  }
-
-  // ========== 订阅管理 ==========
-  async function loadSubscriptions() {
-    subscribeLoading.value = true;
-    try {
-      const categories = await MessageCategoryApi.getAll();
-      const subscribeData = await MessageSubscribeApi.getMine();
-
-      const list: MessageTypeItem[] = (
-        Array.isArray(categories) ? categories : []
-      ).map((cat: any) => {
-        const catSub = (Array.isArray(subscribeData) ? subscribeData : []).find(
-          (s: any) => s.category_key === cat.key,
-        );
-        const modulesSubscribed: Record<string, boolean> = {};
-        if (cat.modules) {
-          for (const mod of cat.modules) {
-            const modSub = catSub?.modules?.find(
-              (m: any) => m.module_key === mod.key,
-            );
-            modulesSubscribed[mod.key] = modSub?.is_subscribed ?? true;
-          }
-        }
-        return {
-          key: cat.key,
-          name: cat.name,
-          description: cat.description,
-          modules: cat.modules,
-          category_subscribed: catSub?.is_subscribed ?? true,
-          modules_subscribed: modulesSubscribed,
-        };
-      });
-      subscribeList.value = list;
-    } catch (error) {
-      console.error('[NotifyStore] 加载订阅列表失败:', error);
-    } finally {
-      subscribeLoading.value = false;
-    }
-  }
-
-  async function toggleSubscription(categoryKey: string, moduleKey?: string) {
-    const item = subscribeList.value.find((s) => s.key === categoryKey);
-    if (!item) return;
-    try {
-      if (moduleKey) {
-        item.modules_subscribed[moduleKey] =
-          !item.modules_subscribed[moduleKey];
-        await MessageSubscribeApi.batchSet([
-          {
-            category_key: categoryKey,
-            module_key: moduleKey,
-            is_subscribed: item.modules_subscribed[moduleKey],
-          },
-        ]);
-      } else {
-        item.category_subscribed = !item.category_subscribed;
-        await MessageSubscribeApi.batchSet([
-          {
-            category_key: categoryKey,
-            module_key: null,
-            is_subscribed: item.category_subscribed,
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error('[NotifyStore] 切换订阅失败:', error);
-      if (moduleKey) {
-        item.modules_subscribed[moduleKey] =
-          !item.modules_subscribed[moduleKey];
-      } else {
-        item.category_subscribed = !item.category_subscribed;
-      }
     }
   }
 
@@ -248,8 +163,6 @@ export const useNotifyStore = defineStore('notify', () => {
     totalItems.value = 0;
     loading.value = false;
     pushConnected.value = false;
-    subscribeList.value = [];
-    subscribeLoading.value = false;
     pushClient = null;
   }
 
@@ -257,9 +170,11 @@ export const useNotifyStore = defineStore('notify', () => {
   function normalizeItem(item: any): any {
     return {
       id: item.id,
-      category: item.category_key ?? '',
+      definition_id: item.definition_id,
+      category: item.category_id ?? 0,
       category_name: item.category_name,
-      module_key: item.module_key,
+      module_id: item.definition_id, // 兼容旧引用
+      module_name: item.definition_name ?? item.module_name,
       title: item.title ?? '',
       content: item.content ?? '',
       date: item.created_at
@@ -287,8 +202,6 @@ export const useNotifyStore = defineStore('notify', () => {
     totalItems,
     loading,
     pushConnected,
-    subscribeList,
-    subscribeLoading,
 
     initPush,
     destroyPush,
@@ -301,8 +214,5 @@ export const useNotifyStore = defineStore('notify', () => {
     batchMarkRead,
     markAllRead,
     batchDelete,
-
-    loadSubscriptions,
-    toggleSubscription,
   };
 });
