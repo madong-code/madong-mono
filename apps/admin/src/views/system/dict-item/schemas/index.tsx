@@ -112,7 +112,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'code',
           component: 'Input',
           formItemClass: 'col-span-2',
-          componentProps: { disabled: true },
+          dependencies: { triggerFields: ['dict_id'], show: false },
         },
         {
           label: $t('system.dict.item.form.modal.color'),
@@ -145,7 +145,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             placeholder: $t(
-              'setting.dict.item.form.modal.placeholder.other_class',
+              'system.dict.item.form.modal.placeholder.other_class',
             ),
           },
         },
