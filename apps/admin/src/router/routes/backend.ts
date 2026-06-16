@@ -1,4 +1,4 @@
-import type { RouteRecord } from 'vue-router';
+import type { RouteRecordStringComponent } from '@vben/types';
 
 /**
  * 后端模式路由定义
@@ -11,7 +11,7 @@ import type { RouteRecord } from 'vue-router';
  * - hideInMenu: true 表示不在前端菜单中显示，但可通过URL访问
  * - 无需在前端静态路由中重复定义
  */
-const backendRoutes: RouteRecord[] = [
+const backendRoutes: RouteRecordStringComponent[] = [
   /**
    * 个人中心路由
    * 后端菜单模式下，此路由由后端菜单系统管理
@@ -38,6 +38,60 @@ const backendRoutes: RouteRecord[] = [
       title: '通用配置',
       module: 'system',
     },
+  },
+
+  // ========== 临时路由：应用管理模块 ==========
+  // TODO: 开发完成后删除，菜单由后端 admin.php 配置接管
+  {
+    name: 'APPTest',
+    path: '/app',
+    component: 'BasicLoyout',
+    meta: {
+      title: '应用管理',
+    },
+    children: [
+      {
+        name: 'AppPluginMarket1',
+        path: '/app/plugin/market',
+        component: 'views/app/plugin/market/index',
+        meta: {
+          title: '模块市场',
+        },
+      },
+      {
+        name: 'AppPluginDevelop1',
+        path: '/app/plugin/develop',
+        component: 'views/app/plugin/develop/index',
+        meta: {
+          title: '插件开发',
+        },
+      },
+      {
+        name: 'AppGenerator',
+        path: '/app/generator',
+        component: 'views/app/generator/index',
+        meta: {
+          title: '代码生成',
+        },
+      },
+      {
+        name: 'AppGeneratorCode',
+        path: '/app/generator/code',
+        component: 'views/app/generator/generator',
+        meta: {
+          hideInMenu: true,
+          title: '代码生成编辑',
+        },
+      },
+      {
+        name: 'AppPluginDelegation1',
+        path: '/app/plugin/delegation',
+        component: 'views/app/plugin/delegation/index',
+        meta: {
+          title: '授权信息',
+        },
+      },
+    ],
   },
 ];
 
