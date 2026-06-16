@@ -1,31 +1,34 @@
-import { requestClient } from '#/api/request';
+import type { CommandGroup } from '#/api/devtools/terminal/types';
 
-const baseUrl = '/devtools/terminal';
+import { requestClient, sse } from '#/api/request';
+
+const baseUrl = '/terminal';
 
 export const TerminalService = {
-  getConfig() {
-    return requestClient.get(`${baseUrl}/config`);
+  getConfig: () => {
+    return requestClient.get<any>(`${baseUrl}/config`);
   },
 
-  getCommands() {
-    return requestClient.get(`${baseUrl}/commands`);
+  getCommands: () => {
+    return requestClient.get<CommandGroup[]>(`${baseUrl}/commands`);
   },
 
-  command(
+  command: (
     commandKey: string,
     uuid: string,
     extend: string,
-    _eventHandlers?: any,
-  ) {
-    return requestClient.post(baseUrl, {
+    eventHandlers: Record<string, any> = {},
+  ) => {
+    return sse(baseUrl, eventHandlers, {
       command: commandKey,
       uuid,
       extend,
-      server: 'crmd',
     });
   },
 
-  updateConfig(data: Partial<any>) {
-    return requestClient.post(`${baseUrl}/config`, data);
+  updateConfig: (data: Record<string, any>) => {
+    return requestClient.put(`${baseUrl}/config`, data);
   },
 };
+
+export type { CommandGroup };
