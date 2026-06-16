@@ -229,6 +229,10 @@ defineExpose(methods);
   }
 
   .m-dialog-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
     padding: 0;
     background-color: var(--el-bg-color);
   }
@@ -243,6 +247,8 @@ defineExpose(methods);
   }
 
   .el-drawer__body {
+    display: flex;
+    flex-direction: column;
     padding: 0 !important;
   }
 }

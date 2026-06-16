@@ -225,6 +225,9 @@ export interface CrudApiInstance {
   removeByApi: (row: any) => void;
   executeRemove: (row: any) => void;
   executeBatchRemove: () => void;
+
+  /** 动态更新 VxeGrid 选项（如 height） */
+  setGridOptions: (options: Record<string, any>) => void;
 }
 
 // ========== 表格相关类型定义 ==========
