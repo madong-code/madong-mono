@@ -700,6 +700,9 @@ importers:
       element-plus:
         specifier: 'catalog:'
         version: 2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
+      lucide-vue-next:
+        specifier: 'catalog:'
+        version: 0.577.0(vue@3.5.33(typescript@6.0.3))
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
@@ -710,6 +713,9 @@ importers:
         specifier: 'catalog:'
         version: 5.0.6(@vue/compiler-sfc@3.5.33)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(vue@3.5.33(typescript@6.0.3))
     devDependencies:
+      sortablejs:
+        specifier: 'catalog:'
+        version: 1.15.7
       unplugin-element-plus:
         specifier: 'catalog:'
         version: 0.11.2(magicast@0.5.2)
