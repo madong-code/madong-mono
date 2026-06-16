@@ -1,42 +1,22 @@
-/** 消息分类 */
-export interface MessageCategory {
-  id?: number | string;
-  key: string;
-  name: string;
-  icon?: string;
-  description?: string;
-  sort?: number;
-  is_system?: boolean;
-  is_enabled?: boolean;
-  tenant_id?: null | string;
-  created_at?: null | number;
-  updated_at?: null | number;
-}
-
-/** 消息订阅设置（按分类分组） */
-export interface MessageSubscribeGrouped {
-  category_key: string;
-  is_subscribed: boolean;
-  modules: MessageSubscribeModule[];
-}
-
-export interface MessageSubscribeModule {
-  module_key: string;
-  is_subscribed: boolean;
-}
-
 /** 未读数响应 */
 export interface UnreadCountData {
   total: number;
-  categories: { count: number; key: string }[];
+  categories: {
+    category_id: string;
+    count: number;
+    key?: string;
+    name?: string;
+  }[];
 }
 
 /** 消息项 */
 export interface MessageItem {
-  id: number | string;
-  category: string;
+  id: string;
+  definition_id?: string;
+  category_id?: string;
   category_name?: string;
-  module_key?: string;
+  definition_name?: string;
+  module_name?: string; // 兼容旧字段
   title: string;
   content?: string;
   date: string;
@@ -48,8 +28,8 @@ export interface MessageItem {
   priority?: number;
   sender_id?: string;
   receiver_id?: string;
-  read_at?: null | number;
-  created_at?: number;
+  read_at?: null | string;
+  created_at?: string;
 }
 
 /** 消息列表响应 */
