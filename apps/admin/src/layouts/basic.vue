@@ -11,20 +11,39 @@ import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
-import { Bell } from 'lucide-vue-next';
+import { Bell, FileText, TerminalSquare } from 'lucide-vue-next';
 
 import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import { $t } from '#/locales';
-import { useAuthStore, useNotifyStore } from '#/store';
+import { useAuthStore, useNotifyStore, useTerminalStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
-import MessageDrawer from '#/views/content/message/components/message-drawer.vue';
+import MessageDrawer from '#/views/content/message/notify/components/message-drawer.vue';
+import NotepadDrawer from '#/views/content/notepad/components/notepad-drawer.vue';
+import TerminalDialog from '#/views/devtools/terminal/index.vue';
 
 const notifyStore = useNotifyStore();
+const terminalStore = useTerminalStore();
 const messageDrawerRef = ref<InstanceType<typeof MessageDrawer> | null>(null);
+const notepadDrawerRef = ref<InstanceType<typeof NotepadDrawer> | null>(null);
 
 function openMessageDrawer() {
   messageDrawerRef.value?.open();
 }
+
+function openNotepadDrawer() {
+  notepadDrawerRef.value?.open();
+}
+
+function openTerminalDialog() {
+  terminalStore.toggle(true);
+}
+
+/** 是否显示终端按钮：非租户模式 + 超级管理员 */
+const showTerminalButton = computed(() => {
+  const info = userStore.userInfo as null | Record<string, any>;
+  // 非租户模式（tenantId 为 null）且为平台超级管理员
+  return accessStore.tenantId === null && info?.is_super === 1;
+});
 
 onMounted(() => {
   notifyStore.initPush();
@@ -160,15 +179,13 @@ watch(
     </template>
     <template #notification>
       <div
-        class="relative flex items-center cursor-pointer"
+        class="relative flex size-8 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-accent hover:shadow-md mr-1"
         @click="openMessageDrawer"
       >
-        <Bell
-          class="size-[18px] text-foreground hover:text-primary transition-colors"
-        />
+        <Bell class="size-[18px] text-foreground" />
         <span
           v-if="notifyStore.unreadCount.total > 0"
-          class="absolute -right-0.5 -top-0.5 flex size-[16px] items-center justify-center rounded-full bg-red-500 text-[10px] text-white"
+          class="absolute right-0 top-0 flex size-[16px] items-center justify-center rounded-full bg-red-500 text-[10px] text-white"
         >
           {{
             notifyStore.unreadCount.total > 99
@@ -178,6 +195,30 @@ watch(
         </span>
       </div>
       <MessageDrawer ref="messageDrawerRef" />
+    </template>
+    <!-- 命令终端按钮（仅非租户模式 + 超级管理员显示） -->
+    <template #header-right-60>
+      <div
+        v-if="showTerminalButton"
+        class="hidden size-8 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-accent hover:shadow-md md:flex mr-1"
+        title="命令终端"
+        @click="openTerminalDialog"
+      >
+        <TerminalSquare class="size-[18px] text-foreground" />
+      </div>
+      <TerminalDialog />
+    </template>
+
+    <!-- 记事本按钮（排在最后，移动端隐藏） -->
+    <template #header-right-100>
+      <div
+        class="hidden size-8 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-accent hover:shadow-md md:flex mr-1"
+        title="记事本"
+        @click="openNotepadDrawer"
+      >
+        <FileText class="size-[18px] text-foreground" />
+      </div>
+      <NotepadDrawer ref="notepadDrawerRef" />
     </template>
     <template #extra>
       <AuthenticationLoginExpiredModal
