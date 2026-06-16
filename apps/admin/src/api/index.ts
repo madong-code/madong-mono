@@ -4,6 +4,5 @@ export * from './core';
 export * from './devtools';
 export * from './member';
 export * from './ops';
-export * from './plugin';
 export * from './system';
 export * from './web';
