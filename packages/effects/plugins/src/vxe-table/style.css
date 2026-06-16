@@ -117,3 +117,17 @@
 .vxe-grid--layout-body-content-wrapper {
   overflow: hidden;
 }
+
+/* ============================================
+   表格底部边线（追加到包裹层，不覆盖单元格样式）
+   默认关闭，取消注释下方代码即可开启
+   ============================================ 
+*/
+
+.vxe-grid {
+  padding: 0 15px;
+}
+
+.vxe-grid--table-wrapper {
+  border-bottom: 1px solid var(--vxe-ui-table-border-color, #e8eaec);
+}
