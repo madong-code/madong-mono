@@ -8,6 +8,7 @@ import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
 import { ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
+import { $t } from '#/locales';
 
 import { DetailViewer } from '../viewer';
 
@@ -107,9 +108,9 @@ const [BasicForm, formApi] = useVbenForm(formOptions.value);
 
 const dialogTitle = computed(() => {
   const title = props.options.title || '';
-  if (viewType.value === 'add') return `新增${title}`;
-  if (viewType.value === 'edit') return `编辑${title}`;
-  return `${title}详情`;
+  if (viewType.value === 'add') return $t('components.dialog.add') + title;
+  if (viewType.value === 'edit') return $t('components.dialog.edit') + title;
+  return title + $t('components.dialog.view');
 });
 
 const dialogWidth = computed(() => props.options.width || 'w-[50%]');
@@ -236,7 +237,11 @@ async function handleSubmit() {
     const submitApi = viewType.value === 'edit' ? api?.edit : api?.add;
     if (submitApi) {
       await submitApi(values);
-      ElMessage.success(viewType.value === 'edit' ? '编辑成功' : '新增成功');
+      ElMessage.success(
+        viewType.value === 'edit'
+          ? $t('components.dialog.success.edit')
+          : $t('components.dialog.success.add'),
+      );
     }
 
     currentApi.value.close();

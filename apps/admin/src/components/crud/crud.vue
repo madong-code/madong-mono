@@ -13,6 +13,7 @@ import { useRoute } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { $t } from '#/locales';
 
 import FormDialogComponent from './components/dialog/dialog.vue';
 import { TableAction } from './components/table-action';
@@ -343,19 +344,17 @@ async function handleSingleDelete(row: any) {
     mergedCrudSchema.value.crudApi.remove;
 
   if (!removeApi) {
-    ElMessage.error('未配置删除接口');
+    ElMessage.error($t('components.crud.message.no_delete_api'));
     return;
   }
 
   try {
     await ElMessageBox.confirm(
-      `确定要删除选中的${formDialogTitle.value || '数据'}吗？`,
-      '删除确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      },
+      $t('components.crud.table.confirm_delete', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+      $t('components.crud.table.delete_confirm_title'),
+      { type: 'warning' },
     );
   } catch {
     // 用户取消
@@ -365,7 +364,11 @@ async function handleSingleDelete(row: any) {
   try {
     crudInstance.setLoading(true);
     await removeApi(id);
-    ElMessage.success(`删除${formDialogTitle.value}成功`);
+    ElMessage.success(
+      $t('components.crud.message.delete_success', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+    );
     crudInstance.refreshRemove();
   } finally {
     crudInstance.setLoading(false);
@@ -378,19 +381,18 @@ async function handleBatchDelete() {
   const ids = readonlyState.selection.map((item: any) => item[rowKey]);
 
   if (ids.length === 0) {
-    ElMessage.warning('请先勾选要删除的数据');
+    ElMessage.warning($t('components.crud.message.no_selection'));
     return;
   }
 
   try {
     await ElMessageBox.confirm(
-      `确定要删除选中的${ids.length}条${formDialogTitle.value || '数据'}吗？`,
-      '批量删除确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      },
+      $t('components.crud.table.confirm_batch_delete', [
+        ids.length.toString(),
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+      $t('components.crud.table.batch_delete_confirm_title'),
+      { type: 'warning' },
     );
   } catch {
     // 用户取消
@@ -403,14 +405,18 @@ async function handleBatchDelete() {
     (mergedCrudSchema.value.crudApi as any).batchRemove;
 
   if (!batchRemoveApi) {
-    ElMessage.error('未配置批量删除接口');
+    ElMessage.error($t('components.crud.message.no_batch_delete_api'));
     return;
   }
 
   try {
     crudInstance.setLoading(true);
     await batchRemoveApi({ ids, ...pathParams });
-    ElMessage.success(`删除${formDialogTitle.value}成功`);
+    ElMessage.success(
+      $t('components.crud.message.delete_success', [
+        formDialogTitle.value || $t('components.crud.table.action'),
+      ]),
+    );
     readonlyState.selection = [];
     gridApi.grid?.clearCheckboxRow();
     crudInstance.refreshRemove();
@@ -475,6 +481,9 @@ const crudInstance: CrudApiInstance = {
   },
   executeBatchRemove: () => {
     handleBatchDelete();
+  },
+  setGridOptions: (options: Record<string, any>) => {
+    gridApi.setGridOptions(options);
   },
 };
 

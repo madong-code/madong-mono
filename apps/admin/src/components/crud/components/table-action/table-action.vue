@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType } from 'vue';
 
-import type { ActionItem, PopConfirm } from './types'
+import type { ActionItem, PopConfirm } from './types';
 
-import { computed, h, reactive, toRaw } from 'vue'
+import { computed, h, reactive, toRaw } from 'vue';
 
-import { useAccess } from '@vben/access'
+import { useAccess } from '@vben/access';
+import { isBoolean, isFunction } from '@vben/utils';
 
 import {
   ElButton,
@@ -15,144 +16,152 @@ import {
   ElMessageBox,
   ElPopconfirm,
   ElSpace,
-} from 'element-plus'
-import { Icon } from '#/components/icon'
-import { isBoolean, isFunction } from '@vben/utils'
+} from 'element-plus';
+
+import { Icon } from '#/components/icon';
+import { $t } from '#/locales';
 
 const props = defineProps({
   record: {
     type: Object as PropType<Record<string, any>>,
     default() {
-      return {}
+      return {};
     },
   },
   actions: {
     type: Array as PropType<ActionItem[]>,
     default() {
-      return []
+      return [];
     },
   },
   dropDownActions: {
     type: Array as PropType<ActionItem[]>,
     default() {
-      return []
+      return [];
     },
   },
   divider: {
     type: Boolean,
     default: true,
   },
-})
+});
 
 const emit = defineEmits<{
-  (e: 'actionItemClick', record: any): void
-}>()
+  (e: 'actionItemClick', record: any): void;
+}>();
 
-const renderIcon = (icon: string | any) => {
+const renderIcon = (icon: any | string) => {
   if (typeof icon === 'string') {
-    return h(Icon, { icon })
+    return h(Icon, { icon });
   }
-  return h(icon)
-}
+  return h(icon);
+};
 
-const { hasAccessByCodes } = useAccess()
+const { hasAccessByCodes } = useAccess();
 
 const hasAccess = (permCodes: string | unknown) => {
   if (permCodes) {
-    return hasAccessByCodes([permCodes as string])
+    return hasAccessByCodes([permCodes as string]);
   }
-  return true
-}
+  return true;
+};
 
-const popconfirmRef = reactive<Record<string, any>>({})
+const popconfirmRef = reactive<Record<string, any>>({});
 
 function isIfShow(action: ActionItem): boolean {
-  const ifShow = action.ifShow
-  let isIfShow = true
+  const ifShow = action.ifShow;
+  let isIfShow = true;
   if (isBoolean(ifShow)) {
-    isIfShow = ifShow
+    isIfShow = ifShow;
   }
   if (ifShow && typeof ifShow === 'function') {
-    isIfShow = ifShow(action, props.record)
+    isIfShow = ifShow(action, props.record);
   }
-  return isIfShow
+  return isIfShow;
 }
 
 const wrapConfirm = (action: ActionItem) => {
-  const newAction = { ...action }
+  const newAction = { ...action };
 
   if (action.confirm) {
     newAction.onClick = () => {
-      emit('actionItemClick', props.record)
-      const title = action.confirm!.title || '提示'
-      const content = action.confirm!.content || '确定要执行此操作吗？'
-      const options: any = { ...action.confirm }
+      emit('actionItemClick', props.record);
+      const title =
+        action.confirm?.title || $t('components.crud.action.confirm_title');
+      const content =
+        action.confirm?.content || $t('components.crud.action.confirm_content');
+      const options: any = { ...action.confirm };
       if (!options.type) {
-        options.type = 'warning'
+        options.type = 'warning';
       }
-      const ok = options.ok
-      const cancel = options.cancel
-      delete options.title
-      delete options.content
+      const ok = options.ok;
+      const cancel = options.cancel;
+      delete options.title;
+      delete options.content;
       ElMessageBox.confirm(content, title, options)
         .then(() => {
           if (ok && typeof ok === 'function') {
-            ok(props.record)
+            ok(props.record);
           }
         })
         .catch(() => {
           if (cancel && typeof cancel === 'function') {
-            cancel(props.record)
+            cancel(props.record);
           }
-        })
-    }
+        });
+    };
   }
 
   if (action.dialogRef) {
     const params =
       (typeof action.dialogParams === 'function'
         ? action.dialogParams(props.record || {})
-        : action.dialogParams) || {}
-    const dialogRef = action.dialogRef
+        : action.dialogParams) || {};
+    const dialogRef = action.dialogRef;
     newAction.onClick = () => {
       if (isFunction((dialogRef.value || dialogRef).show)) {
         // 树形模式下新增子节点：将父节点的 id 映射为子节点的 pid
-        let data = { ...props.record, ...params.data }
+        let data = { ...props.record, ...params.data };
         if (params.tree && params.type === 'add') {
-          const tree = params.tree
+          const tree = params.tree;
           data = {
             [tree.pid]: props.record[tree.id],
-          }
+          };
           if (params.data) {
-            data = { ...data, ...params.data }
+            data = { ...data, ...params.data };
           }
         }
-        ;(dialogRef.value || dialogRef).show({
+        (dialogRef.value || dialogRef).show({
           data,
           ...params,
-        })
+        });
       }
-    }
+    };
   }
-  return newAction
-}
+  return newAction;
+};
 
 const getActions = computed(() => {
   return (toRaw(props.actions) || [])
     .filter((action) => {
-      return hasAccess(action.auth) && isIfShow(action)
+      return hasAccess(action.auth) && isIfShow(action);
     })
-    .sort((a, b) => (a.sort || 1000) - (b.sort || 1000))
+    .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
     .map((action) => {
-      let processedAction = wrapConfirm(action)
-      if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {
+      let processedAction = wrapConfirm(action);
+      if (
+        processedAction.dynamicProps &&
+        isFunction(processedAction.dynamicProps)
+      ) {
         processedAction = {
           ...processedAction,
           ...processedAction.dynamicProps(props.record || {}),
-        }
+        };
       }
-      const { popConfirm } = processedAction
-      const icon = processedAction.icon ? renderIcon(processedAction.icon) : undefined
+      const { popConfirm } = processedAction;
+      const icon = processedAction.icon
+        ? renderIcon(processedAction.icon)
+        : undefined;
       return {
         ...processedAction,
         ...popConfirm,
@@ -160,91 +169,98 @@ const getActions = computed(() => {
         onConfirm: popConfirm?.confirm,
         onCancel: popConfirm?.cancel,
         enable: !!popConfirm,
-      }
-    })
-})
+      };
+    });
+});
 
 const getDropdownList = computed((): any[] => {
   return (toRaw(props.dropDownActions) || [])
     .filter((action) => {
-      return hasAccess(action.auth) && isIfShow(action)
+      return hasAccess(action.auth) && isIfShow(action);
     })
-    .sort((a, b) => (a.sort || 1000) - (b.sort || 1000))
+    .toSorted((a, b) => (a.sort || 1000) - (b.sort || 1000))
     .map((action, index) => {
-      let processedAction = wrapConfirm(action)
-      if (processedAction.dynamicProps && isFunction(processedAction.dynamicProps)) {
+      let processedAction = wrapConfirm(action);
+      if (
+        processedAction.dynamicProps &&
+        isFunction(processedAction.dynamicProps)
+      ) {
         processedAction = {
           ...processedAction,
           ...processedAction.dynamicProps(props.record || {}),
-        }
+        };
       }
-      const { label, popConfirm } = processedAction
+      const { label, popConfirm } = processedAction;
       return {
         ...processedAction,
         ...popConfirm,
         onConfirm: popConfirm?.confirm,
         onCancel: popConfirm?.cancel,
         text: label,
-        divider: index < props.dropDownActions.length - 1 ? props.divider : false,
-      }
-    })
-})
+        divider:
+          index < props.dropDownActions.length - 1 ? props.divider : false,
+      };
+    });
+});
 
 const getPopConfirmProps = (attrs: PopConfirm) => {
-  const originAttrs: any = { ...attrs }
-  delete originAttrs.icon
+  const originAttrs: any = { ...attrs };
+  delete originAttrs.icon;
   if (attrs.confirm && isFunction(attrs.confirm)) {
-    const confirm = attrs.confirm
+    const confirm = attrs.confirm;
     originAttrs.onConfirm = (e: Event) => {
-      confirm(e, props.record)
-    }
-    delete originAttrs.confirm
+      confirm(e, props.record);
+    };
+    delete originAttrs.confirm;
   }
   if (attrs.cancel && isFunction(attrs.cancel)) {
-    const cancel = attrs.cancel
+    const cancel = attrs.cancel;
     originAttrs.onCancel = () => {
-      cancel(props.record)
-    }
-    delete originAttrs.cancel
+      cancel(props.record);
+    };
+    delete originAttrs.cancel;
   }
-  return originAttrs
-}
+  return originAttrs;
+};
 
 const getButtonProps = (action: ActionItem): any => {
-  const onClick = action.onClick
-  const res: any = { ...action }
+  const onClick = action.onClick;
+  const res: any = { ...action };
   if (onClick) {
     res.onClick = (e: Event) => {
-      emit('actionItemClick', props.record)
-      onClick(e, props.record)
-    }
+      emit('actionItemClick', props.record);
+      onClick(e, props.record);
+    };
   }
-  res.type = action.type || 'primary'
-  return res
-}
+  res.type = action.type || 'primary';
+  return res;
+};
 
 const handleCommand = (index: number) => {
-  const action = getDropdownList.value[index]
+  const action = getDropdownList.value[index];
   if (action.onClick && isFunction(action.onClick)) {
-    emit('actionItemClick', props.record)
-    action.onClick(action, props.record)
+    emit('actionItemClick', props.record);
+    action.onClick(action, props.record);
   } else {
-    const currentPopconfirmRef = popconfirmRef[index.toString()]
-    emit('actionItemClick', props.record)
-    currentPopconfirmRef?.click(action, props.record)
+    const currentPopconfirmRef = popconfirmRef[index.toString()];
+    emit('actionItemClick', props.record);
+    currentPopconfirmRef?.click(action, props.record);
   }
-}
+};
 
 const handleRef = (e: any, index: number) => {
-  popconfirmRef[index.toString()] = e
-}
+  popconfirmRef[index.toString()] = e;
+};
 </script>
 
 <template>
   <div class="m-table-action">
     <ElSpace :size="2">
       <template v-for="(action, index) in getActions" :key="index">
-        <ElPopconfirm v-if="action.popConfirm" v-bind="getPopConfirmProps(action.popConfirm)">
+        <ElPopconfirm
+          v-if="action.popConfirm"
+          v-bind="getPopConfirmProps(action.popConfirm)"
+        >
           <template #reference>
             <ElButton v-bind="getButtonProps(action)">
               {{ action.label }}
@@ -257,13 +273,17 @@ const handleRef = (e: any, index: number) => {
       </template>
     </ElSpace>
 
-    <ElDropdown v-if="getDropdownList.length > 0" trigger="hover" @command="handleCommand">
+    <ElDropdown
+      v-if="getDropdownList.length > 0"
+      trigger="hover"
+      @command="handleCommand"
+    >
       <template #default>
         <div>
           <span style="margin-left: 6px">
             <slot name="more">
               <ElButton link type="primary">
-                更多
+                {{ $t('components.crud.action.more') }}
                 <template #icon>
                   <Icon icon="ant-design:bars-outlined" />
                 </template>
@@ -271,7 +291,10 @@ const handleRef = (e: any, index: number) => {
             </slot>
           </span>
           <template v-for="(action, index) in getDropdownList" :key="index">
-            <ElPopconfirm v-if="action.popConfirm" v-bind="getPopConfirmProps(action.popConfirm)">
+            <ElPopconfirm
+              v-if="action.popConfirm"
+              v-bind="getPopConfirmProps(action.popConfirm)"
+            >
               <template #reference>
                 <span :ref="(e) => handleRef(e, index)"></span>
               </template>
