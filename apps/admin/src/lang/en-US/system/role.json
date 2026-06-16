@@ -50,5 +50,34 @@
       "save_success": "Saved successfully",
       "select_user": "Please select a user"
     }
+  },
+  "table_actions": {
+    "auth_menu": "Authorize Menu",
+    "member_manage": "Member Management"
+  },
+  "drop_down_actions": {
+    "edit": "Edit",
+    "assign_permission": "Assign Permission"
+  },
+  "auth_menu": {
+    "title": "Authorize Menu",
+    "success": "Authorization successful",
+    "title_template": "【{name}】Authorize Menu",
+    "type_labels": {
+      "dir": "Directory",
+      "menu": "Menu",
+      "button": "Button",
+      "api": "API"
+    },
+    "toolbar": {
+      "operation": "Operations",
+      "expand_all": "Expand All",
+      "expand_level_1": "Expand Level 1",
+      "expand_level_2": "Expand Level 2",
+      "collapse_all": "Collapse All",
+      "select_all": "Select All",
+      "select_none": "Deselect All",
+      "select_inverse": "Invert Selection"
+    }
   }
 }

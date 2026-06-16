@@ -9,7 +9,7 @@
       "version": "版本",
       "description": "描述",
       "author": "作者",
-      "installedAt": "安装时间"
+      "installed_at": "安装时间"
     }
   }
 }

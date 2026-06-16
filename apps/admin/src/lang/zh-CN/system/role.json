@@ -50,5 +50,34 @@
       "save_success": "保存成功",
       "select_user": "请选择用户"
     }
+  },
+  "table_actions": {
+    "auth_menu": "授权菜单",
+    "member_manage": "成员管理"
+  },
+  "drop_down_actions": {
+    "edit": "编辑",
+    "assign_permission": "分配权限"
+  },
+  "auth_menu": {
+    "title": "授权菜单",
+    "success": "授权成功",
+    "title_template": "【{name}】授权菜单",
+    "type_labels": {
+      "dir": "目录",
+      "menu": "菜单",
+      "button": "按钮",
+      "api": "接口"
+    },
+    "toolbar": {
+      "operation": "操作",
+      "expand_all": "展开全部",
+      "expand_level_1": "展开一级",
+      "expand_level_2": "展开二级",
+      "collapse_all": "折叠全部",
+      "select_all": "全选",
+      "select_none": "取消全选",
+      "select_inverse": "反选"
+    }
   }
 }

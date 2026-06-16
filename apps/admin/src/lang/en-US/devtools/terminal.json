@@ -1,5 +1,5 @@
 {
-    "title": "Terminal",
+    "title": "Command Terminal",
     "status": {
         "waiting": "Waiting for execution",
         "connecting": "Connecting",
@@ -43,5 +43,10 @@
             "source_command": "Cannot modify source command, please try again manually.",
             "packaging_build": "Please confirm whether to republish"
         }
+    },
+    "messages": {
+        "has_tasks": "Please clear tasks before changing configuration",
+        "config_saved": "Configuration saved",
+        "config_save_failed": "Failed to save configuration"
     }
 }

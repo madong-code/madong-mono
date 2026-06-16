@@ -1,26 +1,41 @@
 {
-  "title": "Dictionary Item Management",
+  "title": "Dict Items",
   "table": {
     "columns": {
-      "id": "ID",
-      "label": "Dictionary Item Label",
-      "value": "Dictionary Item Value",
-      "code": "Dictionary Code",
+      "code": "Code",
+      "label": "Label",
+      "value": "Value",
       "sort": "Sort",
-      "enabled": "Status",
-      "remark": "Remark"
+      "enabled": "Status"
+    },
+    "search": {
+      "label": "Label",
+      "value": "Value",
+      "placeholder": {
+        "label": "Please enter label",
+        "value": "Please enter value"
+      }
     }
   },
-  "search": {
-    "label": "Dictionary Label"
-  },
   "form": {
-    "id": "ID",
-    "label": "Dictionary Label",
-    "value": "Dictionary Value",
-    "code": "Dictionary Code",
-    "sort": "Sort",
-    "enabled": "Status",
-    "remark": "Remark"
+    "modal": {
+      "id": "ID",
+      "dict_id": "Dict ID",
+      "code": "Code",
+      "color": "Color",
+      "label": "Label",
+      "value": "Value",
+      "other_class": "Class",
+      "enabled": "Status",
+      "sort": "Sort",
+      "remark": "Remark",
+      "placeholder": {
+        "label": "Please enter label",
+        "value": "Please enter value",
+        "other_class": "Please enter class",
+        "sort": "Please enter sort",
+        "remark": "Please enter remark"
+      }
+    }
   }
 }

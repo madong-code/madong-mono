@@ -1,5 +1,5 @@
 {
-    "title": "终端",
+    "title": "命令终端",
     "status": {
         "waiting": "等待执行",
         "connecting": "连接中",
@@ -40,8 +40,13 @@
         },
         "confirm": {
             "title": "温馨提醒",
-            "source_command": "无法修改源命令，请手动重新尝试。",
+            "source_command": "无法修改源命令,请手动重新尝试。",
             "packaging_build": "请确认是否重新发布"
         }
+    },
+    "messages": {
+        "has_tasks": "请先清理任务后再修改配置",
+        "config_saved": "配置保存成功",
+        "config_save_failed": "配置保存失败"
     }
 }

@@ -9,7 +9,7 @@
       "version": "Version",
       "description": "Description",
       "author": "Author",
-      "installedAt": "Install Time"
+      "installed_at": "Install Time"
     }
   }
 }
