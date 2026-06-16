@@ -89,7 +89,7 @@ async function handleScopeChange(val: any) {
 }
 
 const [Dialog, dialogApi] = useDialog({
-  title: '分配权限',
+  title: $t('system.role.form.data_scope_form.assign_permission'),
   width: '500',
   modal: true,
   closeOnClickModal: true,

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 
 import { useCrud } from '#/adapter/crud';
 import { Page } from '#/components/page';
+import { $t } from '#/locales';
 
 import AuthMenu from './components/auth-menu.vue';
 import DataScope from './components/data-scope.vue';
@@ -20,7 +21,7 @@ const [BasicCrud, crudApi] = useCrud({
   },
   tableActions: [
     {
-      label: '授权菜单',
+      label: $t('system.role.table_actions.auth_menu'),
       type: 'primary',
       link: true,
       auth: 'system:auth:role_menu',
@@ -33,7 +34,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: '成员管理',
+      label: $t('system.role.table_actions.member_manage'),
       type: 'primary',
       link: true,
       auth: 'system:auth:role_user_list',
@@ -48,7 +49,7 @@ const [BasicCrud, crudApi] = useCrud({
   ],
   dropDownActions: [
     {
-      label: '编辑',
+      label: $t('system.role.drop_down_actions.edit'),
       auth: 'system:role:update',
       icon: 'ant-design:edit-outlined',
       onClick: (_e: any, row: any) => {
@@ -56,7 +57,7 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: '分配权限',
+      label: $t('system.role.drop_down_actions.assign_permission'),
       auth: 'system:role:data_scope',
       icon: 'ant-design:safety-outlined',
       onClick: (_e: any, row: any) => {

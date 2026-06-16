@@ -3,7 +3,7 @@ import type { ElTree as ElTreeType } from 'element-plus';
 
 import type { CrudApiInstance } from '#/adapter/crud';
 
-import { nextTick, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import {
   ElButton,
@@ -17,6 +17,7 @@ import {
 
 import { AuthService } from '#/api/system';
 import { useDialog } from '#/components/dialog';
+import { $t } from '#/locales';
 
 interface TreeNode {
   id: number | string;
@@ -27,12 +28,12 @@ interface TreeNode {
 }
 
 const emit = defineEmits<{ success: [] }>();
-const typeLabels: Record<number, string> = {
-  1: '目录',
-  2: '菜单',
-  3: '按钮',
-  4: '接口',
-};
+const typeLabels = computed<Record<number, string>>(() => ({
+  1: $t('system.role.auth_menu.type_labels.dir'),
+  2: $t('system.role.auth_menu.type_labels.menu'),
+  3: $t('system.role.auth_menu.type_labels.button'),
+  4: $t('system.role.auth_menu.type_labels.api'),
+}));
 const typeColors: Record<number, string> = {
   1: '#4080ff',
   2: '#00b42a',
@@ -99,7 +100,7 @@ const loadData = async (roleId: number | string) => {
 
 // ===== Dialog =====
 const [Dialog, dialogApi] = useDialog({
-  title: '授权菜单',
+  title: $t('system.role.auth_menu.title'),
   width: '50%',
   dialogType: 'drawer',
   modal: true,
@@ -113,7 +114,7 @@ const [Dialog, dialogApi] = useDialog({
         role_id: currentRow.value.id,
         menu_id: keys,
       });
-      ElMessage.success('授权成功');
+      ElMessage.success($t('system.role.auth_menu.success'));
       crudApi.value?.refreshCreate();
       emit('success');
       dialogApi.close();
@@ -129,7 +130,9 @@ defineExpose({
   show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudApiInstance }) {
     currentRow.value = data;
     crudApi.value = getCrudApi();
-    dialogApi.setState({ title: `【${data.name}】授权菜单` });
+    dialogApi.setState({
+      title: $t('system.role.auth_menu.title_template', { name: data.name }),
+    });
     dialogApi.open();
     nextTick(() => {
       setCheckedKeys([]);
@@ -260,7 +263,7 @@ const handleToolCommand = (command: string) => {
       <div class="footer-tools">
         <ElDropdown @command="handleToolCommand">
           <ElButton size="small" text>
-            操作
+            {{ $t('system.role.auth_menu.toolbar.operation') }}
             <ElIcon>
               <svg
                 viewBox="0 0 24 24"
@@ -276,13 +279,41 @@ const handleToolCommand = (command: string) => {
           </ElButton>
           <template #dropdown>
             <ElDropdownMenu>
-              <ElDropdownItem command="expand-all">展开全部</ElDropdownItem>
-              <ElDropdownItem command="expand-level-1">展开一级</ElDropdownItem>
-              <ElDropdownItem command="expand-level-2">展开二级</ElDropdownItem>
-              <ElDropdownItem command="collapse-all">折叠全部</ElDropdownItem>
-              <ElDropdownItem divided command="select-all">全选</ElDropdownItem>
-              <ElDropdownItem command="select-none">取消全选</ElDropdownItem>
-              <ElDropdownItem command="select-inverse">反选</ElDropdownItem>
+              <ElDropdownItem command="expand-all">
+{{
+                $t('system.role.auth_menu.toolbar.expand_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="expand-level-1">
+{{
+                $t('system.role.auth_menu.toolbar.expand_level_1')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="expand-level-2">
+{{
+                $t('system.role.auth_menu.toolbar.expand_level_2')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="collapse-all">
+{{
+                $t('system.role.auth_menu.toolbar.collapse_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem divided command="select-all">
+{{
+                $t('system.role.auth_menu.toolbar.select_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="select-none">
+{{
+                $t('system.role.auth_menu.toolbar.select_none')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="select-inverse">
+{{
+                $t('system.role.auth_menu.toolbar.select_inverse')
+              }}
+</ElDropdownItem>
             </ElDropdownMenu>
           </template>
         </ElDropdown>
