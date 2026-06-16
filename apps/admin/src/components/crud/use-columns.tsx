@@ -5,6 +5,8 @@ import type { CrudColumn } from './types';
 
 import { computed } from 'vue';
 
+import { $t } from '#/locales';
+
 import { TableAction } from './components/table-action';
 
 interface UseColumnsOptions {
@@ -43,7 +45,7 @@ export function useColumns(
       const actionCol = options.tableActionColumn || {};
       vxeColumns.push({
         field: '__ACTION__',
-        title: '操作',
+        title: $t('components.crud.table.action'),
         width: 220,
         align: 'center',
         showOverflow: 'tooltip',
