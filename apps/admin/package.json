@@ -49,6 +49,7 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "sortablejs": "catalog:",
     "unplugin-element-plus": "catalog:"
   }
 }
