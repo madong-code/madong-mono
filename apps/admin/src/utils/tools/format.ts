@@ -49,6 +49,10 @@ export function formatDate(
   format: string = 'YYYY-MM-DD HH:mm:ss',
 ): string {
   if (time === undefined || time === null) return '';
+  // 兼容秒级时间戳（10位数字），转为毫秒
+  if (typeof time === 'number' && time.toString().length === 10) {
+    time = time * 1000;
+  }
   return _formatDate(time, format as any);
 }
 
