@@ -17,6 +17,10 @@
       "path": "apps/platform"
     },
     {
+      "name": "@madong/web",
+      "path": "apps/web"
+    },
+    {
       "name": "@vben/docs",
       "path": "docs"
     },
