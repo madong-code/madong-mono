@@ -1,7 +1,7 @@
 {
   "apiBaseUrl": "/adminapi",
   "installInfo": {
-    "title": "MD-Admin 安装向导",
+    "title": "Madong SaaS 安装向导",
     "version": "1.0.0",
     "description": "极速后台开发框架"
   },

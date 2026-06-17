@@ -30,8 +30,8 @@ function getConfigUrl(): string {
   if (import.meta.env.DEV) {
     return '/config.json';
   }
-  // 生产模式：相对于 BASE_URL
-  const base = import.meta.env.BASE_URL || '/';
+  // 生产模式：相对于 BASE_URL，确保 base 以 / 结尾避免路径拼接错误
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
   return `${base}config.json`;
 }
 

@@ -89,7 +89,7 @@ watch(
           <div class="brand-logo">
             <img :src="logoUrl" alt="logo" class="logo-img" />
           </div>
-          <span class="brand-name">{{ siteInfo.name || 'MD-Admin' }}</span>
+          <span class="brand-name">{{ siteInfo.name || 'Madong SaaS' }}</span>
         </div>
         <nav class="top-nav">
           <el-link
@@ -196,7 +196,7 @@ watch(
 
     <!-- 底部版权 -->
     <footer class="bottom-footer">
-      <span>&copy; {{ new Date().getFullYear() }} MD-Admin. All rights
+      <span>&copy; {{ new Date().getFullYear() }} madong.tech. All rights
         reserved.</span>
     </footer>
   </div>

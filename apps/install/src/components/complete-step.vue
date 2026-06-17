@@ -41,7 +41,9 @@ const goToFrontend = () => window.open('/', '_blank');
       </div>
 
       <h2 class="sc-title">安装成功！</h2>
-      <p class="sc-desc">MD-Admin 系统已安装完成，耗时 {{ installDuration }}</p>
+      <p class="sc-desc">
+        Madong SaaS 系统已安装完成，耗时 {{ installDuration }}
+      </p>
 
       <div class="sc-stats">
         <div class="sc-stat">
