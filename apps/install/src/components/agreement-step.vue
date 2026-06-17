@@ -99,7 +99,7 @@ const handleGoToAdmin = () => {
           我已阅读并同意
           <el-link
             type="primary"
-            :underline="false"
+            underline="never"
             class="agreement-link"
             @click.stop="showAgreement = true"
           >
@@ -166,9 +166,9 @@ const handleGoToAdmin = () => {
             showAgreement = false;
             agreed = true;
           "
-          >
-我已阅读并同意
-</el-button>
+        >
+          我已阅读并同意
+        </el-button>
       </template>
     </el-dialog>
   </div>
