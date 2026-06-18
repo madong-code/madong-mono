@@ -6,6 +6,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { useCrud } from '#/adapter/crud';
 import { TenantService } from '#/api/tenant/account';
 import { Page } from '#/components/page';
+import { $t } from '#/locales';
 
 import GrantPlan from './components/grant-plan.vue';
 import TenantMemberWarp from './components/tenant-member-warp.vue';
@@ -22,20 +23,22 @@ const [TenantMemberDrawer, tenantMemberDrawerApi] = useVbenDrawer({
 const handleSyncData = async (row: any) => {
   try {
     await ElMessageBox.confirm(
-      `确定要同步租户「${row.name}」的数据吗？\n同步将重新应用关联套餐的权限和配置。`,
-      '同步数据确认',
+      $t('tenant.account.message.sync_confirm', [row.name]),
+      $t('tenant.account.message.sync_confirm_title'),
       {
-        confirmButtonText: '确定同步',
-        cancelButtonText: '取消',
+        confirmButtonText: $t('tenant.account.message.sync_confirm_btn'),
+        cancelButtonText: $t('tenant.account.message.sync_cancel_btn'),
         type: 'warning',
       },
     );
     await TenantService.syncData(row.id);
-    ElMessage.success('数据同步成功');
+    ElMessage.success($t('tenant.account.message.sync_success'));
     crudApi.query();
   } catch (error: any) {
     if (error !== 'cancel' && error?.message) {
-      ElMessage.error(error.message || '同步失败');
+      ElMessage.error(
+        error.message || $t('tenant.account.message.sync_failed'),
+      );
     }
   }
 };
@@ -44,7 +47,7 @@ const [BasicCrud, crudApi] = useCrud({
   ...useCrudSchema(),
   dropDownActions: [
     {
-      label: '授权套餐',
+      label: $t('tenant.account.action.grant_plan'),
       type: 'primary',
       link: true,
       icon: 'ant-design:link-outlined',
@@ -55,14 +58,14 @@ const [BasicCrud, crudApi] = useCrud({
       },
     },
     {
-      label: '同步数据',
+      label: $t('tenant.account.action.sync_data'),
       type: 'primary',
       link: true,
       icon: 'ant-design:sync-outlined',
       onClick: (_e: any, row: any) => handleSyncData(row),
     },
     {
-      label: '租户成员',
+      label: $t('tenant.account.action.tenant_member'),
       type: 'primary',
       link: true,
       icon: 'ant-design:team-outlined',

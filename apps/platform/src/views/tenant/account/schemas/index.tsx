@@ -2,6 +2,7 @@ import type { CrudSchema } from '#/components/crud/components/types';
 
 import { DbSettingService } from '#/api/database';
 import { TenantService } from '#/api/tenant/account';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -20,43 +21,109 @@ export const useCrudSchema = (): CrudSchema => {
 
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'id', title: 'ID', minWidth: 60, visible: false },
-      { field: 'name', title: '租户名称', minWidth: 130 },
-      { field: 'code', title: '租户编码', minWidth: 120 },
-      { field: 'domain', title: '绑定域名', minWidth: 150 },
+      {
+        field: 'id',
+        title: $t('tenant.account.columns.id'),
+        minWidth: 60,
+        visible: false,
+      },
+      {
+        field: 'name',
+        title: $t('tenant.account.columns.name'),
+        minWidth: 130,
+        align: 'left',
+      },
+      {
+        field: 'code',
+        title: $t('tenant.account.columns.code'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'domain',
+        title: $t('tenant.account.columns.domain'),
+        minWidth: 150,
+        align: 'left',
+      },
       {
         field: 'database_mode',
-        title: '隔离模式',
+        title: $t('tenant.account.columns.database_mode'),
         minWidth: 100,
-        componentProps: {
-          options: [
-            { label: '字段隔离', value: 'field' },
-            { label: '库隔离', value: 'database' },
-          ],
+        cellRender: {
+          name: 'CellTag',
+          attrs: {
+            options: [
+              {
+                label: $t('tenant.account.options.database_mode.field'),
+                value: 'field',
+                color: 'info',
+              },
+              {
+                label: $t('tenant.account.options.database_mode.database'),
+                value: 'database',
+                color: 'warning',
+              },
+            ],
+          },
         },
       },
       {
         field: 'db_setting_id',
-        title: '关联数据源',
+        title: $t('tenant.account.columns.db_setting_id'),
         minWidth: 120,
         visible: false,
       },
       {
         field: 'status',
-        title: '状态',
+        title: $t('tenant.account.columns.status'),
         minWidth: 80,
-        componentProps: {
-          options: [
-            { label: '启用', value: 'active' },
-            { label: '暂停', value: 'suspended' },
-            { label: '注销', value: 'cancelled' },
-          ],
+        cellRender: {
+          name: 'CellTag',
+          attrs: {
+            options: [
+              {
+                label: $t('tenant.account.options.status.active'),
+                value: 'active',
+                color: 'success',
+              },
+              {
+                label: $t('tenant.account.options.status.suspended'),
+                value: 'suspended',
+                color: 'warning',
+              },
+              {
+                label: $t('tenant.account.options.status.cancelled'),
+                value: 'cancelled',
+                color: 'danger',
+              },
+            ],
+          },
         },
       },
-      { field: 'expire_time', title: '到期时间', minWidth: 160 },
-      { field: 'contact_name', title: '联系人', minWidth: 100 },
-      { field: 'contact_phone', title: '电话', minWidth: 120 },
-      { field: 'contact_email', title: '邮箱', minWidth: 150, visible: false },
+      {
+        field: 'expire_time',
+        title: $t('tenant.account.columns.expire_time'),
+        minWidth: 160,
+        slots: {
+          default: ({ row }: any) => <span>{row.expire_time || '/'}</span>,
+        },
+      },
+      {
+        field: 'contact_name',
+        title: $t('tenant.account.columns.contact_name'),
+        minWidth: 100,
+      },
+      {
+        field: 'contact_phone',
+        title: $t('tenant.account.columns.contact_phone'),
+        minWidth: 120,
+      },
+      {
+        field: 'contact_email',
+        title: $t('tenant.account.columns.contact_email'),
+        minWidth: 150,
+        visible: false,
+      },
     ],
 
     searchForm: {
@@ -66,24 +133,37 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_name',
-          label: '租户名称',
-          componentProps: { placeholder: '请输入租户名称' },
+          label: $t('tenant.account.search.name'),
+          componentProps: {
+            placeholder: $t('tenant.account.search.placeholder.name'),
+          },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_code',
-          label: '租户编码',
-          componentProps: { placeholder: '请输入编码' },
+          label: $t('tenant.account.search.code'),
+          componentProps: {
+            placeholder: $t('tenant.account.search.placeholder.code'),
+          },
         },
         {
           component: 'Select',
           fieldName: 'EQ_status',
-          label: '状态',
+          label: $t('tenant.account.search.status'),
           componentProps: {
             options: [
-              { label: '启用', value: 'active' },
-              { label: '暂停', value: 'suspended' },
-              { label: '注销', value: 'cancelled' },
+              {
+                label: $t('tenant.account.options.status.active'),
+                value: 'active',
+              },
+              {
+                label: $t('tenant.account.options.status.suspended'),
+                value: 'suspended',
+              },
+              {
+                label: $t('tenant.account.options.status.cancelled'),
+                value: 'cancelled',
+              },
             ],
             clearable: true,
           },
@@ -97,7 +177,7 @@ export const useCrudSchema = (): CrudSchema => {
       schema: [
         {
           fieldName: 'id',
-          label: 'ID',
+          label: $t('tenant.account.columns.id'),
           component: 'Input',
           formItemClass: 'col-span-1',
           dependencies: {
@@ -112,26 +192,32 @@ export const useCrudSchema = (): CrudSchema => {
           label: '',
           formItemClass: 'col-span-2',
           componentProps: {
-            title: '基本信息',
+            title: $t('tenant.account.form.divider_base_info'),
           },
         },
         {
           fieldName: 'name',
-          label: '租户名称',
+          label: $t('tenant.account.form.name'),
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'database_mode',
-          label: '隔离模式',
+          label: $t('tenant.account.form.database_mode'),
           component: 'RadioGroup',
           defaultValue: 'field',
-          help: '字段隔离：数据以 TENANT_ID 区分，共享数据库；库隔离：租户需关联独立数据源，系统将自动创建授权套餐所需的表结构。',
+          help: $t('tenant.account.form.help_database_mode'),
           componentProps: {
             options: [
-              { label: '字段隔离', value: 'field' },
-              { label: '库隔离', value: 'database' },
+              {
+                label: $t('tenant.account.options.database_mode.field'),
+                value: 'field',
+              },
+              {
+                label: $t('tenant.account.options.database_mode.database'),
+                value: 'database',
+              },
             ],
             isBtn: true,
           },
@@ -143,56 +229,62 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'code',
-          label: '租户编码',
+          label: $t('tenant.account.form.code'),
           component: 'Input',
           rules: 'required',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'domain',
-          label: '绑定域名',
+          label: $t('tenant.account.form.domain'),
           component: 'Input',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'contact_name',
-          label: '联系人',
+          label: $t('tenant.account.form.contact_name'),
           component: 'Input',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'contact_phone',
-          label: '联系电话',
+          label: $t('tenant.account.form.contact_phone'),
           component: 'Input',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'contact_email',
-          label: '联系邮箱',
+          label: $t('tenant.account.form.contact_email'),
           component: 'Input',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'contact_address',
-          label: '联系地址',
+          label: $t('tenant.account.form.contact_address'),
           component: 'Input',
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'system_name',
-          label: '系统名称',
+          label: $t('tenant.account.form.system_name'),
           component: 'Input',
           formItemClass: 'col-span-2',
         },
         {
           fieldName: 'effective_mode',
-          label: '生效方式',
+          label: $t('tenant.account.form.effective_mode'),
           component: 'RadioGroup',
           defaultValue: 'immediate',
           componentProps: {
             options: [
-              { label: '永久生效', value: 'immediate' },
-              { label: '指定时间', value: 'specified' },
+              {
+                label: $t('tenant.account.options.effective_mode.immediate'),
+                value: 'immediate',
+              },
+              {
+                label: $t('tenant.account.options.effective_mode.specified'),
+                value: 'specified',
+              },
             ],
             isBtn: true,
           },
@@ -200,7 +292,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'start_time',
-          label: '生效时间',
+          label: $t('tenant.account.form.start_time'),
           component: 'DatePicker',
           componentProps: { type: 'datetime' },
           formItemClass: 'col-span-1',
@@ -211,7 +303,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'expire_time',
-          label: '到期时间',
+          label: $t('tenant.account.form.expire_time'),
           component: 'DatePicker',
           componentProps: { type: 'datetime' },
           formItemClass: 'col-span-1',
@@ -222,20 +314,29 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'status',
-          label: '状态',
+          label: $t('tenant.account.form.status'),
           component: 'Select',
           componentProps: {
             options: [
-              { label: '启用', value: 'active' },
-              { label: '暂停', value: 'suspended' },
-              { label: '注销', value: 'cancelled' },
+              {
+                label: $t('tenant.account.options.status.active'),
+                value: 'active',
+              },
+              {
+                label: $t('tenant.account.options.status.suspended'),
+                value: 'suspended',
+              },
+              {
+                label: $t('tenant.account.options.status.cancelled'),
+                value: 'cancelled',
+              },
             ],
           },
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'sort',
-          label: '排序',
+          label: $t('tenant.account.form.sort'),
           component: 'Input',
           componentProps: { type: 'number' },
           formItemClass: 'col-span-1',
@@ -247,7 +348,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: '',
           formItemClass: 'col-span-2',
           componentProps: {
-            title: '管理员信息',
+            title: $t('tenant.account.form.divider_admin_info'),
           },
           dependencies: {
             show: (values) => {
@@ -260,7 +361,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'account',
-          label: '账号',
+          label: $t('tenant.account.form.account'),
           rules: 'required',
           formItemClass: 'col-span-2',
           dependencies: {
@@ -271,7 +372,7 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Password',
           fieldName: 'password',
-          label: '密码',
+          label: $t('tenant.account.form.password'),
           rules: 'required',
           formItemClass: 'col-span-2',
           dependencies: {
@@ -286,7 +387,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: '',
           formItemClass: 'col-span-2',
           componentProps: {
-            title: '数据中心',
+            title: $t('tenant.account.form.divider_data_center'),
           },
           dependencies: {
             triggerFields: ['database_mode'],
@@ -295,9 +396,9 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'db_setting_id',
-          label: '关联数据源',
+          label: $t('tenant.account.form.db_setting_id'),
           component: 'ApiSelect',
-          help: '请先在"数据源管理"中配置数据源',
+          help: $t('tenant.account.form.help_db_setting'),
           componentProps: {
             api: async () => {
               const res = await DbSettingService.list({ format: 'select' });
@@ -305,7 +406,7 @@ export const useCrudSchema = (): CrudSchema => {
             },
             clearable: true,
             filterable: true,
-            placeholder: '请选择数据源',
+            placeholder: $t('tenant.account.form.placeholder_db_setting'),
           },
           formItemClass: 'col-span-2',
           rules: 'selectRequired',

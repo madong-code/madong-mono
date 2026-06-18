@@ -3,6 +3,8 @@ import { ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 
+import { $t } from '#/locales';
+
 import TenantMemberIndex from '../../member/index.vue';
 
 const emit = defineEmits<{ reload: [] }>();
@@ -30,10 +32,15 @@ function onChildReload() {
 </script>
 
 <template>
-  <Drawer :footer="false" class="w-[80%]" title="租户成员">
+  <Drawer
+    :footer="false"
+    class="w-[80%]"
+    :title="$t('tenant.account.drawer.tenant_member.title')"
+  >
     <template #extra>
       <span class="text-sm text-gray-400" v-if="currentTenant.name">
-        租户：{{ currentTenant.name }}
+        {{ $t('tenant.account.drawer.tenant_member.extra')
+        }}{{ currentTenant.name }}
       </span>
     </template>
     <TenantMemberIndex
