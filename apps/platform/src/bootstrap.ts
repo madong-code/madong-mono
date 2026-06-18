@@ -14,12 +14,11 @@ import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
-
 import App from './app.vue';
 import { router } from './router';
 
 (async () => {
-  //加载离线图标
+  // 加载离线图标
   if ((import.meta as any).env.VITE_APP_ICON_OFFLINE === 'true') {
     await import('#/components/icon/load-offline');
   }
@@ -67,6 +66,19 @@ async function bootstrap(namespace: string) {
   // 配置Motion插件
   const { MotionPlugin } = await import('@vben/plugins/motion');
   app.use(MotionPlugin);
+
+  // 预加载平台站点配置（阻塞，确保登录页品牌信息就绪）
+  const { useSiteConfigStore } = await import('#/store/modules/site-config');
+  const siteConfigStore = useSiteConfigStore();
+  await siteConfigStore.fetchPlatformConfig();
+
+  // loading 动画的标题/Logo/主色由 loading.html 的内联脚本在渲染前从 localStorage 读取处理
+  // bootstrap.ts 不再事后修改 loading 动画 DOM，避免"硬编码 → 动态切换"的闪动
+
+  // 如果已登录（有持久化的 token），非阻塞获取租户配置并同步到 preferences
+  if (accessStore.accessToken) {
+    siteConfigStore.syncTenantPreferences();
+  }
 
   // 动态更新标题
   watchEffect(() => {
