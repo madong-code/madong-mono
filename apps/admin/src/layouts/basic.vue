@@ -172,8 +172,10 @@ watch(
         :avatar
         :menus
         :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
-        tag-text="Pro"
+        :description="
+          userStore.userInfo?.email || userStore.userInfo?.username || ''
+        "
+        :tag-text="userStore.userInfo?.username || ''"
         @logout="handleLogout"
       />
     </template>
