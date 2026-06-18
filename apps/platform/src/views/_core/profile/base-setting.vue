@@ -54,11 +54,15 @@ async function handleSubmit(values: Record<string, any>) {
     const userInfo = await getUserInfoApi();
     userStore.setUserInfo(userInfo);
     ElMessage.success('基本信息更新成功');
-  } catch (e: any) {
-    ElMessage.error(e?.message || '更新失败');
+  } catch (error: any) {
+    ElMessage.error(error?.message || '更新失败');
   }
 }
 </script>
 <template>
-  <ProfileBaseSetting ref="profileBaseSettingRef" :form-schema="formSchema" @submit="handleSubmit" />
+  <ProfileBaseSetting
+    ref="profileBaseSettingRef"
+    :form-schema="formSchema"
+    @submit="handleSubmit"
+  />
 </template>
