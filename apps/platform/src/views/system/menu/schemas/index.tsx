@@ -1,30 +1,42 @@
-import type { CrudSchema } from '#/components/crud/components/types'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-import { PlatformMenuService } from '#/api/system/platform-menu'
+import { PlatformMenuService } from '#/api/system/platform-menu';
+import { Icon } from '#/components/icon';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
 
-function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'children'): any[] {
-  const map = new Map<any, any>()
-  const roots: any[] = []
+function arrayToTree(
+  data: any[],
+  idKey = 'id',
+  pidKey = 'pid',
+  childrenKey = 'children',
+): any[] {
+  const map = new Map<any, any>();
+  const roots: any[] = [];
 
   data.forEach((item) => {
-    map.set(item[idKey], { ...item, [childrenKey]: [] })
-  })
+    map.set(item[idKey], { ...item, [childrenKey]: [] });
+  });
 
   data.forEach((item) => {
-    const node = map.get(item[idKey])
-    if (item[pidKey] === null || item[pidKey] === undefined || item[pidKey] === 0) {
-      roots.push(node)
+    const node = map.get(item[idKey]);
+    if (
+      item[pidKey] === null ||
+      item[pidKey] === undefined ||
+      item[pidKey] === 0
+    ) {
+      roots.push(node);
     } else {
-      const parent = map.get(item[pidKey])
+      const parent = map.get(item[pidKey]);
       if (parent) {
-        parent[childrenKey].push(node)
+        parent[childrenKey].push(node);
       } else {
-        roots.push(node)
+        roots.push(node);
       }
     }
-  })
+  });
 
-  return roots
+  return roots;
 }
 
 export const useCrudSchema = (): CrudSchema => {
@@ -44,43 +56,86 @@ export const useCrudSchema = (): CrudSchema => {
     hasBatchRemove: false,
     tree: { id: 'id', pid: 'pid', children: 'children' },
     beforeFetch: (params: any) => {
-      return params
+      return params;
     },
     afterFetch: (res: any) => {
-      const items = Array.isArray(res) ? res : res?.items || []
+      const items = Array.isArray(res) ? res : res?.items || [];
       return {
         items: arrayToTree(items),
         total: items.length,
-      }
+      };
     },
     columns: [
-      { field: 'id', title: 'ID', minWidth: 60, visible: false },
-      { field: 'title', title: '菜单名称', minWidth: 200, treeNode: true, align: 'left' },
-      { field: 'code', title: '权限标识', minWidth: 120 },
+      {
+        field: 'id',
+        title: $t('system.menu.table.columns.id'),
+        minWidth: 60,
+        visible: false,
+      },
+      {
+        field: 'title',
+        title: $t('system.menu.table.columns.title'),
+        minWidth: 200,
+        treeNode: true,
+        align: 'left',
+        slots: {
+          default: ({ row }: any) => (
+            <span>
+              <Icon class="mr-1" icon={row.icon} />
+              {row.title}
+            </span>
+          ),
+        },
+      },
+      {
+        field: 'code',
+        title: $t('system.menu.table.columns.code'),
+        minWidth: 120,
+        align: 'left',
+      },
       {
         field: 'type',
-        title: '类型',
+        title: $t('system.menu.table.columns.type'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: 'sys_menu_type' },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_MENU_TYPE },
+        },
       },
-      { field: 'path', title: '路由地址', minWidth: 150 },
-      { field: 'component', title: '组件路径', minWidth: 150 },
-      { field: 'icon', title: '图标', minWidth: 80 },
-      { field: 'sort', title: '排序', minWidth: 60 },
+      {
+        field: 'path',
+        title: $t('system.menu.table.columns.path'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'component',
+        title: $t('system.menu.table.columns.component'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'sort',
+        title: $t('system.menu.table.columns.sort'),
+        minWidth: 60,
+      },
       {
         field: 'is_show',
-        title: '是否显示',
+        title: $t('system.menu.table.columns.is_show'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag' },
-        componentProps: { code: 'sys_yes_no' },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_YES_NO },
+        },
       },
       {
         field: 'enabled',
-        title: '状态',
+        title: $t('system.menu.table.columns.enabled'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: 'sys_enabled_status' },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
     ],
 
@@ -92,48 +147,48 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'ApiDict',
           fieldName: 'EQ_type',
-          label: '菜单类型',
+          label: $t('system.menu.table.search.type'),
           componentProps: {
             code: 'sys_menu_type',
             clearable: true,
-            placeholder: '请选择类型',
+            placeholder: $t('system.menu.table.search.placeholder.type'),
           },
         },
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
-          label: '状态',
+          label: $t('system.menu.table.search.enabled'),
           componentProps: {
             code: 'sys_enabled_status',
             clearable: true,
-            placeholder: '请选择状态',
+            placeholder: $t('system.menu.table.search.placeholder.enabled'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_title',
-          label: '菜单名称',
+          label: $t('system.menu.table.search.title'),
           componentProps: {
             clearable: true,
-            placeholder: '请输入菜单名称',
+            placeholder: $t('system.menu.table.search.placeholder.title'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_code',
-          label: '权限标识',
+          label: $t('system.menu.table.search.code'),
           componentProps: {
             clearable: true,
-            placeholder: '请输入权限标识',
+            placeholder: $t('system.menu.table.search.placeholder.code'),
           },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_path',
-          label: '路由地址',
+          label: $t('system.menu.table.search.path'),
           componentProps: {
             clearable: true,
-            placeholder: '请输入路由地址',
+            placeholder: $t('system.menu.table.search.placeholder.path'),
           },
         },
       ],
@@ -150,7 +205,7 @@ export const useCrudSchema = (): CrudSchema => {
       },
       schema: [
         {
-          label: 'ID',
+          label: $t('system.menu.table.columns.id'),
           fieldName: 'id',
           component: 'Input',
           formItemClass: 'col-span-2',
@@ -160,26 +215,26 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: '菜单类型',
+          label: $t('system.menu.form.modal.type'),
           fieldName: 'type',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-2',
           rules: 'required',
           componentProps: {
-            placeholder: '请选择类型',
+            placeholder: $t('system.menu.form.placeholder.type'),
             code: 'sys_menu_type',
             isBtn: true,
             renderType: 'RadioGroup',
           },
         },
         {
-          label: '上级菜单',
+          label: $t('system.menu.form.modal.pid'),
           fieldName: 'pid',
           component: 'ApiTreeSelect',
           formItemClass: 'col-span-1',
           componentProps: {
-            placeholder: '请选择上级菜单',
+            placeholder: $t('system.menu.form.placeholder.pid'),
             clearable: true,
             checkStrictly: true,
             api: '/platform-menu/tree',
@@ -189,55 +244,56 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
         {
-          label: '菜单名称',
+          label: $t('system.menu.form.modal.title'),
           fieldName: 'title',
           component: 'Input',
           formItemClass: 'col-span-1',
           rules: 'required',
           componentProps: {
-            placeholder: '请输入菜单名称',
+            placeholder: $t('system.menu.form.placeholder.title'),
             clearable: true,
           },
         },
         {
-          label: '权限标识',
+          label: $t('system.menu.form.modal.code'),
           fieldName: 'code',
           component: 'Input',
           formItemClass: 'col-span-1',
           rules: 'required',
           componentProps: {
-            placeholder: '请输入权限标识',
+            placeholder: $t('system.menu.form.placeholder.code'),
             clearable: true,
           },
         },
         {
-          label: '路由地址',
+          label: $t('system.menu.form.modal.path'),
           fieldName: 'path',
           component: 'Input',
           formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.path'),
           componentProps: (values: any) => {
             return {
-              placeholder: '请输入路由地址',
+              placeholder: $t('system.menu.form.placeholder.path'),
               clearable: true,
               disabled: ![1, 2, 4].includes(values.type),
-            }
+            };
           },
         },
         {
-          label: '组件路径',
+          label: $t('system.menu.form.modal.component'),
           fieldName: 'component',
           component: 'Input',
           formItemClass: 'col-span-1',
           componentProps: (values: any) => {
             return {
-              placeholder: '请输入组件路径',
+              placeholder: $t('system.menu.form.placeholder.component'),
               clearable: true,
               disabled: ![1, 2].includes(values.type),
-            }
+            };
           },
         },
         {
-          label: '打开方式',
+          label: $t('system.menu.form.modal.open_type'),
           fieldName: 'open_type',
           component: 'ApiDict',
           defaultValue: 1,
@@ -245,83 +301,126 @@ export const useCrudSchema = (): CrudSchema => {
           rules: 'required',
           componentProps: (values: any) => {
             return {
-              placeholder: '请选择打开方式',
+              placeholder: $t('system.menu.form.placeholder.open_type'),
               code: 'sys_menu_open_type',
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: values.type !== 2,
-            }
+            };
           },
         },
         {
-          label: '图标',
+          label: $t('system.menu.form.modal.icon'),
           fieldName: 'icon',
           component: 'IconPicker',
           formItemClass: 'col-span-1',
           componentProps: (values: any) => {
             return {
               class: 'w-full',
-              placeholder: '请选择图标',
+              placeholder: $t('system.menu.form.placeholder.icon'),
               clearable: true,
               disabled: ![1, 2].includes(values.type),
-            }
+            };
           },
         },
         {
-          label: '外链地址',
+          label: $t('system.menu.form.modal.link_url'),
           fieldName: 'link_url',
           component: 'Input',
           formItemClass: 'col-span-1',
+          help: $t('system.menu.form.help.link_url'),
           componentProps: (values: any) => {
             return {
-              placeholder: '请输入外链地址',
+              placeholder: $t('system.menu.form.placeholder.link_url'),
               clearable: true,
               disabled: values.type !== 2,
-            }
+            };
           },
         },
         {
           fieldName: 'sort',
-          label: '排序',
+          label: $t('system.menu.form.modal.sort'),
           component: 'InputNumber',
           formItemClass: 'col-span-1',
           defaultValue: 999,
           componentProps: {
-            placeholder: '请输入排序',
+            placeholder: $t('system.menu.form.placeholder.sort'),
             clearable: true,
             min: 0,
           },
         },
         {
-          label: '状态',
+          label: $t('system.menu.form.modal.enabled'),
           fieldName: 'enabled',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
           componentProps: {
-            placeholder: '请选择状态',
+            placeholder: $t('system.menu.form.placeholder.enabled'),
             code: 'yes_no',
             isBtn: true,
             renderType: 'RadioGroup',
           },
         },
         {
-          label: '是否显示',
+          label: $t('system.menu.form.modal.is_show'),
           fieldName: 'is_show',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
           componentProps: (values: any) => {
             return {
-              placeholder: '请选择',
+              placeholder: $t('system.menu.form.placeholder.is_show'),
               code: 'yes_no',
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),
-            }
+            };
+          },
+        },
+        {
+          label: $t('system.menu.form.modal.is_sync'),
+          fieldName: 'is_sync',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.is_sync'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup',
+          },
+        },
+        {
+          label: $t('system.menu.form.modal.is_cache'),
+          fieldName: 'is_cache',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: (values: any) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.is_cache'),
+              code: 'yes_no',
+              isBtn: true,
+              renderType: 'RadioGroup',
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
+        },
+        {
+          label: $t('system.menu.form.modal.is_affix'),
+          fieldName: 'is_affix',
+          component: 'ApiDict',
+          defaultValue: 0,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.is_affix'),
+            code: 'yes_no',
+            isBtn: true,
+            renderType: 'RadioGroup',
           },
         },
       ],
     },
-  }
-}
+  };
+};
