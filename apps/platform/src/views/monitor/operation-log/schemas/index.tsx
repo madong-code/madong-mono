@@ -1,5 +1,7 @@
 import type { CrudSchema } from '#/components/crud/components/types';
+
 import { OperateLogService } from '#/api/monitor';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -15,28 +17,65 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: false,
     hasView: true,
     hasRemove: true,
+    permissions: {
+      remove: 'platform:monitor:operation-log:delete',
+      view: 'platform:monitor:operation-log:view',
+    },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'name', title: '操作名称', width: 90 },
-      { field: 'app', title: '应用', width: 60 },
-      { field: 'ip', title: 'IP地址', width: 110 },
+      {
+        field: 'name',
+        title: $t('monitor.operation.log.columns.name'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'app',
+        title: $t('monitor.operation.log.columns.app'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'ip',
+        title: $t('monitor.operation.log.columns.ip'),
+        width: 110,
+        align: 'left',
+      },
       {
         field: 'ip_location',
-        title: '操作地点',
+        title: $t('monitor.operation.log.columns.ip_location'),
         minWidth: 120,
+        align: 'left',
       },
-      { field: 'os', title: '操作系统', minWidth: 100 },
+      {
+        field: 'os',
+        title: $t('monitor.operation.log.columns.os'),
+        minWidth: 100,
+        align: 'left',
+      },
       {
         field: 'browser',
-        title: '浏览器',
+        title: $t('monitor.operation.log.columns.browser'),
         minWidth: 100,
+        align: 'left',
       },
-      { field: 'url', title: '请求地址', minWidth: 170 },
-      { field: 'param', title: '请求参数', minWidth: 170 },
       {
-        field: 'created_date',
-        title: '操作时间',
+        field: 'url',
+        title: $t('monitor.operation.log.columns.url'),
+        minWidth: 170,
+        align: 'left',
+      },
+      {
+        field: 'param',
+        title: $t('monitor.operation.log.columns.param'),
+        minWidth: 170,
+        align: 'left',
+      },
+      {
+        field: 'created_at',
+        title: $t('monitor.operation.log.columns.created_date'),
         width: 170,
+        formatter: 'formatDateTime',
       },
     ],
     searchForm: {
@@ -47,88 +86,93 @@ export const useCrudSchema = (): CrudSchema => {
         {
           component: 'Input',
           fieldName: 'LIKE_user_name',
-          label: '用户名',
+          label: $t('monitor.operation.log.search.user_name'),
           componentProps: { clearable: true },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_ip',
-          label: 'IP地址',
+          label: $t('monitor.operation.log.search.ip'),
           componentProps: { clearable: true },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_url',
-          label: '请求地址',
+          label: $t('monitor.operation.log.search.url'),
           componentProps: { clearable: true },
         },
         {
           component: 'DatePicker',
           fieldName: 'BETWEEN_created_at',
-          label: '操作日期',
+          label: $t('monitor.operation.log.search.date'),
           componentProps: { type: 'daterange' },
         },
       ],
     },
     formDialog: {
       enabled: true,
-      title: '操作日志详情',
+      title: $t('monitor.operation.log.detail_title'),
       width: 'w-[50%]',
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 100 },
       schema: [
-        { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { show: false } },
+        {
+          fieldName: 'id',
+          label: 'ID',
+          component: 'Input',
+          dependencies: { show: false },
+        },
         {
           fieldName: 'app',
-          label: '应用',
+          label: $t('monitor.operation.log.form.app'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'ip',
-          label: 'IP地址',
+          label: $t('monitor.operation.log.form.ip'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'class_name',
-          label: '类名',
+          label: $t('monitor.operation.log.form.class_name'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'method',
-          label: '方法',
+          label: $t('monitor.operation.log.form.method'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'action',
-          label: '动作',
+          label: $t('monitor.operation.log.form.action'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'created_date',
-          label: '操作时间',
+          label: $t('monitor.operation.log.form.created_date'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'user_name',
-          label: '用户名',
+          label: $t('monitor.operation.log.form.user_name'),
           component: 'Input',
           componentProps: { readOnly: true },
         },
         {
           fieldName: 'param',
-          label: '请求参数',
+          label: $t('monitor.operation.log.form.param'),
           component: 'Input',
           componentProps: { type: 'textarea', readOnly: true, rows: 5 },
         },
         {
           fieldName: 'result',
-          label: '执行结果',
+          label: $t('monitor.operation.log.form.result'),
           component: 'Input',
           componentProps: { type: 'textarea', readOnly: true, rows: 8 },
         },
