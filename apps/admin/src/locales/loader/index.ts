@@ -92,12 +92,12 @@ function extractDirFileKeys(
   return { localeDir, fileKeys: [...dirParts, ...fileNameParts] };
 }
 
-// ============ 模式2: 插件命名空间 + 目录+文件+key (用于 plugins/*/lang/) ============
+// ============ 模式2: 插件命名空间 + 目录+文件+key (用于 plugin/*/lang/) ============
 function extractPluginFileKeys(
   path: string,
 ): null | { fileKeys: string[]; localeDir: string } {
   const parts = path.split('/');
-  const pluginIndex = parts.indexOf('plugins');
+  const pluginIndex = parts.indexOf('plugin');
   const langIndex = parts.indexOf('lang');
   if (pluginIndex === -1 || langIndex === -1 || langIndex + 2 >= parts.length)
     return null;
@@ -179,7 +179,7 @@ function loadPluginLocales(localeDir: string): LocaleMessages {
   const messages: LocaleMessages = {};
 
   const pluginModules = import.meta.glob<{ default: LocaleMessages }>(
-    '../../plugins/**/lang/**/*.json',
+    '../../plugin/**/lang/**/*.json',
     { eager: true },
   );
 
