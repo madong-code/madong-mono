@@ -1,4 +1,4 @@
-import type { RouteRecord, RouteRecordRaw } from 'vue-router';
+import type { RouteRecordStringComponent } from '@vben/types';
 
 /**
  * 后端模式路由定义
@@ -7,11 +7,27 @@ import type { RouteRecord, RouteRecordRaw } from 'vue-router';
  * 路由使用字符串形式的 component，由后端菜单系统动态加载。
  *
  * 路由特点：
- * - component 为字符串路径，如 'views/system/user-center/index.vue'
+ * - component 为字符串路径，如 '/system/user-center/index.vue'
  * - hideInMenu: true 表示不在前端菜单中显示，但可通过URL访问
  * - 无需在前端静态路由中重复定义
  */
-const backendRoutes: RouteRecord[] = [
+const backendRoutes: RouteRecordStringComponent[] = [
+  /**
+   * 代码生成编辑路由
+   * 编辑时使用 router.push({ path: '/app/generator/code', query: { id } })
+   * 不显示在侧边菜单，仅用于代码生成器的编辑功能
+   */
+  {
+    name: 'GeneratorCode',
+    path: '/app/generator/code',
+    component: '/app/generator/generator',
+    meta: {
+      hideInMenu: true,
+      hideInBreadcrumb: true,
+      title: '代码生成编辑',
+      currentActiveMenu: '/app/generator',
+    },
+  },
   /**
    * 个人中心路由
    * 后端菜单模式下，此路由由后端菜单系统管理
@@ -20,11 +36,22 @@ const backendRoutes: RouteRecord[] = [
   {
     name: 'Profile',
     path: '/profile',
-    component: 'views/_core/profile/index',
+    component: '/_core/profile/index',
     meta: {
       hideInMenu: true,
       hideInBreadcrumb: false,
       title: '个人中心',
+      module: 'system',
+    },
+  },
+  {
+    name: 'ConfigCommon',
+    path: '/system/config-common',
+    component: '/system/config/components/common',
+    meta: {
+      hideInMenu: true,
+      hideInBreadcrumb: false,
+      title: '通用配置',
       module: 'system',
     },
   },

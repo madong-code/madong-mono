@@ -11,11 +11,12 @@ import { ElMessage } from 'element-plus';
 import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
+
 import pluginRouter from './plugin';
 
 /** 无权限时显示的 403 组件 */
-const FORBIDDEN_COMPONENT = () => import('#/views/_core/fallback/forbidden.vue');
-
+const FORBIDDEN_COMPONENT = () =>
+  import('#/views/_core/fallback/forbidden.vue');
 
 /**
  * 打印扫描到的组件模板
@@ -24,7 +25,7 @@ function logScannedTemplates(pageMap: ComponentRecordType): void {
   if (!import.meta.env.DEV) return;
 
   const keys = Object.keys(pageMap);
-  console.log(`[generateAccess] 📦 Scanned ${keys.length} components:`);
+  console.warn(`[generateAccess] 📦 Scanned ${keys.length} components:`);
 
   // 按目录分类统计
   const categorized: Record<string, string[]> = {};
@@ -38,7 +39,7 @@ function logScannedTemplates(pageMap: ComponentRecordType): void {
   });
 
   Object.entries(categorized).forEach(([category, items]) => {
-    console.log(`[generateAccess] 📂 ${category}: ${items.length} files`);
+    console.warn(`[generateAccess] 📂 ${category}: ${items.length} files`);
   });
 }
 
@@ -47,7 +48,7 @@ function logScannedTemplates(pageMap: ComponentRecordType): void {
  */
 function buildPageMap(): ComponentRecordType {
   const viewsMap = import.meta.glob('../views/**/*.vue', { eager: false });
-  const pluginsMap = import.meta.glob('../plugins/**/*.vue', { eager: false });
+  const pluginsMap = import.meta.glob('../plugin/**/*.vue', { eager: false });
 
   const pageMap: ComponentRecordType = {
     ...(viewsMap as ComponentRecordType),
@@ -69,19 +70,19 @@ async function fetchBackendMenus(): Promise<any[]> {
   });
 
   const backendMenus = await getAllMenusApi();
-  
+
   // 后端菜单去重（按 name 和 path 去重）
   const dedup = (menus: any[]): any[] => {
-    const seen = new Set<string>()
+    const seen = new Set<string>();
     return menus.filter((m) => {
-      const key = `${m.name || ''}_${m.path || ''}`
-      if (seen.has(key)) return false
-      seen.add(key)
-      if (m.children) m.children = dedup(m.children)
-      return true
-    })
-  }
-  
+      const key = `${m.name || ''}_${m.path || ''}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      if (m.children) m.children = dedup(m.children);
+      return true;
+    });
+  };
+
   // 合并插件定义的后端格式路由
   return pluginRouter.mergeBackendMenus(dedup(backendMenus));
 }
@@ -89,7 +90,9 @@ async function fetchBackendMenus(): Promise<any[]> {
 /**
  * 生成路由和菜单（核心方法）
  */
-async function generateAccess(options: GenerateMenuAndRoutesOptions): Promise<any> {
+async function generateAccess(
+  options: GenerateMenuAndRoutesOptions,
+): Promise<any> {
   const pageMap = buildPageMap();
 
   return await generateAccessible(preferences.app.accessMode, {
@@ -101,4 +104,4 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions): Promise<an
   });
 }
 
-export { generateAccess, fetchBackendMenus };
+export { fetchBackendMenus, generateAccess };
