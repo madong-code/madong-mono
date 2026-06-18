@@ -8,6 +8,7 @@ import { ElMessage, ElMessageBox, ElSwitch } from 'element-plus';
 import { useCrud } from '#/adapter/crud';
 import { TenantMemberApi } from '#/api/tenant/member-for-tenant';
 import { Page } from '#/components/page';
+import { $t } from '#/locales';
 
 import { useCrudSchema } from './schemas';
 
@@ -24,18 +25,27 @@ const handleStatusChange = async (
   newVal: boolean | number | string,
 ) => {
   try {
-    const statusText = newVal ? '启用' : '禁用';
+    const statusText = newVal
+      ? $t('tenant.member.options.enabled.enable')
+      : $t('tenant.member.options.enabled.disable');
     await ElMessageBox.confirm(
-      `确定要${statusText}用户「${row.real_name}」吗？`,
-      `${statusText}确认`,
+      $t('tenant.member.message.status_change_confirm', [
+        statusText,
+        row.real_name,
+      ]),
+      $t('tenant.member.message.status_change_title', [statusText]),
       { type: 'warning' },
     );
     await api.value.changStatus(row.id, Number(newVal));
-    ElMessage.success(`已${statusText}`);
+    ElMessage.success(
+      $t('tenant.member.message.status_change_success', [statusText]),
+    );
     crudApi.query();
   } catch (error: any) {
     if (error !== 'cancel' && error?.message)
-      ElMessage.error(error.message || '操作失败');
+      ElMessage.error(
+        error.message || $t('tenant.member.message.status_change_failed'),
+      );
   }
 };
 
@@ -43,18 +53,18 @@ const handleStatusChange = async (
 const handleLock = async (row: TenantMemberRow) => {
   try {
     await ElMessageBox.confirm(
-      `确定要锁定用户「${row.real_name}」吗？`,
-      '锁定确认',
+      $t('tenant.member.message.lock_confirm', [row.real_name]),
+      $t('tenant.member.message.lock_title'),
       {
         type: 'warning',
       },
     );
     await api.value.locked(row.id);
-    ElMessage.success('已锁定');
+    ElMessage.success($t('tenant.member.message.lock_success'));
     crudApi.query();
   } catch (error: any) {
     if (error !== 'cancel' && error?.message)
-      ElMessage.error(error.message || '锁定失败');
+      ElMessage.error(error.message || $t('tenant.member.message.lock_failed'));
   }
 };
 
@@ -62,18 +72,20 @@ const handleLock = async (row: TenantMemberRow) => {
 const handleUnlock = async (row: TenantMemberRow) => {
   try {
     await ElMessageBox.confirm(
-      `确定要解锁用户「${row.real_name}」吗？`,
-      '解锁确认',
+      $t('tenant.member.message.unlock_confirm', [row.real_name]),
+      $t('tenant.member.message.unlock_title'),
       {
         type: 'warning',
       },
     );
     await api.value.unLocked(row.id);
-    ElMessage.success('已解锁');
+    ElMessage.success($t('tenant.member.message.unlock_success'));
     crudApi.query();
   } catch (error: any) {
     if (error !== 'cancel' && error?.message)
-      ElMessage.error(error.message || '解锁失败');
+      ElMessage.error(
+        error.message || $t('tenant.member.message.unlock_failed'),
+      );
   }
 };
 
@@ -81,16 +93,18 @@ const handleUnlock = async (row: TenantMemberRow) => {
 const handleResetPwd = async (row: TenantMemberRow) => {
   try {
     await ElMessageBox.confirm(
-      `确定要重置用户「${row.real_name}」的密码吗？密码将重置为 123456`,
-      '重置密码确认',
+      $t('tenant.member.message.reset_pwd_confirm', [row.real_name]),
+      $t('tenant.member.message.reset_pwd_title'),
       { type: 'warning' },
     );
     await api.value.resetPassword(row.id);
-    ElMessage.success('密码已重置');
+    ElMessage.success($t('tenant.member.message.reset_pwd_success'));
     crudApi.query();
   } catch (error: any) {
     if (error !== 'cancel' && error?.message)
-      ElMessage.error(error.message || '重置失败');
+      ElMessage.error(
+        error.message || $t('tenant.member.message.reset_pwd_failed'),
+      );
   }
 };
 
@@ -99,7 +113,7 @@ const [BasicCrud, crudApi] = useCrud({
   ...useCrudSchema(api.value),
   dropDownActions: [
     {
-      label: '锁定',
+      label: $t('tenant.member.action.lock'),
       type: 'warning',
       link: true,
       icon: 'ant-design:lock-outlined',
@@ -107,7 +121,7 @@ const [BasicCrud, crudApi] = useCrud({
       onClick: (_e: any, record: any) => handleLock(record),
     },
     {
-      label: '解锁',
+      label: $t('tenant.member.action.unlock'),
       type: 'success',
       link: true,
       icon: 'ant-design:unlock-outlined',
@@ -115,14 +129,14 @@ const [BasicCrud, crudApi] = useCrud({
       onClick: (_e: any, record: any) => handleUnlock(record),
     },
     {
-      label: '重置密码',
+      label: $t('tenant.member.action.reset_password'),
       type: 'primary',
       link: true,
       icon: 'ant-design:key-outlined',
       onClick: (_e: any, record: any) => handleResetPwd(record),
     },
     {
-      label: '删除',
+      label: $t('tenant.member.action.delete'),
       type: 'danger',
       link: true,
       icon: 'ant-design:delete-outlined',

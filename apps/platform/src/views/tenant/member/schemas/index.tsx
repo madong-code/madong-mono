@@ -2,6 +2,7 @@ import type { TenantMemberApi } from '#/api/tenant/member-for-tenant';
 import type { CrudSchema } from '#/components/crud/components/types';
 
 import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (
   api: ReturnType<typeof TenantMemberApi>,
@@ -22,18 +23,32 @@ export const useCrudSchema = (
 
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'user_name', title: '账号', minWidth: 100, align: 'left' },
-      { field: 'real_name', title: '用户昵称', minWidth: 100, align: 'left' },
-      { field: 'mobile_phone', title: '手机号', minWidth: 120 },
+      {
+        field: 'user_name',
+        title: $t('tenant.member.columns.user_name'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'real_name',
+        title: $t('tenant.member.columns.real_name'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'mobile_phone',
+        title: $t('tenant.member.columns.mobile_phone'),
+        minWidth: 120,
+      },
       {
         field: 'enabled',
-        title: '状态',
+        title: $t('tenant.member.columns.enabled'),
         width: 80,
         slots: { default: 'enabled_switch' },
       },
       {
         field: 'is_locked',
-        title: '锁定状态',
+        title: $t('tenant.member.columns.is_locked'),
         width: 90,
         cellRender: {
           name: 'CellDictTag',
@@ -42,9 +57,10 @@ export const useCrudSchema = (
       },
       {
         field: 'created_date',
-        title: '创建时间',
+        title: $t('tenant.member.columns.created_date'),
         width: 160,
         visible: false,
+        formatter: 'formatDateTime',
       },
     ],
 
@@ -55,29 +71,35 @@ export const useCrudSchema = (
         {
           component: 'Input',
           fieldName: 'LIKE_user_name',
-          label: '用户名',
-          componentProps: { placeholder: '请输入用户名' },
+          label: $t('tenant.member.search.user_name'),
+          componentProps: {
+            placeholder: $t('tenant.member.search.placeholder.user_name'),
+          },
         },
         {
           component: 'Input',
           fieldName: 'LIKE_real_name',
-          label: '姓名',
-          componentProps: { placeholder: '请输入姓名' },
+          label: $t('tenant.member.search.real_name'),
+          componentProps: {
+            placeholder: $t('tenant.member.search.placeholder.real_name'),
+          },
         },
         {
           component: 'Input',
           fieldName: 'mobile_phone',
-          label: '手机号',
-          componentProps: { placeholder: '请输入手机号' },
+          label: $t('tenant.member.search.mobile_phone'),
+          componentProps: {
+            placeholder: $t('tenant.member.search.placeholder.mobile_phone'),
+          },
         },
         {
           component: 'Select',
           fieldName: 'enabled',
-          label: '状态',
+          label: $t('tenant.member.search.enabled'),
           componentProps: {
             options: [
-              { label: '启用', value: 1 },
-              { label: '禁用', value: 0 },
+              { label: $t('tenant.member.options.enabled.enable'), value: 1 },
+              { label: $t('tenant.member.options.enabled.disable'), value: 0 },
             ],
             clearable: true,
           },
@@ -96,19 +118,21 @@ export const useCrudSchema = (
         },
         {
           fieldName: 'user_name',
-          label: '用户名',
+          label: $t('tenant.member.form.user_name'),
           component: 'Input',
           rules: 'required',
           componentProps: (_values: any) => ({
-            placeholder: '请输入用户名',
+            placeholder: $t('tenant.member.form.placeholder_user_name'),
           }),
         },
         {
           fieldName: 'password',
-          label: '密码',
+          label: $t('tenant.member.form.password'),
           component: 'Password',
           componentProps: (values: any) => ({
-            placeholder: values?.id ? '留空则不修改密码' : '请输入密码',
+            placeholder: values?.id
+              ? $t('tenant.member.form.placeholder_password_edit')
+              : $t('tenant.member.form.placeholder_password_add'),
           }),
           dependencies: {
             show: (values: any) => !values?.id,
@@ -117,44 +141,44 @@ export const useCrudSchema = (
         },
         {
           fieldName: 'real_name',
-          label: '姓名',
+          label: $t('tenant.member.form.real_name'),
           component: 'Input',
           rules: 'required',
           componentProps: (_values: any) => ({
-            placeholder: '请输入姓名',
+            placeholder: $t('tenant.member.form.placeholder_real_name'),
           }),
         },
         {
           fieldName: 'mobile_phone',
-          label: '手机号',
+          label: $t('tenant.member.form.mobile_phone'),
           component: 'Input',
           componentProps: (_values: any) => ({
-            placeholder: '请输入手机号',
+            placeholder: $t('tenant.member.form.placeholder_mobile_phone'),
           }),
         },
         {
           fieldName: 'email',
-          label: '邮箱',
+          label: $t('tenant.member.form.email'),
           component: 'Input',
           componentProps: (_values: any) => ({
-            placeholder: '请输入邮箱',
+            placeholder: $t('tenant.member.form.placeholder_email'),
           }),
         },
         {
           fieldName: 'is_super',
-          label: '类型',
+          label: $t('tenant.member.form.type'),
           component: 'Select',
           defaultValue: 0,
           componentProps: (_values: any) => ({
             options: [
-              { label: '普通用户', value: 0 },
-              { label: '管理员', value: 1 },
+              { label: $t('tenant.member.form.type_user'), value: 0 },
+              { label: $t('tenant.member.form.type_admin'), value: 1 },
             ],
           }),
         },
         {
           fieldName: 'sex',
-          label: '性别',
+          label: $t('tenant.member.form.sex'),
           component: 'ApiDict',
           defaultValue: 0,
           componentProps: (_values: any) => ({
@@ -165,7 +189,7 @@ export const useCrudSchema = (
         },
         {
           fieldName: 'enabled',
-          label: '状态',
+          label: $t('tenant.member.form.enabled'),
           component: 'ApiDict',
           defaultValue: 1,
           componentProps: (_values: any) => ({
@@ -176,10 +200,10 @@ export const useCrudSchema = (
         },
         {
           fieldName: 'remark',
-          label: '备注',
+          label: $t('tenant.member.form.remark'),
           component: 'Textarea',
           componentProps: (_values: any) => ({
-            placeholder: '请输入备注',
+            placeholder: $t('tenant.member.form.placeholder_remark'),
           }),
         },
       ],
