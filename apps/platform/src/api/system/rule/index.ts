@@ -1,7 +1,9 @@
-import type { RouteRow } from './types';
+import type { HttpMethod, RouteRow } from './types';
 
 import BaseService from '#/api/core/base';
 import { requestClient } from '#/api/request';
+
+export type { HttpMethod, RouteRow };
 
 const baseUrl = '/system/rule';
 
