@@ -1,9 +1,21 @@
 <script setup lang="tsx">
-import type { RouteRow } from '#/api/system/rule';
+import type { HttpMethod, RouteRow } from '#/api/system/rule';
+import type { CrudApiInstance } from '#/components/crud/components/types';
+
+import { nextTick, ref } from 'vue';
+
+import {
+  ElButton,
+  ElCard,
+  ElCol,
+  ElInput,
+  ElMessage,
+  ElRow,
+  ElTree,
+} from 'element-plus';
 
 import { MenuService } from '#/api/system/menu';
-import { HttpMethod, RuleService } from '#/api/system/rule';
-import { CrudApiInstance } from '#/components/crud/components/types';
+import { RuleService } from '#/api/system/rule';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
 
@@ -47,7 +59,6 @@ const loadData = async (cateId: any, name: any) => {
     cate_id: cateId,
     keyword: name,
   });
-  // @ts-expect-error: Type mismatch between API response and routeList type
   routeList.value = result || [];
 };
 
@@ -126,11 +137,10 @@ const isSelected = (item: RouteRow): boolean => {
  */
 const handleCardClick = (item: RouteRow): void => {
   const normalizedMethod = normalizeMethod(item.method);
-  // @ts-expect-error: method and methods fields have different types but serve similar purpose
   const target: Pick<
     RouteRow,
-    'code' | 'method' | 'methods' | 'path' | 'title' | 'type'
-  > = {
+    'code' | 'method' | 'path' | 'title' | 'type'
+  > & { methods: string } = {
     path: item.path,
     method: item.method,
     methods: item.method,
@@ -197,7 +207,7 @@ defineExpose({
   show({ data, getCrudApi }: { data: any; getCrudApi: () => CrudApiInstance }) {
     record.value = data;
     dialogApi.setState({
-      title: `选择接口`,
+      title: $t('system.menu.template.api.title'),
     });
     crudApi.value = getCrudApi();
     dialogApi.open();
@@ -214,7 +224,7 @@ defineExpose({
       <p>{{ $t('system.menu.api.tips.2') }}</p>
       <p>{{ $t('system.menu.api.tips.3') }}</p>
       <div class="button-row">
-        <Input
+        <ElInput
           class="mt-2"
           style="width: 250px; margin-right: 2px"
           v-model:value="keyword"
@@ -235,7 +245,7 @@ defineExpose({
             shadow="never"
             style="max-height: 80vh; margin-top: 0"
           >
-            <el-tree
+            <ElTree
               node-key="id"
               :data="treeData"
               :props="{ label: 'label', children: 'children' }"
@@ -247,8 +257,8 @@ defineExpose({
         </div>
 
         <div class="right-content" style="margin-left: 5px">
-          <el-row :gutter="20">
-            <el-col
+          <ElRow :gutter="20">
+            <ElCol
               v-for="(item, index) in routeList"
               :key="index"
               :xs="24"
@@ -256,7 +266,7 @@ defineExpose({
               :md="12"
               :lg="12"
             >
-              <el-card
+              <ElCard
                 class="cursor-pointer transition-all duration-300"
                 :class="{
                   'selected-route-card': isSelected(item),
@@ -320,9 +330,9 @@ defineExpose({
                     }}</span>
                   </p>
                 </div>
-              </el-card>
-            </el-col>
-          </el-row>
+              </ElCard>
+            </ElCol>
+          </ElRow>
         </div>
       </div>
     </div>
