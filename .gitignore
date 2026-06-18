@@ -43,7 +43,7 @@ vite.config.ts.*
 # Application plugin directories (generated at runtime)
 apps/*/src/plugin/
 .idea
-# .vscode
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
