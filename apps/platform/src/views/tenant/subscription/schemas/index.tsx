@@ -1,6 +1,7 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
 import { SubscriptionService } from '#/api/tenant/subscription';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (options: {
   authDrawerApi: { open: () => void; setData: (data: any) => any };
@@ -27,25 +28,48 @@ export const useCrudSchema = (options: {
       { type: 'checkbox', width: 60 },
       {
         field: 'code',
-        title: '套餐代码',
+        title: $t('tenant.subscription.columns.code'),
         minWidth: 100,
         width: 200,
         align: 'left',
       },
-      { field: 'name', title: '套餐名称', align: 'left' },
+      {
+        field: 'name',
+        title: $t('tenant.subscription.columns.name'),
+        align: 'left',
+      },
       {
         field: 'status',
-        title: '状态',
+        title: $t('tenant.subscription.columns.status'),
         width: 100,
-        componentProps: {
-          options: [
-            { label: '正常', value: 'active' },
-            { label: '禁用', value: 'disabled' },
-          ],
+        cellRender: {
+          name: 'CellTag',
+          attrs: {
+            options: [
+              {
+                label: $t('tenant.subscription.options.status.active'),
+                value: 'active',
+                color: 'success',
+              },
+              {
+                label: $t('tenant.subscription.options.status.disabled'),
+                value: 'disabled',
+                color: 'info',
+              },
+            ],
+          },
         },
       },
-      { field: 'max_users', title: '最大用户', align: 'right' },
-      { field: 'price', title: '价格/月', width: 100 },
+      {
+        field: 'max_users',
+        title: $t('tenant.subscription.columns.max_users'),
+        align: 'right',
+      },
+      {
+        field: 'price',
+        title: $t('tenant.subscription.columns.price'),
+        width: 100,
+      },
     ],
 
     searchForm: {
@@ -55,8 +79,10 @@ export const useCrudSchema = (options: {
         {
           component: 'Input',
           fieldName: 'LIKE_name',
-          label: '套餐名称',
-          componentProps: { placeholder: '请输入套餐名称' },
+          label: $t('tenant.subscription.search.name'),
+          componentProps: {
+            placeholder: $t('tenant.subscription.search.placeholder.name'),
+          },
         },
       ],
     },
@@ -67,56 +93,62 @@ export const useCrudSchema = (options: {
       schema: [
         {
           fieldName: 'id',
-          label: 'ID',
+          label: $t('tenant.subscription.form.id'),
           component: 'Input',
           dependencies: { triggerFields: ['id'], show: false },
         },
         {
           fieldName: 'name',
-          label: '套餐名称',
+          label: $t('tenant.subscription.form.name'),
           component: 'Input',
           rules: 'required',
         },
         {
           fieldName: 'code',
-          label: '套餐代码',
+          label: $t('tenant.subscription.form.code'),
           component: 'Input',
           rules: 'required',
         },
         {
           fieldName: 'status',
-          label: '状态',
+          label: $t('tenant.subscription.form.status'),
           component: 'Select',
           rules: 'required',
           defaultValue: 'active',
           componentProps: {
             options: [
-              { label: '正常', value: 'active' },
-              { label: '禁用', value: 'disabled' },
+              {
+                label: $t('tenant.subscription.options.status.active'),
+                value: 'active',
+              },
+              {
+                label: $t('tenant.subscription.options.status.disabled'),
+                value: 'disabled',
+              },
             ],
           },
         },
         {
           fieldName: 'price',
-          label: '价格/月',
+          label: $t('tenant.subscription.form.price'),
           component: 'InputNumber',
           componentProps: { min: 0, precision: 2 },
         },
         {
           fieldName: 'price_year',
-          label: '价格/年',
+          label: $t('tenant.subscription.form.price_year'),
           component: 'InputNumber',
           componentProps: { min: 0, precision: 2 },
         },
         {
           fieldName: 'max_users',
-          label: '最大用户',
+          label: $t('tenant.subscription.form.max_users'),
           component: 'InputNumber',
           componentProps: { min: 0 },
         },
         {
           fieldName: 'description',
-          label: '描述',
+          label: $t('tenant.subscription.form.description'),
           component: 'Textarea',
           componentProps: { rows: 3 },
         },
@@ -126,7 +158,7 @@ export const useCrudSchema = (options: {
     // 更多 → 下拉菜单
     dropDownActions: [
       {
-        label: '关联租户',
+        label: $t('tenant.subscription.action.grant_tenant'),
         type: null,
         icon: 'ant-design:link-outlined',
         onClick: (_e: any, row: any) => {
@@ -134,7 +166,7 @@ export const useCrudSchema = (options: {
         },
       },
       {
-        label: '权限授权',
+        label: $t('tenant.subscription.action.grant_auth'),
         type: null,
         icon: 'ant-design:safety-certificate-outlined',
         onClick: (_e: any, row: any) => {

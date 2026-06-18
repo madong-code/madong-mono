@@ -1,58 +1,22 @@
-<template>
-  <Drawer>
-    <div class="auth-tree">
-      <ElTree
-  ref="treeRef"
-  :data="treeData"
-  show-checkbox
-  node-key="key"
-  :props="{ label: 'label', children: 'children' }"
->
-  <template #default="{ data }">
-    <span class="gt-row">
-      <span class="gt-tag" :class="'gt-tag--' + data.type">
-        {{ typeLabels[data.type] }}
-      </span>
-      <span v-if="data.type === 4" class="gt-method" :class="'gt-method--' + (data.method||'').toLowerCase()">
-        {{ data.method }}
-      </span>
-      <span class="gt-name">{{ data.type === 4 ? data.path : data.label }}</span>
-    </span>
-  </template>
-</ElTree>
-    </div>
-    <template #prepend-footer>
-      <div class="footer-tools">
-        <ElDropdown @command="handleToolCommand">
-          <ElButton size="small" type="text">
-            <span>操作</span>
-            <Icon icon="lucide:chevron-down" class="w-4 h-4 ml-1" />
-          </ElButton>
-          <template #dropdown>
-            <ElDropdownMenu>
-              <ElDropdownItem command="expand-all">展开全部</ElDropdownItem>
-              <ElDropdownItem command="collapse-all">收缩全部</ElDropdownItem>
-              <ElDropdownItem command="expand-level-1">展开一级</ElDropdownItem>
-              <ElDropdownItem command="expand-level-2">展开二级</ElDropdownItem>
-              <ElDropdownItem divided command="select-all">全选</ElDropdownItem>
-              <ElDropdownItem command="select-none">取消全选</ElDropdownItem>
-              <ElDropdownItem command="select-inverse">反选</ElDropdownItem>
-            </ElDropdownMenu>
-          </template>
-        </ElDropdown>
-      </div>
-    </template>
-  </Drawer>
-</template>
-
 <script setup lang="ts">
-import { nextTick, reactive, ref } from 'vue';
-import { ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElMessage, ElTree } from 'element-plus';
 import type { ElTree as ElTreeType } from 'element-plus';
+
+import { nextTick, ref } from 'vue';
+
 import { useVbenDrawer } from '@vben/common-ui';
-import { Icon } from '#/components/icon';
+
+import {
+  ElButton,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElMessage,
+  ElTree,
+} from 'element-plus';
 
 import { SubscriptionService } from '#/api/tenant/subscription';
+import { Icon } from '#/components/icon';
+import { $t } from '#/locales';
 
 interface TreeNode {
   key: string;
@@ -72,7 +36,12 @@ interface RawNode {
   path?: string;
 }
 
-const typeLabels: Record<number, string> = { 1: '目录', 2: '菜单', 3: '权限', 4: 'Api' };
+const typeLabels: Record<number, string> = {
+  1: $t('tenant.subscription.drawer.grant_auth.type_labels.dir'),
+  2: $t('tenant.subscription.drawer.grant_auth.type_labels.menu'),
+  3: $t('tenant.subscription.drawer.grant_auth.type_labels.perm'),
+  4: $t('tenant.subscription.drawer.grant_auth.type_labels.api'),
+};
 
 let authData: RawNode[] = [];
 
@@ -105,7 +74,7 @@ const initPermissionTree = async () => {
   try {
     const res = await SubscriptionService.getPermissionTree();
     authData = (res || []) as RawNode[];
-  } catch (e: any) {
+  } catch {
     treeLoaded.value = false;
     authData = [];
   }
@@ -144,12 +113,12 @@ const loadData = async (planId: string) => {
 
 // ===== Vben Drawer =====
 const [Drawer, drawerApi] = useVbenDrawer({
-  title: '权限授权',
+  title: $t('tenant.subscription.drawer.grant_auth.title'),
   class: 'w-[800px]',
   closeOnClickModal: false,
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = drawerApi.getData<{ row: any; onSuccess?: () => void }>();
+      const data = drawerApi.getData<{ onSuccess?: () => void; row: any }>();
       currentRow.value = data?.row;
       onSuccessRef.value = data?.onSuccess || null;
       // 重置选中状态，避免显示上一个套餐的旧数据
@@ -164,16 +133,21 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const keys = getCheckedKeys();
     drawerApi.setState({ confirmLoading: true });
     try {
-      const res = await SubscriptionService.authorize(currentRow.value.id, keys);
-      ElMessage.success('授权成功');
+      const res = await SubscriptionService.authorize(
+        currentRow.value.id,
+        keys,
+      );
+      ElMessage.success($t('tenant.subscription.drawer.grant_auth.success'));
       // 用后端返回的 ids 回显
       if (res?.ids) {
         setCheckedKeys(res.ids);
       }
       onSuccessRef.value?.();
       drawerApi.close();
-    } catch (e: any) {
-      ElMessage.error(e?.message || '操作失败');
+    } catch (error: any) {
+      ElMessage.error(
+        error?.message || $t('tenant.subscription.drawer.grant_auth.failed'),
+      );
     } finally {
       drawerApi.setState({ confirmLoading: false });
     }
@@ -184,8 +158,14 @@ const [Drawer, drawerApi] = useVbenDrawer({
 });
 
 const handleToolCommand = (command: string) => {
-  const expandNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = true; };
-  const collapseNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = false; };
+  const expandNode = (key: string) => {
+    const n = treeRef.value?.getNode(key);
+    if (n) n.expanded = true;
+  };
+  const collapseNode = (key: string) => {
+    const n = treeRef.value?.getNode(key);
+    if (n) n.expanded = false;
+  };
   const traverse = (nodes: TreeNode[], fn: (n: TreeNode) => void) => {
     nodes.forEach((n) => {
       fn(n);
@@ -193,33 +173,46 @@ const handleToolCommand = (command: string) => {
     });
   };
   switch (command) {
-    case 'expand-all':
-      traverse(treeData.value, (n) => expandNode(n.key));
-      break;
-    case 'collapse-all':
+    case 'collapse-all': {
       traverse(treeData.value, (n) => collapseNode(n.key));
       break;
-    case 'expand-level-1':
+    }
+    case 'expand-all': {
+      traverse(treeData.value, (n) => expandNode(n.key));
+      break;
+    }
+    case 'expand-level-1': {
       expandToLevel(1);
       break;
-    case 'expand-level-2':
+    }
+    case 'expand-level-2': {
       expandToLevel(2);
       break;
-    case 'select-all':
+    }
+    case 'select-all': {
       selectAll();
       break;
-    case 'select-none':
-      selectNone();
-      break;
-    case 'select-inverse':
+    }
+    case 'select-inverse': {
       selectInverse();
       break;
+    }
+    case 'select-none': {
+      selectNone();
+      break;
+    }
   }
 };
 
 const expandToLevel = (level: number) => {
-  const expandNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = true; };
-  const collapseNode = (key: string) => { const n = treeRef.value?.getNode(key); if (n) n.expanded = false; };
+  const expandNode = (key: string) => {
+    const n = treeRef.value?.getNode(key);
+    if (n) n.expanded = true;
+  };
+  const collapseNode = (key: string) => {
+    const n = treeRef.value?.getNode(key);
+    if (n) n.expanded = false;
+  };
   const traverse = (nodes: TreeNode[], fn: (n: TreeNode) => void) => {
     nodes.forEach((n) => {
       fn(n);
@@ -283,17 +276,100 @@ const selectInverse = () => {
 };
 </script>
 
+<template>
+  <Drawer>
+    <div class="auth-tree">
+      <ElTree
+        ref="treeRef"
+        :data="treeData"
+        show-checkbox
+        node-key="key"
+        :props="{ label: 'label', children: 'children' }"
+      >
+        <template #default="{ data }">
+          <span class="gt-row">
+            <span class="gt-tag" :class="`gt-tag--${data.type}`">
+              {{ typeLabels[data.type] }}
+            </span>
+            <span
+              v-if="data.type === 4"
+              class="gt-method"
+              :class="`gt-method--${(data.method || '').toLowerCase()}`"
+            >
+              {{ data.method }}
+            </span>
+            <span class="gt-name">{{
+              data.type === 4 ? data.path : data.label
+            }}</span>
+          </span>
+        </template>
+      </ElTree>
+    </div>
+    <template #prepend-footer>
+      <div class="footer-tools">
+        <ElDropdown @command="handleToolCommand">
+          <ElButton size="small" type="text">
+            <span>{{
+              $t('tenant.subscription.drawer.grant_auth.action')
+            }}</span>
+            <Icon icon="lucide:chevron-down" class="w-4 h-4 ml-1" />
+          </ElButton>
+          <template #dropdown>
+            <ElDropdownMenu>
+              <ElDropdownItem command="expand-all">
+{{
+                $t('tenant.subscription.drawer.grant_auth.expand_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="collapse-all">
+{{
+                $t('tenant.subscription.drawer.grant_auth.collapse_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="expand-level-1">
+{{
+                $t('tenant.subscription.drawer.grant_auth.expand_level_1')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="expand-level-2">
+{{
+                $t('tenant.subscription.drawer.grant_auth.expand_level_2')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem divided command="select-all">
+{{
+                $t('tenant.subscription.drawer.grant_auth.select_all')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="select-none">
+{{
+                $t('tenant.subscription.drawer.grant_auth.select_none')
+              }}
+</ElDropdownItem>
+              <ElDropdownItem command="select-inverse">
+{{
+                $t('tenant.subscription.drawer.grant_auth.select_inverse')
+              }}
+</ElDropdownItem>
+            </ElDropdownMenu>
+          </template>
+        </ElDropdown>
+      </div>
+    </template>
+  </Drawer>
+</template>
+
 <style scoped>
 .auth-tree {
   flex: 1;
+  min-height: 0;
   padding: 16px;
   overflow-y: auto;
-  min-height: 0;
 }
 
 .auth-tree :deep(.el-tree-node__content) {
-  padding: 4px 0 !important;
   min-height: 32px;
+  padding: 4px 0 !important;
 }
 
 .auth-tree :deep(.el-tree-node__children) {
@@ -306,55 +382,77 @@ const selectInverse = () => {
 
 .gt-row {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   white-space: nowrap;
 }
 
 .gt-tag {
-  flex-shrink: 0;
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  padding: 0 6px;
+  min-width: 32px;
   height: 18px;
+  padding: 0 6px;
   font-size: 10px;
   font-weight: 500;
-  border-radius: 3px;
   color: #fff;
-  min-width: 32px;
+  border-radius: 3px;
 }
 
-.gt-tag--1 { background: #4080ff; }
-.gt-tag--2 { background: #00b42a; }
-.gt-tag--3 { background: #e6a23c; }
-.gt-tag--4 { background: #722ed1; }
+.gt-tag--1 {
+  background: #4080ff;
+}
+
+.gt-tag--2 {
+  background: #00b42a;
+}
+
+.gt-tag--3 {
+  background: #e6a23c;
+}
+
+.gt-tag--4 {
+  background: #722ed1;
+}
 
 .gt-name {
   font-size: 13px;
-  color: #333;
   font-weight: 500;
+  color: #333;
 }
 
 .gt-method {
-  flex-shrink: 0;
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
+  min-width: 36px;
   height: 16px;
+  padding: 0 5px;
   font-family: 'SF Mono', Menlo, monospace;
   font-size: 10px;
   font-weight: 700;
-  border-radius: 2px;
   color: #fff;
-  min-width: 36px;
+  border-radius: 2px;
 }
 
-.gt-method--get { background: #00b42a; }
-.gt-method--post { background: #165DFF; }
-.gt-method--put { background: #e6a23c; }
-.gt-method--delete { background: #f56c6c; }
+.gt-method--get {
+  background: #00b42a;
+}
+
+.gt-method--post {
+  background: #165dff;
+}
+
+.gt-method--put {
+  background: #e6a23c;
+}
+
+.gt-method--delete {
+  background: #f56c6c;
+}
 
 .footer-tools {
   display: flex;
@@ -363,8 +461,8 @@ const selectInverse = () => {
 }
 
 .footer-tools :deep(.el-button) {
-  font-size: 14px;
   padding: 8px 12px;
+  font-size: 14px;
 }
 
 .footer-tools :deep(.el-dropdown-menu) {
@@ -372,7 +470,7 @@ const selectInverse = () => {
 }
 
 .footer-tools :deep(.el-dropdown-item) {
-  text-align: left;
   justify-content: flex-start;
+  text-align: left;
 }
 </style>

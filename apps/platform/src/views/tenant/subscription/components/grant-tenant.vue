@@ -1,40 +1,15 @@
-<template>
-  <Drawer>
-    <template #extra>
-      <span class="text-sm text-gray-400">套餐：{{ currentRow?.name }}</span>
-      <span class="text-sm text-gray-400 ml-3">已关联：{{ selectedIds.length }} 个租户</span>
-    </template>
-    <div class="tenant-selector">
-      <ElTable
-        ref="tableRef"
-        :data="tenantList"
-        row-key="id"
-        height="calc(100vh - 220px)"
-        @selection-change="onSelectionChange"
-      >
-        <ElTableColumn type="selection" width="50" />
-        <ElTableColumn prop="name" label="租户名称" min-width="200" />
-        <ElTableColumn prop="code" label="编码" width="150" />
-        <ElTableColumn prop="status" label="状态" width="80">
-          <template #default="{ row }">
-            <ElTag :type="row.status === 'active' ? 'success' : 'info'" size="small">
-              {{ row.status === 'active' ? '正常' : '禁用' }}
-            </ElTag>
-          </template>
-        </ElTableColumn>
-      </ElTable>
-    </div>
-  </Drawer>
-</template>
-
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import { ElMessage, ElTable, ElTableColumn, ElTag } from 'element-plus';
 import type { ElTable as ElTableType } from 'element-plus';
+
+import { nextTick, ref } from 'vue';
+
 import { useVbenDrawer } from '@vben/common-ui';
 
-import { SubscriptionService } from '#/api/tenant/subscription';
+import { ElMessage, ElTable, ElTableColumn, ElTag } from 'element-plus';
+
 import { TenantService } from '#/api/tenant/account';
+import { SubscriptionService } from '#/api/tenant/subscription';
+import { $t } from '#/locales';
 
 interface Tenant {
   id: string;
@@ -59,9 +34,9 @@ const syncTableSelection = async () => {
   if (!tableRef.value) return;
   tableRef.value.clearSelection();
   // 快照当前选中 ID，避免 toggleRowSelection 触发 selection-change 污染循环中的判断
-  const ids = [...selectedIds.value];
+  const ids = new Set(selectedIds.value);
   tenantList.value.forEach((row) => {
-    tableRef.value!.toggleRowSelection(row, ids.includes(row.id));
+    tableRef.value?.toggleRowSelection(row, ids.has(row.id));
   });
 };
 
@@ -99,12 +74,12 @@ const getCheckedIds = (): string[] => {
 };
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  title: '关联租户',
+  title: $t('tenant.subscription.drawer.grant_tenant.title'),
   class: 'w-[800px]',
   closeOnClickModal: false,
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const data = drawerApi.getData<{ row: any; onSuccess?: () => void }>();
+      const data = drawerApi.getData<{ onSuccess?: () => void; row: any }>();
       currentRow.value = data?.row;
       onSuccessRef.value = data?.onSuccess || null;
       // 重置状态，避免显示上一个套餐的旧数据
@@ -117,8 +92,11 @@ const [Drawer, drawerApi] = useVbenDrawer({
     const ids = getCheckedIds();
     drawerApi.setState({ confirmLoading: true });
     try {
-      const res = await SubscriptionService.bindTenant(currentRow.value.id, ids);
-      ElMessage.success('关联租户成功');
+      const res = await SubscriptionService.bindTenant(
+        currentRow.value.id,
+        ids,
+      );
+      ElMessage.success($t('tenant.subscription.drawer.grant_tenant.success'));
       // 用后端返回的 ids 回显选中的租户
       if (res?.ids) {
         selectedIds.value = res.ids;
@@ -126,8 +104,10 @@ const [Drawer, drawerApi] = useVbenDrawer({
       }
       onSuccessRef.value?.();
       drawerApi.close();
-    } catch (e: any) {
-      ElMessage.error(e?.message || '操作失败');
+    } catch (error: any) {
+      ElMessage.error(
+        error?.message || $t('tenant.subscription.drawer.grant_tenant.failed'),
+      );
     } finally {
       drawerApi.setState({ confirmLoading: false });
     }
@@ -137,6 +117,61 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
 });
 </script>
+
+<template>
+  <Drawer>
+    <template #extra>
+      <span class="text-sm text-gray-400">{{ $t('tenant.subscription.drawer.grant_tenant.extra_plan')
+        }}{{ currentRow?.name }}</span>
+      <span class="text-sm text-gray-400 ml-3">{{ $t('tenant.subscription.drawer.grant_tenant.extra_tenant')
+        }}{{ selectedIds.length
+        }}{{
+          $t('tenant.subscription.drawer.grant_tenant.extra_tenant_unit')
+        }}</span>
+    </template>
+    <div class="tenant-selector">
+      <ElTable
+        ref="tableRef"
+        :data="tenantList"
+        row-key="id"
+        height="calc(100vh - 220px)"
+        @selection-change="onSelectionChange"
+      >
+        <ElTableColumn type="selection" width="50" />
+        <ElTableColumn
+          prop="name"
+          :label="$t('tenant.subscription.drawer.grant_tenant.columns.name')"
+          min-width="200"
+        />
+        <ElTableColumn
+          prop="code"
+          :label="$t('tenant.subscription.drawer.grant_tenant.columns.code')"
+          width="150"
+        />
+        <ElTableColumn
+          prop="status"
+          :label="$t('tenant.subscription.drawer.grant_tenant.columns.status')"
+          width="80"
+        >
+          <template #default="{ row }">
+            <ElTag
+              :type="row.status === 'active' ? 'success' : 'info'"
+              size="small"
+            >
+              {{
+                row.status === 'active'
+                  ? $t('tenant.subscription.drawer.grant_tenant.status_active')
+                  : $t(
+                      'tenant.subscription.drawer.grant_tenant.status_disabled',
+                    )
+              }}
+            </ElTag>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+    </div>
+  </Drawer>
+</template>
 
 <style scoped>
 .tenant-selector {
