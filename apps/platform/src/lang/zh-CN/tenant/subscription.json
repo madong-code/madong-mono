@@ -1,0 +1,72 @@
+{
+  "title": "套餐管理",
+  "columns": {
+    "code": "套餐代码",
+    "name": "套餐名称",
+    "status": "状态",
+    "max_users": "最大用户",
+    "price": "价格/月"
+  },
+  "options": {
+    "status": {
+      "active": "正常",
+      "disabled": "禁用"
+    }
+  },
+  "search": {
+    "name": "套餐名称",
+    "placeholder": {
+      "name": "请输入套餐名称"
+    }
+  },
+  "form": {
+    "id": "ID",
+    "name": "套餐名称",
+    "code": "套餐代码",
+    "status": "状态",
+    "price": "价格/月",
+    "price_year": "价格/年",
+    "max_users": "最大用户",
+    "description": "描述"
+  },
+  "action": {
+    "grant_tenant": "关联租户",
+    "grant_auth": "权限授权"
+  },
+  "drawer": {
+    "grant_tenant": {
+      "title": "关联租户",
+      "extra_plan": "套餐：",
+      "extra_tenant": "已关联：",
+      "extra_tenant_unit": "个租户",
+      "columns": {
+        "name": "租户名称",
+        "code": "编码",
+        "status": "状态"
+      },
+      "status_active": "正常",
+      "status_disabled": "禁用",
+      "success": "关联租户成功",
+      "failed": "操作失败"
+    },
+    "grant_auth": {
+      "title": "权限授权",
+      "action": "操作",
+      "expand_all": "展开全部",
+      "collapse_all": "收缩全部",
+      "expand_level_1": "展开一级",
+      "expand_level_2": "展开二级",
+      "select_all": "全选",
+      "select_none": "取消全选",
+      "select_inverse": "反选",
+      "type_labels": {
+        "dir": "目录",
+        "menu": "菜单",
+        "perm": "权限",
+        "api": "Api"
+      },
+      "success": "授权成功",
+      "failed": "操作失败"
+    }
+  }
+}

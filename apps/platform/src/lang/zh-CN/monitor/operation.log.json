@@ -1,0 +1,32 @@
+{
+  "title": "操作日志",
+  "detail_title": "操作日志详情",
+  "columns": {
+    "name": "操作名称",
+    "app": "应用",
+    "ip": "IP地址",
+    "ip_location": "操作地点",
+    "os": "操作系统",
+    "browser": "浏览器",
+    "url": "请求地址",
+    "param": "请求参数",
+    "created_date": "操作时间"
+  },
+  "search": {
+    "user_name": "用户名",
+    "ip": "IP地址",
+    "url": "请求地址",
+    "date": "操作日期"
+  },
+  "form": {
+    "app": "应用",
+    "ip": "IP地址",
+    "class_name": "类名",
+    "method": "方法",
+    "action": "动作",
+    "created_date": "操作时间",
+    "user_name": "用户名",
+    "param": "请求参数",
+    "result": "执行结果"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "title": "数据中心",
+  "action": {
+    "test_connection": "测试连接",
+    "connection_success": "连接成功",
+    "connection_fail": "连接失败",
+    "connection_unknown_error": "未知错误",
+    "test_connection_fail": "测试连接失败"
+  },
+  "search": {
+    "name": "数据源名称",
+    "placeholder_name": "请输入名称",
+    "database_name": "数据库名",
+    "placeholder_database": "请输入数据库名",
+    "driver": "驱动"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "数据源名称",
+      "host": "主机",
+      "port": "端口",
+      "database": "数据库",
+      "username": "用户名",
+      "driver": "驱动",
+      "enabled": "状态",
+      "description": "备注"
+    }
+  },
+  "form": {
+    "title": "数据源",
+    "name": "名称",
+    "host": "主机",
+    "port": "端口",
+    "database": "数据库名",
+    "username": "用户名",
+    "password": "密码",
+    "password_placeholder": "留空则不修改密码",
+    "driver": "驱动",
+    "prefix": "表前缀",
+    "charset": "字符集",
+    "charset_placeholder": "utf8mb4",
+    "description": "备注",
+    "is_existing": "使用现有数据库",
+    "is_existing_on": "使用现有库（跳过建库）",
+    "is_existing_off": "新建数据库（自动建库）",
+    "is_existing_help": "开启后系统不会自动创建数据库，也不会执行迁移建表，需确保数据库已存在且可访问",
+    "create_success": "创建成功",
+    "enabled":"状态",
+    "update_success": "更新成功"
+  },
+  "state": {
+    "enable": "启用",
+    "disable": "禁用"
+  },
+  "drivers": {
+    "mysql": "MySQL",
+    "pgsql": "PostgreSQL",
+    "sqlite": "SQLite"
+  }
+}

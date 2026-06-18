@@ -1,0 +1,72 @@
+{
+  "title": "Plan Management",
+  "columns": {
+    "code": "Plan Code",
+    "name": "Plan Name",
+    "status": "Status",
+    "max_users": "Max Users",
+    "price": "Price/Month"
+  },
+  "options": {
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    }
+  },
+  "search": {
+    "name": "Plan Name",
+    "placeholder": {
+      "name": "Enter plan name"
+    }
+  },
+  "form": {
+    "id": "ID",
+    "name": "Plan Name",
+    "code": "Plan Code",
+    "status": "Status",
+    "price": "Price/Month",
+    "price_year": "Price/Year",
+    "max_users": "Max Users",
+    "description": "Description"
+  },
+  "action": {
+    "grant_tenant": "Linked Tenants",
+    "grant_auth": "Permissions"
+  },
+  "drawer": {
+    "grant_tenant": {
+      "title": "Linked Tenants",
+      "extra_plan": "Plan: ",
+      "extra_tenant": "Linked: ",
+      "extra_tenant_unit": " tenants",
+      "columns": {
+        "name": "Tenant Name",
+        "code": "Code",
+        "status": "Status"
+      },
+      "status_active": "Active",
+      "status_disabled": "Disabled",
+      "success": "Tenants linked successfully",
+      "failed": "Operation failed"
+    },
+    "grant_auth": {
+      "title": "Permission Authorization",
+      "action": "Actions",
+      "expand_all": "Expand All",
+      "collapse_all": "Collapse All",
+      "expand_level_1": "Level 1",
+      "expand_level_2": "Level 2",
+      "select_all": "Select All",
+      "select_none": "Deselect All",
+      "select_inverse": "Invert Selection",
+      "type_labels": {
+        "dir": "Dir",
+        "menu": "Menu",
+        "perm": "Perm",
+        "api": "Api"
+      },
+      "success": "Authorization successful",
+      "failed": "Operation failed"
+    }
+  }
+}

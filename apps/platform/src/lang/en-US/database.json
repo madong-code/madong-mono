@@ -1,0 +1,61 @@
+{
+  "title": "Database Center",
+  "action": {
+    "test_connection": "Test Connection",
+    "connection_success": "Connection successful",
+    "connection_fail": "Connection failed",
+    "connection_unknown_error": "Unknown error",
+    "test_connection_fail": "Test connection failed"
+  },
+  "search": {
+    "name": "Source Name",
+    "placeholder_name": "Please enter name",
+    "database_name": "Database Name",
+    "placeholder_database": "Please enter database name",
+    "driver": "Driver"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "name": "Source Name",
+      "host": "Host",
+      "port": "Port",
+      "database": "Database",
+      "username": "Username",
+      "driver": "Driver",
+      "enabled": "Status",
+      "description": "Description"
+    }
+  },
+  "form": {
+    "title": "Data Source",
+    "name": "Name",
+    "host": "Host",
+    "port": "Port",
+    "database": "Database",
+    "username": "Username",
+    "password": "Password",
+    "password_placeholder": "Leave empty to keep current password",
+    "driver": "Driver",
+    "prefix": "Table Prefix",
+    "charset": "Charset",
+    "charset_placeholder": "utf8mb4",
+    "description": "Description",
+    "is_existing": "Use Existing Database",
+    "is_existing_on": "Use existing (skip DB creation)",
+    "is_existing_off": "Create new database",
+    "is_existing_help": "When enabled, the system will not create the database or run migrations. Make sure the database already exists and is accessible",
+    "create_success": "Created successfully",
+    "enabled":"Status",
+    "update_success": "Updated successfully"
+  },
+  "state": {
+    "enable": "Enable",
+    "disable": "Disable"
+  },
+  "drivers": {
+    "mysql": "MySQL",
+    "pgsql": "PostgreSQL",
+    "sqlite": "SQLite"
+  }
+}

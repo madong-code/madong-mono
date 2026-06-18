@@ -1,0 +1,32 @@
+{
+  "title": "Operation Log",
+  "detail_title": "Operation Log Details",
+  "columns": {
+    "name": "Action",
+    "app": "App",
+    "ip": "IP Address",
+    "ip_location": "Location",
+    "os": "OS",
+    "browser": "Browser",
+    "url": "URL",
+    "param": "Parameters",
+    "created_date": "Time"
+  },
+  "search": {
+    "user_name": "Username",
+    "ip": "IP Address",
+    "url": "URL",
+    "date": "Date"
+  },
+  "form": {
+    "app": "Application",
+    "ip": "IP Address",
+    "class_name": "Class",
+    "method": "Method",
+    "action": "Action",
+    "created_date": "Time",
+    "user_name": "Username",
+    "param": "Parameters",
+    "result": "Result"
+  }
+}

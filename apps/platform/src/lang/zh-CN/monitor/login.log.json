@@ -1,0 +1,31 @@
+{
+  "title": "登录日志",
+  "detail_title": "登录日志详情",
+  "columns": {
+    "app": "应用",
+    "user_name": "用户名",
+    "real_name": "昵称",
+    "status": "状态",
+    "os": "操作系统",
+    "browser": "浏览器",
+    "ip": "IP地址",
+    "ip_location": "登录地点",
+    "login_time": "登录时间"
+  },
+  "search": {
+    "user_name": "用户名",
+    "ip": "IP地址",
+    "status": "状态",
+    "login_date": "登录日期"
+  },
+  "form": {
+    "user_name": "用户名",
+    "status": "状态",
+    "os": "操作系统",
+    "browser": "浏览器",
+    "ip": "IP地址",
+    "ip_location": "登录地点",
+    "login_time": "登录时间",
+    "remark": "备注"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "title": "菜单模板",
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "type": "菜单类型",
+      "path": "路由地址",
+      "component": "组件路径",
+      "icon": "图标",
+      "sort": "排序",
+      "is_show": "是否显示",
+      "enabled": "是否启用"
+    },
+    "search": {
+      "app": "应用类型",
+      "type": "菜单类型",
+      "enabled": "是否启用",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "path": "路由地址",
+      "app_options": {
+        "admin": "Admin端",
+        "platform": "平台"
+      },
+      "placeholder": {
+        "app": "请选择应用类型",
+        "type": "请选择菜单类型",
+        "enabled": "请选择启用状态",
+        "title": "请输入菜单名称",
+        "code": "请输入权限标识",
+        "path": "请输入路由地址"
+      }
+    }
+  },
+  "api": {
+    "title": "选择接口",
+    "search": "搜索",
+    "refresh_cache": "刷新缓存",
+    "tips": {
+      "1": "1. 左侧选择路由分类，右侧显示对应分类的路由列表。",
+      "2": "2. 鼠标单击卡片选中/取消路由，可同时选择多个路由。",
+      "3": "3. 点击 确认 按钮保存选择。"
+    },
+    "route_info": {
+      "name": "接口名称",
+      "method": "请求方法",
+      "path": "接口地址",
+      "code": "权限标识"
+    }
+  },
+  "form": {
+    "modal": {
+      "type": "菜单类型",
+      "pid": "上级菜单",
+      "title": "菜单名称",
+      "code": "权限标识",
+      "path": "路由/接口地址",
+      "component": "组件路径",
+      "open_type": "打开方式",
+      "icon": "图标",
+      "link_url": "外链地址",
+      "sort": "排序",
+      "enabled": "启用",
+      "is_show": "显示",
+      "is_sync": "同步",
+      "is_cache": "缓存",
+      "is_affix": "固定"
+    },
+    "placeholder": {
+      "type": "请选择菜单类型",
+      "pid": "请选择上级菜单",
+      "title": "请输入菜单名称",
+      "code": "请输入权限标识",
+      "path": "请输入路由地址",
+      "component": "请输入组件路径",
+      "open_type": "请选择打开方式",
+      "icon": "请选择图标",
+      "link_url": "请输入外链地址",
+      "sort": "请输入排序",
+      "enabled": "请选择状态",
+      "is_show": "请选择",
+      "is_sync": "请选择",
+      "is_cache": "请选择",
+      "is_affix": "请选择"
+    },
+    "help": {
+      "path": "路由地址必须以 / 开头，接口地址无需填写",
+      "link_url": "内外链地址仅在打开方式为外链或内嵌时生效"
+    }
+  }
+}

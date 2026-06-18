@@ -1,0 +1,98 @@
+{
+  "title": "Tenant Management",
+  "columns": {
+    "id": "ID",
+    "name": "Tenant Name",
+    "code": "Tenant Code",
+    "domain": "Domain",
+    "database_mode": "Isolation Mode",
+    "db_setting_id": "Data Source",
+    "status": "Status",
+    "expire_time": "Expires",
+    "contact_name": "Contact",
+    "contact_phone": "Phone",
+    "contact_email": "Email",
+    "sort": "Sort"
+  },
+  "options": {
+    "database_mode": {
+      "field": "Field Isolation",
+      "database": "Database Isolation"
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended",
+      "cancelled": "Cancelled"
+    },
+    "effective_mode": {
+      "immediate": "Permanent",
+      "specified": "Specified"
+    }
+  },
+  "search": {
+    "name": "Tenant Name",
+    "code": "Tenant Code",
+    "status": "Status",
+    "placeholder": {
+      "name": "Enter tenant name",
+      "code": "Enter code"
+    }
+  },
+  "form": {
+    "divider_base_info": "Basic Info",
+    "divider_admin_info": "Admin Info",
+    "divider_data_center": "Data Center",
+    "name": "Tenant Name",
+    "database_mode": "Isolation Mode",
+    "help_database_mode": "Field Isolation: Data is distinguished by TENANT_ID, sharing the database; Database Isolation: Each tenant requires an independent data source.",
+    "code": "Tenant Code",
+    "domain": "Domain",
+    "contact_name": "Contact",
+    "contact_phone": "Phone",
+    "contact_email": "Email",
+    "contact_address": "Address",
+    "system_name": "System Name",
+    "effective_mode": "Effective Mode",
+    "start_time": "Effective Time",
+    "expire_time": "Expires",
+    "status": "Status",
+    "sort": "Sort",
+    "account": "Account",
+    "password": "Password",
+    "db_setting_id": "Data Source",
+    "help_db_setting": "Please configure the data source in \"Data Source Management\" first",
+    "placeholder_db_setting": "Please select data source"
+  },
+  "action": {
+    "grant_plan": "Grant Plan",
+    "sync_data": "Sync Data",
+    "tenant_member": "Members"
+  },
+  "message": {
+    "sync_confirm": "Are you sure to sync data for tenant \"{0}\"?\nSyncing will re-apply the plan's permissions and configuration.",
+    "sync_confirm_title": "Sync Data Confirmation",
+    "sync_confirm_btn": "Sync",
+    "sync_cancel_btn": "Cancel",
+    "sync_success": "Data synced successfully",
+    "sync_failed": "Sync failed"
+  },
+  "drawer": {
+    "grant_plan": {
+      "title": "Grant Plan",
+      "extra": "Tenant: ",
+      "columns": {
+        "name": "Plan Name",
+        "code": "Code",
+        "status": "Status"
+      },
+      "status_active": "Active",
+      "status_disabled": "Disabled",
+      "success": "Plan granted successfully",
+      "failed": "Operation failed"
+    },
+    "tenant_member": {
+      "title": "Tenant Members",
+      "extra": "Tenant: "
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "title": "成员管理",
+  "columns": {
+    "user_name": "账号",
+    "real_name": "用户昵称",
+    "mobile_phone": "手机号",
+    "enabled": "状态",
+    "is_locked": "锁定状态",
+    "created_date": "创建时间"
+  },
+  "search": {
+    "user_name": "用户名",
+    "real_name": "姓名",
+    "mobile_phone": "手机号",
+    "enabled": "状态",
+    "placeholder": {
+      "user_name": "请输入用户名",
+      "real_name": "请输入姓名",
+      "mobile_phone": "请输入手机号"
+    }
+  },
+  "options": {
+    "enabled": {
+      "enable": "启用",
+      "disable": "禁用"
+    }
+  },
+  "form": {
+    "user_name": "用户名",
+    "placeholder_user_name": "请输入用户名",
+    "password": "密码",
+    "placeholder_password_edit": "留空则不修改密码",
+    "placeholder_password_add": "请输入密码",
+    "real_name": "姓名",
+    "placeholder_real_name": "请输入姓名",
+    "mobile_phone": "手机号",
+    "placeholder_mobile_phone": "请输入手机号",
+    "email": "邮箱",
+    "placeholder_email": "请输入邮箱",
+    "type": "类型",
+    "type_user": "普通用户",
+    "type_admin": "管理员",
+    "sex": "性别",
+    "enabled": "状态",
+    "remark": "备注",
+    "placeholder_remark": "请输入备注"
+  },
+  "action": {
+    "lock": "锁定",
+    "unlock": "解锁",
+    "reset_password": "重置密码",
+    "delete": "删除"
+  },
+  "message": {
+    "status_change_confirm": "确定要{0}用户「{1}」吗？",
+    "status_change_title": "{0}确认",
+    "status_change_success": "已{0}",
+    "status_change_failed": "操作失败",
+    "lock_confirm": "确定要锁定用户「{0}」吗？",
+    "lock_title": "锁定确认",
+    "lock_success": "已锁定",
+    "lock_failed": "锁定失败",
+    "unlock_confirm": "确定要解锁用户「{0}」吗？",
+    "unlock_title": "解锁确认",
+    "unlock_success": "已解锁",
+    "unlock_failed": "解锁失败",
+    "reset_pwd_confirm": "确定要重置用户「{0}」的密码吗？密码将重置为 123456",
+    "reset_pwd_title": "重置密码确认",
+    "reset_pwd_success": "密码已重置",
+    "reset_pwd_failed": "重置失败"
+  }
+}

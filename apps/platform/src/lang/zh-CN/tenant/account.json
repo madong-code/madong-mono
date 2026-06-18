@@ -1,0 +1,98 @@
+{
+  "title": "租户管理",
+  "columns": {
+    "id": "ID",
+    "name": "租户名称",
+    "code": "租户编码",
+    "domain": "绑定域名",
+    "database_mode": "隔离模式",
+    "db_setting_id": "关联数据源",
+    "status": "状态",
+    "expire_time": "到期时间",
+    "contact_name": "联系人",
+    "contact_phone": "电话",
+    "contact_email": "邮箱",
+    "sort": "排序"
+  },
+  "options": {
+    "database_mode": {
+      "field": "字段隔离",
+      "database": "库隔离"
+    },
+    "status": {
+      "active": "启用",
+      "suspended": "暂停",
+      "cancelled": "注销"
+    },
+    "effective_mode": {
+      "immediate": "永久生效",
+      "specified": "指定时间"
+    }
+  },
+  "search": {
+    "name": "租户名称",
+    "code": "租户编码",
+    "status": "状态",
+    "placeholder": {
+      "name": "请输入租户名称",
+      "code": "请输入编码"
+    }
+  },
+  "form": {
+    "divider_base_info": "基本信息",
+    "divider_admin_info": "管理员信息",
+    "divider_data_center": "数据中心",
+    "name": "租户名称",
+    "database_mode": "隔离模式",
+    "help_database_mode": "字段隔离：数据以 TENANT_ID 区分，共享数据库；库隔离：租户需关联独立数据源，系统将自动创建授权套餐所需的表结构。",
+    "code": "租户编码",
+    "domain": "绑定域名",
+    "contact_name": "联系人",
+    "contact_phone": "联系电话",
+    "contact_email": "联系邮箱",
+    "contact_address": "联系地址",
+    "system_name": "系统名称",
+    "effective_mode": "生效方式",
+    "start_time": "生效时间",
+    "expire_time": "到期时间",
+    "status": "状态",
+    "sort": "排序",
+    "account": "账号",
+    "password": "密码",
+    "db_setting_id": "关联数据源",
+    "help_db_setting": "请先在\"数据源管理\"中配置数据源",
+    "placeholder_db_setting": "请选择数据源"
+  },
+  "action": {
+    "grant_plan": "授权套餐",
+    "sync_data": "同步数据",
+    "tenant_member": "租户成员"
+  },
+  "message": {
+    "sync_confirm": "确定要同步租户「{0}」的数据吗？\n同步将重新应用关联套餐的权限和配置。",
+    "sync_confirm_title": "同步数据确认",
+    "sync_confirm_btn": "确定同步",
+    "sync_cancel_btn": "取消",
+    "sync_success": "数据同步成功",
+    "sync_failed": "同步失败"
+  },
+  "drawer": {
+    "grant_plan": {
+      "title": "授权套餐",
+      "extra": "租户：",
+      "columns": {
+        "name": "套餐名称",
+        "code": "编码",
+        "status": "状态"
+      },
+      "status_active": "正常",
+      "status_disabled": "禁用",
+      "success": "授权套餐成功",
+      "failed": "操作失败"
+    },
+    "tenant_member": {
+      "title": "租户成员",
+      "extra": "租户："
+    }
+  }
+}

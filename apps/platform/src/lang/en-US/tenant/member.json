@@ -1,0 +1,72 @@
+{
+  "title": "Member Management",
+  "columns": {
+    "user_name": "Account",
+    "real_name": "Nickname",
+    "mobile_phone": "Mobile",
+    "enabled": "Status",
+    "is_locked": "Lock Status",
+    "created_date": "Created"
+  },
+  "search": {
+    "user_name": "Username",
+    "real_name": "Name",
+    "mobile_phone": "Mobile",
+    "enabled": "Status",
+    "placeholder": {
+      "user_name": "Enter username",
+      "real_name": "Enter name",
+      "mobile_phone": "Enter mobile"
+    }
+  },
+  "options": {
+    "enabled": {
+      "enable": "Enable",
+      "disable": "Disable"
+    }
+  },
+  "form": {
+    "user_name": "Username",
+    "placeholder_user_name": "Enter username",
+    "password": "Password",
+    "placeholder_password_edit": "Leave blank to keep current password",
+    "placeholder_password_add": "Enter password",
+    "real_name": "Name",
+    "placeholder_real_name": "Enter name",
+    "mobile_phone": "Mobile",
+    "placeholder_mobile_phone": "Enter mobile",
+    "email": "Email",
+    "placeholder_email": "Enter email",
+    "type": "Type",
+    "type_user": "User",
+    "type_admin": "Admin",
+    "sex": "Gender",
+    "enabled": "Status",
+    "remark": "Remark",
+    "placeholder_remark": "Enter remark"
+  },
+  "action": {
+    "lock": "Lock",
+    "unlock": "Unlock",
+    "reset_password": "Reset Password",
+    "delete": "Delete"
+  },
+  "message": {
+    "status_change_confirm": "Are you sure to {0} user \"{1}\"?",
+    "status_change_title": "{0} Confirmation",
+    "status_change_success": "{0} successfully",
+    "status_change_failed": "Operation failed",
+    "lock_confirm": "Are you sure to lock user \"{0}\"?",
+    "lock_title": "Lock Confirmation",
+    "lock_success": "Locked successfully",
+    "lock_failed": "Lock failed",
+    "unlock_confirm": "Are you sure to unlock user \"{0}\"?",
+    "unlock_title": "Unlock Confirmation",
+    "unlock_success": "Unlocked successfully",
+    "unlock_failed": "Unlock failed",
+    "reset_pwd_confirm": "Are you sure to reset password for user \"{0}\"? Password will be reset to 123456",
+    "reset_pwd_title": "Reset Password Confirmation",
+    "reset_pwd_success": "Password reset successfully",
+    "reset_pwd_failed": "Reset failed"
+  }
+}

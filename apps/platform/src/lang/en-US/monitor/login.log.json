@@ -1,0 +1,31 @@
+{
+  "title": "Login Log",
+  "detail_title": "Login Log Details",
+  "columns": {
+    "app": "App",
+    "user_name": "User Name",
+    "real_name": "Nick Name",
+    "status": "Status",
+    "os": "OS",
+    "browser": "Browser",
+    "ip": "IP Address",
+    "ip_location": "Location",
+    "login_time": "Login Time"
+  },
+  "search": {
+    "user_name": "Username",
+    "ip": "IP Address",
+    "status": "Status",
+    "login_date": "Login Date"
+  },
+  "form": {
+    "user_name": "Username",
+    "status": "Status",
+    "os": "OS",
+    "browser": "Browser",
+    "ip": "IP Address",
+    "ip_location": "Location",
+    "login_time": "Login Time",
+    "remark": "Remark"
+  }
+}
