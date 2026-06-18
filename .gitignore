@@ -40,7 +40,8 @@ vite.config.mjs.*
 vite.config.js.*
 vite.config.ts.*
 
-# Editor directories and files
+# Application plugin directories (generated at runtime)
+apps/*/src/plugin/
 .idea
 # .vscode
 *.suo
