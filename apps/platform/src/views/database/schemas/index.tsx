@@ -1,6 +1,7 @@
 import type { CrudSchema } from '#/components/crud/components/types';
 
 import { DbSettingService } from '#/api/database';
+import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
@@ -8,8 +9,9 @@ export const useCrudSchema = (): CrudSchema => {
     crudApi: {
       list: DbSettingService.list,
       add: DbSettingService.create,
-      edit: DbSettingService.update,
+      edit: (data) => DbSettingService.update(data.id, data),
       remove: DbSettingService.delete,
+      batchRemove: DbSettingService.remove,
       view: DbSettingService.get,
     },
 
@@ -18,41 +20,93 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: true,
     hasRemove: true,
 
+    permissions: {
+      add: 'platform:database:setting:create',
+      edit: 'platform:database:setting:update',
+      remove: 'platform:database:setting:delete',
+      view: 'platform:database:setting:view',
+    },
+
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'id', title: 'ID', minWidth: 60, visible: false },
-      { field: 'name', title: '数据源名称', minWidth: 130 },
-      { field: 'host', title: '主机', minWidth: 120 },
-      { field: 'port', title: '端口', minWidth: 70 },
-      { field: 'database', title: '数据库', minWidth: 120 },
-      { field: 'username', title: '用户名', minWidth: 100 },
-      { field: 'driver', title: '驱动', minWidth: 80 },
+      {
+        field: 'name',
+        title: $t('database.table.columns.name'),
+        minWidth: 130,
+        align: 'left',
+      },
+      {
+        field: 'host',
+        title: $t('database.table.columns.host'),
+        minWidth: 120,
+        align: 'left',
+      },
+      { field: 'port', title: $t('database.table.columns.port'), minWidth: 70 },
+      {
+        field: 'database',
+        title: $t('database.table.columns.database'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'username',
+        title: $t('database.table.columns.username'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'driver',
+        title: $t('database.table.columns.driver'),
+        minWidth: 80,
+        align: 'left',
+      },
       {
         field: 'enabled',
-        title: '状态',
+        title: $t('database.table.columns.enabled'),
         minWidth: 80,
-        componentProps: {
-          options: [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }],
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
         },
       },
-      { field: 'description', title: '备注', minWidth: 150 },
+      {
+        field: 'description',
+        title: $t('database.table.columns.description'),
+        minWidth: 150,
+        align: 'left',
+      },
     ],
 
     searchForm: {
       enabled: true,
       collapsed: true,
       schema: [
-        { component: 'Input', fieldName: 'LIKE_name', label: '数据源名称', componentProps: { placeholder: '请输入名称' } },
-        { component: 'Input', fieldName: 'LIKE_database', label: '数据库名', componentProps: { placeholder: '请输入数据库名' } },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_name',
+          label: $t('database.search.name'),
+          componentProps: {
+            placeholder: $t('database.search.placeholder_name'),
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_database',
+          label: $t('database.search.database_name'),
+          componentProps: {
+            placeholder: $t('database.search.placeholder_database'),
+          },
+        },
         {
           component: 'Select',
           fieldName: 'EQ_driver',
-          label: '驱动',
+          label: $t('database.search.driver'),
           componentProps: {
             options: [
-              { label: 'MySQL', value: 'mysql' },
-              { label: 'PostgreSQL', value: 'pgsql' },
-              { label: 'SQLite', value: 'sqlite' },
+              { label: $t('database.drivers.mysql'), value: 'mysql' },
+              { label: $t('database.drivers.pgsql'), value: 'pgsql' },
+              { label: $t('database.drivers.sqlite'), value: 'sqlite' },
             ],
             clearable: true,
           },
@@ -63,7 +117,7 @@ export const useCrudSchema = (): CrudSchema => {
     formDialog: {
       wrapperClass: 'grid-cols-1',
       dialogType: 'drawer',
-      commonConfig: { labelWidth: 80 },
+      commonConfig: { labelWidth: 120 },
       schema: [
         {
           fieldName: 'id',
@@ -78,65 +132,111 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           fieldName: 'name',
-          label: '名称',
+          label: $t('database.form.name'),
           component: 'Input',
           rules: 'required',
-          formItemClass: 'col-span-1'
+          formItemClass: 'col-span-1',
         },
         {
           fieldName: 'host',
-          label: '主机',
+          label: $t('database.form.host'),
           component: 'Input',
           rules: 'required',
-          formItemClass: 'col-span-1'
+          formItemClass: 'col-span-1',
         },
         {
           fieldName: 'port',
-          label: '端口',
+          label: $t('database.form.port'),
           component: 'InputNumber',
           defaultValue: 3306,
-          componentProps: { min: 1, max: 65535 },
-          formItemClass: 'col-span-1'
+          componentProps: { min: 1, max: 65_535 },
+          formItemClass: 'col-span-1',
         },
         {
           fieldName: 'database',
-          label: '数据库名',
+          label: $t('database.form.database'),
           component: 'Input',
           rules: 'required',
-          formItemClass: 'col-span-1'
+          formItemClass: 'col-span-1',
         },
         {
           fieldName: 'username',
-          label: '用户名',
+          label: $t('database.form.username'),
           component: 'Input',
           rules: 'required',
-          formItemClass: 'col-span-1'
+          formItemClass: 'col-span-1',
         },
         {
           fieldName: 'password',
-          label: '密码',
+          label: $t('database.form.password'),
           component: 'Password',
-          componentProps: { placeholder: '留空则不修改密码' },
+          componentProps: {
+            placeholder: $t('database.form.password_placeholder'),
+          },
           formItemClass: 'col-span-1',
         },
         {
           fieldName: 'driver',
-          label: '驱动',
+          label: $t('database.form.driver'),
           component: 'Select',
           rules: 'required',
           defaultValue: 'mysql',
           componentProps: {
             options: [
-              { label: 'MySQL', value: 'mysql' },
-              { label: 'PostgreSQL', value: 'pgsql' },
-              { label: 'SQLite', value: 'sqlite' },
+              { label: $t('database.drivers.mysql'), value: 'mysql' },
+              { label: $t('database.drivers.pgsql'), value: 'pgsql' },
+              { label: $t('database.drivers.sqlite'), value: 'sqlite' },
             ],
           },
           formItemClass: 'col-span-1',
         },
-        { fieldName: 'prefix', label: '表前缀', component: 'Input', formItemClass: 'col-span-1' },
-        { fieldName: 'charset', label: '字符集', component: 'Input', componentProps: { placeholder: 'utf8mb4' }, formItemClass: 'col-span-1' },
-        { fieldName: 'description', label: '备注', component: 'Input', formItemClass: 'col-span-1' },
+        {
+          fieldName: 'prefix',
+          label: $t('database.form.prefix'),
+          component: 'Input',
+          formItemClass: 'col-span-1',
+        },
+        {
+          fieldName: 'charset',
+          label: $t('database.form.charset'),
+          component: 'Input',
+          componentProps: {
+            placeholder: $t('database.form.charset_placeholder'),
+          },
+          formItemClass: 'col-span-1',
+        },
+        {
+          fieldName: 'is_existing',
+          label: $t('database.form.is_existing'),
+          help: $t('database.form.is_existing_help'),
+          component: 'ApiDict',
+          formItemClass: 'col-span-1',
+          defaultValue: 0,
+          componentProps: {
+            code: DictEnum.SYS_YES_NO,
+            renderType: 'RadioGroup',
+            isBtn: true,
+          },
+        },
+        {
+          fieldName: 'enabled',
+          label: $t('database.form.enabled'),
+          component: 'ApiDict',
+          formItemClass: 'col-span-1',
+          defaultValue: 1,
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            renderType: 'RadioGroup',
+            isBtn: true,
+          },
+        },
+        {
+          fieldName: 'description',
+          label: $t('database.form.description'),
+          component: 'Textarea',
+          formItemClass: 'col-span-1',
+          componentProps: { autoSize: true, rows: 4 },
+        },
       ],
     },
   };
