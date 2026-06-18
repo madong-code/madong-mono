@@ -1,23 +1,8 @@
-<template>
-  <ElUpload
-    :http-request="customRequest"
-    :show-file-list="false"
-    class="m-upload"
-    :class="`is-${shape}`"
-    list-type="picture-card"
-    v-bind="$attrs"
-  >
-    <div v-if="displayUrl" class="m-avatar-wrap" :class="`is-${shape}`">
-      <span class="m-avatar-icon-delete" @click="handleRemove">✕</span>
-      <img :src="displayUrl" width="100%" />
-    </div>
-    <span v-else>+</span>
-  </ElUpload>
-</template>
-
 <script setup lang="ts">
-import { computed } from 'vue';
-import { ElUpload, ElMessage } from 'element-plus';
+import { useVModel } from '@vueuse/core';
+import { ElMessage, ElUpload } from 'element-plus';
+
+import { uploadAvatarFile } from '#/api/core/profile';
 
 const props = withDefaults(
   defineProps<{
@@ -31,19 +16,23 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
+  success: [url: string];
   'update:modelValue': [modelValue: string];
 }>();
 
-const displayUrl = computed(() => props.modelValue);
+const mValue = useVModel(props, 'modelValue', emit, {
+  defaultValue: props.modelValue,
+  passive: true,
+});
 
 const customRequest = async (e: any) => {
   try {
-    const { requestClient } = await import('#/api/request');
-    const formData = new FormData();
-    formData.append('file', e.file);
-    const data = await requestClient.post('/file/upload', formData);
-    const url = data?.base_path || data?.url || '';
-    emit('update:modelValue', url);
+    const data = await uploadAvatarFile(e.file);
+    const avatar = data?.avatar || '';
+    if (avatar) {
+      mValue.value = avatar;
+      emit('success', avatar);
+    }
   } catch {
     ElMessage.error('头像上传失败');
   }
@@ -51,9 +40,26 @@ const customRequest = async (e: any) => {
 
 const handleRemove = (e: Event) => {
   e.stopPropagation();
-  emit('update:modelValue', '');
+  mValue.value = '';
 };
 </script>
+
+<template>
+  <ElUpload
+    :http-request="customRequest"
+    :show-file-list="false"
+    class="m-upload"
+    :class="`is-${shape}`"
+    list-type="picture-card"
+    v-bind="$attrs"
+  >
+    <div v-if="mValue" class="m-avatar-wrap" :class="`is-${shape}`">
+      <span class="m-avatar-icon-delete" @click="handleRemove">✕</span>
+      <img :src="mValue" width="100%" />
+    </div>
+    <span v-else>+</span>
+  </ElUpload>
+</template>
 
 <style scoped>
 .m-avatar-wrap {

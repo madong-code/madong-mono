@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import type { FormActionType, FormDialogOptions } from './types';
 
-import { useVbenForm } from '#/adapter/form';
-import { useVbenModal, useVbenDrawer } from '@vben/common-ui';
 import { computed, nextTick, ref } from 'vue';
+
+import { useVbenDrawer, useVbenModal } from '@vben/common-ui';
+
 import { ElMessage } from 'element-plus';
+
+import { useVbenForm } from '#/adapter/form';
+import { $t } from '#/locales';
+
 import { DetailViewer } from '../viewer';
 
 const props = defineProps<{
@@ -103,19 +108,24 @@ const [BasicForm, formApi] = useVbenForm(formOptions.value);
 
 const dialogTitle = computed(() => {
   const title = props.options.title || '';
-  if (viewType.value === 'add') return `新增${title}`;
-  if (viewType.value === 'edit') return `编辑${title}`;
-  return `${title}详情`;
+  if (viewType.value === 'add') return $t('components.dialog.add') + title;
+  if (viewType.value === 'edit') return $t('components.dialog.edit') + title;
+  return title + $t('components.dialog.view');
 });
 
 const dialogWidth = computed(() => props.options.width || 'w-[50%]');
+const dialogClass = computed(() => {
+  const cls = [dialogWidth.value];
+  if (props.options.class) cls.push(props.options.class);
+  return cls.join(' ');
+});
 const rowKey = computed(() => props.options.rowKey || 'id');
 const isView = computed(() => viewType.value === 'view');
 
 // DetailViewer 的 layout：从 FormDialogOptions 的 layout 映射
 const detailLayout = computed(() => {
   return (
-    (props.options.layout as 'horizontal' | 'vertical' | 'inline') ||
+    (props.options.layout as 'horizontal' | 'inline' | 'vertical') ||
     'horizontal'
   );
 });
@@ -129,6 +139,7 @@ const detailWrapperClass = computed(() => {
 const [Modal, modalApi] = useVbenModal({
   draggable: props.options.draggable !== false,
   fullscreenButton: props.options.fullscreenButton !== false,
+  zIndex: props.options.zIndex,
   confirmText: props.options.confirmText,
   cancelText: props.options.cancelText,
   async onConfirm() {
@@ -191,7 +202,7 @@ function handleOpen() {
     });
   }
 
-  props.options.onOpen?.(viewType.value, currentRow.value, formApi);
+  props.options.onOpen?.(viewType.value, currentRow.value);
 }
 
 async function handleSubmit() {
@@ -226,7 +237,11 @@ async function handleSubmit() {
     const submitApi = viewType.value === 'edit' ? api?.edit : api?.add;
     if (submitApi) {
       await submitApi(values);
-      ElMessage.success(viewType.value === 'edit' ? '编辑成功' : '新增成功');
+      ElMessage.success(
+        viewType.value === 'edit'
+          ? $t('components.dialog.success.edit')
+          : $t('components.dialog.success.add'),
+      );
     }
 
     currentApi.value.close();
@@ -287,7 +302,7 @@ defineExpose({
   <Modal
     v-if="options.dialogType !== 'drawer'"
     :title="dialogTitle"
-    :class="dialogWidth"
+    :class="dialogClass"
   >
     <!-- 查看模式：使用 DetailViewer 详情组件 -->
     <DetailViewer
@@ -302,7 +317,7 @@ defineExpose({
     <!-- 新增/编辑模式：使用 Form 表单 -->
     <BasicForm v-else class="p-4" :show-default-actions="false" />
   </Modal>
-  <Drawer v-else :title="dialogTitle" :class="dialogWidth">
+  <Drawer v-else :title="dialogTitle" :class="dialogClass">
     <!-- 查看模式：使用 DetailViewer 详情组件 -->
     <DetailViewer
       v-if="isView"

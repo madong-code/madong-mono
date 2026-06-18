@@ -4,7 +4,7 @@
 
 import type { VbenFormProps, VbenFormSchema } from '#/adapter/form';
 
-export type FormDialogType = 'modal' | 'drawer';
+export type FormDialogType = 'drawer' | 'modal';
 export type FormActionType = 'add' | 'edit' | 'view';
 
 export interface FormDialogApiConfig {
@@ -23,7 +23,7 @@ export interface FormDialogCommonConfig {
   wrapperClass?: string;
   hideLabel?: boolean;
   hideRequiredMark?: boolean;
-  formItemClass?: string | (() => string);
+  formItemClass?: (() => string) | string;
   componentProps?: Record<string, any>;
 }
 
@@ -31,7 +31,7 @@ export interface FormDialogOptions extends Omit<
   Partial<VbenFormProps>,
   'schema'
 > {
-  schema?: VbenFormSchema[] | (() => VbenFormSchema[]);
+  schema?: (() => VbenFormSchema[]) | VbenFormSchema[];
   commonConfig?: FormDialogCommonConfig;
   api?: FormDialogApiConfig;
   dialogType?: FormDialogType;
@@ -40,18 +40,22 @@ export interface FormDialogOptions extends Omit<
   rowKey?: string;
   draggable?: boolean;
   fullscreenButton?: boolean;
+  /** 弹窗组件的 CSS class，例如 'top-0' 让弹窗靠顶部显示 */
+  class?: string;
+  /** 弹窗层级，默认 undefined（使用组件默认值） */
+  zIndex?: number;
   onSuccess?: (
     type: FormActionType,
     values: Record<string, any>,
-  ) => void | Promise<void>;
+  ) => Promise<void> | void;
   beforeSubmit?: (
     values: Record<string, any>,
     type: FormActionType,
-  ) => Record<string, any> | false | Promise<Record<string, any> | false>;
+  ) => false | Promise<false | Record<string, any>> | Record<string, any>;
   onOpen?: (
     type: FormActionType,
     data: Record<string, any>,
-  ) => void | Promise<void>;
+  ) => Promise<void> | void;
   confirmText?: string;
   cancelText?: string;
   transformFormValues?: (

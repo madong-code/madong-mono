@@ -1,4 +1,161 @@
 <!-- 图片选择弹窗 -->
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+
+import { ElMessage } from 'element-plus';
+
+import { requestClient } from '#/api/request';
+import { Icon } from '#/components/icon';
+import { $t } from '#/locales';
+import { buildStaticUrl } from '#/utils/url';
+
+interface Props {
+  modelValue?: boolean;
+  multiple?: boolean;
+  defaultSelected?: null | string | string[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: false,
+  multiple: false,
+  defaultSelected: null,
+});
+
+const emit = defineEmits<{
+  confirm: [images: string | string[]];
+  'update:modelValue': [modelValue: boolean];
+}>();
+
+const loading = ref(false);
+const searchKeyword = ref('');
+const page = ref(1);
+const pageSize = ref(12);
+const total = ref(0);
+const imageList = ref<any[]>([]);
+const selectedImages = ref<any[]>([]);
+
+const dialogVisible = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val),
+});
+
+watch(
+  () => props.defaultSelected,
+  (val) => {
+    if (!val) {
+      selectedImages.value = [];
+    } else if (props.multiple) {
+      selectedImages.value = Array.isArray(val) ? val : [val];
+    } else {
+      selectedImages.value = val ? [val] : [];
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) loadImages();
+  },
+);
+
+const loadImages = async () => {
+  loading.value = true;
+  try {
+    const params: any = {
+      page: page.value,
+      limit: pageSize.value,
+      LIKE_filename: searchKeyword.value,
+    };
+    const res = await requestClient.get('/file/list', { params });
+    imageList.value = res?.items || res?.list || [];
+    total.value = res?.total || 0;
+  } catch {
+    ElMessage.error($t('components.form.image_picker.load_error'));
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleSearch = () => {
+  page.value = 1;
+  loadImages();
+};
+
+const handleSizeChange = (size: number) => {
+  pageSize.value = size;
+  loadImages();
+};
+
+const handleCurrentChange = (current: number) => {
+  page.value = current;
+  loadImages();
+};
+
+const getImageUrl = (image: any) => {
+  if (!image.base_path) return '';
+  return buildStaticUrl(image.base_path);
+};
+
+const formatFileSize = (bytes?: number) => {
+  if (!bytes) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${Math.round((bytes / k ** i) * 100) / 100} ${sizes[i]}`;
+};
+
+const isSelected = (image: any) => {
+  return selectedImages.value.some(
+    (item) => item.id === image.id || item.base_path === image.base_path,
+  );
+};
+
+const toggleSelect = (image: any) => {
+  if (props.multiple) {
+    const index = selectedImages.value.findIndex(
+      (item) => item.id === image.id,
+    );
+    if (index === -1) {
+      selectedImages.value.push(image);
+    } else {
+      selectedImages.value.splice(index, 1);
+    }
+  } else {
+    selectedImages.value = [image];
+  }
+};
+
+const customUpload = async (e: any) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', e.file);
+    await requestClient.post('/file/upload', formData);
+    ElMessage.success($t('components.form.image_picker.upload_success'));
+    loadImages();
+  } catch {
+    ElMessage.error($t('components.form.image_picker.upload_error'));
+  }
+};
+
+const handleClose = () => {
+  dialogVisible.value = false;
+  selectedImages.value = [];
+};
+
+const handleConfirm = () => {
+  if (props.multiple) {
+    const result = selectedImages.value.map((img) => img.base_path);
+    emit('confirm', result);
+  } else {
+    const result = selectedImages.value[0]?.base_path || '';
+    emit('confirm', result);
+  }
+  handleClose();
+};
+</script>
+
 <template>
   <ElDialog
     v-model="dialogVisible"
@@ -93,161 +250,6 @@
     </template>
   </ElDialog>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import { ElMessage } from 'element-plus';
-
-import { Icon } from '#/components/icon';
-import { requestClient } from '#/api/request';
-import { $t } from '#/locales';
-
-interface Props {
-  modelValue: boolean;
-  multiple?: boolean;
-  defaultSelected?: string | string[] | null;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
-  multiple: false,
-  defaultSelected: null,
-});
-
-const emit = defineEmits<{
-  'update:modelValue': [modelValue: boolean];
-  confirm: [images: string | string[]];
-}>();
-
-const loading = ref(false);
-const searchKeyword = ref('');
-const page = ref(1);
-const pageSize = ref(12);
-const total = ref(0);
-const imageList = ref<any[]>([]);
-const selectedImages = ref<any[]>([]);
-
-const dialogVisible = computed({
-  get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val),
-});
-
-watch(
-  () => props.defaultSelected,
-  (val) => {
-    if (!val) {
-      selectedImages.value = [];
-    } else if (props.multiple) {
-      selectedImages.value = Array.isArray(val) ? val : [val];
-    } else {
-      selectedImages.value = val ? [val] : [];
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val) loadImages();
-  },
-);
-
-const loadImages = async () => {
-  loading.value = true;
-  try {
-    const params: any = {
-      page: page.value,
-      limit: pageSize.value,
-      LIKE_filename: searchKeyword.value,
-    };
-    const res = await requestClient.get('/file/list', { params });
-    imageList.value = res?.items || res?.list || [];
-    total.value = res?.total || 0;
-  } catch {
-    ElMessage.error($t('components.form.image_picker.load_error'));
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handleSearch = () => {
-  page.value = 1;
-  loadImages();
-};
-
-const handleSizeChange = (size: number) => {
-  pageSize.value = size;
-  loadImages();
-};
-
-const handleCurrentChange = (current: number) => {
-  page.value = current;
-  loadImages();
-};
-
-const getImageUrl = (image: any) => {
-  if (!image.base_path) return '';
-  return image.base_path;
-};
-
-const formatFileSize = (bytes?: number) => {
-  if (!bytes) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${Math.round((bytes / Math.pow(k, i)) * 100) / 100} ${sizes[i]}`;
-};
-
-const isSelected = (image: any) => {
-  return selectedImages.value.some(
-    (item) => item.id === image.id || item.base_path === image.base_path,
-  );
-};
-
-const toggleSelect = (image: any) => {
-  if (props.multiple) {
-    const index = selectedImages.value.findIndex(
-      (item) => item.id === image.id,
-    );
-    if (index > -1) {
-      selectedImages.value.splice(index, 1);
-    } else {
-      selectedImages.value.push(image);
-    }
-  } else {
-    selectedImages.value = [image];
-  }
-};
-
-const customUpload = async (e: any) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', e.file);
-    await requestClient.post('/file/upload', formData);
-    ElMessage.success($t('components.form.image_picker.upload_success'));
-    loadImages();
-  } catch {
-    ElMessage.error($t('components.form.image_picker.upload_error'));
-  }
-};
-
-const handleClose = () => {
-  dialogVisible.value = false;
-  selectedImages.value = [];
-};
-
-const handleConfirm = () => {
-  if (props.multiple) {
-    const result = selectedImages.value.map((img) => img.base_path);
-    emit('confirm', result);
-  } else {
-    const result = selectedImages.value[0]?.base_path || '';
-    emit('confirm', result);
-  }
-  handleClose();
-};
-</script>
 
 <style lang="scss" scoped>
 .image-selector-content {

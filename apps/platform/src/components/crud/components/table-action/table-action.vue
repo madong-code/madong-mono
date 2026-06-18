@@ -6,6 +6,7 @@ import type { ActionItem, PopConfirm } from './types';
 import { computed, h, reactive, toRaw } from 'vue';
 
 import { useAccess } from '@vben/access';
+import { isBoolean, isFunction } from '@vben/utils';
 
 import {
   ElButton,
@@ -16,8 +17,9 @@ import {
   ElPopconfirm,
   ElSpace,
 } from 'element-plus';
+
 import { Icon } from '#/components/icon';
-import { isBoolean, isFunction } from '@vben/utils';
+import { $t } from '#/locales';
 
 const props = defineProps({
   record: {
@@ -48,7 +50,7 @@ const emit = defineEmits<{
   (e: 'actionItemClick', record: any): void;
 }>();
 
-const renderIcon = (icon: string | any) => {
+const renderIcon = (icon: any | string) => {
   if (typeof icon === 'string') {
     return h(Icon, { icon });
   }
@@ -84,8 +86,10 @@ const wrapConfirm = (action: ActionItem) => {
   if (action.confirm) {
     newAction.onClick = () => {
       emit('actionItemClick', props.record);
-      const title = action.confirm!.title || '提示';
-      const content = action.confirm!.content || '确定要执行此操作吗？';
+      const title =
+        action.confirm.title || $t('components.crud.action.confirm_title');
+      const content =
+        action.confirm.content || $t('components.crud.action.confirm_content');
       const options: any = { ...action.confirm };
       if (!options.type) {
         options.type = 'warning';
@@ -279,7 +283,7 @@ const handleRef = (e: any, index: number) => {
           <span style="margin-left: 6px">
             <slot name="more">
               <ElButton link type="primary">
-                更多
+                {{ $t('components.crud.action.more') }}
                 <template #icon>
                   <Icon icon="ant-design:bars-outlined" />
                 </template>

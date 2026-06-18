@@ -12,17 +12,19 @@
  * - formDialog：控制表单弹窗相关配置
  */
 
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 
-import type { CrudSchema } from './components/types'
-import type { ActionItem } from './components/table-action'
+import type { ActionItem } from './components/table-action';
+import type { CrudSchema } from './components/types';
 
-import { computed } from 'vue'
+import { computed } from 'vue';
+
+import { $t } from '#/locales';
 
 // useAction 所需的最小 API 接口
 interface UseActionApi {
-  executeBatchRemove: () => void
-  executeRemove: (row: any) => void
+  executeBatchRemove: () => void;
+  executeRemove: (row: any) => void;
 }
 
 export function useAction(
@@ -33,8 +35,8 @@ export function useAction(
 ) {
   // 获取表单弹窗配置
   const formDialogEnabled = computed(() => {
-    return crudSchema.formDialog?.enabled !== false
-  })
+    return crudSchema.formDialog?.enabled !== false;
+  });
 
   // 表格配置
   const tableConfig = computed(() => {
@@ -45,32 +47,32 @@ export function useAction(
       hasView: crudSchema.hasView ?? false,
       hasRemove: crudSchema.hasRemove ?? true,
       tree: crudSchema.tree,
-    }
-  })
+    };
+  });
 
   // 计算下拉菜单中已有的自定义操作数量
   const dropDownToolbarActionsCount = computed(() => {
-    return crudSchema.dropDownToolbarActions?.length || 0
-  })
+    return crudSchema.dropDownToolbarActions?.length || 0;
+  });
 
   // 是否应将批量删除放到下拉菜单中（当下拉菜单已有自定义操作时）
   const shouldRemoveInDropdown = computed(() => {
-    return dropDownToolbarActionsCount.value > 0
-  })
+    return dropDownToolbarActionsCount.value > 0;
+  });
 
   // 是否有选中的数据
   const hasSelection = computed(() => {
-    const selection = getSelection ? getSelection() : []
-    return selection.length > 0
-  })
+    const selection = getSelection ? getSelection() : [];
+    return selection.length > 0;
+  });
 
   // toolbarActions：主工具栏按钮（新增、批量删除等）
   const toolbarActions = computed(() => {
-    const actions: ActionItem[] = []
+    const actions: ActionItem[] = [];
 
     if (tableConfig.value.hasAdd && formDialogEnabled.value) {
       actions.push({
-        label: crudSchema.buttonText?.add || '新增',
+        label: crudSchema.buttonText?.add || $t('components.crud.action.add'),
         type: 'primary',
         icon: 'ant-design:plus-outlined',
         auth: crudSchema.permissions?.add,
@@ -78,102 +80,106 @@ export function useAction(
         dialogParams: {
           type: 'add',
         },
-      })
+      });
     }
 
-    if (tableConfig.value.hasBatchRemove && formDialogEnabled.value) {
-      // 规则：当下拉菜单已有自定义操作时，批量删除也放到下拉菜单中
-      if (!shouldRemoveInDropdown.value) {
-        actions.push({
-          label: '批量删除',
-          type: 'danger',
-          icon: 'ant-design:delete-outlined',
-          auth: crudSchema.permissions?.remove,
-          ifShow: () => hasSelection.value,
-          onClick: () => {
-            crudApi.executeBatchRemove()
-          },
-        })
-      }
+    if (
+      tableConfig.value.hasBatchRemove &&
+      formDialogEnabled.value &&
+      !shouldRemoveInDropdown.value
+    ) {
+      actions.push({
+        label: $t('components.crud.action.batch_delete'),
+        type: 'danger',
+        icon: 'ant-design:delete-outlined',
+        auth: crudSchema.permissions?.remove,
+        ifShow: () => hasSelection.value,
+        onClick: () => {
+          crudApi.executeBatchRemove();
+        },
+      });
     }
 
-    actions.push(...(crudSchema.toolbarActions || []))
-    return actions
-  })
+    actions.push(...(crudSchema.toolbarActions || []));
+    return actions;
+  });
 
   const toolbarToolActions = computed(() => {
-    const actions: ActionItem[] = []
-    const tc = crudSchema.toolbar
+    const actions: ActionItem[] = [];
+    const tc = crudSchema.toolbar;
 
     if (tc?.export) {
       actions.push({
-        label: '导出',
+        label: $t('components.crud.action.export'),
         icon: 'ant-design:download-outlined',
         type: 'primary',
         link: true,
         onClick: () => {},
-      })
+      });
     }
 
     if (tc?.print) {
       actions.push({
-        label: '打印',
+        label: $t('components.crud.action.print'),
         icon: 'ant-design:printer-outlined',
         type: 'primary',
         link: true,
         onClick: () => {},
-      })
+      });
     }
 
-    actions.push(...(tc?.tools || []))
-    return actions
-  })
+    actions.push(...(tc?.tools || []));
+    return actions;
+  });
 
   // toolbarTools 下拉菜单中的操作按钮
   const dropDownToolbarActions = computed(() => {
-    const actions: ActionItem[] = []
+    const actions: ActionItem[] = [];
 
-    if (tableConfig.value.hasBatchRemove && formDialogEnabled.value) {
-      // 规则：当下拉菜单已有自定义操作时，批量删除也放到下拉菜单中
-      if (shouldRemoveInDropdown.value) {
-        actions.push({
-          label: '批量删除',
-          type: 'danger',
-          icon: 'ant-design:delete-outlined',
-          auth: crudSchema.permissions?.remove,
-          ifShow: () => hasSelection.value,
-          onClick: () => {
-            crudApi.executeBatchRemove()
-          },
-        })
-      }
+    if (
+      tableConfig.value.hasBatchRemove &&
+      formDialogEnabled.value &&
+      shouldRemoveInDropdown.value
+    ) {
+      actions.push({
+        label: $t('components.crud.action.batch_delete'),
+        type: 'danger',
+        icon: 'ant-design:delete-outlined',
+        auth: crudSchema.permissions?.remove,
+        ifShow: () => hasSelection.value,
+        onClick: () => {
+          crudApi.executeBatchRemove();
+        },
+      });
     }
 
-    actions.push(...(crudSchema.dropDownToolbarActions || []))
-    return actions
-  })
+    actions.push(...(crudSchema.dropDownToolbarActions || []));
+    return actions;
+  });
 
   const tableActions = computed(() => {
-    const actions: ActionItem[] = []
+    const actions: ActionItem[] = [];
 
     if (crudSchema.formDialog?.enabled !== false) {
       if (tableConfig.value.hasView) {
         actions.push({
-          label: crudSchema.buttonText?.view || '详情',
+          label:
+            crudSchema.buttonText?.view || $t('components.crud.action.view'),
           type: 'primary',
           link: true,
           icon: 'ant-design:eye-outlined',
           auth: crudSchema.permissions?.view,
           dialogRef: dialogFormRef,
           dialogParams() {
-            return { type: 'view' }
+            return { type: 'view' };
           },
-        })
+        });
       }
 
       if (tableConfig.value.hasEdit) {
         actions.push({
-          label: crudSchema.buttonText?.edit || '编辑',
+          label:
+            crudSchema.buttonText?.edit || $t('components.crud.action.edit'),
           type: 'primary',
           link: true,
           icon: 'ant-design:edit-outlined',
@@ -182,22 +188,24 @@ export function useAction(
           dialogParams: {
             type: 'edit',
           },
-        })
+        });
       }
     }
 
-    actions.push(...(crudSchema.tableActions || []))
-    return actions
-  })
+    actions.push(...(crudSchema.tableActions || []));
+    return actions;
+  });
 
   const dropDownActions = computed(() => {
-    const actions: ActionItem[] = []
+    const actions: ActionItem[] = [];
 
     if (crudSchema.formDialog?.enabled !== false) {
       // 新增子节点（树形）
       if (tableConfig.value.hasAdd && tableConfig.value.tree) {
         actions.push({
-          label: (crudSchema.buttonText?.add || '新增') + '子节点',
+          label:
+            (crudSchema.buttonText?.add || $t('components.crud.action.add')) +
+            $t('components.crud.action.add_child'),
           icon: 'ant-design:plus-outlined',
           size: 'small',
           auth: crudSchema.permissions?.add,
@@ -206,26 +214,28 @@ export function useAction(
             type: 'add',
             tree: tableConfig.value.tree,
           },
-        })
+        });
       }
 
       if (tableConfig.value.hasRemove) {
         actions.push({
-          label: crudSchema.buttonText?.remove || '删除',
+          label:
+            crudSchema.buttonText?.remove ||
+            $t('components.crud.action.delete'),
           type: 'danger',
           icon: 'ant-design:delete-outlined',
           size: 'small',
           auth: crudSchema.permissions?.remove,
           onClick: (_action: any, _record: any) => {
-            crudApi.executeRemove(_record)
+            crudApi.executeRemove(_record);
           },
-        })
+        });
       }
     }
 
-    actions.push(...(crudSchema.dropDownActions || []))
-    return actions
-  })
+    actions.push(...(crudSchema.dropDownActions || []));
+    return actions;
+  });
 
   return {
     toolbarActions,
@@ -233,5 +243,5 @@ export function useAction(
     dropDownToolbarActions,
     tableActions,
     dropDownActions,
-  }
+  };
 }
