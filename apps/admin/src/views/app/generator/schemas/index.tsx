@@ -17,10 +17,10 @@ export const useCrudSchema = (): CrudSchema => ({
   hasRemove: true,
   hasView: false,
   permissions: {
-    add: 'generate:code:create',
-    remove: 'generate:code:delete',
-    edit: 'generate:code:update',
-    view: 'generate:code:read',
+    add: 'generator:code:create',
+    remove: 'generator:code:delete',
+    edit: 'generator:code:update',
+    view: 'generator:code:read',
   },
   columns: [
     { type: 'checkbox', width: 60 },

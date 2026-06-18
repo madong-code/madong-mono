@@ -10,7 +10,8 @@ import { $t } from '#/locales';
 
 defineOptions({ name: 'ImportTable' });
 
-defineEmits<{
+const emit = defineEmits<{
+  success: [];
   tableSelected: [tableData: any];
   'update:table-name': [tableName: string];
 }>();
@@ -32,6 +33,7 @@ const [Dialog, dialogApi] = useDialog({
     await GeneratorCodeService.create({ table: selection });
     ElMessage.success($t('common.success'));
     dialogApi.close();
+    emit('success');
   },
 });
 

@@ -57,7 +57,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1010,
       link: true,
       icon: 'ant-design:edit-outlined',
-      auth: 'generate:code:update',
+      auth: 'generator:code:update',
       onClick: (_e: Event, row: any) => {
         router.push({ path: '/app/generator/code', query: { id: row.id } });
       },
@@ -69,7 +69,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1010,
       link: true,
       icon: 'ant-design:eye-outlined',
-      auth: 'generate:code:preview',
+      auth: 'generator:code:preview',
       dialogRef: codePreviewRef,
       dialogParams: (record: any) => ({ record }),
     },
@@ -78,7 +78,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       link: true,
       icon: 'ant-design:cloud-upload-outlined',
-      auth: 'generate:code:deploy',
+      auth: 'generator:code:deploy',
       onClick: async (_e: Event, row: any) => {
         await GeneratorCodeService.deploy(row.id);
         crudApi.reload();
@@ -89,7 +89,7 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1030,
       link: true,
       icon: 'ant-design:download-outlined',
-      auth: 'generate:code:download',
+      auth: 'generator:code:download',
       onClick: async (_e: Event, row: any) => {
         download(row.id);
       },
@@ -101,7 +101,7 @@ const [BasicCrud, crudApi] = useCrud({
 <template>
   <Page auto-content-height>
     <BasicCrud />
-    <ImportTable ref="importTableRef" />
+    <ImportTable ref="importTableRef" @success="crudApi.reload()" />
     <CodePreview ref="codePreviewRef" />
   </Page>
 </template>
