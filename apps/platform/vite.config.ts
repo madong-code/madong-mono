@@ -26,6 +26,11 @@ export default defineConfig(async () => {
           //   target: 'http://localhost:5320/api/platform',//使用mock 要修改为localhost:5320
           //   ws: true,
           // },
+          // 上传文件静态资源代理（对应 storage.php 中的 domain 配置）
+          '/upload': {
+            changeOrigin: true,
+            target: 'http://127.0.0.1:8500',
+          },
         },
       },
     },
