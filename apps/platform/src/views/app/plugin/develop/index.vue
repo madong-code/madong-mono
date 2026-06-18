@@ -1,0 +1,89 @@
+<script setup lang="ts">
+/** 插件开发：平台默认顶级管理员单一模式，始终可用 */
+import { ElMessageBox } from 'element-plus';
+
+import { useCrud } from '#/adapter/crud';
+import { AppPluginDevelopService } from '#/api/app/plugin/develop';
+import { Page } from '#/components/page';
+import { $t } from '#/locales';
+
+import { useCrudSchema } from './schemas';
+
+defineOptions({ name: 'AppPluginDevelop' });
+
+const [BasicCrud] = useCrud({
+  ...useCrudSchema(),
+
+  // 表格操作列
+  tableActions: [],
+  dropDownActions: [
+    {
+      label: $t('app.plugin.develop.action.package'),
+      icon: 'ant-design:download-outlined',
+      auth: 'platform:plugin:develop:build',
+      onClick: async (_e: Event, row: any) => {
+        try {
+          await ElMessageBox.confirm(
+            $t('app.plugin.develop.action.package_confirm_message'),
+            $t('app.plugin.develop.action.package_confirm_title'),
+            {
+              confirmButtonText: $t(
+                'app.plugin.develop.action.package_confirm',
+              ),
+              cancelButtonText: $t('app.plugin.develop.action.package_cancel'),
+              type: 'warning',
+              closeOnClickModal: false,
+              closeOnPressEscape: false,
+            },
+          );
+
+          const res: any = await AppPluginDevelopService.build(row.id);
+          const zipPath = res?.zip_path || '';
+          const hasFrontend = res?.has_frontend
+            ? $t('app.plugin.develop.action.package_has_frontend') +
+              $t('common.yes')
+            : $t('app.plugin.develop.action.package_has_frontend') +
+              $t('common.no');
+
+          ElMessageBox.alert(
+            `<div style="line-height: 2;">
+                <div style="margin-bottom: 10px;"><strong>${$t('app.plugin.develop.action.package_plugin')}:</strong> ${res.plugin_key || row.key}</div>
+                <div style="margin-bottom: 10px;"><strong>${$t('app.plugin.develop.action.package_zip_path')}:</strong> ${zipPath}</div>
+                <div><strong>${$t('app.plugin.develop.action.package_has_frontend')}:</strong> ${hasFrontend}</div>
+              </div>`,
+            $t('app.plugin.develop.action.package_success'),
+            {
+              dangerouslyUseHTMLString: true,
+              showConfirmButton: true,
+              showClose: false,
+              closeOnClickModal: true,
+              closeOnPressEscape: true,
+            },
+          );
+        } catch {
+          // 用户取消操作
+        }
+      },
+    },
+  ],
+  toolbarActions: [],
+  dropDownToolbarActions: [],
+});
+</script>
+
+<template>
+  <div class="h-full">
+    <Page auto-content-height>
+      <template #header>
+        <div class="mb-4">
+          <h2 class="text-xl font-bold text-gray-800">插件开发</h2>
+          <p class="mt-1 text-sm text-gray-400">
+            {{ $t('app.plugin.develop.description') }}
+          </p>
+        </div>
+      </template>
+
+      <BasicCrud />
+    </Page>
+  </div>
+</template>
