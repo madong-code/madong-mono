@@ -1,83 +1,31 @@
 <script lang="ts" setup>
-import type { NotificationItem } from '#/components/notification-drawer/types';
-
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import { BasicLayout, LockScreen, UserDropdown } from '@vben/layouts';
 import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
 
-import { NotificationDrawer } from '#/components/notification-drawer';
+import { FileText, TerminalSquare } from 'lucide-vue-next';
+
 import { $t } from '#/locales';
-import { useAuthStore } from '#/store';
+import { useAuthStore, useTerminalStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import NotepadDrawer from '#/views/content/notepad/components/notepad-drawer.vue';
+import TerminalDialog from '#/views/devtools/terminal/index.vue';
 
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    category: 'daily',
-    date: '3小时前',
-    isRead: true,
-    content: '收到了 14 份新周报，请及时查收',
-    title: '收到了 14 份新周报',
-  },
-  {
-    id: 2,
-    category: 'daily',
-    date: '刚刚',
-    isRead: false,
-    content: '朱偏右 在项目讨论中回复了你',
-    title: '朱偏右 回复了你',
-  },
-  {
-    id: 3,
-    category: 'daily',
-    date: '2024-01-01',
-    isRead: false,
-    content: '曲丽丽 评论了你的工作日志',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    id: 4,
-    category: 'attendance',
-    date: '1天前',
-    isRead: false,
-    content: '你有一条待审批的加班申请',
-    title: '加班申请待审批',
-  },
-  {
-    id: 5,
-    category: 'attendance',
-    date: '2天前',
-    isRead: true,
-    content: '本月考勤异常汇总，请查看详情',
-    title: '考勤异常提醒',
-  },
-  {
-    id: 6,
-    category: 'approval',
-    date: '30分钟前',
-    isRead: false,
-    content: '张三提交了请假申请，请尽快审批',
-    title: '请假申请待审批',
-    link: '/workspace',
-  },
-  {
-    id: 7,
-    category: 'approval',
-    date: '2小时前',
-    isRead: false,
-    content: '李四提交了报销申请，金额 ¥2,500.00',
-    title: '报销申请待审批',
-    actionText: '去审批',
-  },
-]);
+const notepadDrawerRef = ref<InstanceType<typeof NotepadDrawer> | null>(null);
+
+function openNotepadDrawer() {
+  notepadDrawerRef.value?.open();
+}
+
+function openTerminalDialog() {
+  const terminal = useTerminalStore();
+  terminal.toggle(true);
+}
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -131,40 +79,6 @@ async function handleLogout() {
   await authStore.logout(false);
 }
 
-function markRead(id: number | string) {
-  const item = notifications.value.find((item) => item.id === id);
-  if (item) {
-    item.isRead = true;
-  }
-}
-
-function remove(id: number | string) {
-  notifications.value = notifications.value.filter((item) => item.id !== id);
-}
-
-function handleMakeAll() {
-  notifications.value.forEach((item) => (item.isRead = true));
-}
-
-const handleClick = (item: NotificationItem) => {
-  markRead(item.id);
-  if (item.link) {
-    navigateTo(item.link, item.query);
-  }
-};
-
-function navigateTo(
-  link: string,
-  query?: Record<string, any>,
-  state?: Record<string, any>,
-) {
-  if (link.startsWith('http://') || link.startsWith('https://')) {
-    window.open(link, '_blank');
-  } else {
-    router.push({ path: link, query: query || {}, state });
-  }
-}
-
 watch(
   () => ({
     enable: preferences.app.watermark,
@@ -212,24 +126,33 @@ watch(
         :avatar
         :menus
         :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
-        tag-text="Pro"
+        :description="userStore.userInfo?.email || ''"
+        :tag-text="userStore.userInfo?.user_name || 'Pro'"
         @logout="handleLogout"
       />
     </template>
-    <template #notification>
-      <NotificationDrawer
-        :notifications="notifications"
-        @read="(item) => item.id && markRead(item.id)"
-        @read-all="handleMakeAll"
-        @remove="(item) => item.id && remove(item.id)"
-        @click="handleClick"
-        @batch-read="(ids) => ids.forEach((id) => markRead(id))"
-        @batch-remove="
-          (ids) =>
-            (notifications = notifications.filter((n) => !ids.includes(n.id)))
-        "
-      />
+    <!-- 命令终端按钮 -->
+    <template #header-right-60>
+      <div
+        class="hidden size-8 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-accent hover:shadow-md md:flex mr-1"
+        title="命令终端"
+        @click="openTerminalDialog"
+      >
+        <TerminalSquare class="size-[18px] text-foreground" />
+      </div>
+      <TerminalDialog />
+    </template>
+
+    <!-- 记事本按钮 -->
+    <template #header-right-100>
+      <div
+        class="hidden size-8 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-accent hover:shadow-md md:flex mr-1"
+        title="记事本"
+        @click="openNotepadDrawer"
+      >
+        <FileText class="size-[18px] text-foreground" />
+      </div>
+      <NotepadDrawer ref="notepadDrawerRef" />
     </template>
     <template #extra>
       <AuthenticationLoginExpiredModal
