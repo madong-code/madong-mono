@@ -84,8 +84,23 @@ const setCheckedKeys = (keys: (number | string)[]) => {
   });
 };
 
-const getCheckedLeafKeys = (): (number | string)[] => {
-  return (treeRef.value?.getCheckedKeys(true) as (number | string)[]) || [];
+/**
+ * 获取选中的全部菜单ID（含父级目录）
+ *
+ * 说明：Element Plus Tree 的 getCheckedKeys(true) 只返回叶子节点，
+ * 导致父级目录 ID 不包含在保存数据中。当后端用这些 ID 做角色菜单关联时，
+ * 只会存叶子 ID，下次加载时 Tree 无法还原完整的层级结构。
+ *
+ * 修复方案：合并 getCheckedKeys() + getHalfCheckedKeys()，
+ * 同时包含完全选中和半选中的节点（即所有关联的父级目录），
+ * 确保后端 sys_role_menu 表中存有完整的父子关系链。
+ */
+const getCheckedKeysWithParents = (): (number | string)[] => {
+  const tree = treeRef.value;
+  if (!tree) return [];
+  const checked = tree.getCheckedKeys() as (number | string)[];
+  const halfChecked = tree.getHalfCheckedKeys() as (number | string)[];
+  return [...new Set([...checked, ...halfChecked])];
 };
 
 // ===== 回显已授权菜单 =====
@@ -107,12 +122,12 @@ const [Dialog, dialogApi] = useDialog({
   closeOnClickModal: true,
   destroyOnClose: true,
   async onConfirm() {
-    const keys = getCheckedLeafKeys();
+    const keys = getCheckedKeysWithParents();
     dialogApi.setState({ confirmLoading: true, loading: true });
     try {
       await AuthService.saveRoleMenu({
         role_id: currentRow.value.id,
-        menu_id: keys,
+        menu_id: keys as (number | string)[],
       });
       ElMessage.success($t('system.role.auth_menu.success'));
       crudApi.value?.refreshCreate();
@@ -193,7 +208,7 @@ const selectInverse = () => {
   };
   collect(treeData.value);
 
-  const checkedKeys = getCheckedLeafKeys();
+  const checkedKeys = getCheckedKeysWithParents();
   const toCheck = leafKeys.filter((k) => !checkedKeys.includes(k));
 
   treeRef.value?.setCheckedKeys([]);
@@ -280,40 +295,26 @@ const handleToolCommand = (command: string) => {
           <template #dropdown>
             <ElDropdownMenu>
               <ElDropdownItem command="expand-all">
-{{
-                $t('system.role.auth_menu.toolbar.expand_all')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.expand_all') }}
+              </ElDropdownItem>
               <ElDropdownItem command="expand-level-1">
-{{
-                $t('system.role.auth_menu.toolbar.expand_level_1')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.expand_level_1') }}
+              </ElDropdownItem>
               <ElDropdownItem command="expand-level-2">
-{{
-                $t('system.role.auth_menu.toolbar.expand_level_2')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.expand_level_2') }}
+              </ElDropdownItem>
               <ElDropdownItem command="collapse-all">
-{{
-                $t('system.role.auth_menu.toolbar.collapse_all')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.collapse_all') }}
+              </ElDropdownItem>
               <ElDropdownItem divided command="select-all">
-{{
-                $t('system.role.auth_menu.toolbar.select_all')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.select_all') }}
+              </ElDropdownItem>
               <ElDropdownItem command="select-none">
-{{
-                $t('system.role.auth_menu.toolbar.select_none')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.select_none') }}
+              </ElDropdownItem>
               <ElDropdownItem command="select-inverse">
-{{
-                $t('system.role.auth_menu.toolbar.select_inverse')
-              }}
-</ElDropdownItem>
+                {{ $t('system.role.auth_menu.toolbar.select_inverse') }}
+              </ElDropdownItem>
             </ElDropdownMenu>
           </template>
         </ElDropdown>
