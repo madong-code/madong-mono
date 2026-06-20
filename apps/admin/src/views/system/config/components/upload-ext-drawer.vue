@@ -46,9 +46,21 @@ const currentGroupFields = computed(() => {
   return result;
 });
 
-const show = (values: Record<string, any>) => {
+const show = async (values: Record<string, any>) => {
   currentMode.value = values.mode || '';
   Object.assign(formData, values);
+  // 加载当前供应商专属配置（限定 default 分组，与 admin 端 UploadScene::admin() 一致）
+  const record = (await ConfigService.getByCode(currentMode.value, {
+    group_code: 'default',
+  })) as any;
+  if (record) {
+    const fieldKeys = templateField(currentMode.value);
+    fieldKeys.forEach((key) => {
+      if (record[key] !== undefined) {
+        formData[key] = record[key];
+      }
+    });
+  }
   visible.value = true;
 };
 
@@ -58,11 +70,22 @@ const handleClose = () => {
 
 const handleSave = async () => {
   try {
-    await ConfigService.update('upload', {
-      group_code: 'setting',
-      code: 'upload',
-      name: '上传设置',
-      content: convertStringNumbers({ ...formData, mode: currentMode.value }),
+    // 只保存当前供应商专属字段
+    const config: Record<string, any> = {};
+    const fieldKeys = templateField(currentMode.value);
+    fieldKeys.forEach((key) => {
+      if (formData[key] !== undefined) {
+        config[key] = formData[key];
+      }
+    });
+    await ConfigService.update(currentMode.value, {
+      group_code: 'default',
+      code: currentMode.value,
+      name:
+        currentMode.value === 'local'
+          ? '本地存储'
+          : `${currentMode.value.toUpperCase()} 存储`,
+      content: convertStringNumbers(config),
     });
     ElMessage.success($t('system.config.save_success'));
     visible.value = false;

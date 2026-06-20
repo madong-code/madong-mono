@@ -95,7 +95,7 @@ async function onSubmit() {
   if (!valid) return;
   const content = await formApi.getValues();
   await ConfigService.update('email', {
-    group_code: 'setting',
+    group_code: 'default',
     code: 'email',
     name: $t('system.config.email.title'),
     content,
@@ -105,7 +105,9 @@ async function onSubmit() {
 }
 
 const retrieveData = async () => {
-  const record = (await ConfigService.getByCode('email')) as any;
+  const record = (await ConfigService.getByCode('email', {
+    group_code: 'default',
+  })) as any;
   await formApi.setValues({ ...record });
 };
 

@@ -192,10 +192,22 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
   /**
    * 获取租户配置并同步到 preferences（logo/标题/favicon）
    * 供 settings 保存后、登录后、切换租户后统一调用
+   *
+   * 内部已做异常保护，不会因租户配置获取失败而中断调用方流程
+   * （登录后参数校验、路由跳转等不应被站点配置请求阻塞）
    */
   const syncTenantPreferences = async () => {
-    await fetchTenantConfig();
+    try {
+      await fetchTenantConfig();
+    } catch {
+      console.warn('获取租户配置失败，使用平台配置作为回退');
+    }
+
     const config = getCurrentConfig();
+    if (!config.title && !config.logo) {
+      return; // 无可用配置，跳过同步
+    }
+
     const { updatePreferences } = await import('@vben/preferences');
     const updates: Record<string, any> = {};
     if (config.title) updates.app = { name: config.title };

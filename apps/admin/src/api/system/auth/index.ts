@@ -15,7 +15,7 @@ export const AuthService = {
 
   /** 保存角色菜单授权 */
   saveRoleMenu(data: {
-    menu_id: number[];
+    menu_id: (number | string)[];
     role_id: number | string;
   }): Promise<void> {
     return requestClient.post(`${baseUrl}/save-role-menu`, data);

@@ -70,7 +70,7 @@ async function onSubmit() {
   if (!valid) return;
   const content = await formApi.getValues();
   await ConfigService.update('sms', {
-    group_code: 'setting',
+    group_code: 'default',
     code: 'sms',
     name: $t('system.config.sms.title'),
     content,
@@ -80,7 +80,9 @@ async function onSubmit() {
 }
 
 const retrieveData = async () => {
-  const record = (await ConfigService.getByCode('sms')) as any;
+  const record = (await ConfigService.getByCode('sms', {
+    group_code: 'default',
+  })) as any;
   await formApi.setValues({ ...record });
 };
 

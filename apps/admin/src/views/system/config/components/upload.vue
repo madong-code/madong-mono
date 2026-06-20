@@ -66,7 +66,7 @@ async function onSubmit() {
   if (!valid) return;
   const content = await formApi.getValues();
   await ConfigService.update('upload', {
-    group_code: 'setting',
+    group_code: 'default',
     code: 'upload',
     name: $t('system.config.upload.title'),
     content,
