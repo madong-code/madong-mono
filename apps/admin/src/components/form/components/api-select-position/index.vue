@@ -14,6 +14,7 @@ import {
 
 import { PostService } from '#/api/system/post';
 import { Dialog } from '#/components/dialog';
+import { Icon } from '#/components/icon';
 import { $t } from '#/locales';
 
 import PositionSelectModal from './position-select-dialog.vue';
@@ -63,6 +64,8 @@ const modalRef = ref();
 const options = ref<Option[]>([]);
 const tempValue = ref<string[]>([]);
 const hasDeptIdsEver = ref(false);
+// 标志：handleConfirm 已设置好 options，initValue 应跳过 loadPositionNames
+let skipNextLoad = false;
 
 const effectivePlaceholder = computed(
   () => props.placeholder || $t('components.form.select_position.placeholder'),
@@ -89,6 +92,19 @@ const selectValue = computed({
 });
 
 function initValue() {
+  // handleConfirm 已同步设好 options，跳过异步 loadPositionNames 避免覆盖
+  if (skipNextLoad) {
+    skipNextLoad = false;
+    const v = props.modelValue;
+    if (v) {
+      const values = Array.isArray(v) ? v.map(String) : String(v).split(',');
+      tempValue.value = values;
+    } else {
+      tempValue.value = [];
+    }
+    return;
+  }
+
   const v = props.modelValue;
   if (v) {
     const values = Array.isArray(v) ? v.map(String) : String(v).split(',');
@@ -135,7 +151,9 @@ function handleConfirm() {
     label: item.name,
     value: String(item[props.rowKey]),
   }));
+  // 同步设置 options，后续 initValue 跳过异步 load 避免被覆盖
   options.value = opts;
+  skipNextLoad = true;
   const result = props.multiple ? values : values[0] || null;
   emit('update:modelValue', result);
   emit('change', result);
@@ -170,11 +188,27 @@ function handleChange(value: any) {
 
 watch(() => props.modelValue, initValue, { immediate: true });
 
+let prevDeptIds: string[] | undefined;
 watch(
   () => props.deptIds,
-  async (newDeptIds) => {
+  async (newDeptIds, _oldDeptIds) => {
     if (newDeptIds?.length) hasDeptIdsEver.value = true;
-    // 部门被移除 → 清空
+
+    // 用 prevDeptIds 缓存上一次的值，跳过内容没变的重复触发
+    // 父表单每次 re-render 都会通过 componentProps 创建新数组引用
+    if (prevDeptIds !== undefined) {
+      const newArr = newDeptIds || [];
+      const oldArr = prevDeptIds;
+      if (
+        newArr.length === oldArr.length &&
+        newArr.every((v, i) => v === oldArr[i])
+      ) {
+        return;
+      }
+    }
+    prevDeptIds = [...(newDeptIds || [])];
+
+    // 部门从有到无 → 清空选择
     if ((!newDeptIds || newDeptIds.length === 0) && hasDeptIdsEver.value) {
       options.value = [];
       tempValue.value = [];
@@ -185,7 +219,7 @@ watch(
       }
       return;
     }
-    // 重新加载过滤
+    // 部门变更 → 重新加载并过滤
     if (props.modelValue) {
       const values = Array.isArray(props.modelValue)
         ? props.modelValue.map(String)
@@ -202,7 +236,6 @@ watch(
       }
     }
   },
-  { deep: true },
 );
 
 defineExpose({ getValue: () => selectValue.value });

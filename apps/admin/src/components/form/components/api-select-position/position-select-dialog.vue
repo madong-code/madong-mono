@@ -3,7 +3,14 @@ import type { PostRow } from '#/api/system/post/types';
 
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
-import { ElInput, ElMessage, ElRadio, ElTag, ElTree } from 'element-plus';
+import {
+  ElCheckbox,
+  ElInput,
+  ElMessage,
+  ElRadio,
+  ElTag,
+  ElTree,
+} from 'element-plus';
 
 import { DeptService } from '#/api/system/dept';
 import { PostService } from '#/api/system/post';
@@ -399,7 +406,7 @@ defineExpose({
           <div class="tree-node-content" :data-is-post="data.isPost">
             <!-- 多选模式：职位节点显示复选框 -->
             <span v-if="data.isPost && multiple" class="checkbox-wrapper">
-              <el-checkbox
+              <ElCheckbox
                 :model-value="isSelected(data)"
                 :disabled="node.disabled"
                 @update:model-value="
