@@ -1,8 +1,8 @@
-import type { CrudSchema } from '#/components/crud/components/types'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-import { UserService } from '#/api/system/user'
-import { DictEnum } from '#/enums'
-import { $t } from '#/locales'
+import { UserService } from '#/api/system/user';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -28,22 +28,83 @@ export const useCrudSchema = (): CrudSchema => {
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'user_name', title: $t('system.user.table.columns.user_name'), minWidth: 80 },
-      { field: 'real_name', title: $t('system.user.table.columns.real_name'), minWidth: 130 },
-      { field: 'dept_name', title: $t('system.user.table.columns.dept_name'), minWidth: 100 },
-      { field: 'mobile_phone', title: $t('system.user.table.columns.mobile_phone'), minWidth: 120 },
+      {
+        field: 'user_name',
+        title: $t('system.user.table.columns.user_name'),
+        minWidth: 80,
+        align: 'left',
+      },
+      {
+        field: 'real_name',
+        title: $t('system.user.table.columns.real_name'),
+        minWidth: 130,
+        align: 'left',
+      },
+      {
+        field: 'main_dept_name',
+        title: $t('system.user.table.columns.dept'),
+        minWidth: 120,
+        align: 'left',
+        cellRender: {
+          name: 'CellTags',
+          attrs: { color: 'primary', labelKey: '' },
+        },
+      },
+      {
+        field: 'main_post_name',
+        title: $t('system.user.table.columns.post'),
+        minWidth: 120,
+        align: 'left',
+        cellRender: {
+          name: 'CellTags',
+          attrs: { color: 'success', labelKey: '' },
+        },
+      },
+      {
+        field: 'depts',
+        visible: false,
+        title: $t('system.user.table.columns.depts'),
+        minWidth: 180,
+        cellRender: { name: 'CellTags', attrs: { color: 'primary' } },
+        align: 'left',
+      },
+      {
+        field: 'posts',
+        visible: false,
+        title: $t('system.user.table.columns.posts'),
+        minWidth: 180,
+        cellRender: { name: 'CellTags', attrs: { color: 'success' } },
+        align: 'left',
+      },
+      {
+        field: 'roles',
+        title: $t('system.user.table.columns.roles'),
+        minWidth: 180,
+        cellRender: { name: 'CellTags', attrs: { color: 'warning' } },
+        align: 'left',
+      },
+      {
+        field: 'mobile_phone',
+        title: $t('system.user.table.columns.mobile_phone'),
+        minWidth: 120,
+      },
       {
         field: 'enabled',
         title: $t('system.user.table.columns.enabled'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
-
       {
         field: 'is_locked',
         title: $t('system.user.table.columns.is_locked'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_LOCKED_STATUS } },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_LOCKED_STATUS },
+        },
       },
     ],
 
@@ -76,7 +137,9 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('system.user.table.search.mobile_phone'),
           componentProps: {
             clearable: true,
-            placeholder: $t('system.user.table.search.placeholder.mobile_phone'),
+            placeholder: $t(
+              'system.user.table.search.placeholder.mobile_phone',
+            ),
           },
         },
         {
@@ -118,7 +181,7 @@ export const useCrudSchema = (): CrudSchema => {
           hideLabel: true,
           componentProps: {
             title: $t('system.user.form.base_info'),
-          }
+          },
         },
         {
           label: $t('system.user.form.user_name'),
@@ -139,7 +202,7 @@ export const useCrudSchema = (): CrudSchema => {
           dependencies: {
             triggerFields: ['id'],
             if(values) {
-              return values.id === undefined
+              return values.id === undefined;
             },
           },
           componentProps: {
@@ -191,15 +254,15 @@ export const useCrudSchema = (): CrudSchema => {
           },
         },
 
-         {
+        {
           fieldName: 'outherinfo',
           label: '',
           component: 'Divider',
           formItemClass: 'col-span-2 w-full',
-             hideLabel: true,
+          hideLabel: true,
           componentProps: {
             title: $t('system.user.form.outher_info'),
-          }
+          },
         },
         // 所属部门
         {
@@ -208,11 +271,10 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'ApiSelectDept',
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
-             return {
-               multiple: true
-             }
-
-          }
+            return {
+              multiple: true,
+            };
+          },
         },
         // 所属岗位
         {
@@ -221,9 +283,11 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: [],
           component: 'ApiSelectPosition',
           formItemClass: 'col-span-2',
-          componentProps: (_value) => {
-
-          }
+          componentProps: (values) => {
+            return {
+              deptIds: values.dept_id_list ?? [],
+            };
+          },
         },
         // 主要部门
         {
@@ -233,10 +297,9 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: (_values) => {
             return {
-              multiple: false
-            }
-
-          }
+              multiple: false,
+            };
+          },
         },
         // 主要岗位
         {
@@ -244,12 +307,12 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'main_post_id',
           component: 'ApiSelectPosition',
           formItemClass: 'col-span-2',
-          componentProps: (_value) => {
+          componentProps: (values) => {
             return {
-              multiple: false
-            }
-
-          }
+              multiple: false,
+              deptIds: values.main_dept_id ? [values.main_dept_id] : [],
+            };
+          },
         },
 
         // 所属角色
@@ -258,28 +321,27 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'role_id_list',
           component: 'ApiSelectRole',
           formItemClass: 'col-span-2',
-          componentProps: {
-          }
+          componentProps: {},
         },
         {
           label: $t('system.user.form.avatar'),
           fieldName: 'avatar',
           component: 'Avatar',
           formItemClass: 'col-span-2',
-          componentProps: {}
+          componentProps: {},
         },
         {
           label: $t('system.user.form.remark'),
           fieldName: 'remark',
           component: 'Input',
-                    formItemClass: 'col-span-2',
+          formItemClass: 'col-span-2',
           componentProps: {
             type: 'textarea',
             rows: 4,
-            placeholder: $t('system.user.form.placeholder.remark')
-          }
-        }
+            placeholder: $t('system.user.form.placeholder.remark'),
+          },
+        },
       ],
     },
-  }
+  };
 };

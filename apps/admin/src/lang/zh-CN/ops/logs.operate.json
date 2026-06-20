@@ -2,7 +2,8 @@
   "title": "操作日志",
   "table": {
     "columns": {
-      "name": "操作人",
+      "user_name": "账号",
+      "name": "栏目",
       "app": "应用",
       "ip": "IP地址",
       "ip_location": "IP归属地",
@@ -10,6 +11,7 @@
       "browser": "浏览器",
       "url": "请求地址",
       "param": "请求参数",
+      "created_at": "操作时间",
       "created_date": "操作时间"
     },
     "search": {

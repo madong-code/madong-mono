@@ -1,32 +1,42 @@
-import type { CrudSchema } from '#/components/crud/components/types'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-import { MenuService } from '#/api/system'
-import { DictEnum } from '#/enums'
-import { $t } from '#/locales'
+import { MenuService } from '#/api/system';
+import { Icon } from '#/components/icon';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
 
-function arrayToTree(data: any[], idKey = 'id', pidKey = 'pid', childrenKey = 'children'): any[] {
-  const map = new Map<any, any>()
-  const roots: any[] = []
+function arrayToTree(
+  data: any[],
+  idKey = 'id',
+  pidKey = 'pid',
+  childrenKey = 'children',
+): any[] {
+  const map = new Map<any, any>();
+  const roots: any[] = [];
 
   data.forEach((item) => {
-    map.set(item[idKey], { ...item, [childrenKey]: [] })
-  })
+    map.set(item[idKey], { ...item, [childrenKey]: [] });
+  });
 
   data.forEach((item) => {
-    const node = map.get(item[idKey])
-    if (item[pidKey] === null || item[pidKey] === undefined || item[pidKey] === 0) {
-      roots.push(node)
+    const node = map.get(item[idKey]);
+    if (
+      item[pidKey] === null ||
+      item[pidKey] === undefined ||
+      item[pidKey] === 0
+    ) {
+      roots.push(node);
     } else {
-      const parent = map.get(item[pidKey])
+      const parent = map.get(item[pidKey]);
       if (parent) {
-        parent[childrenKey].push(node)
+        parent[childrenKey].push(node);
       } else {
-        roots.push(node)
+        roots.push(node);
       }
     }
-  })
+  });
 
-  return roots
+  return roots;
 }
 
 export const useCrudSchema = (): CrudSchema => {
@@ -55,43 +65,86 @@ export const useCrudSchema = (): CrudSchema => {
     },
     tree: { id: 'id', pid: 'pid', children: 'children' },
     beforeFetch: (params: any) => {
-      return { ...params, page: 1, limit: 999 }
+      return { ...params, page: 1, limit: 999 };
     },
     afterFetch: (res: { items?: any[]; total?: number }) => {
-      const items = res?.items || []
+      const items = res?.items || [];
       return {
         items: arrayToTree(items),
         total: res?.total ?? items.length,
-      }
+      };
     },
     columns: [
-      { field: 'id', title: $t('system.menu.table.columns.id'), minWidth: 60, visible: false },
-      { field: 'title', title: $t('system.menu.table.columns.title'), minWidth: 200, treeNode: true, align: 'left' },
-      { field: 'code', title: $t('system.menu.table.columns.code'), minWidth: 120 },
+      {
+        field: 'id',
+        title: $t('system.menu.table.columns.id'),
+        minWidth: 60,
+        visible: false,
+      },
+      {
+        field: 'title',
+        title: $t('system.menu.table.columns.title'),
+        minWidth: 200,
+        treeNode: true,
+        align: 'left',
+        slots: {
+          default: ({ row }: any) => (
+            <span>
+              <Icon class="mr-1" icon={row.icon} />
+              {row.title}
+            </span>
+          ),
+        },
+      },
+      {
+        field: 'code',
+        title: $t('system.menu.table.columns.code'),
+        minWidth: 120,
+        align: 'left',
+      },
       {
         field: 'type',
         title: $t('system.menu.table.columns.type'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_MENU_TYPE },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_MENU_TYPE },
+        },
       },
-      { field: 'path', title: $t('system.menu.table.columns.path'), minWidth: 150 },
-      { field: 'component', title: $t('system.menu.table.columns.component'), minWidth: 150 },
-      { field: 'icon', title: $t('system.menu.table.columns.icon'), minWidth: 80 },
-      { field: 'sort', title: $t('system.menu.table.columns.sort'), minWidth: 60 },
+      {
+        field: 'path',
+        title: $t('system.menu.table.columns.path'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'component',
+        title: $t('system.menu.table.columns.component'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'sort',
+        title: $t('system.menu.table.columns.sort'),
+        minWidth: 60,
+      },
       {
         field: 'is_show',
         title: $t('system.menu.table.columns.is_show'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag' },
-        componentProps: { code: DictEnum.SYS_YES_NO },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_YES_NO },
+        },
       },
       {
         field: 'enabled',
         title: $t('system.menu.table.columns.enabled'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
     ],
 
@@ -194,8 +247,8 @@ export const useCrudSchema = (): CrudSchema => {
             placeholder: $t('system.menu.form.placeholder.type'),
             code: DictEnum.SYS_MENU_TYPE,
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+            renderType: 'RadioGroup',
+          },
         },
         {
           label: $t('system.menu.form.modal.app'),
@@ -210,15 +263,15 @@ export const useCrudSchema = (): CrudSchema => {
               requestMethod: 'get',
               placeholder: $t('system.menu.form.placeholder.app'),
               style: {
-                width: '330px'
+                width: '330px',
               },
               labelField: 'label',
               valueField: 'value',
               onChange: (_values: any) => {
-                _value.pid = ''
-              }
-            }
-          }
+                _value.pid = '';
+              },
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.pid'),
@@ -235,12 +288,12 @@ export const useCrudSchema = (): CrudSchema => {
               requestMethod: 'get',
               params: {
                 format: 'tree',
-                app: _value.app || 'admin'
+                app: _value.app || 'admin',
               },
               labelField: 'name',
-              valueField: 'id'
-            }
-          }
+              valueField: 'id',
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.title'),
@@ -250,8 +303,8 @@ export const useCrudSchema = (): CrudSchema => {
           rules: 'required',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.title'),
-            clearable: true
-          }
+            clearable: true,
+          },
         },
         {
           label: $t('system.menu.form.modal.code'),
@@ -261,8 +314,8 @@ export const useCrudSchema = (): CrudSchema => {
           rules: 'required',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.code'),
-            clearable: true
-          }
+            clearable: true,
+          },
         },
         {
           label: $t('system.menu.form.modal.path'),
@@ -274,9 +327,9 @@ export const useCrudSchema = (): CrudSchema => {
             return {
               placeholder: $t('system.menu.form.placeholder.path'),
               clearable: true,
-              disabled: ![1, 2, 4].includes(values.type)
-            }
-          }
+              disabled: ![1, 2, 4].includes(values.type),
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.component'),
@@ -287,9 +340,9 @@ export const useCrudSchema = (): CrudSchema => {
             return {
               placeholder: $t('system.menu.form.placeholder.component'),
               clearable: true,
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.open_type'),
@@ -304,9 +357,9 @@ export const useCrudSchema = (): CrudSchema => {
               code: 'sys_menu_open_type',
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: values.type !== 2
-            }
-          }
+              disabled: values.type !== 2,
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.icon'),
@@ -318,9 +371,9 @@ export const useCrudSchema = (): CrudSchema => {
               class: 'w-full',
               placeholder: $t('system.menu.form.placeholder.icon'),
               clearable: true,
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.link_url'),
@@ -332,9 +385,9 @@ export const useCrudSchema = (): CrudSchema => {
             return {
               placeholder: $t('system.menu.form.placeholder.link_url'),
               clearable: true,
-              disabled: ![2, 3].includes(values.openType)
-            }
-          }
+              disabled: ![2, 3].includes(values.openType),
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.sort'),
@@ -345,8 +398,8 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.sort'),
             clearable: true,
-            min: 0
-          }
+            min: 0,
+          },
         },
         {
           label: $t('system.menu.form.modal.enabled'),
@@ -358,8 +411,8 @@ export const useCrudSchema = (): CrudSchema => {
             placeholder: $t('system.menu.form.placeholder.enabled'),
             code: 'yes_no',
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+            renderType: 'RadioGroup',
+          },
         },
         {
           label: $t('system.menu.form.modal.is_show'),
@@ -373,9 +426,9 @@ export const useCrudSchema = (): CrudSchema => {
               code: 'yes_no',
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
         },
         {
           label: $t('system.menu.form.modal.is_sync'),
@@ -387,8 +440,8 @@ export const useCrudSchema = (): CrudSchema => {
             placeholder: $t('system.menu.form.placeholder.is_sync'),
             code: 'yes_no',
             isBtn: true,
-            renderType: 'RadioGroup'
-          }
+            renderType: 'RadioGroup',
+          },
         },
         {
           label: $t('system.menu.form.modal.is_cache'),
@@ -402,11 +455,11 @@ export const useCrudSchema = (): CrudSchema => {
               code: 'yes_no',
               isBtn: true,
               renderType: 'RadioGroup',
-              disabled: ![1, 2].includes(values.type)
-            }
-          }
-        }
-      ]
+              disabled: ![1, 2].includes(values.type),
+            };
+          },
+        },
+      ],
     },
-  }
-}
+  };
+};

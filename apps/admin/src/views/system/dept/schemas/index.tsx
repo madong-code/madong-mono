@@ -85,11 +85,29 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'code',
         title: $t('system.dept.table.columns.code'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'sort',
         title: $t('system.dept.table.columns.sort'),
         minWidth: 80,
+      },
+      {
+        field: 'leader',
+        title: $t('system.dept.table.columns.leader'),
+        minWidth: 180,
+        align: 'left',
+        vxeColumn: {
+          formatter: ({ cellValue }: any) => {
+            if (
+              !cellValue ||
+              !Array.isArray(cellValue) ||
+              cellValue.length === 0
+            )
+              return '-';
+            return cellValue.map((l: any) => l.real_name || l.name).join('、');
+          },
+        },
       },
       {
         field: 'enabled',
@@ -159,7 +177,7 @@ export const useCrudSchema = (): CrudSchema => {
           label: $t('system.dept.form.parent_dept'),
           fieldName: 'pid',
           component: 'ApiTreeSelect',
-          defaultValue: '0',
+          defaultValue: undefined,
           formItemClass: 'col-span-2',
           componentProps: {
             api: '/system/dept',

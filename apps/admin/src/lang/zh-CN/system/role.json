@@ -10,7 +10,9 @@
       "enabled": "状态",
       "sort": "排序",
       "remark": "备注",
-      "created_date": "创建时间"
+      "created_date": "创建时间",
+      "created_at": "创建时间",
+      "updated_at": "更新时间"
     }
   },
   "search": {

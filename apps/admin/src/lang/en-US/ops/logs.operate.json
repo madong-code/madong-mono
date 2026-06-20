@@ -2,7 +2,8 @@
   "title": "Operation Logs",
   "table": {
     "columns": {
-      "name": "Operator",
+      "user_name": "Account",
+      "name": "Section",
       "app": "App",
       "ip": "IP",
       "ip_location": "Location",
@@ -10,6 +11,7 @@
       "browser": "Browser",
       "url": "URL",
       "param": "Params",
+      "created_at": "Time",
       "created_date": "Time"
     },
     "search": {

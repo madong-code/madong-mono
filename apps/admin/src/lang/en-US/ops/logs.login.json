@@ -3,7 +3,7 @@
   "table": {
     "columns": {
       "user_name": "Username",
-      "real_name": "Name",
+      "real_name": "Nickname",
       "status": "Status",
       "os": "OS",
       "browser": "Browser",

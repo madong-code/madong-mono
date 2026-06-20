@@ -5,6 +5,7 @@
       "name": "Department Name",
       "code": "Code",
       "sort": "Sort",
+      "leader": "Leader",
       "enabled": "Status"
     },
     "search": {

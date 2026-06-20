@@ -32,16 +32,19 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'dept.name',
         title: $t('system.dept.table.columns.name'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'code',
         title: $t('system.post.table.columns.code'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'name',
         title: $t('system.post.table.columns.name'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'sort',
@@ -61,6 +64,7 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'remark',
         title: $t('system.post.table.columns.remark'),
         minWidth: 160,
+        align: 'left',
       },
     ],
 

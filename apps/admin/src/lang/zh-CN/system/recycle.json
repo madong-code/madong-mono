@@ -4,7 +4,7 @@
     "columns": {
       "table_name": "数据表",
       "data": "数据",
-      "enabled": "状态",
+      "is_restore": "是否还原",
       "created_date": "删除时间"
     },
     "search": {

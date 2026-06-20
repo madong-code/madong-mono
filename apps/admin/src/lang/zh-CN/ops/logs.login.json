@@ -3,7 +3,7 @@
   "table": {
     "columns": {
       "user_name": "用户名",
-      "real_name": "姓名",
+      "real_name": "昵称",
       "status": "状态",
       "os": "操作系统",
       "browser": "浏览器",

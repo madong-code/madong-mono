@@ -31,43 +31,52 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'account.user_name',
         title: $t('ops.logs.login.table.columns.user_name'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'account.real_name',
         title: $t('ops.logs.login.table.columns.real_name'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'status',
         title: $t('ops.logs.login.table.columns.status'),
         minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_OPERATION_RESULT },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_OPERATION_RESULT },
+        },
       },
       {
         field: 'os',
         title: $t('ops.logs.login.table.columns.os'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'browser',
         title: $t('ops.logs.login.table.columns.browser'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'ip',
         title: $t('ops.logs.login.table.columns.ip'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'ip_location',
         title: $t('ops.logs.login.table.columns.ip_location'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'created_at',
         title: $t('ops.logs.login.table.columns.login_date'),
         minWidth: 170,
+        formatter: 'formatDateTime',
       },
     ],
     searchForm: {
@@ -115,7 +124,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'id',
           label: 'ID',
           component: 'Input',
-          dependencies: { show: false },
+          dependencies: { show: false, triggerFields: ['id'] },
         },
         {
           fieldName: 'user_name',

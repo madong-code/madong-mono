@@ -30,11 +30,13 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'table_name',
         title: $t('system.recycle.table.columns.table_name'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'data',
         title: $t('system.recycle.table.columns.data'),
         minWidth: 300,
+        align: 'left',
         formatter: ({ cellValue }: any) => {
           if (!cellValue) return '--';
           try {
@@ -47,18 +49,25 @@ export const useCrudSchema = (): CrudSchema => {
           }
         },
       },
-      { field: 'ip', title: 'IP', minWidth: 130 },
+      { field: 'ip', title: 'IP', minWidth: 130, align: 'left' },
       {
         field: 'enabled',
-        title: $t('system.recycle.table.columns.enabled'),
+        title: $t('system.recycle.table.columns.is_restore'),
         width: 90,
+        align: 'center',
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_YES_NO },
+        },
       },
       {
         field: 'created_date',
         title: $t('system.recycle.table.columns.created_date'),
         width: 150,
+        align: 'center',
       },
     ],
+    tableActionColumn: { align: 'center' },
 
     searchForm: {
       enabled: true,

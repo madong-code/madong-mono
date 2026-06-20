@@ -4,7 +4,7 @@
     "columns": {
       "table_name": "Table",
       "data": "Data",
-      "enabled": "Status",
+      "is_restore": "Restore",
       "created_date": "Deleted"
     },
     "search": {

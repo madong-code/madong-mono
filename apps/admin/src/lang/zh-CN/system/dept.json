@@ -5,6 +5,7 @@
       "name": "部门名称",
       "code": "部门代码",
       "sort": "排序",
+      "leader": "负责人",
       "enabled": "状态"
     },
     "search": {

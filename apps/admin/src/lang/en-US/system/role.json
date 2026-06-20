@@ -10,7 +10,9 @@
       "enabled": "Status",
       "sort": "Sort",
       "remark": "Remark",
-      "created_date": "Creation Time"
+      "created_date": "Creation Time",
+      "created_at": "Created",
+      "updated_at": "Updated"
     }
   },
   "search": {
