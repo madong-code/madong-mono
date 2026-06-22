@@ -20,7 +20,7 @@ const useCrudSchema = (): CrudSchema => {
   return {
     crudApi: {
       list: (params: any) =>
-        ConfigService.getItems({ ...params, groupCode: 'common' }),
+        ConfigService.getItems({ ...params, groupCode: 'default' }),
       add: (params: any) => {
         const { group_code, code, name, content, remark } = params;
         return ConfigService.save({ group_code, code, name, content, remark });

@@ -12,7 +12,7 @@ import { useSiteConfigStore } from '#/store/modules/site-config';
 
 import { convertStringNumbers } from '../schemas';
 
-const groupCode = 'system';
+const groupCode = 'default';
 
 const [BasicForm, formApi] = useVbenForm({
   showDefaultActions: false,

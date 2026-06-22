@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import { AuthPageLayout } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
@@ -18,6 +18,13 @@ const logo = computed(
 const logoDark = computed(
   () => siteConfigStore.platformConfig.logo || preferences.logo.sourceDark,
 );
+
+// 登录页加载时，如果平台配置为空则自动获取（保障退出登录后有平台品牌信息可展示）
+onMounted(() => {
+  if (!siteConfigStore.platformIsLoaded) {
+    siteConfigStore.fetchPlatformConfig();
+  }
+});
 </script>
 
 <template>

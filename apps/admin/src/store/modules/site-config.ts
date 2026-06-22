@@ -173,7 +173,8 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
   };
 
   // resetAllStores() 依赖 $reset()，setup 语法 store 需要手动实现
-  const $reset = resetConfig;
+  // $reset 只清空租户配置，保留平台配置（退出登录后登录页仍能显示平台品牌信息）
+  const $reset = clearTenantConfig;
 
   /**
    * 获取当前有效配置（优先租户，回退平台）
