@@ -22,26 +22,39 @@ function menuHasVisibleWithForbidden(route: RouteRecordRaw): boolean {
 async function generateRoutesByBackend(
   options: GenerateMenuAndRoutesOptions,
 ): Promise<RouteRecordRaw[]> {
-  const { fetchMenuListAsync, layoutMap = {}, pageMap = {}, forbiddenComponent, routes: frontendRoutes = [] } = options;
+  const {
+    fetchMenuListAsync,
+    layoutMap = {},
+    pageMap = {},
+    forbiddenComponent,
+    routes: frontendRoutes = [],
+  } = options;
 
   try {
-    const menuRoutes = await fetchMenuListAsync?.() || [];
+    const menuRoutes = (await fetchMenuListAsync?.()) || [];
 
     // 规范化页面组件映射表
     const normalizedPageMap = Object.fromEntries(
-      Object.entries(pageMap).map(([key, value]) => [normalizeViewPath(key), value]),
+      Object.entries(pageMap).map(([key, value]) => [
+        normalizeViewPath(key),
+        value,
+      ]),
     );
 
     // 转换后端菜单路由
     let routes = convertRoutes(menuRoutes, layoutMap, normalizedPageMap);
 
     // 处理前端定义的后端模式路由（component为字符串的路由）
-    const frontendBackendRoutes = frontendRoutes.filter((route) => 
-      typeof route.component === 'string'
+    const frontendBackendRoutes = frontendRoutes.filter(
+      (route) => typeof route.component === 'string',
     );
-    
+
     if (frontendBackendRoutes.length > 0) {
-      const convertedFrontendRoutes = convertRoutes(frontendBackendRoutes, layoutMap, normalizedPageMap);
+      const convertedFrontendRoutes = convertRoutes(
+        frontendBackendRoutes,
+        layoutMap,
+        normalizedPageMap,
+      );
       routes = mergeRoutesByPath(routes, convertedFrontendRoutes);
     }
 
@@ -65,17 +78,20 @@ async function generateRoutesByBackend(
 /**
  * 根据路径合并路由
  */
-function mergeRoutesByPath(baseRoutes: RouteRecordRaw[], extraRoutes: RouteRecordRaw[]): RouteRecordRaw[] {
+function mergeRoutesByPath(
+  baseRoutes: RouteRecordRaw[],
+  extraRoutes: RouteRecordRaw[],
+): RouteRecordRaw[] {
   const result = [...baseRoutes];
   const pathMap = new Map<string, RouteRecordRaw>();
-  
+
   // 构建路径映射
   result.forEach((route) => {
     if (route.path) {
       pathMap.set(route.path, route);
     }
   });
-  
+
   // 合并额外路由
   extraRoutes.forEach((route) => {
     if (route.path) {
@@ -85,7 +101,10 @@ function mergeRoutesByPath(baseRoutes: RouteRecordRaw[], extraRoutes: RouteRecor
         existing.meta = { ...existing.meta, ...route.meta };
         // 合并子路由
         if (route.children && existing.children) {
-          existing.children = mergeRoutesByPath(existing.children, route.children);
+          existing.children = mergeRoutesByPath(
+            existing.children,
+            route.children,
+          );
         } else if (route.children) {
           existing.children = route.children;
         }
@@ -95,7 +114,7 @@ function mergeRoutesByPath(baseRoutes: RouteRecordRaw[], extraRoutes: RouteRecor
       }
     }
   });
-  
+
   return result;
 }
 
@@ -115,8 +134,12 @@ function convertRoutes(
       console.error('[RouteGenerator] Route name is required', route);
     }
 
+    // 无component但有子路由：自动使用 RouterView 作为容器
+    if (!component && route.children && route.children.length > 0) {
+      route.component = layoutMap.RouteView;
+    }
     // 布局组件转换
-    if (component && layoutMap[component]) {
+    else if (component && layoutMap[component]) {
       route.component = layoutMap[component];
     }
     // 页面组件转换
@@ -133,7 +156,8 @@ function convertRoutes(
           route: route.path,
           meta: route.meta,
         });
-        route.component = pageMap['/_core/fallback/not-found.vue'] || Object.values(pageMap)[0];
+        route.component =
+          pageMap['/_core/fallback/not-found.vue'] || Object.values(pageMap)[0];
       }
     }
 
@@ -152,7 +176,9 @@ function findMatchingComponent(
   const result = resolveComponentPath(component, meta);
 
   // 精确匹配
-  const exactPath = result.path.endsWith('.vue') ? result.path : `${result.path}.vue`;
+  const exactPath = result.path.endsWith('.vue')
+    ? result.path
+    : `${result.path}.vue`;
   if (pageMap[exactPath]) {
     return exactPath;
   }
@@ -165,7 +191,8 @@ function findMatchingComponent(
 
     if (moduleFiles.length > 0) {
       if (result.template) {
-        const matchedFile = moduleFiles.find((file) => file.includes(result.template!));
+        const { template } = result;
+        const matchedFile = moduleFiles.find((file) => file.includes(template));
         if (matchedFile) {
           return matchedFile;
         }
@@ -178,7 +205,9 @@ function findMatchingComponent(
   const pathParts = result.path.replace('.vue', '').split('/').filter(Boolean);
   if (pathParts.length >= 2) {
     const searchParts = pathParts.slice(-3).join('/');
-    const partialMatch = Object.keys(pageMap).find((key) => key.includes(searchParts));
+    const partialMatch = Object.keys(pageMap).find((key) =>
+      key.includes(searchParts),
+    );
     if (partialMatch) {
       return partialMatch;
     }
@@ -198,7 +227,10 @@ function findMatchingComponent(
  * 5. 视图路径: views/about/test → /about/test 或 /plugins/{module}/views/about/test
  * 6. 直接路径: /dashboard/workspace
  */
-function resolveComponentPath(component: string, meta?: any): { path: string; module?: string; template?: string } {
+function resolveComponentPath(
+  component: string,
+  meta?: any,
+): { module?: string; path: string; template?: string } {
   const { module } = meta || {};
 
   // ⭐ 最简写法：通过 meta.module 定位插件
@@ -291,7 +323,7 @@ function resolveComponentPath(component: string, meta?: any): { path: string; mo
 function isSimplePath(path: string): boolean {
   // 类型保护，确保 path 是字符串
   if (typeof path !== 'string' || !path) return false;
-  
+
   return (
     !path.startsWith('/') &&
     !path.startsWith('plugin/') &&
@@ -306,7 +338,9 @@ function isSimplePath(path: string): boolean {
  */
 function normalizeViewPath(path: string): string {
   const normalizedPath = path.replace(/^(\.\/|\.\.\/)+/, '');
-  const viewPath = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
+  const viewPath = normalizedPath.startsWith('/')
+    ? normalizedPath
+    : `/${normalizedPath}`;
   return viewPath.replace(/^\/views/, '');
 }
 
