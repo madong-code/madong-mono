@@ -1,9 +1,9 @@
-import type { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw, RouteRecordStringComponent } from '@vben/types';
 
 import { mergeRouteModules, traverseTreeValues } from '@vben/utils';
 
-import { coreRoutes, fallbackNotFoundRoute } from './core';
 import backendRoutes from './backend';
+import { coreRoutes, fallbackNotFoundRoute } from './core';
 
 const dynamicRouteFiles = import.meta.glob('./modules/**/*.ts', {
   eager: true,
@@ -23,7 +23,7 @@ const staticRoutes: RouteRecordRaw[] = [];
 const externalRoutes: RouteRecordRaw[] = [];
 
 /** 后端模式路由，component为字符串路径，由后端菜单系统动态加载 */
-const backendModeRoutes: RouteRecordRaw[] = backendRoutes;
+const backendModeRoutes: RouteRecordStringComponent[] = backendRoutes;
 
 /** 路由列表，由基本路由、外部路由和404兜底路由组成
  *  无需走权限验证（会一直显示在菜单中） */

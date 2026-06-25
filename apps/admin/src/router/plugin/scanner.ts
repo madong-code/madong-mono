@@ -71,7 +71,9 @@ export class PluginRouteScanner {
     // 深度合并路由树
     const mergeRouteTree = (routes: any[]): any[] => {
       // 先去重，相同name的只保留第一个（后端优先，插件路由后续覆盖）
-      const uniqueRoutes = [...new Map(routes.map((r) => [r.name, r])).values()];
+      const uniqueRoutes = [
+        ...new Map(routes.map((r) => [r.name, r])).values(),
+      ];
 
       return uniqueRoutes.map((route) => {
         const pluginRoute = pluginRouteMap.get(route.name);
@@ -128,7 +130,7 @@ export class PluginRouteScanner {
   /**
    * 一次性扫描所有插件路由，同时收集前端和后端格式
    */
-  scan(): { backendRoutes: any[]; frontendRoutes: RouteRecordRaw[]; } {
+  scan(): { backendRoutes: any[]; frontendRoutes: RouteRecordRaw[] } {
     if (this.hasScanned) {
       return {
         frontendRoutes: this.cachedFrontendRoutes,
@@ -259,7 +261,7 @@ export class PluginRouteScanner {
     routes: any[],
     pluginName: string,
     parentMeta?: Record<string, any>,
-  ): { backend: any[]; frontend: RouteRecordRaw[]; } {
+  ): { backend: any[]; frontend: RouteRecordRaw[] } {
     const frontend: RouteRecordRaw[] = [];
     const backend: any[] = [];
 
@@ -275,7 +277,7 @@ export class PluginRouteScanner {
       const processedRoute = { ...route, meta };
 
       // 处理子路由
-      let children: null | { backend: any[]; frontend: RouteRecordRaw[]; } =
+      let children: null | { backend: any[]; frontend: RouteRecordRaw[] } =
         null;
       if (
         Array.isArray(processedRoute.children) &&
@@ -307,8 +309,14 @@ export class PluginRouteScanner {
           processedRoute.children = children.backend;
         }
         backend.push(processedRoute);
-      } else if (processedRoute.component === 'BasicLayout') {
-        // 布局组件：视为后端路由的分组
+      } else if (
+        processedRoute.component === 'BasicLayout' ||
+        processedRoute.component === 'RouteView' ||
+        (!processedRoute.component &&
+          Array.isArray(processedRoute.children) &&
+          processedRoute.children.length > 0)
+      ) {
+        // 布局组件或空 component 的分组路由：视为后端路由的分组
         if (children?.backend?.length) {
           processedRoute.children = children.backend;
         }

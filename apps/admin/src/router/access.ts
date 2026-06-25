@@ -14,6 +14,9 @@ import { $t } from '#/locales';
 
 import pluginRouter from './plugin';
 
+/** RouteView：路由分组容器，仅渲染子路由的 router-view */
+const RouteView = () => import('vue-router').then((m) => m.RouterView);
+
 /** 无权限时显示的 403 组件 */
 const FORBIDDEN_COMPONENT = () =>
   import('#/views/_core/fallback/forbidden.vue');
@@ -99,7 +102,7 @@ async function generateAccess(
     ...options,
     fetchMenuListAsync: fetchBackendMenus,
     forbiddenComponent: FORBIDDEN_COMPONENT,
-    layoutMap: { BasicLayout, IFrameView },
+    layoutMap: { BasicLayout, IFrameView, RouteView },
     pageMap,
   });
 }
