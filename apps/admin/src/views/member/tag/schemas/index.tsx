@@ -1,4 +1,5 @@
 import type { CrudSchema } from '#/components/crud/components/types';
+
 import { MemberTagService } from '#/api/member';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
@@ -15,7 +16,7 @@ export const useCrudSchema = (): CrudSchema => {
     },
     // ========== 扁平化表格配置 ==========
     hasAdd: true,
-    hasEdit: true,
+    hasEdit: false,
     hasView: true,
     hasRemove: true,
     permissions: {
@@ -26,32 +27,59 @@ export const useCrudSchema = (): CrudSchema => {
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'name', title: $t('member.tag.table.columns.name'), minWidth: 150 },
-      { field: 'description', title: $t('member.tag.table.columns.description'), minWidth: 200 },
+      {
+        field: 'name',
+        title: $t('member.tag.table.columns.name'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'description',
+        title: $t('member.tag.table.columns.description'),
+        minWidth: 200,
+        align: 'left',
+      },
       {
         field: 'member_count',
         title: $t('member.tag.table.columns.member_count'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'enabled',
         title: $t('member.tag.table.columns.enabled'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
-      { field: 'created_at', title: $t('member.tag.table.columns.created_at'), minWidth: 160 },
+      {
+        field: 'created_at',
+        title: $t('member.tag.table.columns.created_at'),
+        minWidth: 160,
+        align: 'center',
+        formatter: 'formatDateTime',
+      },
     ],
     searchForm: {
       enabled: true,
       collapsed: true,
       collapsedRows: 2,
       schema: [
-        { component: 'Input', fieldName: 'LINK_name', label: $t('member.tag.table.search.name') },
+        {
+          component: 'Input',
+          fieldName: 'LINK_name',
+          label: $t('member.tag.table.search.name'),
+        },
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
           label: $t('member.tag.table.search.enabled'),
-          componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+          },
         },
       ],
     },

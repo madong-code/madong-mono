@@ -31,26 +31,35 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'level',
         title: $t('member.level.table.columns.level'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'name',
         title: $t('member.level.table.columns.name'),
         minWidth: 200,
+        align: 'left',
       },
       {
         field: 'min_points',
         title: $t('member.level.table.columns.min_points'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'discount',
         title: $t('member.level.table.columns.discount'),
         minWidth: 100,
+        align: 'left',
+        formatter: ({ cellValue }: any) => {
+          if (cellValue === null || cellValue === undefined) return '-';
+          return `${(cellValue * 100).toFixed(0)}%`;
+        },
       },
       {
         field: 'member_count',
         title: $t('member.level.table.columns.member_count'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'enabled',
@@ -65,6 +74,8 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'created_at',
         title: $t('member.level.table.columns.created_at'),
         minWidth: 160,
+        align: 'center',
+        formatter: 'formatDateTime',
       },
     ],
     searchForm: {

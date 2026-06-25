@@ -1,4 +1,5 @@
 import type { CrudSchema } from '#/components/crud/components/types';
+
 import { MemberService } from '#/api/member';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
@@ -26,19 +27,58 @@ export const useCrudSchema = (): CrudSchema => {
     },
     columns: [
       { type: 'checkbox', width: 60 },
-      { field: 'username', title: $t('member.user.table.columns.username'), minWidth: 100 },
-      { field: 'nickname', title: $t('member.user.table.columns.nickname'), minWidth: 100 },
-      { field: 'phone', title: $t('member.user.table.columns.phone'), minWidth: 120 },
-      { field: 'email', title: $t('member.user.table.columns.email'), minWidth: 150 },
-      { field: 'level.name', title: $t('member.user.table.columns.level_name'), minWidth: 100 },
-      { field: 'points', title: $t('member.user.table.columns.points'), minWidth: 100 },
-    {
+      {
+        field: 'username',
+        title: $t('member.user.table.columns.username'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'nickname',
+        title: $t('member.user.table.columns.nickname'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'phone',
+        title: $t('member.user.table.columns.phone'),
+        minWidth: 120,
+        align: 'left',
+      },
+      {
+        field: 'email',
+        title: $t('member.user.table.columns.email'),
+        minWidth: 150,
+        align: 'left',
+      },
+      {
+        field: 'level.name',
+        title: $t('member.user.table.columns.level_name'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
+        field: 'points',
+        title: $t('member.user.table.columns.points'),
+        minWidth: 100,
+        align: 'left',
+      },
+      {
         field: 'enabled',
         title: $t('member.user.table.columns.enabled'),
         minWidth: 80,
-        cellRender: { name: 'CellDictTag', attrs: { code: DictEnum.SYS_ENABLED_STATUS } },
-    },
-      { field: 'created_at', title: $t('member.user.table.columns.created_at'), minWidth: 160 },
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
+      },
+      {
+        field: 'created_at',
+        title: $t('member.user.table.columns.created_at'),
+        minWidth: 160,
+        align: 'center',
+        formatter: 'formatDateTime',
+      },
     ],
     searchForm: {
       enabled: true,
@@ -55,12 +95,19 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'nickname',
           label: $t('member.user.table.search.nickname'),
         },
-        { component: 'Input', fieldName: 'phone', label: $t('member.user.table.search.phone') },
+        {
+          component: 'Input',
+          fieldName: 'phone',
+          label: $t('member.user.table.search.phone'),
+        },
         {
           component: 'ApiDict',
           fieldName: 'EQ_enabled',
           label: $t('member.user.table.search.enabled'),
-          componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+          },
         },
       ],
     },
