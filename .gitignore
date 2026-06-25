@@ -41,7 +41,8 @@ vite.config.js.*
 vite.config.ts.*
 
 # Application plugin directories (generated at runtime)
-apps/*/src/plugin/
+apps/*/src/plugin/*
+!apps/*/src/plugin/demo/
 .idea
 .vscode
 *.suo
