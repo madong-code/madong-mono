@@ -18,6 +18,9 @@ import pluginRouter from './plugin';
 const FORBIDDEN_COMPONENT = () =>
   import('#/views/_core/fallback/forbidden.vue');
 
+/** RouteView：路由分组容器，仅渲染子路由的 router-view */
+const RouteView = () => import('vue-router').then((m) => m.RouterView);
+
 /**
  * 打印扫描到的组件模板
  */
@@ -99,7 +102,7 @@ async function generateAccess(
     ...options,
     fetchMenuListAsync: fetchBackendMenus,
     forbiddenComponent: FORBIDDEN_COMPONENT,
-    layoutMap: { BasicLayout, IFrameView },
+    layoutMap: { BasicLayout, IFrameView, RouteView },
     pageMap,
   });
 }
