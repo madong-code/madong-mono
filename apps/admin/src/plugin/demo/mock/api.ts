@@ -1,4 +1,8 @@
-import { MOCK_MENU_DATA, MOCK_PRODUCT_DATA, MOCK_TABLE_DATA } from './table-data';
+import {
+  MOCK_MENU_DATA,
+  MOCK_PRODUCT_DATA,
+  MOCK_TABLE_DATA,
+} from './table-data';
 
 export function getAllMenusApi() {
   return Promise.resolve(MOCK_MENU_DATA);
@@ -19,7 +23,9 @@ export function getTableListApi(params: Record<string, any>) {
 export function uploadFile(_file: File) {
   return new Promise<{ url: string }>((resolve) => {
     setTimeout(() => {
-      resolve({ url: `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/200/200` });
+      resolve({
+        url: `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/200/200`,
+      });
     }, 1000);
   });
 }

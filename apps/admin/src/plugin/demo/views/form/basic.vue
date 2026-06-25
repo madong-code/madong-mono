@@ -3,9 +3,8 @@ import { Page } from '@vben/common-ui';
 
 import { ElButton, ElCard, ElMessage } from 'element-plus';
 
-import { $t } from '#/locales';
-
 import { useVbenForm } from '#/adapter/form';
+import { $t } from '#/locales';
 
 const [BaseForm, baseFormApi] = useVbenForm({
   commonConfig: {
@@ -24,7 +23,11 @@ const [BaseForm, baseFormApi] = useVbenForm({
     },
     {
       component: 'Input',
-      componentProps: { placeholder: '请输入', type: 'password', showPassword: true },
+      componentProps: {
+        placeholder: '请输入',
+        type: 'password',
+        showPassword: true,
+      },
       fieldName: 'password',
       label: '密码',
     },
@@ -88,7 +91,20 @@ const [BaseForm, baseFormApi] = useVbenForm({
       component: 'TreeSelect',
       componentProps: {
         data: [
-          { id: 1, label: 'root 1', children: [{ id: 2, label: 'parent 1', children: [{ id: 3, label: 'leaf 1' }, { id: 4, label: 'leaf 2' }] }] },
+          {
+            id: 1,
+            label: 'root 1',
+            children: [
+              {
+                id: 2,
+                label: 'parent 1',
+                children: [
+                  { id: 3, label: 'leaf 1' },
+                  { id: 4, label: 'leaf 2' },
+                ],
+              },
+            ],
+          },
         ],
         nodeKey: 'id',
         props: { label: 'label', children: 'children' },
@@ -125,12 +141,17 @@ function handleSetFormValue() {
 </script>
 
 <template>
-  <Page :description="$t('demo.form.basic.desc')" :title="$t('demo.form.basic.title')">
+  <Page
+    :description="$t('demo.form.basic.desc')"
+    :title="$t('demo.form.basic.title')"
+  >
     <ElCard>
       <template #header>
         <div class="flex items-center justify-between">
           <span>基础示例</span>
-          <ElButton type="primary" @click="handleSetFormValue">设置表单值</ElButton>
+          <ElButton type="primary" @click="handleSetFormValue">
+            设置表单值
+          </ElButton>
         </div>
       </template>
       <BaseForm />

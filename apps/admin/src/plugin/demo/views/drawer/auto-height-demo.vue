@@ -40,7 +40,9 @@ function handleUpdate(len: number) {
       {{ item }}
     </div>
     <template #prepend-footer>
-      <ElButton type="primary" link @click="handleUpdate(6)">点击更新数据</ElButton>
+      <ElButton type="primary" link @click="handleUpdate(6)">
+        点击更新数据
+      </ElButton>
     </template>
   </Drawer>
 </template>

@@ -1,3 +1,75 @@
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+
+import { useI18n } from '@vben/locales';
+
+import { $t } from '#/locales';
+
+const { locale, mergeLocaleMessage } = useI18n();
+
+const currentLocale = computed(() => locale.value);
+
+function testTranslation() {
+  console.warn('demo.locale.test.greeting:', $t('demo.locale.test.greeting'));
+  console.warn('demo.locale.test.welcome:', $t('demo.locale.test.welcome'));
+  console.warn('demo.locale.test.menuHome:', $t('demo.locale.test.menuHome'));
+  console.warn(
+    'demo.locale.test.menuSettings:',
+    $t('demo.locale.test.menuSettings'),
+  );
+}
+
+async function switchLocale(lang: string) {
+  locale.value = lang;
+  await reloadLocaleForLang(lang);
+}
+
+async function reloadLocaleForLang(lang: string) {
+  try {
+    const { loadAllLocaleMessages } =
+      await import('../../../../locales/loader');
+    const result = loadAllLocaleMessages(lang as any);
+    mergeLocaleMessage(lang, result);
+    console.warn(`语言包已加载并合并到 ${lang}`);
+  } catch (error) {
+    console.error('加载语言包失败:', error);
+  }
+}
+
+onMounted(async () => {
+  const staticMessages = {
+    demo: {
+      locale: {
+        test: {
+          greeting: '你好！欢迎使用插件语言包测试',
+          welcome: '欢迎来到后端模式路由测试',
+          menuHome: '首页',
+          menuSettings: '设置',
+        },
+      },
+    },
+  };
+  mergeLocaleMessage(currentLocale.value, staticMessages);
+  if (currentLocale.value !== 'zh-CN') {
+    mergeLocaleMessage('zh-CN', staticMessages);
+  }
+});
+
+async function reloadLocale() {
+  try {
+    const { loadAllLocaleMessages } =
+      await import('../../../../locales/loader');
+    const result = loadAllLocaleMessages(currentLocale.value as any);
+    mergeLocaleMessage(currentLocale.value, result);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  } catch (error) {
+    console.error('加载语言包失败:', error);
+  }
+}
+</script>
+
 <template>
   <div class="locale-backend-test">
     <div class="test-container">
@@ -28,7 +100,9 @@
           </div>
           <div class="test-card">
             <div class="card-label">demo.locale.test.menuSettings</div>
-            <div class="card-value">{{ $t('demo.locale.test.menuSettings') }}</div>
+            <div class="card-value">
+              {{ $t('demo.locale.test.menuSettings') }}
+            </div>
           </div>
         </div>
       </div>
@@ -62,14 +136,18 @@
         <div class="lang-buttons">
           <button
             class="lang-btn"
-            :class="{ active: currentLocale === 'zh-CN' || currentLocale === 'zh' }"
+            :class="{
+              active: currentLocale === 'zh-CN' || currentLocale === 'zh',
+            }"
             @click="switchLocale('zh-CN')"
           >
             🇨🇳 {{ $t('demo.locale.test.chinese') }}
           </button>
           <button
             class="lang-btn"
-            :class="{ active: currentLocale === 'en-US' || currentLocale === 'en' }"
+            :class="{
+              active: currentLocale === 'en-US' || currentLocale === 'en',
+            }"
             @click="switchLocale('en-US')"
           >
             🇬🇧 {{ $t('demo.locale.test.english') }}
@@ -79,71 +157,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useI18n } from '@vben/locales'
-import { $t } from '#/locales'
-
-const { locale, mergeLocaleMessage } = useI18n()
-
-const currentLocale = computed(() => locale.value)
-
-function testTranslation() {
-  console.log('demo.locale.test.greeting:', $t('demo.locale.test.greeting'))
-  console.log('demo.locale.test.welcome:', $t('demo.locale.test.welcome'))
-  console.log('demo.locale.test.menuHome:', $t('demo.locale.test.menuHome'))
-  console.log('demo.locale.test.menuSettings:', $t('demo.locale.test.menuSettings'))
-}
-
-async function switchLocale(lang: string) {
-  locale.value = lang
-  await reloadLocaleForLang(lang)
-}
-
-async function reloadLocaleForLang(lang: string) {
-  try {
-    const { loadAllLocaleMessages } = await import('../../../../locales/loader')
-    const result = loadAllLocaleMessages(lang as any)
-    mergeLocaleMessage(lang, result)
-    console.log(`语言包已加载并合并到 ${lang}`)
-  } catch (error) {
-    console.error('加载语言包失败:', error)
-  }
-}
-
-onMounted(async () => {
-  const staticMessages = {
-    demo: {
-      locale: {
-        test: {
-          greeting: '你好！欢迎使用插件语言包测试',
-          welcome: '欢迎来到后端模式路由测试',
-          menuHome: '首页',
-          menuSettings: '设置',
-        },
-      },
-    },
-  }
-  mergeLocaleMessage(currentLocale.value, staticMessages)
-  if (currentLocale.value !== 'zh-CN') {
-    mergeLocaleMessage('zh-CN', staticMessages)
-  }
-})
-
-async function reloadLocale() {
-  try {
-    const { loadAllLocaleMessages } = await import('../../../../locales/loader')
-    const result = loadAllLocaleMessages(currentLocale.value as any)
-    mergeLocaleMessage(currentLocale.value, result)
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)
-  } catch (error) {
-    console.error('加载语言包失败:', error)
-  }
-}
-</script>
 
 <style scoped>
 .locale-backend-test {

@@ -3,9 +3,12 @@ import type { RouteRecordStringComponent } from '@vben/types';
 import { $t } from '#/locales';
 
 /** 插件路由定义类型：component 可选，无 component 但有 children 时自动渲染为 RouterView 容器 */
-type PluginRoute = Omit<RouteRecordStringComponent, 'children' | 'component'> & {
-  component?: string;
+type PluginRoute = Omit<
+  RouteRecordStringComponent,
+  'children' | 'component'
+> & {
   children?: PluginRoute[];
+  component?: string;
 };
 
 const routes: PluginRoute[] = [
@@ -375,4 +378,3 @@ const routes: PluginRoute[] = [
 ];
 
 export default routes;
-

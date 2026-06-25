@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Page, Loading, Spinner } from '@vben/common-ui';
+import { Loading, Page, Spinner } from '@vben/common-ui';
 
 import { ElCard } from 'element-plus';
 </script>
@@ -28,7 +28,10 @@ import { ElCard } from 'element-plus';
 
     <ElCard>
       <template #header>v-loading 指令</template>
-      <div v-loading="true" class="h-[100px] w-[200px] flex items-center justify-center">
+      <div
+        v-loading="true"
+        class="h-[100px] w-[200px] flex items-center justify-center"
+      >
         内容区域
       </div>
     </ElCard>

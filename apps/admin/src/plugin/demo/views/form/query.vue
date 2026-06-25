@@ -3,8 +3,8 @@ import { Page } from '@vben/common-ui';
 
 import { ElCard, ElMessage } from 'element-plus';
 
-import { $t } from '#/locales';
 import { useVbenForm } from '#/adapter/form';
+import { $t } from '#/locales';
 
 const [QueryForm] = useVbenForm({
   collapsed: false,
@@ -12,12 +12,36 @@ const [QueryForm] = useVbenForm({
   handleSubmit: onSubmit,
   layout: 'horizontal',
   schema: [
-    { component: 'Input', componentProps: { placeholder: '请输入用户名' }, fieldName: 'username', label: '用户名' },
-    { component: 'Input', componentProps: { placeholder: '请输入密码', type: 'password', showPassword: true }, fieldName: 'password', label: '密码' },
-    { component: 'InputNumber', componentProps: { placeholder: '请输入' }, fieldName: 'number', label: '数字' },
+    {
+      component: 'Input',
+      componentProps: { placeholder: '请输入用户名' },
+      fieldName: 'username',
+      label: '用户名',
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入密码',
+        type: 'password',
+        showPassword: true,
+      },
+      fieldName: 'password',
+      label: '密码',
+    },
+    {
+      component: 'InputNumber',
+      componentProps: { placeholder: '请输入' },
+      fieldName: 'number',
+      label: '数字',
+    },
     {
       component: 'Select',
-      componentProps: { options: [{ label: '选项1', value: '1' }, { label: '选项2', value: '2' }] },
+      componentProps: {
+        options: [
+          { label: '选项1', value: '1' },
+          { label: '选项2', value: '2' },
+        ],
+      },
       fieldName: 'options',
       label: '下拉选',
     },
@@ -31,9 +55,33 @@ const [QueryForm] = useVbenForm({
 const [InlineForm] = useVbenForm({
   layout: 'inline',
   schema: [
-    { component: 'Input', componentProps: { placeholder: '请输入用户名' }, fieldName: 'username', label: '用户名' },
-    { component: 'Input', componentProps: { placeholder: '请输入密码', type: 'password', showPassword: true }, fieldName: 'password', label: '密码' },
-    { component: 'Select', componentProps: { options: [{ label: '选项1', value: '1' }, { label: '选项2', value: '2' }] }, fieldName: 'options', label: '下拉选' },
+    {
+      component: 'Input',
+      componentProps: { placeholder: '请输入用户名' },
+      fieldName: 'username',
+      label: '用户名',
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入密码',
+        type: 'password',
+        showPassword: true,
+      },
+      fieldName: 'password',
+      label: '密码',
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: '选项1', value: '1' },
+          { label: '选项2', value: '2' },
+        ],
+      },
+      fieldName: 'options',
+      label: '下拉选',
+    },
   ],
 });
 
@@ -43,7 +91,10 @@ function onSubmit(values: Record<string, any>) {
 </script>
 
 <template>
-  <Page :description="$t('demo.form.query.desc')" :title="$t('demo.form.query.title')">
+  <Page
+    :description="$t('demo.form.query.desc')"
+    :title="$t('demo.form.query.title')"
+  >
     <ElCard class="mb-5">
       <template #header>查询表单，默认展开</template>
       <QueryForm />

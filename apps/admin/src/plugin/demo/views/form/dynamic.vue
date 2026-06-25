@@ -3,8 +3,8 @@ import { Page } from '@vben/common-ui';
 
 import { ElButton, ElCard, ElMessage } from 'element-plus';
 
-import { $t } from '#/locales';
 import { useVbenForm } from '#/adapter/form';
+import { $t } from '#/locales';
 
 const [Form, formApi] = useVbenForm({
   handleSubmit: onSubmit,
@@ -36,7 +36,9 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       dependencies: {
-        if(values) { return !!values.field1Switch; },
+        if(values) {
+          return !!values.field1Switch;
+        },
         triggerFields: ['field1Switch'],
       },
       fieldName: 'field1',
@@ -45,7 +47,9 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       dependencies: {
-        show(values) { return !!values.field2Switch; },
+        show(values) {
+          return !!values.field2Switch;
+        },
         triggerFields: ['field2Switch'],
       },
       fieldName: 'field2',
@@ -54,7 +58,9 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       dependencies: {
-        disabled(values) { return !!values.field3Switch; },
+        disabled(values) {
+          return !!values.field3Switch;
+        },
         triggerFields: ['field3Switch'],
       },
       fieldName: 'field3',
@@ -63,7 +69,9 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       dependencies: {
-        required(values) { return !!values.field4Switch; },
+        required(values) {
+          return !!values.field4Switch;
+        },
         triggerFields: ['field4Switch'],
       },
       fieldName: 'field4',
@@ -85,12 +93,21 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Select',
       componentProps: {
-        options: [{ label: '选项1', value: '1' }, { label: '选项2', value: '2' }],
+        options: [
+          { label: '选项1', value: '1' },
+          { label: '选项2', value: '2' },
+        ],
       },
       dependencies: {
         componentProps(values) {
           if (values.field2 === '123') {
-            return { options: [{ label: '选项1', value: '1' }, { label: '选项2', value: '2' }, { label: '选项3', value: '3' }] };
+            return {
+              options: [
+                { label: '选项1', value: '1' },
+                { label: '选项2', value: '2' },
+                { label: '选项3', value: '3' },
+              ],
+            };
           }
           return {};
         },
@@ -110,22 +127,34 @@ function onSubmit(values: Record<string, any>) {
 }
 
 function handleDelete() {
-  formApi.setState((prev) => ({ schema: prev.schema?.filter((item) => item.fieldName !== 'field7') }));
+  formApi.setState((prev) => ({
+    schema: prev.schema?.filter((item) => item.fieldName !== 'field7'),
+  }));
 }
 
 function handleAdd() {
-  formApi.setState((prev) => ({ schema: [...(prev?.schema ?? []), { component: 'Input', fieldName: `field${Date.now()}`, label: '字段+' }] }));
+  formApi.setState((prev) => ({
+    schema: [
+      ...(prev?.schema ?? []),
+      { component: 'Input', fieldName: `field${Date.now()}`, label: '字段+' },
+    ],
+  }));
 }
 
 function handleUpdate() {
   formApi.setState((prev) => ({
-    schema: prev.schema?.map((item) => (item.fieldName === 'field3' ? { ...item, label: '字段3-修改' } : item)),
+    schema: prev.schema?.map((item) =>
+      item.fieldName === 'field3' ? { ...item, label: '字段3-修改' } : item,
+    ),
   }));
 }
 </script>
 
 <template>
-  <Page :description="$t('demo.form.dynamic.desc')" :title="$t('demo.form.dynamic.title')">
+  <Page
+    :description="$t('demo.form.dynamic.desc')"
+    :title="$t('demo.form.dynamic.title')"
+  >
     <ElCard>
       <template #header>
         <div class="flex items-center justify-between">

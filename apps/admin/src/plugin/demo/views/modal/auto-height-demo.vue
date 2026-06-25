@@ -43,7 +43,9 @@ function handleUpdate(len?: number) {
       {{ item }}
     </div>
     <template #prepend-footer>
-      <ElButton type="primary" link @click="handleUpdate()">点击更新数据</ElButton>
+      <ElButton type="primary" link @click="handleUpdate()">
+        点击更新数据
+      </ElButton>
     </template>
   </Modal>
 </template>

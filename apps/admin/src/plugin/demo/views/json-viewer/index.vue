@@ -1,10 +1,15 @@
 <script lang="ts" setup>
-import { Page, JsonViewer } from '@vben/common-ui';
+import { JsonViewer, Page } from '@vben/common-ui';
 
 import { ElCard, ElMessage } from 'element-plus';
 
 const json1 = {
-  additionalInfo: { author: 'Your Name', debug: true, version: '1.3.10', versionCode: 132 },
+  additionalInfo: {
+    author: 'Your Name',
+    debug: true,
+    version: '1.3.10',
+    versionCode: 132,
+  },
   tools: [
     { name: 'Tool 1', description: 'Description of Tool 1' },
     { name: 'Tool 2', description: 'Description of Tool 2' },
@@ -15,9 +20,18 @@ const json1 = {
 const json2 = {
   id: 'chatgpt-123',
   object: 'chat.completion',
-  created: 1677652288,
+  created: 1_677_652_288,
   model: 'gpt-3.5-turbo-0613',
-  choices: [{ index: 0, message: { role: 'assistant', content: 'Hello there, how may I assist you today?' }, finish_reason: 'stop' }],
+  choices: [
+    {
+      index: 0,
+      message: {
+        role: 'assistant',
+        content: 'Hello there, how may I assist you today?',
+      },
+      finish_reason: 'stop',
+    },
+  ],
   usage: { prompt_tokens: 9, completion_tokens: 12, total_tokens: 21 },
 };
 </script>
@@ -31,7 +45,13 @@ const json2 = {
 
     <ElCard class="mb-4">
       <template #header>可复制 + 默认展开3层 + 显示边框</template>
-      <JsonViewer :value="json2" :copyable="true" :expand-depth="3" bordered @copy="() => ElMessage.success('已复制到剪贴板')" />
+      <JsonViewer
+        :value="json2"
+        :copyable="true"
+        :expand-depth="3"
+        bordered
+        @copy="() => ElMessage.success('已复制到剪贴板')"
+      />
     </ElCard>
 
     <ElCard>
