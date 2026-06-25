@@ -1,4 +1,4 @@
-import type { Recordable, UserInfo } from '@vben/types';
+import type { Recordable } from '@vben/types';
 
 import type { AuthApi } from '#/api/core/auth';
 
@@ -9,7 +9,6 @@ import { LOGIN_PATH } from '@vben/constants';
 import { preferences } from '@vben/preferences';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
-import { ElNotification } from 'element-plus';
 import { defineStore } from 'pinia';
 
 import {
@@ -20,7 +19,6 @@ import {
   logoutApi,
   switchTenantApi,
 } from '#/api';
-import { $t } from '#/locales';
 import { resetRoutes as resetRouterRoutes } from '#/router';
 import { generateAccess } from '#/router/access';
 import { accessRoutes } from '#/router/routes';
@@ -44,8 +42,6 @@ export const useAuthStore = defineStore('auth', () => {
     params: Recordable<any>,
     onSuccess?: () => Promise<void> | void,
   ) {
-    // 异步处理用户登录操作并获取 accessToken
-    let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
       const loginResult = await loginApi(params);
@@ -62,50 +58,17 @@ export const useAuthStore = defineStore('auth', () => {
           accessStore.setTenantId(params.tenant_id);
         }
 
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
-          fetchUserInfo(),
-          getAccessCodesApi(),
-        ]);
-
-        userInfo = fetchUserInfoResult;
-
-        // 后端 getUserInfo 不返回 current_tenant，从登录响应中注入
-        if (loginResult.tenant) {
-          (userInfo as Record<string, any>).current_tenant = loginResult.tenant;
-        }
-        userStore.setUserInfo(userInfo);
-        accessStore.setAccessCodes(accessCodes);
-
-        // 登录成功后获取租户配置并同步到 preferences（logo/标题/favicon）
-        const siteConfigStore = useSiteConfigStore();
-        await siteConfigStore.syncTenantPreferences();
-
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
         } else {
           onSuccess
             ? await onSuccess?.()
-            : await router.push(
-                userInfo.homePath || preferences.app.defaultHomePath,
-              );
-        }
-
-        if (userInfo?.realName) {
-          ElNotification({
-            message: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
-            title: $t('authentication.loginSuccess'),
-            type: 'success',
-          });
+            : await router.push(preferences.app.defaultHomePath);
         }
       }
     } finally {
       loginLoading.value = false;
     }
-
-    return {
-      userInfo,
-    };
   }
 
   async function logout(redirect: boolean = true) {
