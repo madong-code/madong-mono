@@ -137,6 +137,10 @@
       "path": "packages/icons"
     },
     {
+      "name": "@madong/visual-form",
+      "path": "packages/lib/visual-form"
+    },
+    {
       "name": "@vben/locales",
       "path": "packages/locales"
     },

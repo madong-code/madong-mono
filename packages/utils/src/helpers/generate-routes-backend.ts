@@ -142,8 +142,8 @@ function convertRoutes(
     else if (component && layoutMap[component]) {
       route.component = layoutMap[component];
     }
-    // 页面组件转换
-    else if (component) {
+    // 页面组件转换（仅处理字符串类型的 component）
+    else if (component && typeof component === 'string') {
       const matchedPath = findMatchingComponent(component, route.meta, pageMap);
 
       if (matchedPath) {
@@ -231,6 +231,11 @@ function resolveComponentPath(
   component: string,
   meta?: any,
 ): { module?: string; path: string; template?: string } {
+  // 类型保护：处理非字符串的 component 值（如路由合并过程中产生的异常数据）
+  if (typeof component !== 'string') {
+    return { path: `/${String(component)}` };
+  }
+
   const { module } = meta || {};
 
   // ⭐ 最简写法：通过 meta.module 定位插件
