@@ -22,5 +22,7 @@ export default defineConfig({
     '.npmrc',
     '*-lock.yaml',
     'skills-lock.json',
+    // 第三方库构建产物，不可格式化
+    'packages/lib',
   ],
 });
