@@ -1,70 +1,8 @@
-<template>
-  <div class="form-builder-page">
-    <!-- 加载中 -->
-    <div v-if="!isReady && !error" class="designer-wrapper loading-wrapper">
-      <div class="loading-text">加载设计器...</div>
-    </div>
-    <div v-else-if="error" class="designer-wrapper error-wrapper">
-      <div class="error-msg">{{ error }}</div>
-    </div>
-    <template v-else>
-    <!-- 顶部工具栏 -->
-    <div class="builder-toolbar">
-      <div class="toolbar-left">
-        <span class="toolbar-title">{{ $t('demo.form_builder.title') }}</span>
-      </div>
-      <div class="toolbar-right">
-        <ElButton @click="loadSampleForm">加载示例</ElButton>
-        <ElButton @click="clearDesigner">清空</ElButton>
-        <ElButton type="primary" @click="getFormJson">获取 JSON</ElButton>
-      </div>
-    </div>
-
-    <!-- 设计器区域 -->
-    <div class="designer-wrapper">
-      <v-form-designer
-        ref="vfDesignerRef"
-        :designer-config="designerConfig"
-        :form-json="formJson"
-      >
-        <template #customToolButtons>
-          <ElButton type="primary" link @click="getFormJson">
-            查看 JSON
-          </ElButton>
-        </template>
-      </v-form-designer>
-    </div>
-
-    <!-- JSON 对话框 -->
-    <ElDialog
-      v-model="jsonDialogVisible"
-      title="表单 JSON"
-      width="70%"
-      destroy-on-close
-    >
-      <ElTabs v-model="activeJsonTab">
-        <ElTabPane label="表单 Schema" name="formSchema">
-          <pre class="json-content">{{ formatJson(jsonData?.formSchema) }}</pre>
-        </ElTabPane>
-        <ElTabPane label="表单数据" name="formData">
-          <pre class="json-content">{{ formatJson(jsonData?.formData) }}</pre>
-        </ElTabPane>
-      </ElTabs>
-      <template #footer>
-        <ElButton @click="copyJson">复制 JSON</ElButton>
-        <ElButton type="primary" @click="jsonDialogVisible = false">关闭</ElButton>
-      </template>
-    </ElDialog>
-    </template>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 
-import { ElMessage } from 'element-plus';
-
 import { useVForm } from '@madong/visual-form';
+import { ElMessage } from 'element-plus';
 
 import { $t } from '#/locales';
 
@@ -76,7 +14,7 @@ const vfDesignerRef = ref<any>(null);
 
 const jsonDialogVisible = ref(false);
 const activeJsonTab = ref('formSchema');
-const jsonData = ref<{ formSchema: any; formData: any } | null>(null);
+const jsonData = ref<null | { formData: any; formSchema: any }>(null);
 
 const formJson = ref<any>({ ...EMPTY_FORM_JSON });
 
@@ -142,13 +80,75 @@ async function copyJson() {
 }
 </script>
 
+<template>
+  <div class="form-builder-page">
+    <!-- 加载中 -->
+    <div v-if="!isReady && !error" class="designer-wrapper loading-wrapper">
+      <div class="loading-text">加载设计器...</div>
+    </div>
+    <div v-else-if="error" class="designer-wrapper error-wrapper">
+      <div class="error-msg">{{ error }}</div>
+    </div>
+    <template v-else>
+      <!-- 顶部工具栏 -->
+      <div class="builder-toolbar">
+        <div class="toolbar-left">
+          <span class="toolbar-title">{{ $t('demo.form_builder.title') }}</span>
+        </div>
+        <div class="toolbar-right">
+          <ElButton @click="loadSampleForm">加载示例</ElButton>
+          <ElButton @click="clearDesigner">清空</ElButton>
+          <ElButton type="primary" @click="getFormJson">获取 JSON</ElButton>
+        </div>
+      </div>
+
+      <!-- 设计器区域 -->
+      <div class="designer-wrapper">
+        <v-form-designer
+          ref="vfDesignerRef"
+          :designer-config="designerConfig"
+          :form-json="formJson"
+        >
+          <template #customToolButtons>
+            <ElButton type="primary" link @click="getFormJson">
+              查看 JSON
+            </ElButton>
+          </template>
+        </v-form-designer>
+      </div>
+
+      <!-- JSON 对话框 -->
+      <ElDialog
+        v-model="jsonDialogVisible"
+        title="表单 JSON"
+        width="70%"
+        destroy-on-close
+      >
+        <ElTabs v-model="activeJsonTab">
+          <ElTabPane label="表单 Schema" name="formSchema">
+            <pre class="json-content">{{
+              formatJson(jsonData?.formSchema)
+            }}</pre>
+          </ElTabPane>
+          <ElTabPane label="表单数据" name="formData">
+            <pre class="json-content">{{ formatJson(jsonData?.formData) }}</pre>
+          </ElTabPane>
+        </ElTabs>
+        <template #footer>
+          <ElButton @click="copyJson">复制 JSON</ElButton>
+          <ElButton type="primary" @click="jsonDialogVisible = false">
+            关闭
+          </ElButton>
+        </template>
+      </ElDialog>
+    </template>
+  </div>
+</template>
+
 <style scoped>
 .form-builder-page {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -156,20 +156,20 @@ async function copyJson() {
 }
 
 .builder-toolbar {
+  z-index: 10;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
   background: #fff;
   border-bottom: 1px solid #eef2f7;
-  flex-shrink: 0;
-  z-index: 10;
 }
 
 .toolbar-left {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .toolbar-title {
@@ -184,18 +184,18 @@ async function copyJson() {
 }
 
 .designer-wrapper {
+  position: relative;
   flex: 1;
   overflow: hidden;
-  position: relative;
 }
 
 .json-content {
   max-height: 500px;
-  overflow: auto;
-  background: #f5f5f5;
   padding: 16px;
-  border-radius: 4px;
+  overflow: auto;
   font-size: 12px;
   line-height: 1.6;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 </style>
