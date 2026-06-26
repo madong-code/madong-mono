@@ -649,6 +649,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@madong/visual-form':
+        specifier: workspace:*
+        version: link:../../packages/lib/visual-form
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -1805,6 +1808,15 @@ importers:
       '@vben-core/icons':
         specifier: workspace:*
         version: link:../@core/base/icons
+
+  packages/lib/visual-form:
+    dependencies:
+      '@element-plus/icons-vue':
+        specifier: 'catalog:'
+        version: 2.3.2(vue@3.5.33(typescript@6.0.3))
+      element-plus:
+        specifier: 'catalog:'
+        version: 2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
 
   packages/locales:
     dependencies:

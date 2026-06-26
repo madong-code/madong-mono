@@ -9,6 +9,9 @@ export default defineConfig(async () => {
       plugins: [
         ElementPlus({
           format: 'esm',
+          exclude: [
+            /packages\/lib\/visual-form\//,
+          ],
         }),
       ],
       server: {

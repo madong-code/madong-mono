@@ -8,6 +8,7 @@ packages:
   - packages/@core/*
   - packages/effects/*
   - packages/business/*
+  - packages/lib/*
   - apps/*
   - scripts/*
   - docs
