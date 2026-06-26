@@ -243,6 +243,16 @@ const routes: PluginRoute[] = [
           },
         ],
       },
+      // ===================== 表单设计 =====================
+      {
+        path: '/demo/form-builder',
+        name: 'DemoFormBuilder',
+        component: 'visual-form/builder/index',
+        meta: {
+          title: $t('demo.form_builder.title'),
+          module: 'demo',
+        },
+      },
       // ===================== 通用组件 =====================
       {
         path: '/demo/locale',
