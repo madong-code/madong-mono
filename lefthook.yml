@@ -51,11 +51,11 @@ pre-commit:
       glob: '*.md'
       stage_fixed: true
     lint-vue:
-      run: pnpm oxfmt {staged_files}; pnpm oxlint --fix {staged_files} && pnpm eslint --cache --fix --no-warn-ignored {staged_files} && pnpm stylelint --fix --allow-empty-input {staged_files}
+      run: pnpm oxfmt {staged_files}; pnpm oxlint --fix {staged_files}; pnpm eslint --cache --fix --no-warn-ignored {staged_files}; pnpm stylelint --fix --allow-empty-input {staged_files}
       glob: '*.vue'
       stage_fixed: true
     lint-js:
-      run: pnpm oxfmt {staged_files}; pnpm oxlint --fix {staged_files} && pnpm eslint --cache --fix --no-warn-ignored {staged_files}
+      run: pnpm oxfmt {staged_files}; pnpm oxlint --fix {staged_files}; pnpm eslint --cache --fix --no-warn-ignored {staged_files}
       glob: '*.{js,jsx,ts,tsx}'
       stage_fixed: true
     lint-style:

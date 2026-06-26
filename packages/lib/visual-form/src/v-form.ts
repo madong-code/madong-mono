@@ -22,7 +22,11 @@ export function useVForm() {
   const error = ref<string | null>(null);
 
   onBeforeMount(async () => {
-    if (isReady.value || loaded) return;
+    // 已加载完成，直接就绪
+    if (loaded) {
+      isReady.value = true;
+      return;
+    }
 
     try {
       const instance = getCurrentInstance();
