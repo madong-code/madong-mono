@@ -1,8 +1,10 @@
-import { requestClient } from '#/api/request';
-import BaseService from '../../core/base';
 import type { TenantRow } from './types';
 
-const baseUrl = '/tenant/account'
+import { requestClient } from '#/api/request';
+
+import BaseService from '../../core/base';
+
+const baseUrl = '/tenant/account';
 
 export const TenantService = {
   ...BaseService<TenantRow>({
@@ -10,8 +12,10 @@ export const TenantService = {
     allowedMethods: [],
     forbiddenMethods: [],
   }),
-  bindPlan: (id: string | number, planIds: string[]): Promise<any> =>
+  bindPlan: (id: number | string, planIds: string[]): Promise<any> =>
     requestClient.put(`/tenant/${id}/bind-plan`, { ids: planIds }),
   syncData: (id: number): Promise<any> =>
-    requestClient.put(`/tenant/${id}/sync-data`),
+    requestClient.put(`/tenant/${id}/sync-data`, undefined, {
+      timeout: 120_000,
+    }),
 };
