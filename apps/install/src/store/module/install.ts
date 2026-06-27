@@ -27,8 +27,11 @@ export const useInstallStore = defineStore('install', {
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'madong',
+      database: 'madong_saas',
       prefix: 'md_',
+      redisHost: '127.0.0.1',
+      redisPort: 6379,
+      redisPassword: '',
     } as DatabaseConfig,
 
     // 多租户配置
@@ -184,6 +187,20 @@ export const useInstallStore = defineStore('install', {
         params.append('db_username', this.databaseConfig.username || '');
         params.append('db_password', this.databaseConfig.password || '');
         params.append('db_prefix', this.databaseConfig.prefix || '');
+
+        // Redis 配置参数
+        params.append(
+          'redis_host',
+          this.databaseConfig.redisHost || '127.0.0.1',
+        );
+        params.append(
+          'redis_port',
+          this.databaseConfig.redisPort?.toString() || '6379',
+        );
+        params.append(
+          'redis_password',
+          this.databaseConfig.redisPassword || '',
+        );
 
         // 管理员配置参数
         params.append('admin_username', this.adminConfig.username || '');
