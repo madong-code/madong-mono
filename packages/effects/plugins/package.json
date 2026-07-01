@@ -33,6 +33,10 @@
     "./motion": {
       "types": "./src/motion/index.ts",
       "default": "./src/motion/index.ts"
+    },
+    "./wangeditor": {
+      "types": "./src/wangeditor/index.ts",
+      "default": "./src/wangeditor/index.ts"
     }
   },
   "dependencies": {
@@ -42,6 +46,7 @@
     "@tiptap/extension-image": "catalog:",
     "@tiptap/extension-link": "catalog:",
     "@tiptap/extension-placeholder": "catalog:",
+    "@tiptap/extension-table": "^3.27.1",
     "@tiptap/extension-text-align": "catalog:",
     "@tiptap/extension-text-style": "catalog:",
     "@tiptap/extension-underline": "catalog:",
@@ -61,6 +66,8 @@
     "@vben/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "@vueuse/motion": "catalog:",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "echarts": "catalog:",
     "vue": "catalog:",
     "vxe-pc-ui": "catalog:",
