@@ -30,12 +30,12 @@ import type { Recordable } from '@vben/types';
 
 import { defineAsyncComponent, defineComponent, h, ref } from 'vue';
 
-import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
+import { globalShareState } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { getAll as getFormComponents } from '../../components/form/component-map';
-
 import { ElNotification } from 'element-plus';
+
+import { getAll as getFormComponents } from '../../components/form/component-map';
 
 type ElTreeSelectSchemaProps = InstanceType<typeof ElTreeSelectType>['$props'];
 type ElTimePickerSchemaProps = InstanceType<typeof ElTimePickerType>['$props'];
@@ -194,6 +194,7 @@ export type ComponentType =
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
+  | 'KeyValueEditor'
   | 'Password'
   | 'RadioGroup'
   | 'Select'
