@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-import { Page } from '@vben/common-ui';
 import { updatePreferences } from '@vben/preferences';
 
 import { ElButton, ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
 import { ConfigService } from '#/api/system/config';
+import { Page } from '#/components/page';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
 

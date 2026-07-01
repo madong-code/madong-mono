@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
 import { ConfigService } from '#/api/system/config';
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const [BasicForm, formApi] = useVbenForm({

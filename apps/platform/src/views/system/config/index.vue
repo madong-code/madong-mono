@@ -3,10 +3,9 @@ import type { TabsPaneContext } from 'element-plus';
 
 import { defineAsyncComponent, markRaw, ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
-
 import { ElCard, ElTabPane, ElTabs } from 'element-plus';
 
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const activeName = ref('1');
