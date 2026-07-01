@@ -5,10 +5,10 @@ import { defineAsyncComponent, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
-import { Page } from '@vben/common-ui';
 
 import { ElCard, ElTabPane, ElTabs } from 'element-plus';
 
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const router = useRouter();
