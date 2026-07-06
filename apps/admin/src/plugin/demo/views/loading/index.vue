@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { Loading, Page, Spinner } from '@vben/common-ui';
+import { Loading, Spinner } from '@vben/common-ui';
 
 import { ElCard } from 'element-plus';
+
+import { Page } from '#/components/page';
 </script>
 
 <template>

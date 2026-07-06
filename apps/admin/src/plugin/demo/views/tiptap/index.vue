@@ -1,11 +1,13 @@
 <script lang="ts" setup>
+import type { ImageUploadOptions } from '@vben/plugins/tiptap';
+
 import { ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
+import { VbenTiptap, VbenTiptapPreview } from '@vben/plugins/tiptap';
 
 import { ElCard, ElSwitch } from 'element-plus';
 
-import { VbenTiptap, VbenTiptapPreview, type ImageUploadOptions } from '@vben/plugins/tiptap';
+import { Page } from '#/components/page';
 
 const content = ref(`
   <h1>Vben Tiptap</h1>
@@ -41,7 +43,11 @@ const imageUpload: ImageUploadOptions = {
           </div>
         </div>
       </template>
-      <VbenTiptap v-model="content" :image-upload="enableImageUpload ? imageUpload : undefined" class="min-h-[300px]" />
+      <VbenTiptap
+        v-model="content"
+        :image-upload="enableImageUpload ? imageUpload : undefined"
+        class="min-h-[300px]"
+      />
     </ElCard>
 
     <ElCard class="mb-4">
@@ -51,7 +57,9 @@ const imageUpload: ImageUploadOptions = {
 
     <ElCard>
       <template #header>HTML 输出</template>
-      <pre class="max-h-[200px] overflow-auto bg-gray-50 p-4 text-sm">{{ content }}</pre>
+      <pre class="max-h-[200px] overflow-auto bg-gray-50 p-4 text-sm">{{
+        content
+      }}</pre>
     </ElCard>
   </Page>
 </template>

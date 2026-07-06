@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElImage, ElSwitch, ElTag } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -24,15 +23,41 @@ const gridOptions = {
   columns: [
     { title: '序号', type: 'seq' as const, width: 50 },
     { field: 'category', title: 'Category', width: 100 },
-    { field: 'imageUrl', slots: { default: 'image-url' }, title: 'Image', width: 100 },
-    { cellRender: { name: 'CellImage' }, field: 'imageUrl2', title: 'Render Image', width: 130 },
+    {
+      field: 'imageUrl',
+      slots: { default: 'image-url' },
+      title: 'Image',
+      width: 100,
+    },
+    {
+      cellRender: { name: 'CellImage' },
+      field: 'imageUrl2',
+      title: 'Render Image',
+      width: 130,
+    },
     { field: 'open', slots: { default: 'open' }, title: 'Open', width: 100 },
-    { field: 'status', slots: { default: 'status' }, title: 'Status', width: 100 },
+    {
+      field: 'status',
+      slots: { default: 'status' },
+      title: 'Status',
+      width: 100,
+    },
     { field: 'color', title: 'Color', width: 100 },
     { field: 'productName', title: 'Product Name', width: 200 },
     { field: 'price', title: 'Price', width: 100 },
-    { field: 'releaseDate', formatter: 'formatDateTime', title: 'Date', width: 200 },
-    { cellRender: { name: 'CellLink', props: { text: '编辑' } }, field: 'action', fixed: 'right' as const, title: '操作', width: 120 },
+    {
+      field: 'releaseDate',
+      formatter: 'formatDateTime',
+      title: 'Date',
+      width: 200,
+    },
+    {
+      cellRender: { name: 'CellLink', props: { text: '编辑' } },
+      field: 'action',
+      fixed: 'right' as const,
+      title: '操作',
+      width: 120,
+    },
   ],
   height: 'auto',
   keepSource: true,
@@ -40,7 +65,10 @@ const gridOptions = {
   proxyConfig: {
     ajax: {
       query: async ({ page }: any) => {
-        return await getExampleTableApi({ page: page.currentPage, pageSize: page.pageSize });
+        return await getExampleTableApi({
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
       },
     },
   },
@@ -60,7 +88,17 @@ const [Grid] = useVbenVxeGrid<RowType>({ gridOptions });
         <ElSwitch v-model="row.open" />
       </template>
       <template #status="{ row }">
-        <ElTag :type="row.status === 'success' ? 'success' : row.status === 'warning' ? 'warning' : 'danger'">{{ row.status }}</ElTag>
+        <ElTag
+          :type="
+            row.status === 'success'
+              ? 'success'
+              : row.status === 'warning'
+                ? 'warning'
+                : 'danger'
+          "
+          >
+{{ row.status }}
+</ElTag>
       </template>
       <template #action>
         <ElButton type="primary" link>编辑</ElButton>

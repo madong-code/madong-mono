@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { CrudSchema } from '#/adapter/crud';
 
-import { Page } from '@vben/common-ui';
-
 import { useCrud } from '#/adapter/crud';
+import { Page } from '#/components/page';
 
 const mockData = [
   {

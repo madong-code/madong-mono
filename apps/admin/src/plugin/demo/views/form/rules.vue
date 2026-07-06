@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElCard, ElMessage } from 'element-plus';
 
 import { useVbenForm, z } from '#/adapter/form';
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const [Form, formApi] = useVbenForm({

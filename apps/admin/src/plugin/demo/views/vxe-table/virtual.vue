@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
-import { Page } from '@vben/common-ui';
-
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 interface RowType {
   id: number;
@@ -31,7 +30,12 @@ const [Grid, gridApi] = useVbenVxeGrid<RowType>({ gridOptions });
 const loadList = (size = 200) => {
   const dataList: RowType[] = [];
   for (let i = 0; i < size; i++) {
-    dataList.push({ id: 10_000 + i, name: `Test${i}`, role: 'Developer', sex: '男' });
+    dataList.push({
+      id: 10_000 + i,
+      name: `Test${i}`,
+      role: 'Developer',
+      sex: '男',
+    });
   }
   gridApi.setGridOptions({ data: dataList });
 };

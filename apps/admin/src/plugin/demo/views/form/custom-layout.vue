@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElCard } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const [CustomLayoutForm] = useVbenForm({

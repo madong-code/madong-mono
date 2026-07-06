@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -19,7 +18,11 @@ const gridOptions = {
     { title: '序号', type: 'seq' as const, width: 50 },
     { editRender: { name: 'input' }, field: 'category', title: 'Category' },
     { editRender: { name: 'input' }, field: 'color', title: 'Color' },
-    { editRender: { name: 'input' }, field: 'productName', title: 'Product Name' },
+    {
+      editRender: { name: 'input' },
+      field: 'productName',
+      title: 'Product Name',
+    },
     { field: 'price', title: 'Price' },
     { field: 'releaseDate', formatter: 'formatDateTime', title: 'Date' },
   ],
@@ -29,7 +32,10 @@ const gridOptions = {
   proxyConfig: {
     ajax: {
       query: async ({ page }: any) => {
-        return await getExampleTableApi({ page: page.currentPage, pageSize: page.pageSize });
+        return await getExampleTableApi({
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
       },
     },
   },

@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { Page, Tippy } from '@vben/common-ui';
+import { Tippy } from '@vben/common-ui';
 
 import { ElButton, ElCard } from 'element-plus';
+
+import { Page } from '#/components/page';
 </script>
 
 <template>
@@ -10,9 +12,15 @@ import { ElButton, ElCard } from 'element-plus';
       <template #header>指令形式使用</template>
       <div class="flex flex-wrap gap-4">
         <ElButton v-tippy="'默认提示'">默认提示</ElButton>
-        <ElButton v-tippy="{ content: '指定主题', theme: 'light' }">light 主题</ElButton>
-        <ElButton v-tippy="{ content: '指定延时', delay: [500, 200] }">延时显示</ElButton>
-        <ElButton v-tippy="{ content: '指定动画', animation: 'scale' }">scale 动画</ElButton>
+        <ElButton v-tippy="{ content: '指定主题', theme: 'light' }">
+light 主题
+</ElButton>
+        <ElButton v-tippy="{ content: '指定延时', delay: [500, 200] }">
+延时显示
+</ElButton>
+        <ElButton v-tippy="{ content: '指定动画', animation: 'scale' }">
+scale 动画
+</ElButton>
       </div>
     </ElCard>
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElCard, ElMessage } from 'element-plus';
+
+import { Page } from '#/components/page';
 </script>
 
 <template>

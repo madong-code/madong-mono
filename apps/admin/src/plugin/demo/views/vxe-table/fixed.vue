@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -23,15 +22,29 @@ const gridOptions = {
     { field: 'color', title: 'Color', width: 300 },
     { field: 'productName', title: 'Product Name', width: 300 },
     { field: 'price', title: 'Price', width: 300 },
-    { field: 'releaseDate', formatter: 'formatDateTime', title: 'DateTime', width: 500 },
-    { field: 'action', fixed: 'right' as const, slots: { default: 'action' }, title: '操作', width: 120 },
+    {
+      field: 'releaseDate',
+      formatter: 'formatDateTime',
+      title: 'DateTime',
+      width: 500,
+    },
+    {
+      field: 'action',
+      fixed: 'right' as const,
+      slots: { default: 'action' },
+      title: '操作',
+      width: 120,
+    },
   ],
   height: 'auto',
   pagerConfig: {},
   proxyConfig: {
     ajax: {
       query: async ({ page }: any) => {
-        return await getExampleTableApi({ page: page.currentPage, pageSize: page.pageSize });
+        return await getExampleTableApi({
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
       },
     },
   },

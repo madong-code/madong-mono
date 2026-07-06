@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElMessage } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -21,7 +20,11 @@ const gridOptions = {
     { title: '序号', type: 'seq' as const, width: 50 },
     { editRender: { name: 'input' }, field: 'category', title: 'Category' },
     { editRender: { name: 'input' }, field: 'color', title: 'Color' },
-    { editRender: { name: 'input' }, field: 'productName', title: 'Product Name' },
+    {
+      editRender: { name: 'input' },
+      field: 'productName',
+      title: 'Product Name',
+    },
     { field: 'price', title: 'Price' },
     { field: 'releaseDate', formatter: 'formatDateTime', title: 'Date' },
     { slots: { default: 'action' }, title: '操作' },
@@ -32,7 +35,10 @@ const gridOptions = {
   proxyConfig: {
     ajax: {
       query: async ({ page }: any) => {
-        return await getExampleTableApi({ page: page.currentPage, pageSize: page.pageSize });
+        return await getExampleTableApi({
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
       },
     },
   },
@@ -68,11 +74,17 @@ const cancelRowEvent = (_row: RowType) => {
     <Grid>
       <template #action="{ row }">
         <template v-if="hasEditStatus(row)">
-          <ElButton type="primary" link @click="saveRowEvent(row)">保存</ElButton>
-          <ElButton type="primary" link @click="cancelRowEvent(row)">取消</ElButton>
+          <ElButton type="primary" link @click="saveRowEvent(row)">
+保存
+</ElButton>
+          <ElButton type="primary" link @click="cancelRowEvent(row)">
+取消
+</ElButton>
         </template>
         <template v-else>
-          <ElButton type="primary" link @click="editRowEvent(row)">编辑</ElButton>
+          <ElButton type="primary" link @click="editRowEvent(row)">
+编辑
+</ElButton>
         </template>
       </template>
     </Grid>

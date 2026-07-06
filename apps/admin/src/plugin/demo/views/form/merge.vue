@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
-
 import { ElButton, ElCard, ElMessage, ElSwitch } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
+import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
 const currentTab = ref(0);

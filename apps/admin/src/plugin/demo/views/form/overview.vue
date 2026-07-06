@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Page, useVbenDrawer } from '@vben/common-ui';
+import { useVbenDrawer } from '@vben/common-ui';
 
 import { ElButton, ElCard, ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
+import { Page } from '#/components/page';
 
 const [BasicForm, basicApi] = useVbenForm({
   schema: [

@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -20,7 +19,12 @@ const gridOptions = {
   checkboxConfig: { highlight: true, labelField: 'name' },
   columns: [
     { title: '序号', type: 'seq' as const, width: 50 },
-    { align: 'left' as const, title: 'Name', type: 'checkbox' as const, width: 100 },
+    {
+      align: 'left' as const,
+      title: 'Name',
+      type: 'checkbox' as const,
+      width: 100,
+    },
     { field: 'category', sortable: true, title: 'Category' },
     { field: 'color', sortable: true, title: 'Color' },
     { field: 'productName', sortable: true, title: 'Product Name' },
@@ -43,7 +47,10 @@ const gridOptions = {
     },
     sort: true,
   },
-  sortConfig: { defaultSort: { field: 'category', order: 'desc' as const }, remote: true },
+  sortConfig: {
+    defaultSort: { field: 'category', order: 'desc' as const },
+    remote: true,
+  },
   toolbarConfig: { custom: true, export: true, refresh: true, zoom: true },
 };
 

@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { Page, SliderCaptcha } from '@vben/common-ui';
+import { SliderCaptcha } from '@vben/common-ui';
 
 import { ElCard, ElMessage } from 'element-plus';
+
+import { Page } from '#/components/page';
 </script>
 
 <template>

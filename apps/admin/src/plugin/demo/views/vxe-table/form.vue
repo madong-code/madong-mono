@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElMessage } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { getExampleTableApi } from '../../mock/api';
 
@@ -19,7 +18,12 @@ interface RowType {
 const formOptions = {
   collapsed: false,
   schema: [
-    { component: 'Input', defaultValue: '1', fieldName: 'category', label: 'Category' },
+    {
+      component: 'Input',
+      defaultValue: '1',
+      fieldName: 'category',
+      label: 'Category',
+    },
     { component: 'Input', fieldName: 'productName', label: 'ProductName' },
     { component: 'Input', fieldName: 'price', label: 'Price' },
     {
@@ -44,7 +48,12 @@ const gridOptions = {
   checkboxConfig: { highlight: true, labelField: 'name' },
   columns: [
     { title: '序号', type: 'seq' as const, width: 50 },
-    { align: 'left' as const, title: 'Name', type: 'checkbox' as const, width: 100 },
+    {
+      align: 'left' as const,
+      title: 'Name',
+      type: 'checkbox' as const,
+      width: 100,
+    },
     { field: 'category', title: 'Category' },
     { field: 'color', title: 'Color' },
     { field: 'productName', title: 'Product Name' },
@@ -59,11 +68,22 @@ const gridOptions = {
     ajax: {
       query: async ({ page }: any, formValues: any) => {
         ElMessage.info(`Query params: ${JSON.stringify(formValues)}`);
-        return await getExampleTableApi({ page: page.currentPage, pageSize: page.pageSize, ...formValues });
+        return await getExampleTableApi({
+          page: page.currentPage,
+          pageSize: page.pageSize,
+          ...formValues,
+        });
       },
     },
   },
-  toolbarConfig: { custom: true, export: true, refresh: true, resizable: true, search: true, zoom: true },
+  toolbarConfig: {
+    custom: true,
+    export: true,
+    refresh: true,
+    resizable: true,
+    search: true,
+    zoom: true,
+  },
 };
 
 const [Grid] = useVbenVxeGrid<RowType>({ formOptions, gridOptions });

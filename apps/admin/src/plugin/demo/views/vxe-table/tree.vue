@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
 
 import { MOCK_TREE_TABLE_DATA } from '../../mock/table-data';
 
@@ -44,7 +43,9 @@ const collapseAll = () => {
   <Page>
     <Grid table-title="数据列表" table-title-help="提示">
       <template #toolbar-tools>
-        <ElButton class="mr-2" type="primary" @click="expandAll">展开全部</ElButton>
+        <ElButton class="mr-2" type="primary" @click="expandAll">
+展开全部
+</ElButton>
         <ElButton type="primary" @click="collapseAll">折叠全部</ElButton>
       </template>
     </Grid>

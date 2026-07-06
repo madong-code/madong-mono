@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import { Page } from '@vben/common-ui';
-
 import { ElButton } from 'element-plus';
 
-import { $t } from '#/locales';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page } from '#/components/page';
+import { $t } from '#/locales';
 
 import { MOCK_TABLE_DATA } from '../../mock/table-data';
-
 import DocButton from '../doc-button.vue';
 
 interface RowType {
