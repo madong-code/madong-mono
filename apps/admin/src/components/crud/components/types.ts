@@ -252,6 +252,8 @@ export interface TreeConfig {
   id?: string;
   /** 子节点字段名，默认 children */
   children?: string;
+  /** 刷新后是否保持展开状态，默认 false */
+  reserve?: boolean;
 }
 
 /**

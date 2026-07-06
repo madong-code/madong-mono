@@ -2,59 +2,66 @@
  * TableAction 类型定义
  */
 
-import type { Component, VNode } from 'vue'
+import type { Component, VNode } from 'vue';
 
 export interface PopConfirm {
-  title?: string
-  content?: string
-  confirm?: (e?: any, record?: any) => void
-  cancel?: (record?: any) => void
-  icon?: string | Component
-  confirmText?: string
-  cancelText?: string
-  okType?: 'primary' | 'danger' | 'default' | null
-  disabled?: boolean
+  title?: string;
+  content?: string;
+  confirm?: (e?: any, record?: any) => void;
+  cancel?: (record?: any) => void;
+  icon?: Component | string;
+  confirmText?: string;
+  cancelText?: string;
+  okType?: 'danger' | 'default' | 'primary' | null;
+  disabled?: boolean;
 }
 
 export interface ActionItem {
+  /** 按钮唯一标识，用于覆盖默认按钮 */
+  key?: string;
   /** 按钮文本 */
-  label?: string | (() => string)
+  label?: (() => string) | string;
   /** 按钮类型 */
-  type?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | null
+  type?:
+    | 'danger'
+    | 'default'
+    | 'info'
+    | 'primary'
+    | 'success'
+    | 'warning'
+    | null;
   /** 按钮图标 */
-  icon?: string | Component | VNode
+  icon?: Component | string | VNode;
   /** 按钮尺寸 */
-  size?: 'large' | 'default' | 'small'
+  size?: 'default' | 'large' | 'small';
   /** 按钮颜色 */
-  color?: string
+  color?: string;
   /** 危险按钮 */
-  danger?: boolean
+  danger?: boolean;
   /** 是否为链接按钮 */
-  link?: boolean
+  link?: boolean;
   /** 是否主要按钮 */
-  main?: boolean
+  main?: boolean;
   /** 是否禁用 */
-  disabled?: boolean
+  disabled?: boolean;
   /** 是否隐藏 */
-  ifShow?: boolean | ((action: ActionItem, record: any) => boolean)
+  ifShow?: ((action: ActionItem, record: any) => boolean) | boolean;
   /** 权限编码 */
-  auth?: string | string[]
+  auth?: string | string[];
   /** 排序 */
-  sort?: number
+  sort?: number;
   /** 点击事件 */
-  onClick?: (e: Event | any, record?: any) => void
+  onClick?: (e: any | Event, record?: any) => void;
   /** PopConfirm 配置 */
-  confirm?: PopConfirm
+  confirm?: PopConfirm;
   /** Popover 配置 */
-  popConfirm?: PopConfirm
+  popConfirm?: PopConfirm;
   /** Dialog 引用 */
-  dialogRef?: any
+  dialogRef?: any;
   /** Dialog 参数 */
-  dialogParams?:
-    | Record<string, any>
-    | ((record: any) => Record<string, any>)
+  dialogParams?: ((record: any) => Record<string, any>) | Record<string, any>;
   /** 动态属性 */
-  dynamicProps?: (record: any) => Partial<ActionItem>
+  dynamicProps?: (record: any) => Partial<ActionItem>;
   /** 原始属性 */
-  [key: string]: any
+  [key: string]: any;
 }

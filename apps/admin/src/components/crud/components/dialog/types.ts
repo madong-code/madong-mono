@@ -38,6 +38,10 @@ export interface FormDialogOptions extends Omit<
   title?: string;
   width?: string;
   rowKey?: string;
+  /** 表单布局 */
+  layout?: 'horizontal' | 'inline' | 'vertical';
+  /** Grid 布局 class，用于控制表单列数 */
+  wrapperClass?: string;
   draggable?: boolean;
   fullscreenButton?: boolean;
   /** 弹窗组件的 CSS class，例如 'top-0' 让弹窗靠顶部显示 */

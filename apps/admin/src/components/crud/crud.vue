@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import type { FormDialogOptions } from './components/dialog/types';
 import type {
   CrudApiInstance,
   CrudSchema,
@@ -7,7 +8,7 @@ import type {
 
 import type { VbenFormProps } from '#/adapter/form';
 
-import { computed, reactive, ref, useSlots } from 'vue';
+import { computed, nextTick, reactive, ref, useSlots } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -52,10 +53,13 @@ const route = useRoute();
 const dynamicState = reactive<Partial<CrudSchema>>({});
 
 // 合并后的 crudSchema，优先使用动态配置
-const mergedCrudSchema = computed(() => ({
-  ...props.crudSchema,
-  ...dynamicState,
-}));
+const mergedCrudSchema = computed(() => {
+  const merged = {
+    ...props.crudSchema,
+    ...dynamicState,
+  };
+  return merged;
+});
 
 // ============ 表格配置 ============
 // 直接使用扁平化配置
@@ -69,7 +73,7 @@ const {
   tableActions,
   dropDownActions,
 } = useAction(
-  mergedCrudSchema.value,
+  mergedCrudSchema.value as CrudSchema,
   dialogFormRef,
   props.crudApi ?? {
     executeBatchRemove: () => {},
@@ -77,6 +81,21 @@ const {
   },
   () => readonlyState.selection,
 );
+
+// 智能合并：当 dropDownToolbarActions 只有 1 个按钮时，直接放到工具栏
+const finalToolbarActions = computed(() => {
+  if (dropDownToolbarActions.value.length === 1) {
+    return [...toolbarActions.value, ...dropDownToolbarActions.value];
+  }
+  return toolbarActions.value;
+});
+
+const finalDropDownToolbarActions = computed(() => {
+  if (dropDownToolbarActions.value.length <= 1) {
+    return [];
+  }
+  return dropDownToolbarActions.value;
+});
 
 // 获取表格列定义（支持顶层和嵌套两种配置方式）
 const tableColumns = computed(() => {
@@ -122,7 +141,7 @@ const mergedFormOptions = computed((): undefined | VbenFormProps => {
   const sf = mergedCrudSchema.value.searchForm;
 
   return {
-    schema: searchFormSchema.value,
+    schema: searchFormSchema.value as any,
     submitOnChange: sf?.submitOnChange ?? false,
     collapsed: sf?.collapsed ?? false,
     collapsedRows: sf?.collapsedRows ?? 2,
@@ -151,7 +170,7 @@ const formDialogWrapperClass = computed(() => {
 });
 
 // 表单弹窗配置（使用 getter 函数确保 crudInstance 已定义）
-function getFormDialogOptions() {
+function getFormDialogOptions(): FormDialogOptions {
   const fd = mergedCrudSchema.value.formDialog;
   const { crudApi: api } = mergedCrudSchema.value;
   const tableProxy = tableConfig.value.proxyConfig;
@@ -170,7 +189,7 @@ function getFormDialogOptions() {
       };
 
   return {
-    schema: fd?.schema,
+    schema: fd?.schema as any,
     api: fd?.api || finalApi,
     dialogType: fd?.dialogType || 'modal',
     title: formDialogTitle.value,
@@ -182,15 +201,18 @@ function getFormDialogOptions() {
     draggable: fd?.draggable,
     fullscreenButton: fd?.fullscreenButton,
     transformFormValues: fd?.transformFormValues,
-    onSuccess: (type: FormActionType) => {
-      const api = props.crudApi || crudInstance;
-      if (type === 'edit') {
-        api.refreshUpdate();
-      } else {
-        api.refreshCreate();
-      }
-    },
-  };
+    // 支持业务层自定义 onSuccess 回调，未提供则使用默认刷新逻辑
+    onSuccess:
+      fd?.onSuccess ||
+      ((type: FormActionType, _values?: Record<string, any>) => {
+        const api = props.crudApi || crudInstance;
+        if (type === 'edit') {
+          api.refreshUpdate();
+        } else {
+          api.refreshCreate();
+        }
+      }),
+  } as FormDialogOptions;
 }
 
 // ============ Grid 配置 ============
@@ -217,6 +239,8 @@ const mergedTreeConfig = computed(() => {
     rowField: tree.id || 'id',
     childrenField: tree.children || 'children',
     transform: false,
+    // 透传 reserve 配置，刷新后保持展开状态
+    reserve: tree.reserve ?? false,
   };
 });
 
@@ -310,6 +334,50 @@ const mergedGridEvents = computed(() => {
 });
 
 // ============ CRUD 实例 ============
+
+// 树形展开状态保持：记录当前展开的行 ID
+function getExpandedRowIds(): any[] {
+  const grid = gridApi.grid;
+  if (!grid) return [];
+  return (grid.getTreeExpandRecords() || []).map(
+    (row: any) => row[tableConfig.value.rowKey || 'id'],
+  );
+}
+
+// 树形展开状态保持：恢复展开状态
+function restoreExpand(rowIds: any[]) {
+  if (rowIds.length === 0) return;
+  const grid = gridApi.grid;
+  if (!grid) return;
+  nextTick(() => {
+    const rowKey = tableConfig.value.rowKey || 'id';
+    const fullData = grid.getTableData()?.fullData || [];
+    const expandRows = fullData.filter((row: any) =>
+      rowIds.includes(row[rowKey]),
+    );
+    if (expandRows.length > 0) {
+      grid.setTreeExpand(expandRows, true);
+    }
+  });
+}
+
+// 是否启用树形展开状态保持
+function isTreeReserveEnabled() {
+  return !!tableConfig.value.tree?.reserve;
+}
+
+// 轻度刷新：保持展开状态
+function queryWithReserve() {
+  let expandedIds: any[] = [];
+  if (isTreeReserveEnabled()) {
+    expandedIds = getExpandedRowIds();
+  }
+  const result = gridApi.query();
+  if (isTreeReserveEnabled()) {
+    result.then(() => restoreExpand(expandedIds));
+  }
+  return result;
+}
 
 // 获取路径参数（用于删除等操作时携带额外参数）
 function getPathParams(row?: any) {
@@ -444,9 +512,9 @@ const crudInstance: CrudApiInstance = {
   getReadonlyState: () => readonlyState,
 
   refreshData: () => gridApi.reload(),
-  refreshSoft: () => gridApi.query(),
+  refreshSoft: () => queryWithReserve(),
   refreshCreate: () => gridApi.reload(),
-  refreshUpdate: () => gridApi.query(),
+  refreshUpdate: () => queryWithReserve(),
   refreshRemove() {
     const grid = gridApi.grid;
     if (!grid) return;
@@ -460,7 +528,7 @@ const crudInstance: CrudApiInstance = {
         proxyInfo.pager.currentPage -= 1;
       }
     }
-    gridApi.query();
+    queryWithReserve();
   },
 
   openAddDialog: (data?: Record<string, any>) => {
@@ -506,15 +574,22 @@ defineExpose(crudInstance);
       v-bind="$attrs"
     >
       <template #toolbar-actions>
-        <slot name="toolbar-actions" :actions="toolbarActions">
-          <TableAction :actions="toolbarActions" :drop-down-actions="[]" />
+        <slot
+          name="toolbar-actions"
+          :actions="finalToolbarActions"
+          :drop-down-toolbar-actions="finalDropDownToolbarActions"
+        >
+          <TableAction
+            :actions="finalToolbarActions"
+            :drop-down-actions="finalDropDownToolbarActions"
+          />
         </slot>
       </template>
       <template #toolbar-tools>
-        <slot name="toolbar-tools" :actions="dropDownToolbarActions">
+        <slot name="toolbar-tools" :actions="finalDropDownToolbarActions">
           <TableAction
             :actions="toolbarToolActions"
-            :drop-down-actions="dropDownToolbarActions"
+            :drop-down-actions="finalDropDownToolbarActions"
           />
         </slot>
       </template>
@@ -522,11 +597,11 @@ defineExpose(crudInstance);
         <slot :name="name" v-bind="slotData ?? {}"></slot>
       </template>
     </VxeGrid>
+    <!-- 表单弹窗：仅在启用时渲染 -->
+    <FormDialogComponent
+      v-if="formDialogEnabled"
+      ref="dialogFormRef"
+      :options="getFormDialogOptions()"
+    />
   </div>
-  <!-- 表单弹窗：仅在启用时渲染 -->
-  <FormDialogComponent
-    v-if="formDialogEnabled"
-    ref="dialogFormRef"
-    :options="getFormDialogOptions()"
-  />
 </template>

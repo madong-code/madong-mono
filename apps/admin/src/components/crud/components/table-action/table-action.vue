@@ -278,30 +278,14 @@ const handleRef = (e: any, index: number) => {
       trigger="hover"
       @command="handleCommand"
     >
-      <template #default>
-        <div>
-          <span style="margin-left: 6px">
-            <slot name="more">
-              <ElButton link type="primary">
-                {{ $t('components.crud.action.more') }}
-                <template #icon>
-                  <Icon icon="ant-design:bars-outlined" />
-                </template>
-              </ElButton>
-            </slot>
-          </span>
-          <template v-for="(action, index) in getDropdownList" :key="index">
-            <ElPopconfirm
-              v-if="action.popConfirm"
-              v-bind="getPopConfirmProps(action.popConfirm)"
-            >
-              <template #reference>
-                <span :ref="(e) => handleRef(e, index)"></span>
-              </template>
-            </ElPopconfirm>
+      <slot name="more">
+        <ElButton link type="primary">
+          {{ $t('components.crud.action.more') }}
+          <template #icon>
+            <Icon icon="ant-design:bars-outlined" />
           </template>
-        </div>
-      </template>
+        </ElButton>
+      </slot>
       <template #dropdown>
         <ElDropdownMenu>
           <ElDropdownItem
@@ -316,5 +300,24 @@ const handleRef = (e: any, index: number) => {
         </ElDropdownMenu>
       </template>
     </ElDropdown>
+    <!-- 隐藏的 Popconfirm，用于下拉菜单项的确认提示 -->
+    <template v-for="(action, index) in getDropdownList" :key="`pop-${index}`">
+      <ElPopconfirm
+        v-if="action.popConfirm"
+        v-bind="getPopConfirmProps(action.popConfirm)"
+      >
+        <template #reference>
+          <span :ref="(e) => handleRef(e, index)" style="display: none"></span>
+        </template>
+      </ElPopconfirm>
+    </template>
   </div>
 </template>
+
+<style scoped>
+.m-table-action {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+</style>
