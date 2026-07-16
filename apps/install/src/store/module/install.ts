@@ -8,6 +8,12 @@ import { installApi } from '@/api/install';
 import { getConfig } from '@/utils/config';
 import { defineStore } from 'pinia';
 
+function normalizeStatus(status: any) {
+  if (status === true) return 'success';
+  if (status === false) return 'error';
+  return status;
+}
+
 export const useInstallStore = defineStore('install', {
   state: () => ({
     // 协议数据
@@ -112,7 +118,8 @@ export const useInstallStore = defineStore('install', {
     environmentPassed: (state) => {
       if (state.environmentData.check_items.length === 0) return false;
       const hasRequiredError = state.environmentData.check_items.some(
-        (item: any) => item.is_required && item.status === false,
+        (item: any) =>
+          item.is_required && normalizeStatus(item.status) === 'error',
       );
       return !hasRequiredError;
     },
@@ -123,7 +130,7 @@ export const useInstallStore = defineStore('install', {
         need: item.need,
         required: item.required,
         current: item.current,
-        status: item.status,
+        status: normalizeStatus(item.status),
         statusText: item.status_text,
         message: item.message,
         isRequired: item.is_required,

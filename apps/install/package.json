@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite --mode development",
     "build": "vite build --mode production",
+    "build:integrated": "vite build --mode integrated",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
