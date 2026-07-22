@@ -35,8 +35,7 @@ async function switchLocale(lang: string) {
 
 async function reloadLocaleForLang(lang: string) {
   try {
-    const { loadAllLocaleMessages } =
-      await import('../../../../locales/loader');
+    const { loadAllLocaleMessages } = await import('#/locales/loader');
     const result = loadAllLocaleMessages(lang as any);
     mergeLocaleMessage(lang, result);
     console.warn(`语言包已加载并合并到 ${lang}`);
@@ -66,8 +65,7 @@ onMounted(async () => {
 
 async function reloadLocale() {
   try {
-    const { loadAllLocaleMessages } =
-      await import('../../../../locales/loader');
+    const { loadAllLocaleMessages } = await import('#/locales/loader');
     const result = loadAllLocaleMessages(currentLocale.value as any);
     mergeLocaleMessage(currentLocale.value, result);
     setTimeout(() => {
