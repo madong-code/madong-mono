@@ -120,8 +120,10 @@ const goBackForm = () => {
 };
 
 /** 重试安装 */
-const retryInstallation = () => {
+const retryInstallation = async () => {
   installStore.resetInstall();
+  installing.value = false;
+  await nextTick();
   startInstallation();
 };
 
