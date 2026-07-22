@@ -1,91 +1,35 @@
-<template>
-  <div class="detail-view" :class="[layoutClass, wrapperClass]">
-    <template v-for="(schema, index) in mergedSchema" :key="index">
-      <template v-if="!schema.hide && shouldShow(schema)">
-        <div
-          :class="[
-            'detail-view-item',
-            isGrid ? 'detail-view-item--grid' : '',
-            schema.wrapperClass || itemWrapperClass,
-            schema.formItemClass || itemFormClass,
-          ]"
-        >
-          <label
-            v-if="schema.label && !(schema.hideLabel || mergedHideLabel)"
-            :class="[
-              'detail-view-label',
-              labelAlignClass,
-              schema.labelClass || mergedLabelClass,
-            ]"
-            :style="labelStyle"
-          >
-            {{
-              typeof schema.label === 'function' ? schema.label() : schema.label
-            }}
-          </label>
-          <div
-            class="detail-view-value"
-            :class="schema.controlClass || mergedControlClass"
-          >
-            <component
-              v-if="
-                schema.viewComponent ||
-                getViewComponent(
-                  transformComponentName(schema.component as string),
-                )
-              "
-              :is="getViewComponentInstance(schema)"
-              :value="resolveValue(schema.fieldName)"
-              :field-name="schema.fieldName"
-              :schema="schema"
-              :data="model"
-              v-bind="getViewComponentProps(schema)"
-            />
-            <span
-              v-else-if="
-                resolveValue(schema.fieldName) !== undefined &&
-                resolveValue(schema.fieldName) !== null
-              "
-            >
-              {{ formatValue(schema, resolveValue(schema.fieldName)) }}
-            </span>
-            <span v-else class="empty-value">--</span>
-          </div>
-        </div>
-      </template>
-    </template>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { VbenFormSchema } from '#/adapter/form';
+
+import { computed } from 'vue';
+
 import { getComponent as getViewComponent } from './component-map';
 
 const props = withDefaults(
   defineProps<{
-    model?: Record<string, any>;
-    schema: VbenFormSchema[] | (() => VbenFormSchema[]);
-    wrapperClass?: string;
-    /** 布局方式：水平/垂直/行内 */
-    layout?: 'horizontal' | 'vertical' | 'inline';
     /** 通用配置 */
     commonConfig?: {
-      labelClass?: string;
-      labelWidth?: number;
-      /** label 对齐方式：left 左对齐 / right 右对齐，默认 right */
-      labelAlign?: 'left' | 'right';
       controlClass?: string;
-      wrapperClass?: string;
+      formItemClass?: (() => string) | string;
       hideLabel?: boolean;
       hideRequiredMark?: boolean;
-      formItemClass?: string | (() => string);
+      /** label 对齐方式：left 左对齐 / right 右对齐，默认 right */
+      labelAlign?: 'left' | 'right';
+      labelClass?: string;
+      labelWidth?: number;
+      wrapperClass?: string;
     };
+    /** 布局方式：水平/垂直/行内 */
+    layout?: 'horizontal' | 'inline' | 'vertical';
+    model?: Record<string, any>;
+    schema: (() => VbenFormSchema[]) | VbenFormSchema[];
+    wrapperClass?: string;
   }>(),
   {
     model: () => ({}),
     commonConfig: () => ({}),
     layout: 'horizontal',
+    wrapperClass: '',
   },
 );
 
@@ -162,7 +106,7 @@ const getViewComponentInstance = (schema: VbenFormSchema) => {
  * 组件名映射为详情展示组件（默认加 Read 前缀）
  */
 const transformComponentName = (componentName: string): string => {
-  return 'Read' + componentName;
+  return `Read${componentName}`;
 };
 
 const getViewComponentProps = (schema: VbenFormSchema) => {
@@ -213,6 +157,62 @@ defineExpose({
   schema: mergedSchema,
 });
 </script>
+
+<template>
+  <div class="detail-view" :class="[layoutClass, wrapperClass]">
+    <template v-for="(schema, index) in mergedSchema" :key="index">
+      <template v-if="!schema.hide && shouldShow(schema)">
+        <div
+          class="detail-view-item"
+          :class="[
+            isGrid ? 'detail-view-item--grid' : '',
+            schema.wrapperClass || itemWrapperClass,
+            schema.formItemClass || itemFormClass,
+          ]"
+        >
+          <label
+            v-if="schema.label && !(schema.hideLabel || mergedHideLabel)"
+            class="detail-view-label"
+            :class="[labelAlignClass, schema.labelClass || mergedLabelClass]"
+            :style="labelStyle"
+          >
+            {{
+              typeof schema.label === 'function' ? schema.label() : schema.label
+            }}
+          </label>
+          <div
+            class="detail-view-value"
+            :class="schema.controlClass || mergedControlClass"
+          >
+            <component
+              v-if="
+                schema.viewComponent ||
+                getViewComponent(
+                  transformComponentName(schema.component as string),
+                )
+              "
+              :is="getViewComponentInstance(schema)"
+              :value="resolveValue(schema.fieldName)"
+              :field-name="schema.fieldName"
+              :schema="schema"
+              :data="model"
+              v-bind="getViewComponentProps(schema)"
+            />
+            <span
+              v-else-if="
+                resolveValue(schema.fieldName) !== undefined &&
+                resolveValue(schema.fieldName) !== null
+              "
+            >
+              {{ formatValue(schema, resolveValue(schema.fieldName)) }}
+            </span>
+            <span v-else class="empty-value">--</span>
+          </div>
+        </div>
+      </template>
+    </template>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .detail-view {
@@ -285,7 +285,7 @@ defineExpose({
   padding-right: 12px;
   font-weight: 500;
   line-height: 24px;
-  color: #64748b;
+  color: var(--el-text-color-secondary, #64748b);
 }
 
 /* 网格模式下 label 间距调整 */
@@ -299,17 +299,17 @@ defineExpose({
   min-width: 0;
   padding: 0 6px !important;
   line-height: 24px;
-  color: #1e293b;
+  color: var(--el-text-color-primary, #1e293b);
   word-break: break-all;
   overflow-wrap: break-word;
-  background-color: #f5f6f8;
+  background-color: var(--el-fill-color-light, #f5f6f8);
   border-radius: 2px !important;
 }
 
 .empty-value {
   padding: 0 6px !important;
-  color: #94a3b8;
-  background-color: #f5f6f8;
+  color: var(--el-text-color-placeholder, #94a3b8);
+  background-color: var(--el-fill-color-light, #f5f6f8);
   border-radius: 2px !important;
 }
 </style>

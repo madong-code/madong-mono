@@ -1,63 +1,20 @@
-<template>
-  <div class="dept-select-modal">
-    <div class="header">
-      <ElInput
-        v-model="searchText"
-        :placeholder="$t('components.form.select_dept.search_placeholder')"
-        clearable
-      />
-    </div>
-    <ElTree
-      ref="treeRef"
-      :data="deptTree"
-      :props="defaultProps"
-      :node-key="rowKey"
-      :default-expand-all="true"
-      :show-checkbox="multiple"
-      :check-strictly="true"
-      :check-on-click-node="multiple"
-      :filter-node-method="filterNode"
-      @check="handleCheck"
-      @node-click="handleNodeClick"
-    >
-      <template #default="{ node, data }">
-        <div class="tree-node-content">
-          <!-- 单选：所有节点显示 radio -->
-          <span v-if="!multiple" class="radio-wrapper">
-            <el-radio
-              :model-value="selectedKeys.length > 0 ? selectedKeys[0] : ''"
-              :value="String(data[rowKey])"
-              @click.prevent.stop="handleRadioClick($event, data)"
-            >
-              <span class="radio-hidden-label"></span>
-            </el-radio>
-          </span>
-          <span
-            :class="{ selected: isSelected(data) }"
-            @click="handleNodeLabelClick(data, node)"
-          >
-            {{ data.name }}
-          </span>
-        </div>
-      </template>
-    </ElTree>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
-import { ElInput, ElTree, ElMessage, ElRadio } from 'element-plus';
-import { DeptService } from '#/api/system/dept';
 import type { DeptRow } from '#/api/system/dept/types';
+
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
+
+import { ElInput, ElMessage, ElRadio, ElTree } from 'element-plus';
+
+import { DeptService } from '#/api/system/dept';
 import { $t } from '#/locales';
 
 const props = withDefaults(
   defineProps<{
-    value?: string[];
-    multiple?: boolean;
-    rowKey?: string;
     checkStrictly?: boolean;
     filterIds?: string[];
+    multiple?: boolean;
+    rowKey?: string;
+    value?: string[];
   }>(),
   {
     value: () => [],
@@ -104,7 +61,7 @@ const loadDeptTree = async () => {
     let tree = await DeptService.getTree();
 
     if (props.filterIds && props.filterIds.length > 0) {
-      const filterSet = new Set(props.filterIds.map((id) => String(id)));
+      const filterSet = new Set(props.filterIds.map(String));
       tree = filterTreeByIds(tree, filterSet);
     }
 
@@ -123,20 +80,21 @@ const loadDeptTree = async () => {
 };
 
 const filterTreeByIds = (nodes: any[], idSet: Set<string>): any[] => {
-  return nodes.reduce<any[]>((acc, node) => {
+  const result: any[] = [];
+  for (const node of nodes) {
     const nodeId = String(node[props.rowKey as keyof DeptRow]);
     const filteredChildren = node.children
       ? filterTreeByIds(node.children, idSet)
       : [];
     if (idSet.has(nodeId) || filteredChildren.length > 0) {
-      acc.push({
+      result.push({
         ...node,
         children:
           filteredChildren.length > 0 ? filteredChildren : node.children || [],
       });
     }
-    return acc;
-  }, []);
+  }
+  return result;
 };
 
 const filterNode = (value: string, data: any) => {
@@ -164,11 +122,10 @@ const handleNodeClick = (_data: DeptRow) => {
 const handleNodeLabelClick = (data: DeptRow, _node: any) => {
   if (!props.multiple) {
     const key = String(data[props.rowKey as keyof DeptRow]);
-    if (selectedKeys.value.length > 0 && selectedKeys.value[0] === key) {
-      selectedKeys.value = [];
-    } else {
-      selectedKeys.value = [key];
-    }
+    selectedKeys.value =
+      selectedKeys.value.length > 0 && selectedKeys.value[0] === key
+        ? []
+        : [key];
     emitSelect();
   }
 };
@@ -177,11 +134,8 @@ const handleRadioClick = (event: Event, data: DeptRow) => {
   event.preventDefault();
   event.stopPropagation();
   const key = String(data[props.rowKey as keyof DeptRow]);
-  if (selectedKeys.value.length > 0 && selectedKeys.value[0] === key) {
-    selectedKeys.value = [];
-  } else {
-    selectedKeys.value = [key];
-  }
+  selectedKeys.value =
+    selectedKeys.value.length > 0 && selectedKeys.value[0] === key ? [] : [key];
   emitSelect();
 };
 
@@ -294,6 +248,52 @@ defineExpose({
   allSelected,
 });
 </script>
+
+<template>
+  <div class="dept-select-modal">
+    <div class="header">
+      <ElInput
+        v-model="searchText"
+        :placeholder="$t('components.form.select_dept.search_placeholder')"
+        clearable
+      />
+    </div>
+    <ElTree
+      ref="treeRef"
+      :data="deptTree"
+      :props="defaultProps"
+      :node-key="rowKey"
+      :default-expand-all="true"
+      :show-checkbox="multiple"
+      :check-strictly="true"
+      :check-on-click-node="multiple"
+      :filter-node-method="filterNode"
+      @check="handleCheck"
+      @node-click="handleNodeClick"
+    >
+      <template #default="{ node, data }">
+        <div class="tree-node-content">
+          <!-- 单选：所有节点显示 radio -->
+          <span v-if="!multiple" class="radio-wrapper">
+            <ElRadio
+              :model-value="selectedKeys.length > 0 ? selectedKeys[0] : ''"
+              :value="String(data[rowKey])"
+              @click.prevent.stop="handleRadioClick($event, data)"
+            >
+              <span class="radio-hidden-label"></span>
+            </ElRadio>
+          </span>
+          <span
+            :class="{ selected: isSelected(data) }"
+            @click="handleNodeLabelClick(data, node)"
+          >
+            {{ data.name }}
+          </span>
+        </div>
+      </template>
+    </ElTree>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .dept-select-modal {

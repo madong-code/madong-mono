@@ -42,6 +42,10 @@
     "save": "Save",
     "cancel": "Cancel"
   },
+  "avatar": {
+    "success": "Avatar updated successfully",
+    "fail": "Avatar update failed"
+  },
   "security": {
     "title": "Change Password",
     "old_password": "Current Password",

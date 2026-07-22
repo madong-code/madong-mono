@@ -9,29 +9,31 @@ export interface PopConfirm {
   content?: string;
   confirm?: (e?: any, record?: any) => void;
   cancel?: (record?: any) => void;
-  icon?: string | Component;
+  icon?: Component | string;
   confirmText?: string;
   cancelText?: string;
-  okType?: 'primary' | 'danger' | 'default' | null;
+  okType?: 'danger' | 'default' | 'primary' | null;
   disabled?: boolean;
 }
 
 export interface ActionItem {
+  /** 按钮唯一标识，用于覆盖默认按钮 */
+  key?: string;
   /** 按钮文本 */
-  label?: string | (() => string);
+  label?: (() => string) | string;
   /** 按钮类型 */
   type?:
+    | 'danger'
     | 'default'
+    | 'info'
     | 'primary'
     | 'success'
     | 'warning'
-    | 'danger'
-    | 'info'
     | null;
   /** 按钮图标 */
-  icon?: string | Component | VNode;
+  icon?: Component | string | VNode;
   /** 按钮尺寸 */
-  size?: 'large' | 'default' | 'small';
+  size?: 'default' | 'large' | 'small';
   /** 按钮颜色 */
   color?: string;
   /** 危险按钮 */
@@ -43,13 +45,13 @@ export interface ActionItem {
   /** 是否禁用 */
   disabled?: boolean;
   /** 是否隐藏 */
-  ifShow?: boolean | ((action: ActionItem, record: any) => boolean);
+  ifShow?: ((action: ActionItem, record: any) => boolean) | boolean;
   /** 权限编码 */
   auth?: string | string[];
   /** 排序 */
   sort?: number;
   /** 点击事件 */
-  onClick?: (e: Event | any, record?: any) => void;
+  onClick?: (e: any | Event, record?: any) => void;
   /** PopConfirm 配置 */
   confirm?: PopConfirm;
   /** Popover 配置 */
@@ -57,7 +59,7 @@ export interface ActionItem {
   /** Dialog 引用 */
   dialogRef?: any;
   /** Dialog 参数 */
-  dialogParams?: Record<string, any> | ((record: any) => Record<string, any>);
+  dialogParams?: ((record: any) => Record<string, any>) | Record<string, any>;
   /** 动态属性 */
   dynamicProps?: (record: any) => Partial<ActionItem>;
   /** 原始属性 */

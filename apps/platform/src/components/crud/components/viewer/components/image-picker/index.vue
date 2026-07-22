@@ -1,20 +1,11 @@
-<template>
-  <div class="reader-image-picker">
-    <template v-if="images.length">
-      <img v-for="(img, i) in images" :key="i" :src="img" class="preview-img" />
-    </template>
-    <span v-else class="empty-value">--</span>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
 const props = defineProps<{
-  value?: string | string[] | null;
+  data?: Record<string, any>;
   fieldName?: string;
   schema?: any;
-  data?: Record<string, any>;
+  value?: null | string | string[];
 }>();
 
 const images = computed(() => {
@@ -24,6 +15,15 @@ const images = computed(() => {
     : [props.value].filter(Boolean);
 });
 </script>
+
+<template>
+  <div class="reader-image-picker">
+    <template v-if="images.length > 0">
+      <img v-for="(img, i) in images" :key="i" :src="img" class="preview-img" />
+    </template>
+    <span v-else class="empty-value">--</span>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .preview-img {
@@ -35,6 +35,6 @@ const images = computed(() => {
 }
 
 .empty-value {
-  color: #94a3b8;
+  color: var(--el-text-color-placeholder, #94a3b8);
 }
 </style>

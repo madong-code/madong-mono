@@ -1,37 +1,28 @@
-<template>
-  <ApiComponent
-    v-model="value"
-    :component="ElTreeSelect"
-    options-prop-name="data"
-    :value-field="valueField"
-    :label-field="labelField"
-    :children-field="childrenField"
-    v-bind="$attrs"
-  />
-</template>
-
 <script setup lang="ts">
-import ApiComponent from '../api-component/index.vue';
 import { computed } from 'vue';
+
 import { ElTreeSelect } from 'element-plus';
+
+import ApiComponent from '../api-component/index.vue';
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | undefined | number | null | Array<string | number>;
-    valueField?: string;
-    labelField?: string;
     childrenField?: string;
+    labelField?: string;
+    modelValue?: Array<number | string> | null | number | string | undefined;
+    valueField?: string;
   }>(),
   {
     valueField: 'id',
     labelField: 'name',
     childrenField: 'children',
+    modelValue: null,
   },
 );
 
 const emit = defineEmits<{
   'update:modelValue': [
-    modelValue: string | undefined | number | null | Array<string | number>,
+    modelValue: Array<number | string> | null | number | string | undefined,
   ];
 }>();
 
@@ -50,3 +41,15 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ApiComponent
+    v-model="value"
+    :component="ElTreeSelect"
+    options-prop-name="data"
+    :value-field="valueField"
+    :label-field="labelField"
+    :children-field="childrenField"
+    v-bind="$attrs"
+  />
+</template>

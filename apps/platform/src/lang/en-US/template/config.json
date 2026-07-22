@@ -1,0 +1,64 @@
+{
+  "title": {
+    "title": "Config Template",
+    "create": "Create Config Template",
+    "edit": "Edit Config Template"
+  },
+  "save_success": "Saved successfully",
+  "table": {
+    "columns": {
+      "name": "Config Name",
+      "code": "Config Code",
+      "group_code": "Group",
+      "content": "Content",
+      "sort": "Sort",
+      "enabled": "Status"
+    },
+    "search": {
+      "name": "Config Name",
+      "code": "Config Code",
+      "group_code": "Group",
+      "enabled": "Status",
+      "placeholder": {
+        "name": "Please enter config name",
+        "code": "Please enter config code",
+        "group_code": "Please select group",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "group_code": "Group",
+      "name": "Config Name",
+      "code": "Config Code",
+      "content": "Content",
+      "content_type": "Content Type",
+      "enabled": "Status",
+      "sort": "Sort",
+      "remark": "Remark"
+    },
+    "content_type_kv": "JSON Object (Key-Value)",
+    "content_type_string": "String",
+    "kv_label": "Key-Value Config",
+    "add_kv": "Add Key-Value",
+    "enabled_on": "Enable",
+    "enabled_off": "Disable",
+    "placeholder": {
+      "name": "Please enter config name",
+      "code": "Please enter config code (English, unique)",
+      "group_code": "Please select group",
+      "content": "Please enter content",
+      "sort": "Please enter sort",
+      "kv_key": "Key",
+      "kv_value": "Value",
+      "remark": "Please enter remark"
+    },
+    "value_type": {
+      "string": "String",
+      "number": "Number",
+      "boolean": "Boolean",
+      "json": "JSON"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "title": "字典模板",
+  "table": {
+    "columns": {
+      "group_code": "字典分组",
+      "name": "字典名称",
+      "code": "字典标识",
+      "data_type": "数据类型",
+      "sort": "排序",
+      "enabled": "状态"
+    },
+    "search": {
+      "group_code": "字典分组",
+      "name": "字典名称",
+      "code": "字典标识",
+      "enabled": "状态",
+      "placeholder": {
+        "group_code": "请选择字典分组",
+        "name": "请输入字典名称",
+        "code": "请输入字典标识",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "group_code": "字典分组",
+      "name": "字典名称",
+      "code": "字典标识",
+      "data_type": "数据类型",
+      "enabled": "状态",
+      "sort": "排序",
+      "description": "描述",
+      "placeholder": {
+        "group_code": "请选择字典分组",
+        "name": "请输入字典名称",
+        "code": "请输入字典标识",
+        "data_type": "请选择数据类型",
+        "enabled": "请选择状态",
+        "sort": "请输入排序",
+        "description": "请输入描述"
+      }
+    }
+  },
+  "table_actions": {
+    "dict_item": "字典项"
+  },
+  "drop_down_actions": {
+    "edit": "编辑",
+    "delete": "删除"
+  }
+}

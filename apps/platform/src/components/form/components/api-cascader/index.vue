@@ -1,25 +1,16 @@
-<template>
-  <ApiComponent
-    v-model="value"
-    :component="ElCascader"
-    :value-field="valueField"
-    :label-field="labelField"
-    :children-field="childrenField"
-    style="width: 100%"
-  />
-</template>
-
 <script setup lang="ts">
-import ApiComponent from '../api-component/index.vue';
 import { computed } from 'vue';
+
 import { ElCascader } from 'element-plus';
+
+import ApiComponent from '../api-component/index.vue';
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: Array<string | number>;
-    valueField?: string;
-    labelField?: string;
     childrenField?: string;
+    labelField?: string;
+    modelValue?: Array<number | string>;
+    valueField?: string;
   }>(),
   {
     modelValue: () => [],
@@ -30,7 +21,7 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: Array<string | number> | undefined];
+  'update:modelValue': [modelValue: Array<number | string> | undefined];
 }>();
 
 const value = computed({
@@ -48,3 +39,14 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ApiComponent
+    v-model="value"
+    :component="ElCascader"
+    :value-field="valueField"
+    :label-field="labelField"
+    :children-field="childrenField"
+    style="width: 100%"
+  />
+</template>

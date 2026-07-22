@@ -2,9 +2,10 @@
  * useFormDialog 表单对话框 composable
  */
 
-import type { FormDialogOptions, FormDialogApi } from './types';
+import type { FormDialogApi, FormDialogOptions } from './types';
 
-import { computed, reactive, ref } from 'vue';
+import { computed, defineComponent, h, ref } from 'vue';
+
 import FormDialogComponent from './dialog.vue';
 
 export function useFormDialog(options: FormDialogOptions) {
@@ -58,6 +59,3 @@ export function useFormDialog(options: FormDialogOptions) {
     api,
   ] as const;
 }
-
-// 需要引入 defineComponent 和 h
-import { defineComponent, h } from 'vue';

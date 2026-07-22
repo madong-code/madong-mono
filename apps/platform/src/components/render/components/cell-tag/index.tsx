@@ -1,9 +1,7 @@
-import { ElTag } from 'element-plus';
-
 /**
  * 单元格标签渲染器 - 纯 TSX 实现
  */
-import { $t } from '#/locales';
+import { ElTag } from 'element-plus';
 
 interface TagOption {
   value: any;
@@ -27,18 +25,8 @@ export const CellTagRenderer = {
   ) {
     const { column, row } = params;
     const options = renderOpts?.attrs?.options ?? [
-      {
-        value: 1,
-        label: $t('common.state.enable'),
-        color: 'success',
-        effect: 'light',
-      },
-      {
-        value: 0,
-        label: $t('common.state.disable'),
-        color: 'danger',
-        effect: 'light',
-      },
+      { value: 1, label: '启用', color: 'success', effect: 'light' },
+      { value: 0, label: '禁用', color: 'danger', effect: 'light' },
     ];
     const value = row[column.field];
     const tagItem = options.find((item) => item.value === value);
@@ -47,7 +35,7 @@ export const CellTagRenderer = {
     const effect = tagItem?.effect ?? 'light';
 
     return (
-      <ElTag effect={effect} type={tagType as any}>
+      <ElTag effect={effect} size="small" type={tagType as any}>
         {label}
       </ElTag>
     );

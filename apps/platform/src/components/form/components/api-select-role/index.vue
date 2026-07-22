@@ -1,45 +1,12 @@
-<template>
-  <div class="select-role">
-    <ElSelectV2
-      v-model="selectValue"
-      :options="options"
-      :placeholder="effectivePlaceholder"
-      :multiple="multiple"
-      :clearable="clearable"
-      :disabled="disabled"
-      @change="handleChange"
-      style="width: 100%"
-    >
-      <template v-for="(_, slotName) in slots" #[slotName]>
-        <slot :name="slotName" />
-      </template>
-    </ElSelectV2>
-    <ElButton
-      v-if="showButton"
-      type="primary"
-      :disabled="disabled"
-      @click="dialogRef?.open()"
-      style="margin-left: 8px"
-    >
-      {{ effectiveButtonText }}
-    </ElButton>
-    <Dialog
-      ref="dialogRef"
-      :title="effectiveModalTitle"
-      :width="dialogWidth"
-      @confirm="handleConfirm"
-    >
-      <RoleSelectModal ref="modalRef" :multiple="multiple" :value="tempValue" />
-    </Dialog>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, useSlots, watch } from 'vue';
-import { ElSelectV2, ElButton } from 'element-plus';
+import { computed, ref, useSlots, watch } from 'vue';
+
+import { ElButton, ElSelectV2 } from 'element-plus';
+
 import { Dialog } from '#/components/dialog';
-import RoleSelectModal from './role-select-dialog.vue';
 import { $t } from '#/locales';
+
+import RoleSelectModal from './role-select-dialog.vue';
 
 interface Option {
   label: string;
@@ -48,16 +15,16 @@ interface Option {
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | string[] | null;
-    placeholder?: string;
-    multiple?: boolean;
-    clearable?: boolean;
-    disabled?: boolean;
-    showButton?: boolean;
     buttonText?: string;
-    modalTitle?: string;
+    clearable?: boolean;
     dialogWidth?: string;
+    disabled?: boolean;
+    modalTitle?: string;
+    modelValue?: null | string | string[];
+    multiple?: boolean;
+    placeholder?: string;
     rowKey?: string;
+    showButton?: boolean;
   }>(),
   {
     modelValue: null,
@@ -67,12 +34,15 @@ const props = withDefaults(
     showButton: true,
     dialogWidth: '500px',
     rowKey: 'id',
+    buttonText: '',
+    modalTitle: '',
+    placeholder: '',
   },
 );
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | string[] | null];
-  change: [value: string | string[] | null];
+  change: [value: null | string | string[]];
+  'update:modelValue': [value: null | string | string[]];
 }>();
 
 const slots = useSlots();
@@ -95,7 +65,7 @@ const selectValue = computed({
   get() {
     const v = props.modelValue;
     if (props.multiple)
-      return Array.isArray(v) ? v : v ? String(v).split(',') : [];
+      return Array.isArray(v) ? v : (v ? String(v).split(',') : []);
     return v || '';
   },
   set(val: any) {
@@ -160,6 +130,42 @@ function handleChange(value: any) {
 watch(() => props.modelValue, initValue, { immediate: true });
 defineExpose({ getValue: () => selectValue.value });
 </script>
+
+<template>
+  <div class="select-role">
+    <ElSelectV2
+      v-model="selectValue"
+      :options="options"
+      :placeholder="effectivePlaceholder"
+      :multiple="multiple"
+      :clearable="clearable"
+      :disabled="disabled"
+      @change="handleChange"
+      style="width: 100%"
+    >
+      <template v-for="(_, slotName) in slots" #[slotName]>
+        <slot :name="slotName"></slot>
+      </template>
+    </ElSelectV2>
+    <ElButton
+      v-if="showButton"
+      type="primary"
+      :disabled="disabled"
+      @click="dialogRef?.open()"
+      style="margin-left: 8px"
+    >
+      {{ effectiveButtonText }}
+    </ElButton>
+    <Dialog
+      ref="dialogRef"
+      :title="effectiveModalTitle"
+      :width="dialogWidth"
+      @confirm="handleConfirm"
+    >
+      <RoleSelectModal ref="modalRef" :multiple="multiple" :value="tempValue" />
+    </Dialog>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .select-role {

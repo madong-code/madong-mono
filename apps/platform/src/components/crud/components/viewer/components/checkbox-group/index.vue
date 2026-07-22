@@ -1,35 +1,32 @@
-<template>
-  <span class="reader-checkbox-group">
-    <template v-if="displayLabels.length > 0">
-      {{ displayLabels.join(', ') }}
-    </template>
-    <span v-else class="empty-value">--</span>
-  </span>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: (string | number)[] | string | null | undefined;
-    fieldName?: string;
-    schema?: any;
     data?: Record<string, any>;
+    fieldName?: string;
     options?: {
       label: string;
-      value: string | number;
+      value: number | string;
     }[];
+    schema?: any;
+    value?: (number | string)[] | null | string | undefined;
   }>(),
-  {},
+  {
+    data: () => ({}),
+    fieldName: '',
+    options: () => [],
+    schema: undefined,
+    value: undefined,
+  },
 );
 
 const displayLabels = computed(() => {
-  if (!props.options || !props.options.length) {
+  if (!props.options || props.options.length === 0) {
     return [];
   }
 
-  let values: (string | number)[] = [];
+  let values: (number | string)[] = [];
   if (Array.isArray(props.value)) {
     values = props.value;
   } else if (typeof props.value === 'string') {
@@ -47,10 +44,19 @@ const displayLabels = computed(() => {
 });
 </script>
 
+<template>
+  <span class="reader-checkbox-group">
+    <template v-if="displayLabels.length > 0">
+      {{ displayLabels.join(', ') }}
+    </template>
+    <span v-else class="empty-value">--</span>
+  </span>
+</template>
+
 <style lang="scss" scoped>
 .reader-checkbox-group {
   .empty-value {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

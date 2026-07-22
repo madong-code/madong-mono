@@ -1,9 +1,6 @@
-﻿<template>
-  <IconPicker v-model="value" />
-</template>
-
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue';
+
 import { IconPicker } from '@vben/common-ui';
 
 const props = defineProps<{
@@ -29,3 +26,7 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <IconPicker v-model="value" />
+</template>

@@ -1,33 +1,11 @@
-<template>
-  <ElCheckboxGroup v-model="value">
-    <template v-if="isBtn">
-      <ElCheckboxButton
-        :size="size"
-        v-for="item in options || []"
-        :key="item.value + ''"
-        :value="item.value"
-        >{{ item.label }}</ElCheckboxButton
-      >
-    </template>
-    <template v-else>
-      <ElCheckbox
-        :size="size"
-        v-for="item in options"
-        :key="item.value + ''"
-        :value="item.value"
-        >{{ item.label }}</ElCheckbox
-      >
-    </template>
-  </ElCheckboxGroup>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ElCheckboxButton, ElCheckbox, ElCheckboxGroup } from 'element-plus';
+
+import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup } from 'element-plus';
 
 interface Option {
   label: string;
-  value: string | number;
+  value: number | string;
   disabled?: boolean;
   bgColor?: string;
   textColor?: string;
@@ -35,16 +13,16 @@ interface Option {
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: Array<string | number>;
-    options?: Option[];
     isBtn?: boolean;
-    size?: 'default' | 'small' | 'large';
+    modelValue?: Array<number | string>;
+    options?: Option[];
+    size?: 'default' | 'large' | 'small';
   }>(),
-  { modelValue: () => [], isBtn: false },
+  { modelValue: () => [], isBtn: false, options: () => [], size: 'default' },
 );
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: Array<string | number> | undefined];
+  'update:modelValue': [modelValue: Array<number | string> | undefined];
 }>();
 
 const value = computed({
@@ -58,3 +36,28 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ElCheckboxGroup v-model="value">
+    <template v-if="isBtn">
+      <ElCheckboxButton
+        :size="size"
+        v-for="item in options || []"
+        :key="`${item.value}`"
+        :value="item.value"
+      >
+        {{ item.label }}
+      </ElCheckboxButton>
+    </template>
+    <template v-else>
+      <ElCheckbox
+        :size="size"
+        v-for="item in options"
+        :key="`${item.value}`"
+        :value="item.value"
+      >
+        {{ item.label }}
+      </ElCheckbox>
+    </template>
+  </ElCheckboxGroup>
+</template>

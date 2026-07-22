@@ -1,31 +1,19 @@
-<template>
-  <span class="reader-upload">
-    <template v-if="files.length > 0">
-      <template v-for="(file, index) in files" :key="index">
-        <span class="file-item">
-          <span v-if="isImage(file.url)" class="file-preview">
-            <img :src="file.url" :alt="file.name" class="preview-img" />
-          </span>
-          <span v-else class="file-name">{{ file.name }}</span>
-        </span>
-        <span v-if="index < files.length - 1" class="file-separator">, </span>
-      </template>
-    </template>
-    <span v-else class="empty-value">--</span>
-  </span>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | { url: string; name: string }[] | null | undefined;
+    data?: Record<string, any>;
     fieldName?: string;
     schema?: any;
-    data?: Record<string, any>;
+    value?: null | string | undefined | { name: string; url: string }[];
   }>(),
-  {},
+  {
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: undefined,
+  },
 );
 
 const files = computed(() => {
@@ -57,6 +45,23 @@ const isImage = (url: string) => {
   return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 };
 </script>
+
+<template>
+  <span class="reader-upload">
+    <template v-if="files.length > 0">
+      <template v-for="(file, index) in files" :key="index">
+        <span class="file-item">
+          <span v-if="isImage(file.url)" class="file-preview">
+            <img :src="file.url" :alt="file.name" class="preview-img" />
+          </span>
+          <span v-else class="file-name">{{ file.name }}</span>
+        </span>
+        <span v-if="index < files.length - 1" class="file-separator">, </span>
+      </template>
+    </template>
+    <span v-else class="empty-value">--</span>
+  </span>
+</template>
 
 <style lang="scss" scoped>
 .reader-upload {
@@ -93,6 +98,6 @@ const isImage = (url: string) => {
 }
 
 .empty-value {
-  color: #94a3b8;
+  color: var(--el-text-color-placeholder, #94a3b8);
 }
 </style>

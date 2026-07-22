@@ -1,92 +1,21 @@
-<template>
-  <div class="select-dept">
-    <ElSelectV2
-      v-model="selectValue"
-      :options="options"
-      :placeholder="effectivePlaceholder"
-      :multiple="multiple"
-      :clearable="clearable"
-      :disabled="disabled"
-      @change="handleChange"
-      style="width: 100%"
-    >
-      <template v-for="(_, slotName) in slots" #[slotName]>
-        <slot :name="slotName" />
-      </template>
-    </ElSelectV2>
-    <ElButton
-      v-if="showButton"
-      type="primary"
-      :disabled="disabled"
-      @click="dialogRef?.open()"
-      style="margin-left: 8px"
-    >
-      {{ effectiveButtonText }}
-    </ElButton>
-    <Dialog
-      ref="dialogRef"
-      :title="effectiveModalTitle"
-      :width="dialogWidth"
-      custom-class="m-dialog-footer-between"
-      @confirm="handleConfirm"
-    >
-      <DeptSelectModal
-        ref="modalRef"
-        :multiple="multiple"
-        :value="tempValue"
-        :filter-ids="filterIds"
-        @select="handleSelect"
-      />
-      <template #prepend-footer>
-        <ElDropdown @command="handleTreeCommand">
-          <ElButton size="default">
-            {{ $t('components.form.select_dept.tree_operation') }}
-            <ElIcon class="el-icon--right"
-              ><Icon icon="ri:arrow-down-s-line"
-            /></ElIcon>
-          </ElButton>
-          <template #dropdown>
-            <ElDropdownMenu>
-              <ElDropdownItem command="expand">{{
-                $t('components.form.select_dept.expand_all')
-              }}</ElDropdownItem>
-              <ElDropdownItem command="collapse">{{
-                $t('components.form.select_dept.collapse_all')
-              }}</ElDropdownItem>
-              <ElDropdownItem
-                v-if="multiple"
-                command="selectAll"
-                :divided="true"
-              >
-                {{
-                  modalRef?.allSelected
-                    ? $t('components.form.select_dept.cancel_select_all')
-                    : $t('components.form.select_dept.select_all')
-                }}
-              </ElDropdownItem>
-            </ElDropdownMenu>
-          </template>
-        </ElDropdown>
-      </template>
-    </Dialog>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, useSlots, watch } from 'vue';
+import { computed, ref, useSlots, watch } from 'vue';
+
 import {
-  ElSelectV2,
   ElButton,
   ElDropdown,
-  ElDropdownMenu,
   ElDropdownItem,
+  ElDropdownMenu,
   ElIcon,
+  ElSelectV2,
 } from 'element-plus';
-import { Icon } from '#/components/icon';
-import { Dialog } from '#/components/dialog';
-import DeptSelectModal from './dept-select-dialog.vue';
+
 import { DeptService } from '#/api/system/dept';
+import { Dialog } from '#/components/dialog';
+import { Icon } from '#/components/icon';
 import { $t } from '#/locales';
+
+import DeptSelectModal from './dept-select-dialog.vue';
 
 interface Option {
   label: string;
@@ -95,18 +24,18 @@ interface Option {
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | string[] | null;
-    placeholder?: string;
-    multiple?: boolean;
-    clearable?: boolean;
-    disabled?: boolean;
-    showButton?: boolean;
     buttonText?: string;
-    modalTitle?: string;
+    clearable?: boolean;
     dialogWidth?: string;
-    rowKey?: string;
+    disabled?: boolean;
     filterIds?: string[];
+    modalTitle?: string;
+    modelValue?: null | string | string[];
+    multiple?: boolean;
     mustInFilterIds?: boolean;
+    placeholder?: string;
+    rowKey?: string;
+    showButton?: boolean;
   }>(),
   {
     modelValue: null,
@@ -118,12 +47,15 @@ const props = withDefaults(
     rowKey: 'id',
     filterIds: () => [],
     mustInFilterIds: false,
+    buttonText: '',
+    modalTitle: '',
+    placeholder: '',
   },
 );
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | string[] | null];
-  change: [value: string | string[] | null];
+  change: [value: null | string | string[]];
+  'update:modelValue': [value: null | string | string[]];
 }>();
 
 const slots = useSlots();
@@ -146,7 +78,7 @@ const selectValue = computed({
   get() {
     const v = props.modelValue;
     if (props.multiple)
-      return Array.isArray(v) ? v : v ? String(v).split(',') : [];
+      return Array.isArray(v) ? v : (v ? String(v).split(',') : []);
     return v;
   },
   set(val: any) {
@@ -207,15 +139,18 @@ function handleConfirm() {
 
 function handleTreeCommand(command: string) {
   switch (command) {
-    case 'expand':
-      modalRef.value?.handleExpandAll();
-      break;
-    case 'collapse':
+    case 'collapse': {
       modalRef.value?.handleCollapseAll();
       break;
-    case 'selectAll':
+    }
+    case 'expand': {
+      modalRef.value?.handleExpandAll();
+      break;
+    }
+    case 'selectAll': {
       modalRef.value?.handleSelectAll();
       break;
+    }
   }
 }
 
@@ -266,6 +201,80 @@ watch(
 
 defineExpose({ getValue: () => selectValue.value });
 </script>
+
+<template>
+  <div class="select-dept">
+    <ElSelectV2
+      v-model="selectValue"
+      :options="options"
+      :placeholder="effectivePlaceholder"
+      :multiple="multiple"
+      :clearable="clearable"
+      :disabled="disabled"
+      @change="handleChange"
+      style="width: 100%"
+    >
+      <template v-for="(_, slotName) in slots" #[slotName]>
+        <slot :name="slotName"></slot>
+      </template>
+    </ElSelectV2>
+    <ElButton
+      v-if="showButton"
+      type="primary"
+      :disabled="disabled"
+      @click="dialogRef?.open()"
+      style="margin-left: 8px"
+    >
+      {{ effectiveButtonText }}
+    </ElButton>
+    <Dialog
+      ref="dialogRef"
+      :title="effectiveModalTitle"
+      :width="dialogWidth"
+      custom-class="m-dialog-footer-between"
+      @confirm="handleConfirm"
+    >
+      <DeptSelectModal
+        ref="modalRef"
+        :multiple="multiple"
+        :value="tempValue"
+        :filter-ids="filterIds"
+        @select="handleSelect"
+      />
+      <template #prepend-footer>
+        <ElDropdown @command="handleTreeCommand">
+          <ElButton size="default">
+            {{ $t('components.form.select_dept.tree_operation') }}
+            <ElIcon class="el-icon--right">
+              <Icon icon="ri:arrow-down-s-line" />
+            </ElIcon>
+          </ElButton>
+          <template #dropdown>
+            <ElDropdownMenu>
+              <ElDropdownItem command="expand">
+                {{ $t('components.form.select_dept.expand_all') }}
+              </ElDropdownItem>
+              <ElDropdownItem command="collapse">
+                {{ $t('components.form.select_dept.collapse_all') }}
+              </ElDropdownItem>
+              <ElDropdownItem
+                v-if="multiple"
+                command="selectAll"
+                :divided="true"
+              >
+                {{
+                  modalRef?.allSelected
+                    ? $t('components.form.select_dept.cancel_select_all')
+                    : $t('components.form.select_dept.select_all')
+                }}
+              </ElDropdownItem>
+            </ElDropdownMenu>
+          </template>
+        </ElDropdown>
+      </template>
+    </Dialog>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .select-dept {

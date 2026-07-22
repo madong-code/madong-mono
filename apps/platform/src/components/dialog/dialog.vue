@@ -101,6 +101,7 @@ defineExpose(methods);
     :modal="dialogPropsRef.modal ?? true"
     :append-to-body="true"
     :draggable="dialogPropsRef.draggable ?? true"
+    :z-index="dialogPropsRef.zIndex"
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="el-dialog__header-inner">

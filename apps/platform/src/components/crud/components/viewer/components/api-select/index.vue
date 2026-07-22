@@ -1,31 +1,32 @@
-<template>
-  <span class="reader-api-select">
-    <template v-if="loading">加载中...</template>
-    <template v-else>{{ displayValue ?? value ?? '--' }}</template>
-  </span>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+
 import { requestClient } from '#/api/request';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | number | null;
-    fieldName?: string;
-    schema?: any;
-    data?: Record<string, any>;
     api?: string;
-    requestMethod?: 'get' | 'post';
-    params?: Record<string, any>;
+    data?: Record<string, any>;
+    fieldName?: string;
     labelField?: string;
-    valueField?: string;
+    params?: Record<string, any>;
+    requestMethod?: 'get' | 'post';
     resultField?: string;
+    schema?: any;
+    value?: null | number | string;
+    valueField?: string;
   }>(),
   {
     requestMethod: 'get',
     labelField: 'label',
     valueField: 'value',
+    api: '',
+    data: () => ({}),
+    fieldName: '',
+    params: () => ({}),
+    resultField: '',
+    schema: undefined,
+    value: null,
   },
 );
 
@@ -36,7 +37,7 @@ const labelField = computed(() => props.labelField || 'label');
 const valueField = computed(() => props.valueField || 'value');
 
 const displayValue = computed(() => {
-  if (!options.value.length || props.value == null) return null;
+  if (options.value.length === 0 || props.value == null) return null;
 
   if (Array.isArray(props.value)) {
     const labels = props.value.map((val) => {
@@ -67,9 +68,12 @@ const fetchData = async () => {
     let data = res;
     if (props.resultField) {
       const resultField = props.resultField;
-      data = resultField
-        .split('.')
-        .reduce((obj: any, key: string) => obj?.[key], res);
+      let current: any = res;
+      for (const k of resultField.split('.')) {
+        if (current === null || current === undefined) break;
+        current = current[k];
+      }
+      data = current;
     }
     options.value = Array.isArray(data) ? data : [];
   } catch (error) {
@@ -87,6 +91,13 @@ watch(
 );
 onMounted(fetchData);
 </script>
+
+<template>
+  <span class="reader-api-select">
+    <template v-if="loading">加载中...</template>
+    <template v-else>{{ displayValue ?? value ?? '--' }}</template>
+  </span>
+</template>
 
 <style lang="scss" scoped>
 .reader-api-select {

@@ -1,14 +1,14 @@
 import { requestClient } from '#/api/request';
 
 type Method =
-  | 'list'
-  | 'get'
+  | 'changStatus'
   | 'create'
-  | 'update'
-  | 'remove'
   | 'delete'
   | 'export'
-  | 'changStatus';
+  | 'get'
+  | 'list'
+  | 'remove'
+  | 'update';
 
 interface BaseApiOptions {
   baseUrl: string;
@@ -34,7 +34,7 @@ function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
       return requestClient.get(baseUrl, { params });
     },
 
-    get(id: string | number): Promise<any> {
+    get(id: number | string): Promise<any> {
       checkMethod('get');
       return requestClient.get(`${baseUrl}/${id}`);
     },
@@ -45,7 +45,7 @@ function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
     },
 
     update(
-      id: string | number | Record<string, any>,
+      id: number | Record<string, any> | string,
       params?: Record<string, any>,
     ): Promise<any> {
       checkMethod('update');
@@ -67,9 +67,13 @@ function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
       return requestClient.delete(baseUrl, { params });
     },
 
-    delete(id: string | number, params?: Record<string, any>): Promise<any> {
+    delete(id: number | string, params?: Record<string, any>): Promise<any> {
       checkMethod('delete');
       return requestClient.delete(`${baseUrl}/${id}`, { params });
+    },
+
+    batchRemove(params: { ids: any[] }): Promise<any> {
+      return requestClient.post(`${baseUrl}/batch-delete`, params);
     },
 
     export(params: any) {
@@ -78,7 +82,7 @@ function BaseService<_T = Record<string, any>>(options: BaseApiOptions) {
     },
 
     changStatus(
-      id: string | number,
+      id: number | string,
       params: Record<string, any>,
     ): Promise<any> {
       checkMethod('changStatus');

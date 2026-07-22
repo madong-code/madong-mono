@@ -1,0 +1,82 @@
+{
+  "title": "Menu Template",
+  "api": {
+    "title": "Select Permission"
+  },
+  "table": {
+    "columns": {
+      "id": "ID",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "type": "Menu Type",
+      "path": "Route Path",
+      "component": "Component Path",
+      "sort": "Sort",
+      "is_show": "Visible",
+      "enabled": "Enabled"
+    },
+    "search": {
+      "app": "App",
+      "app_options": {
+        "admin": "Admin",
+        "platform": "Platform"
+      },
+      "type": "Menu Type",
+      "enabled": "Enabled",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route Path",
+      "placeholder": {
+        "app": "Please select app",
+        "type": "Please select menu type",
+        "enabled": "Please select status",
+        "title": "Please enter menu name",
+        "code": "Please enter permission code",
+        "path": "Please enter route path"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "Menu ID",
+      "type": "Menu Type",
+      "app": "App",
+      "pid": "Parent Menu",
+      "title": "Menu Name",
+      "code": "Permission Code",
+      "path": "Route/API Path",
+      "component": "Component Path",
+      "open_type": "Open Type",
+      "icon": "Icon",
+      "link_url": "External Link",
+      "sort": "Sort",
+      "enabled": "Enabled",
+      "is_show": "Visible",
+      "is_sync": "Sync",
+      "is_cache": "Cache",
+      "is_affix": "Affix"
+    },
+    "placeholder": {
+      "type": "Please select menu type",
+      "app": "Please select app",
+      "pid": "Please select parent menu",
+      "title": "Please enter menu name",
+      "code": "Please enter permission code",
+      "path": "Please enter route path",
+      "component": "Please enter component path",
+      "open_type": "Please select open type",
+      "icon": "Please select icon",
+      "link_url": "Please enter external link",
+      "sort": "Please enter sort",
+      "enabled": "Please select status",
+      "is_show": "Please select",
+      "is_sync": "Please select sync status",
+      "is_cache": "Please select cache status",
+      "is_affix": "Please select affix status"
+    },
+    "help": {
+      "path": "Route path must start with /. API path can be omitted",
+      "link_url": "External/internal link only valid when open type is external or embed"
+    }
+  }
+}

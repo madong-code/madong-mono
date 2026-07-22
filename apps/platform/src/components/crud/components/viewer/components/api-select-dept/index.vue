@@ -1,28 +1,22 @@
-<template>
-  <span class="reader-api-select-dept">
-    <template v-if="loading">
-      <span class="loading-text">加载中...</span>
-    </template>
-    <template v-else>
-      {{ displayValue }}
-    </template>
-  </span>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | string[] | null;
-    fieldName?: string;
-    schema?: any;
-    data?: Record<string, any>;
     code?: string;
+    data?: Record<string, any>;
+    fieldName?: string;
     rowKey?: string;
+    schema?: any;
+    value?: null | string | string[];
   }>(),
   {
     rowKey: 'id',
+    code: '',
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: null,
   },
 );
 
@@ -31,7 +25,12 @@ const loading = ref(false);
 
 const displayValue = computed(() => {
   if (loading.value) return undefined;
-  if (!nameMap.value.size || props.value == null || props.value === '')
+  if (
+    nameMap.value.size === 0 ||
+    props.value === null ||
+    props.value === undefined ||
+    props.value === ''
+  )
     return '--';
   const vals = Array.isArray(props.value)
     ? props.value.map(String)
@@ -68,10 +67,21 @@ const fetchTree = async () => {
 watch(() => props.value, fetchTree, { immediate: true });
 </script>
 
+<template>
+  <span class="reader-api-select-dept">
+    <template v-if="loading">
+      <span class="loading-text">加载中...</span>
+    </template>
+    <template v-else>
+      {{ displayValue }}
+    </template>
+  </span>
+</template>
+
 <style lang="scss" scoped>
 .reader-api-select-dept {
   .loading-text {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

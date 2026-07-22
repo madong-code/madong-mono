@@ -1,4 +1,3 @@
-/* eslint-disable vue/multi-word-component-names */
 /**
  * 单元格字典标签渲染器
  * 根据 dict code 自动加载字典数据，以 Tag 形式展示
@@ -10,6 +9,7 @@ import { ElTag } from 'element-plus';
 import { useDictStore } from '#/store/modules/dict';
 
 const DictTagInner = defineComponent({
+  name: 'DictTagInner',
   props: {
     code: { type: String, required: true },
     value: { type: [String, Number], default: '' },
@@ -83,7 +83,7 @@ const DictTagInner = defineComponent({
       const style = getTagStyle();
 
       return (
-        <ElTag effect={props.effect as any} style={style}>
+        <ElTag effect={props.effect as any} size="small" style={style}>
           {label()}
         </ElTag>
       );

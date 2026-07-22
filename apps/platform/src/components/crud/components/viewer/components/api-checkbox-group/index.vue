@@ -1,17 +1,13 @@
-<template>
-  <span class="reader-api-checkbox-group">{{ displayValue ?? '--' }}</span>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  value?: (string | number)[] | null;
-  fieldName?: string;
-  schema?: any;
-  data?: Record<string, any>;
   code?: string;
+  data?: Record<string, any>;
+  fieldName?: string;
   labelField?: string;
+  schema?: any;
+  value?: (number | string)[] | null;
   valueField?: string;
 }>();
 
@@ -20,7 +16,7 @@ const labelField = computed(() => props.labelField || 'label');
 const valueField = computed(() => props.valueField || 'value');
 
 const displayValue = computed(() => {
-  if (!options.value.length || !props.value?.length) return null;
+  if (options.value.length === 0 || !props.value?.length) return null;
   return props.value
     .map((v) => {
       const opt = options.value.find((o: any) => o[valueField.value] == v);
@@ -44,3 +40,7 @@ const fetchDict = async () => {
 watch(() => props.code, fetchDict);
 onMounted(fetchDict);
 </script>
+
+<template>
+  <span class="reader-api-checkbox-group">{{ displayValue ?? '--' }}</span>
+</template>

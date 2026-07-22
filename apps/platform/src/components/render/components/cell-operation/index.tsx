@@ -10,8 +10,6 @@ import {
   ElPopconfirm,
 } from 'element-plus';
 
-import { $t } from '#/locales';
-
 // 判断是否为字符串
 function isString(val: unknown): val is string {
   return typeof val === 'string';
@@ -25,26 +23,18 @@ export const CellOperationRenderer = {
       ...props,
     };
 
-    let align;
-    switch (column.align) {
-      case 'center': {
-        align = 'center';
-        break;
-      }
-      case 'left': {
-        align = 'flex-start';
-        break;
-      }
-      default: {
-        align = 'flex-end';
-      }
-    }
+    const align =
+      column.align === 'center'
+        ? 'center'
+        : (column.align === 'left'
+          ? 'flex-start'
+          : 'flex-end');
 
     // 预设配置（可扩展）
     const presets: Record<string, Record<string, any>> = {
       delete: {
         type: 'danger',
-        text: $t('common.crud.delete'),
+        text: '删除',
       },
     };
 
@@ -101,7 +91,8 @@ export const CellOperationRenderer = {
 
     // 渲染按钮
     const renderBtn = (opt: any, listen = true) => {
-      const { icon: _icon, ...restOpt } = opt;
+      const restOpt = { ...opt };
+      delete restOpt.icon;
       return (
         <ElButton
           {...restOpt}
@@ -124,10 +115,10 @@ export const CellOperationRenderer = {
     // 渲染删除确认
     const renderConfirm = (opt: any) => (
       <ElPopconfirm
-        cancelButtonText={$t('common.operate.cancel')}
-        confirmButtonText={$t('common.operate.confirm')}
+        cancelButtonText="取消"
+        confirmButtonText="确认"
         onConfirm={() => attrs?.onClick?.({ code: opt.code, row })}
-        title={$t('common.confirm_dialog.delete')}
+        title={`确定删除 ${row[attrs?.nameField || 'name']} 吗？`}
       >
         {{
           reference: () => renderBtn(opt, false),

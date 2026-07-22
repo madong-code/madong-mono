@@ -1,23 +1,20 @@
-<template>
-  <ApiComponent v-model="value" :component="CheckboxGroup" />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import ApiComponent from '../api-component/index.vue';
 import CheckboxGroup from '../checkbox-group/index.vue';
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: Array<string | number>;
     isBtn?: boolean;
-    size?: 'default' | 'small' | 'large';
+    modelValue?: Array<number | string>;
+    size?: 'default' | 'large' | 'small';
   }>(),
-  { modelValue: () => [], isBtn: false },
+  { modelValue: () => [], isBtn: false, size: 'default' },
 );
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: Array<string | number> | undefined];
+  'update:modelValue': [modelValue: Array<number | string> | undefined];
 }>();
 
 const value = computed({
@@ -27,3 +24,7 @@ const value = computed({
 
 defineExpose({ getValue: () => value.value });
 </script>
+
+<template>
+  <ApiComponent v-model="value" :component="CheckboxGroup" />
+</template>

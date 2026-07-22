@@ -50,16 +50,6 @@ export function useAction(
     };
   });
 
-  // 计算下拉菜单中已有的自定义操作数量
-  const dropDownToolbarActionsCount = computed(() => {
-    return crudSchema.dropDownToolbarActions?.length || 0;
-  });
-
-  // 是否应将批量删除放到下拉菜单中（当下拉菜单已有自定义操作时）
-  const shouldRemoveInDropdown = computed(() => {
-    return dropDownToolbarActionsCount.value > 0;
-  });
-
   // 是否有选中的数据
   const hasSelection = computed(() => {
     const selection = getSelection ? getSelection() : [];
@@ -70,8 +60,12 @@ export function useAction(
   const toolbarActions = computed(() => {
     const actions: ActionItem[] = [];
 
+    // 定义默认按钮配置（带 key）
+    const defaultActions: ActionItem[] = [];
+
     if (tableConfig.value.hasAdd && formDialogEnabled.value) {
-      actions.push({
+      defaultActions.push({
+        key: 'add',
         label: crudSchema.buttonText?.add || $t('components.crud.action.add'),
         type: 'primary',
         icon: 'ant-design:plus-outlined',
@@ -83,24 +77,43 @@ export function useAction(
       });
     }
 
-    if (
-      tableConfig.value.hasBatchRemove &&
-      formDialogEnabled.value &&
-      !shouldRemoveInDropdown.value
-    ) {
-      actions.push({
-        label: $t('components.crud.action.batch_delete'),
-        type: 'danger',
-        icon: 'ant-design:delete-outlined',
-        auth: crudSchema.permissions?.remove,
-        ifShow: () => hasSelection.value,
-        onClick: () => {
-          crudApi.executeBatchRemove();
-        },
-      });
+    if (tableConfig.value.hasBatchRemove && formDialogEnabled.value) {
+      // 只有当 dropDownToolbarActions 配置了非空数组时，批量删除才移入「更多」下拉
+      // 如果 dropDownToolbarActions 是 undefined 或空数组，批量删除显示在工具栏
+      const hasDropDownActions =
+        crudSchema.dropDownToolbarActions &&
+        crudSchema.dropDownToolbarActions.length > 0;
+      if (!hasDropDownActions) {
+        defaultActions.push({
+          key: 'batchRemove',
+          label: $t('components.crud.action.batch_delete'),
+          type: 'danger',
+          icon: 'ant-design:delete-outlined',
+          auth: crudSchema.permissions?.remove,
+          ifShow: () => hasSelection.value,
+          onClick: () => {
+            crudApi.executeBatchRemove();
+          },
+        });
+      }
     }
 
-    actions.push(...(crudSchema.toolbarActions || []));
+    // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
+    const customActions = crudSchema.toolbarActions || [];
+    const customKeys = new Set(
+      customActions.map((a: any) => a.key).filter(Boolean),
+    );
+
+    // 添加默认按钮（排除被自定义覆盖的）
+    defaultActions.forEach((action) => {
+      if (!customKeys.has(action.key)) {
+        actions.push(action);
+      }
+    });
+
+    // 添加自定义按钮
+    actions.push(...customActions);
+
     return actions;
   });
 
@@ -136,12 +149,21 @@ export function useAction(
   const dropDownToolbarActions = computed(() => {
     const actions: ActionItem[] = [];
 
+    // 定义默认按钮配置（带 key）
+    const defaultActions: ActionItem[] = [];
+
+    // 检查是否配置了 dropDownToolbarActions 且非空
+    const hasDropDownActions =
+      crudSchema.dropDownToolbarActions &&
+      crudSchema.dropDownToolbarActions.length > 0;
+
     if (
       tableConfig.value.hasBatchRemove &&
       formDialogEnabled.value &&
-      shouldRemoveInDropdown.value
+      hasDropDownActions
     ) {
-      actions.push({
+      defaultActions.push({
+        key: 'batchRemove',
         label: $t('components.crud.action.batch_delete'),
         type: 'danger',
         icon: 'ant-design:delete-outlined',
@@ -153,7 +175,27 @@ export function useAction(
       });
     }
 
-    actions.push(...(crudSchema.dropDownToolbarActions || []));
+    // 如果没有配置 dropDownToolbarActions 或为空数组，直接返回
+    if (!hasDropDownActions) {
+      return actions;
+    }
+
+    // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
+    const customActions = crudSchema.dropDownToolbarActions || [];
+    const customKeys = new Set(
+      customActions.map((a: any) => a.key).filter(Boolean),
+    );
+
+    // 添加默认按钮（排除被自定义覆盖的）
+    defaultActions.forEach((action) => {
+      if (!customKeys.has(action.key)) {
+        actions.push(action);
+      }
+    });
+
+    // 添加自定义按钮
+    actions.push(...customActions);
+
     return actions;
   });
 
@@ -161,8 +203,12 @@ export function useAction(
     const actions: ActionItem[] = [];
 
     if (crudSchema.formDialog?.enabled !== false) {
+      // 定义默认按钮配置（带 key）
+      const defaultActions: ActionItem[] = [];
+
       if (tableConfig.value.hasView) {
-        actions.push({
+        defaultActions.push({
+          key: 'view',
           label:
             crudSchema.buttonText?.view || $t('components.crud.action.view'),
           type: 'primary',
@@ -177,7 +223,8 @@ export function useAction(
       }
 
       if (tableConfig.value.hasEdit) {
-        actions.push({
+        defaultActions.push({
+          key: 'edit',
           label:
             crudSchema.buttonText?.edit || $t('components.crud.action.edit'),
           type: 'primary',
@@ -190,9 +237,24 @@ export function useAction(
           },
         });
       }
+
+      // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
+      const customActions = crudSchema.tableActions || [];
+      const customKeys = new Set(
+        customActions.map((a: any) => a.key).filter(Boolean),
+      );
+
+      // 添加默认按钮（排除被自定义覆盖的）
+      defaultActions.forEach((action) => {
+        if (!customKeys.has(action.key)) {
+          actions.push(action);
+        }
+      });
+
+      // 添加自定义按钮
+      actions.push(...customActions);
     }
 
-    actions.push(...(crudSchema.tableActions || []));
     return actions;
   });
 
@@ -200,9 +262,13 @@ export function useAction(
     const actions: ActionItem[] = [];
 
     if (crudSchema.formDialog?.enabled !== false) {
+      // 定义默认按钮配置（带 key）
+      const defaultActions: ActionItem[] = [];
+
       // 新增子节点（树形）
       if (tableConfig.value.hasAdd && tableConfig.value.tree) {
-        actions.push({
+        defaultActions.push({
+          key: 'addChild',
           label:
             (crudSchema.buttonText?.add || $t('components.crud.action.add')) +
             $t('components.crud.action.add_child'),
@@ -218,7 +284,8 @@ export function useAction(
       }
 
       if (tableConfig.value.hasRemove) {
-        actions.push({
+        defaultActions.push({
+          key: 'remove',
           label:
             crudSchema.buttonText?.remove ||
             $t('components.crud.action.delete'),
@@ -231,9 +298,24 @@ export function useAction(
           },
         });
       }
+
+      // 合并逻辑：如果自定义配置中有相同 key，则覆盖默认配置
+      const customActions = crudSchema.dropDownActions || [];
+      const customKeys = new Set(
+        customActions.map((a: any) => a.key).filter(Boolean),
+      );
+
+      // 添加默认按钮（排除被自定义覆盖的）
+      defaultActions.forEach((action) => {
+        if (!customKeys.has(action.key)) {
+          actions.push(action);
+        }
+      });
+
+      // 添加自定义按钮
+      actions.push(...customActions);
     }
 
-    actions.push(...(crudSchema.dropDownActions || []));
     return actions;
   });
 

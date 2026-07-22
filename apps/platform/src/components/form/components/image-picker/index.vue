@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+
 import { useVModel } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
 
-import ImageSelectorDialog from './image-picker-dialog.vue';
 import { $t } from '#/locales';
 
+import ImageSelectorDialog from './image-picker-dialog.vue';
+
 interface Props {
-  modelValue?: string | string[] | null;
+  modelValue?: null | string | string[];
   multiple?: boolean;
   disabled?: boolean;
   shape?: 'circle' | 'square';
-  size?: 'small' | 'medium' | 'large';
+  size?: 'large' | 'medium' | 'small';
   accept?: string;
 }
 
@@ -25,9 +27,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: string | string[] | null];
-  change: [modelValue: string | string[] | null];
+  change: [modelValue: null | string | string[]];
   confirm: [modelValue: string | string[]];
+  'update:modelValue': [modelValue: null | string | string[]];
 }>();
 
 const dialogVisible = ref(false);
@@ -77,7 +79,7 @@ const removeImage = (index: number) => {
   } else {
     mValue.value = null;
   }
-  emit('change', mValue.value as string | string[] | null);
+  emit('change', mValue.value as null | string | string[]);
 };
 </script>
 

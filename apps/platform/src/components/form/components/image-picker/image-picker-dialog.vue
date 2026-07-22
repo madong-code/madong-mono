@@ -10,7 +10,7 @@ import { $t } from '#/locales';
 import { buildStaticUrl } from '#/utils/url';
 
 interface Props {
-  modelValue?: boolean;
+  modelValue: boolean;
   multiple?: boolean;
   defaultSelected?: null | string | string[];
 }

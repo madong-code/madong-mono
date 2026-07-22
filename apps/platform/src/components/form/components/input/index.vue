@@ -1,13 +1,5 @@
-﻿<template>
-  <ElInput v-model="value">
-    <template v-for="(_, slotName) in slots" #[slotName]>
-      <slot :name="slotName" />
-    </template>
-  </ElInput>
-</template>
-
-<script setup lang="ts">
-import { useSlots, computed } from 'vue';
+﻿<script setup lang="ts">
+import { computed, useSlots } from 'vue';
 
 const props = defineProps<{
   modelValue: string | undefined;
@@ -34,3 +26,11 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ElInput v-model="value">
+    <template v-for="(_, slotName) in slots" #[slotName]>
+      <slot :name="slotName"></slot>
+    </template>
+  </ElInput>
+</template>

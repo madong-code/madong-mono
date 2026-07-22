@@ -1,43 +1,40 @@
-<template>
-  <span class="reader-select">
-    <template v-if="displayLabel !== undefined">
-      {{ displayLabel }}
-    </template>
-    <span v-else class="empty-value">--</span>
-  </span>
-</template>
-
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | number | null | undefined | (string | number)[];
-    fieldName?: string;
-    schema?: any;
+    code?: string;
     data?: Record<string, any>;
+    fieldName?: string;
+    labelField?: string;
+    multiple?: boolean;
     options?: {
       label: string;
-      value: string | number;
+      value: number | string;
     }[];
-    multiple?: boolean;
-    code?: string;
-    labelField?: string;
+    schema?: any;
+    value?: (number | string)[] | null | number | string | undefined;
     valueField?: string;
   }>(),
   {
     multiple: false,
     labelField: 'label',
     valueField: 'value',
+    code: '',
+    data: () => ({}),
+    fieldName: '',
+    options: () => [],
+    schema: undefined,
+    value: undefined,
   },
 );
 
-const treeOptions = ref<{ label: string; value: string | number }[]>([]);
+const treeOptions = ref<{ label: string; value: number | string }[]>([]);
 
 const displayLabel = computed(() => {
   const allOptions = props.options || treeOptions.value;
 
-  if (!allOptions || !allOptions.length) {
+  if (!allOptions || allOptions.length === 0) {
     return props.value;
   }
   if (props.value === undefined || props.value === null) {
@@ -45,7 +42,7 @@ const displayLabel = computed(() => {
   }
   if (Array.isArray(props.value)) {
     const labels = props.value.map((val) => {
-      const option = allOptions!.find((opt) => opt.value === val);
+      const option = allOptions.find((opt) => opt.value === val);
       return option ? option.label : val;
     });
     return labels.join(', ');
@@ -80,10 +77,19 @@ watch(
 onMounted(fetchTreeOptions);
 </script>
 
+<template>
+  <span class="reader-select">
+    <template v-if="displayLabel !== undefined">
+      {{ displayLabel }}
+    </template>
+    <span v-else class="empty-value">--</span>
+  </span>
+</template>
+
 <style lang="scss" scoped>
 .reader-select {
   .empty-value {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

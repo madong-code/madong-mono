@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+
 import {
-  ElDialog,
   ElButton,
+  ElDialog,
   ElInput,
-  ElSelect,
+  ElMessage,
   ElOption,
   ElPagination,
-  ElMessage,
+  ElSelect,
 } from 'element-plus';
-import { Icon } from '#/components/icon';
+
 import { requestClient } from '#/api/request';
+import { Icon } from '#/components/icon';
 
 defineOptions({
   name: 'ResourceManager',
@@ -19,10 +21,10 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | string[];
-    multiple?: boolean;
     accept?: string;
     disabled?: boolean;
+    modelValue?: string | string[];
+    multiple?: boolean;
     objectType?: string;
   }>(),
   {
@@ -101,10 +103,10 @@ const handlePaginationChange = () => {
 const toggleFileSelection = (fileId: string) => {
   if (props.multiple) {
     const index = selectedFiles.value.indexOf(fileId);
-    if (index > -1) {
-      selectedFiles.value.splice(index, 1);
-    } else {
+    if (index === -1) {
       selectedFiles.value.push(fileId);
+    } else {
+      selectedFiles.value.splice(index, 1);
     }
   } else {
     selectedFiles.value = [fileId];

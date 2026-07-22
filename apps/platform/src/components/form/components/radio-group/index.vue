@@ -1,45 +1,23 @@
-<template>
-  <ElRadioGroup v-model="value">
-    <template v-if="isBtn">
-      <ElRadioButton
-        :size="size"
-        v-for="item in options || []"
-        :key="item.value + ''"
-        :value="item.value"
-        >{{ item.label }}</ElRadioButton
-      >
-    </template>
-    <template v-else>
-      <ElRadio
-        :size="size"
-        v-for="item in options || []"
-        :key="item.value + ''"
-        :value="item.value"
-        >{{ item.label }}</ElRadio
-      >
-    </template>
-  </ElRadioGroup>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ElRadioButton, ElRadio, ElRadioGroup } from 'element-plus';
+
+import { ElRadio, ElRadioButton, ElRadioGroup } from 'element-plus';
 
 interface Option {
   label: string;
-  value: string | number;
+  value: number | string;
   disabled?: boolean;
 }
 
 const props = defineProps<{
-  modelValue?: string | number | boolean | undefined;
-  options?: Option[];
   isBtn?: boolean;
-  size?: 'default' | 'small' | 'large' | undefined;
+  modelValue?: boolean | number | string | undefined;
+  options?: Option[];
+  size?: 'default' | 'large' | 'small' | undefined;
 }>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number | boolean | undefined];
+  'update:modelValue': [value: boolean | number | string | undefined];
 }>();
 
 const value = computed({
@@ -57,3 +35,28 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ElRadioGroup v-model="value">
+    <template v-if="isBtn">
+      <ElRadioButton
+        :size="size"
+        v-for="item in options || []"
+        :key="`${item.value}`"
+        :value="item.value"
+      >
+        {{ item.label }}
+      </ElRadioButton>
+    </template>
+    <template v-else>
+      <ElRadio
+        :size="size"
+        v-for="item in options || []"
+        :key="`${item.value}`"
+        :value="item.value"
+      >
+        {{ item.label }}
+      </ElRadio>
+    </template>
+  </ElRadioGroup>
+</template>

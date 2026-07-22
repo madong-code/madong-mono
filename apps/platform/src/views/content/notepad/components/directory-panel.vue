@@ -187,9 +187,9 @@ defineExpose({ loadFolders, openCreateDialog });
 </script>
 
 <template>
-  <div class="notepad-sidebar h-full flex flex-col bg-white">
+  <div class="notepad-sidebar h-full flex flex-col bg-background">
     <!-- 新建按钮：下拉菜单 -->
-    <div class="border-b border-gray-100 px-3 py-2.5">
+    <div class="border-b border-border px-3 py-2.5">
       <ElDropdown
         trigger="click"
         @command="
@@ -200,7 +200,7 @@ defineExpose({ loadFolders, openCreateDialog });
         "
       >
         <button
-          class="flex w-full items-center justify-center gap-1.5 rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+          class="flex w-full items-center justify-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           <Plus class="h-4 w-4" />
           新建
@@ -226,8 +226,8 @@ defineExpose({ loadFolders, openCreateDialog });
         class="group flex cursor-pointer items-center rounded-md px-2 py-2 transition-colors"
         :class="
           activeFolderId === 'recent'
-            ? 'bg-blue-50 text-blue-600'
-            : 'hover:bg-gray-50 text-gray-700'
+            ? 'bg-primary/10 text-primary'
+            : 'hover:bg-muted/50 text-foreground'
         "
         @click="handleSelect('recent')"
       >
@@ -236,7 +236,7 @@ defineExpose({ loadFolders, openCreateDialog });
       </div>
 
       <!-- 固定项：我的文件夹标题 -->
-      <div class="mt-3 mb-1 px-2 text-xs font-medium text-gray-400">
+      <div class="mt-3 mb-1 px-2 text-xs font-medium text-muted-foreground">
         我的文件夹
       </div>
 
@@ -247,15 +247,15 @@ defineExpose({ loadFolders, openCreateDialog });
           class="group relative flex cursor-pointer items-center rounded-md px-2 py-2 transition-colors"
           :class="
             activeFolderId === folder.id
-              ? 'bg-blue-50 text-blue-600'
-              : 'hover:bg-gray-50 text-gray-700'
+              ? 'bg-primary/10 text-primary'
+              : 'hover:bg-muted/50 text-foreground'
           "
           @click="handleSelect(folder.id)"
         >
           <div class="min-w-0 flex flex-1 items-center">
-            <FolderOpen class="mr-2 h-4 w-4 shrink-0 text-yellow-500" />
+            <FolderOpen class="mr-2 h-4 w-4 shrink-0 text-warning" />
             <span class="truncate text-sm">{{ folder.name }}</span>
-            <span class="ml-1 shrink-0 text-xs text-gray-400">
+            <span class="ml-1 shrink-0 text-xs text-muted-foreground">
               ({{ folder.doc_count || 0 }})
             </span>
           </div>
@@ -272,10 +272,10 @@ defineExpose({ loadFolders, openCreateDialog });
             "
           >
             <button
-              class="ml-1 shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-gray-200"
+              class="ml-1 shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
               @click.stop
             >
-              <MoreHorizontal class="h-3.5 w-3.5 text-gray-400" />
+              <MoreHorizontal class="h-3.5 w-3.5 text-muted-foreground" />
             </button>
             <template #dropdown>
               <ElDropdownMenu>
@@ -301,15 +301,15 @@ defineExpose({ loadFolders, openCreateDialog });
             class="group relative ml-6 flex cursor-pointer items-center rounded-md px-2 py-2 transition-colors"
             :class="
               activeFolderId === child.id
-                ? 'bg-blue-50 text-blue-600'
-                : 'hover:bg-gray-50 text-gray-700'
+                ? 'bg-primary/10 text-primary'
+                : 'hover:bg-muted/50 text-foreground'
             "
             @click="handleSelect(child.id)"
           >
             <div class="min-w-0 flex flex-1 items-center">
-              <FolderOpen class="mr-2 h-4 w-4 shrink-0 text-yellow-500" />
+              <FolderOpen class="mr-2 h-4 w-4 shrink-0 text-warning" />
               <span class="truncate text-sm">{{ child.name }}</span>
-              <span class="ml-1 shrink-0 text-xs text-gray-400">
+              <span class="ml-1 shrink-0 text-xs text-muted-foreground">
                 ({{ child.doc_count || 0 }})
               </span>
             </div>
@@ -325,10 +325,10 @@ defineExpose({ loadFolders, openCreateDialog });
               "
             >
               <button
-                class="ml-1 shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-gray-200"
+                class="ml-1 shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
                 @click.stop
               >
-                <MoreHorizontal class="h-3.5 w-3.5 text-gray-400" />
+                <MoreHorizontal class="h-3.5 w-3.5 text-muted-foreground" />
               </button>
               <template #dropdown>
                 <ElDropdownMenu>
@@ -389,13 +389,13 @@ defineExpose({ loadFolders, openCreateDialog });
       </ElForm>
       <template #footer>
         <button
-          class="rounded-md border border-gray-200 px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+          class="rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted"
           @click="dialogVisible = false"
         >
           取消
         </button>
         <button
-          class="ml-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+          class="ml-2 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground transition-colors hover:bg-primary-hover"
           @click="submitForm"
         >
           确认提交
@@ -408,7 +408,6 @@ defineExpose({ loadFolders, openCreateDialog });
 <style scoped>
 /* 目录面板：鼠标移入显示滚动条，overlay方式不占空间防抖动 */
 .notepad-sidebar :deep(.flex-1.overflow-y-auto) {
-
   /* overlay 滚动条：不占用内容空间，不会导致布局抖动 */
   overflow-y: auto;
 
@@ -429,11 +428,11 @@ defineExpose({ loadFolders, openCreateDialog });
 
   /* 鼠标移入时显示 */
   &:hover::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
+    background-color: hsl(var(--border));
   }
 
   &:hover::-webkit-scrollbar-thumb:hover {
-    background-color: #9ca3af;
+    background-color: hsl(var(--muted-foreground));
   }
 }
 </style>

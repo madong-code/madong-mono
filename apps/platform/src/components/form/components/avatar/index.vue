@@ -2,7 +2,11 @@
 import { useVModel } from '@vueuse/core';
 import { ElMessage, ElUpload } from 'element-plus';
 
-import { uploadAvatarFile } from '#/api/core/profile';
+import { ProfileService } from '#/api/auth/profile';
+
+defineOptions({
+  inheritAttrs: false,
+});
 
 const props = withDefaults(
   defineProps<{
@@ -25,17 +29,23 @@ const mValue = useVModel(props, 'modelValue', emit, {
   passive: true,
 });
 
-const customRequest = async (e: any) => {
-  try {
-    const data = await uploadAvatarFile(e.file);
-    const avatar = data?.avatar || '';
-    if (avatar) {
-      mValue.value = avatar;
-      emit('success', avatar);
-    }
-  } catch {
-    ElMessage.error('头像上传失败');
-  }
+const customRequest = (e: any) => {
+  return new Promise<void>((resolve, reject) => {
+    ProfileService.uploadAvatarFile(e.file)
+      .then((data) => {
+        // 后端返回 { avatar: '/upload/avatar/...' } 相对路径
+        const avatar = data?.avatar || '';
+        if (avatar) {
+          mValue.value = avatar;
+          emit('success', avatar);
+        }
+        resolve();
+      })
+      .catch((error) => {
+        ElMessage.error('头像上传失败');
+        reject(error);
+      });
+  });
 };
 
 const handleRemove = (e: Event) => {

@@ -1,0 +1,64 @@
+{
+  "title": {
+    "title": "配置模板",
+    "create": "新增配置模板",
+    "edit": "编辑配置模板"
+  },
+  "save_success": "保存成功",
+  "table": {
+    "columns": {
+      "name": "配置名称",
+      "code": "配置编码",
+      "group_code": "配置分组",
+      "content": "配置内容",
+      "sort": "排序",
+      "enabled": "状态"
+    },
+    "search": {
+      "name": "配置名称",
+      "code": "配置编码",
+      "group_code": "配置分组",
+      "enabled": "状态",
+      "placeholder": {
+        "name": "请输入配置名称",
+        "code": "请输入配置编码",
+        "group_code": "请选择配置分组",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "group_code": "配置分组",
+      "name": "配置名称",
+      "code": "配置编码",
+      "content": "配置内容",
+      "content_type": "内容类型",
+      "enabled": "状态",
+      "sort": "排序",
+      "remark": "备注"
+    },
+    "content_type_kv": "JSON 对象 (Key-Value)",
+    "content_type_string": "字符串",
+    "kv_label": "Key-Value 配置",
+    "add_kv": "添加 Key-Value",
+    "enabled_on": "启用",
+    "enabled_off": "禁用",
+    "placeholder": {
+      "name": "请输入配置名称",
+      "code": "请输入配置编码（英文，唯一）",
+      "group_code": "请选择配置分组",
+      "content": "请输入配置内容",
+      "sort": "请输入排序",
+      "kv_key": "Key",
+      "kv_value": "Value",
+      "remark": "请输入备注"
+    },
+    "value_type": {
+      "string": "字符串",
+      "number": "数字",
+      "boolean": "布尔",
+      "json": "JSON"
+    }
+  }
+}

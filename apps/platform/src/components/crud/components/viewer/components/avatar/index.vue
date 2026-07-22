@@ -1,24 +1,24 @@
-<template>
-  <ElAvatar v-if="isShow" :src="value" :size="size" :shape="shape" />
-  <span v-else class="empty-value">--</span>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { ElAvatar } from 'element-plus';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | null | undefined;
+    data?: Record<string, any>;
     fieldName?: string;
     schema?: any;
-    data?: Record<string, any>;
-    size?: number;
     shape?: 'circle' | 'square';
+    size?: number;
+    value?: null | string | undefined;
   }>(),
   {
     size: 102,
     shape: 'square',
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: undefined,
   },
 );
 
@@ -26,6 +26,11 @@ const isShow = computed(
   () => props.value !== undefined && props.value !== null && props.value !== '',
 );
 </script>
+
+<template>
+  <ElAvatar v-if="isShow" :src="value" :size="size" :shape="shape" />
+  <span v-else class="empty-value">--</span>
+</template>
 
 <style lang="scss" scoped>
 :deep(.el-avatar) {

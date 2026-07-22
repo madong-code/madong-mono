@@ -1,5 +1,35 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(
+  defineProps<{
+    data?: Record<string, any>;
+    fieldName?: string;
+    rows?: number;
+    schema?: any;
+    type?: string;
+    value?: null | number | string | undefined;
+  }>(),
+  {
+    type: 'text',
+    rows: 1,
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: undefined,
+  },
+);
+
+const isMultiline = computed(() => {
+  return props.type === 'textarea' || props.rows > 1;
+});
+</script>
+
 <template>
-  <span :class="['reader-input', { 'reader-input-multiline': isMultiline }]">
+  <span
+    class="reader-input"
+    :class="[{ 'reader-input-multiline': isMultiline }]"
+  >
     <template v-if="value !== undefined && value !== null">
       <template v-if="isMultiline">
         <pre>{{ value }}</pre>
@@ -11,29 +41,6 @@
     <span v-else class="empty-value">--</span>
   </span>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = withDefaults(
-  defineProps<{
-    value?: string | number | null | undefined;
-    fieldName?: string;
-    schema?: any;
-    data?: Record<string, any>;
-    type?: string;
-    rows?: number;
-  }>(),
-  {
-    type: 'text',
-    rows: 1,
-  },
-);
-
-const isMultiline = computed(() => {
-  return props.type === 'textarea' || props.rows > 1;
-});
-</script>
 
 <style lang="scss" scoped>
 .reader-input {
@@ -49,7 +56,7 @@ const isMultiline = computed(() => {
   }
 
   .empty-value {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

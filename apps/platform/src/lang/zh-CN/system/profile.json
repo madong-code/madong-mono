@@ -42,6 +42,10 @@
     "save": "保存",
     "cancel": "取消"
   },
+  "avatar": {
+    "success": "头像更新成功",
+    "fail": "头像更新失败"
+  },
   "security": {
     "title": "修改密码",
     "old_password": "旧密码",

@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, useAttrs, useSlots, watch } from 'vue';
-import { ElMessage, ElButton } from 'element-plus';
-import { Icon } from '#/components/icon';
+import { computed, onMounted, ref, useAttrs, useSlots, watch } from 'vue';
+
 import { useAccessStore } from '@vben/stores';
+
+import { ElButton, ElMessage } from 'element-plus';
+
+import { Icon } from '#/components/icon';
 
 defineOptions({
   name: 'Upload',
@@ -11,17 +14,17 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string;
+    accept?: string;
     action?: string;
-    headers?: Record<string, string>;
     disabled?: boolean;
+    headers?: Record<string, string>;
+    limit?: number;
     listType?: 'picture' | 'picture-card' | 'text';
     maxCount?: number;
-    uploadName?: string;
-    separator?: string;
-    accept?: string;
     maxSize?: number;
-    limit?: number;
+    modelValue?: string;
+    separator?: string;
+    uploadName?: string;
   }>(),
   {
     modelValue: '',
@@ -47,7 +50,7 @@ const slots = useSlots();
 const slotNames = computed(() => Object.keys(slots));
 
 const bindProps = computed(() => {
-  const excluded = new Set(['onChange', 'onInput', 'onBlur', 'name']);
+  const excluded = new Set(['name', 'onBlur', 'onChange', 'onInput']);
   const filtered = Object.fromEntries(
     Object.entries(attrs).filter(([k]) => !excluded.has(k)),
   );
@@ -151,7 +154,7 @@ onMounted(() => {
       </ElButton>
     </template>
     <template v-for="item in slotNames" :key="item" #[item]>
-      <slot :name="item" />
+      <slot :name="item"></slot>
     </template>
   </Upload>
 </template>

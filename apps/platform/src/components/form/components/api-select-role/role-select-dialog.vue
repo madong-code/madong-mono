@@ -1,51 +1,18 @@
-<template>
-  <div class="role-select-dialog">
-    <ElInput
-      v-model="searchText"
-      :placeholder="$t('components.form.select_role.search_placeholder')"
-      clearable
-      style="margin-bottom: 12px"
-    />
-    <div class="role-list">
-      <div
-        v-for="item in filteredRoles"
-        :key="String(item[rowKey])"
-        class="role-item"
-        :class="{ 'is-selected': isSelected(item) }"
-        @click="handleClick(item)"
-      >
-        <ElCheckbox
-          v-if="multiple"
-          :model-value="isSelected(item)"
-          @update:model-value="(val) => handleCheck(val, item)"
-          @click.stop
-        />
-        <div class="role-info">
-          <span class="role-name">{{ item.name }}</span>
-          <span class="role-code">{{ item.code }}</span>
-        </div>
-      </div>
-      <ElEmpty
-        v-if="filteredRoles.length === 0"
-        :description="$t('components.form.select_role.empty_description')"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
-import { ElInput, ElCheckbox, ElEmpty } from 'element-plus';
-import { Icon } from '#/components/icon';
-import { RoleService } from '#/api/system/role';
 import type { RoleRow } from '#/api/system/role/types';
+
+import { computed, ref, watch } from 'vue';
+
+import { ElCheckbox, ElEmpty, ElInput } from 'element-plus';
+
+import { RoleService } from '#/api/system/role';
 import { $t } from '#/locales';
 
 const props = withDefaults(
   defineProps<{
-    value?: string[];
     multiple?: boolean;
     rowKey?: string;
+    value?: string[];
   }>(),
   {
     value: () => [],
@@ -132,7 +99,7 @@ watch(
   (newValue) => {
     if (newValue) {
       selectedKeys.value = Array.isArray(newValue)
-        ? newValue.map((v) => String(v))
+        ? newValue.map(String)
         : [String(newValue)];
     } else {
       selectedKeys.value = [];
@@ -147,6 +114,41 @@ defineExpose({
 
 loadRoles();
 </script>
+
+<template>
+  <div class="role-select-dialog">
+    <ElInput
+      v-model="searchText"
+      :placeholder="$t('components.form.select_role.search_placeholder')"
+      clearable
+      style="margin-bottom: 12px"
+    />
+    <div class="role-list">
+      <div
+        v-for="item in filteredRoles"
+        :key="String(item[rowKey])"
+        class="role-item"
+        :class="{ 'is-selected': isSelected(item) }"
+        @click="handleClick(item)"
+      >
+        <ElCheckbox
+          v-if="multiple"
+          :model-value="isSelected(item)"
+          @update:model-value="(val) => handleCheck(val, item)"
+          @click.stop
+        />
+        <div class="role-info">
+          <span class="role-name">{{ item.name }}</span>
+          <span class="role-code">{{ item.code }}</span>
+        </div>
+      </div>
+      <ElEmpty
+        v-if="filteredRoles.length === 0"
+        :description="$t('components.form.select_role.empty_description')"
+      />
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .role-select-dialog {

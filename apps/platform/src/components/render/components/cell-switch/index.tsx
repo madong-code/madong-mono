@@ -3,7 +3,6 @@ import { ElSwitch } from 'element-plus';
 /**
  * 单元格开关渲染器
  */
-import { $t } from '#/locales';
 
 export const CellSwitchRenderer = {
   renderTableDefault({ attrs, props }: any, { column, row }: any) {
@@ -18,8 +17,8 @@ export const CellSwitchRenderer = {
     };
 
     const finallyProps = {
-      activeText: $t('common.state.enable'),
-      inactiveText: $t('common.state.disable'),
+      //   activeText: $t('common.enabled'),
+      //   inactiveText: $t('common.disabled'),
       activeValue: 1,
       inactiveValue: 0,
       ...props,

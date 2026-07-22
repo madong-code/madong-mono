@@ -150,84 +150,84 @@ defineExpose({ handleSave, handleSaveTitle });
 </script>
 
 <template>
-  <div class="notepad-editor flex h-full flex-col bg-white">
+  <div class="notepad-editor flex h-full flex-col bg-background">
     <!-- 无选中状态 -->
     <div
       v-if="!props.document"
-      class="flex h-full items-center justify-center text-sm text-gray-400"
+      class="flex h-full items-center justify-center text-sm text-muted-foreground"
     >
       请选择或新建一个文档
     </div>
 
     <template v-else>
       <!-- 工具栏 -->
-      <div class="flex items-center border-b border-gray-100 px-4 py-2">
+      <div class="flex items-center border-b border-border px-4 py-2">
         <div class="flex flex-wrap items-center gap-1">
           <button
             title="正文"
-            class="rounded px-2 py-1 text-xs hover:bg-gray-100"
+            class="rounded px-2 py-1 text-xs hover:bg-muted"
             @click="execCommand('normal')"
           >
             正文
           </button>
-          <span class="text-gray-300">|</span>
+          <span class="text-border">|</span>
 
           <button
             title="加粗"
-            class="rounded p-1 hover:bg-gray-100"
+            class="rounded p-1 hover:bg-muted"
             @click="execCommand('bold')"
           >
             <strong>B</strong>
           </button>
           <button
             title="斜体"
-            class="rounded p-1 italic hover:bg-gray-100"
+            class="rounded p-1 italic hover:bg-muted"
             @click="execCommand('italic')"
           >
             <em>I</em>
           </button>
           <button
             title="下划线"
-            class="rounded p-1 underline hover:bg-gray-100"
+            class="rounded p-1 underline hover:bg-muted"
             @click="execCommand('underline')"
           >
             U
           </button>
-          <span class="text-gray-300">|</span>
+          <span class="text-border">|</span>
 
           <button
             title="标题"
-            class="rounded p-1 hover:bg-gray-100"
+            class="rounded p-1 hover:bg-muted"
             @click="execCommand('heading')"
           >
             A<sup>+</sup>
           </button>
           <button
             title="引用"
-            class="rounded p-1 hover:bg-gray-100"
+            class="rounded p-1 hover:bg-muted"
             @click="execCommand('quote')"
           >
             &ldquo;
           </button>
           <button
             title="代码块"
-            class="rounded p-1 font-mono hover:bg-gray-100"
+            class="rounded p-1 font-mono hover:bg-muted"
             @click="execCommand('code')"
           >
             &lt;/&gt;
           </button>
-          <span class="text-gray-300">|</span>
+          <span class="text-border">|</span>
 
           <button
             title="无序列表"
-            class="rounded p-1 hover:bg-gray-100"
+            class="rounded p-1 hover:bg-muted"
             @click="execCommand('ul')"
           >
             &#8226; 列表
           </button>
           <button
             title="有序列表"
-            class="rounded p-1 hover:bg-gray-100"
+            class="rounded p-1 hover:bg-muted"
             @click="execCommand('ol')"
           >
             1. 列表
@@ -238,13 +238,13 @@ defineExpose({ handleSave, handleSaveTitle });
           <!-- 撤销 / 重做（占位） -->
           <button
             title="撤销"
-            class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            class="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             ↶
           </button>
           <button
             title="重做"
-            class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            class="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             ↷
           </button>
@@ -257,7 +257,7 @@ defineExpose({ handleSave, handleSaveTitle });
           ref="editorRef"
           v-model="editorContent"
           placeholder="记事本内容..."
-          class="h-full w-full resize-none border-none bg-transparent text-sm leading-relaxed outline-none placeholder:text-gray-300"
+          class="h-full w-full resize-none border-none bg-transparent text-sm leading-relaxed text-foreground outline-none placeholder:text-muted-foreground/50"
         ></textarea>
       </div>
     </template>
@@ -285,12 +285,12 @@ defineExpose({ handleSave, handleSaveTitle });
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
+    background-color: hsl(var(--border));
     border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #9ca3af;
+    background-color: hsl(var(--muted-foreground));
   }
 }
 </style>

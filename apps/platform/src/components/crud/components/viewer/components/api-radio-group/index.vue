@@ -1,28 +1,24 @@
-<template>
-  <span class="reader-api-radio-group">
-    <template v-if="loading">
-      <span class="loading-text">加载中...</span>
-    </template>
-    <template v-else>{{ displayValue ?? '--' }}</template>
-  </span>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: string | number | null;
-    fieldName?: string;
-    schema?: any;
-    data?: Record<string, any>;
     code?: string;
+    data?: Record<string, any>;
+    fieldName?: string;
     labelField?: string;
+    schema?: any;
+    value?: null | number | string;
     valueField?: string;
   }>(),
   {
     labelField: 'label',
     valueField: 'value',
+    code: '',
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: null,
   },
 );
 
@@ -31,7 +27,7 @@ const loading = ref(false);
 
 const displayValue = computed(() => {
   if (loading.value) return undefined;
-  if (!options.value.length || props.value == null) return undefined;
+  if (options.value.length === 0 || props.value == null) return undefined;
   const opt = options.value.find(
     (o: any) => o[props.valueField] == props.value,
   );
@@ -57,10 +53,19 @@ const fetchDict = async () => {
 watch(() => props.code, fetchDict, { immediate: true });
 </script>
 
+<template>
+  <span class="reader-api-radio-group">
+    <template v-if="loading">
+      <span class="loading-text">加载中...</span>
+    </template>
+    <template v-else>{{ displayValue ?? '--' }}</template>
+  </span>
+</template>
+
 <style lang="scss" scoped>
 .reader-api-radio-group {
   .loading-text {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

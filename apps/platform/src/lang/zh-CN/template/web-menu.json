@@ -1,0 +1,65 @@
+{
+  "title": "前台菜单模板",
+  "table": {
+    "columns": {
+      "name": "菜单名称",
+      "code": "编码",
+      "url": "链接地址",
+      "icon": "图标",
+      "category": "菜单分类",
+      "type": "菜单类型",
+      "sort": "排序",
+      "is_show": "是否显示",
+      "enabled": "状态"
+    },
+    "search": {
+      "name": "菜单名称",
+      "code": "编码",
+      "category": "菜单分类",
+      "type": "菜单类型",
+      "enabled": "状态",
+      "placeholder": {
+        "name": "请输入菜单名称",
+        "code": "请输入编码",
+        "category": "请选择菜单分类",
+        "type": "请选择菜单类型",
+        "enabled": "请选择状态"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "pid": "父级菜单",
+      "name": "菜单名称",
+      "code": "编码",
+      "url": "链接地址",
+      "icon": "图标",
+      "type": "菜单类型",
+      "category": "菜单分类",
+      "level": "层级",
+      "sort": "排序",
+      "app": "所属应用",
+      "source": "来源",
+      "target": "打开方式",
+      "is_show": "是否显示",
+      "enabled": "状态",
+      "type_options": {
+        "directory": "目录",
+        "menu": "菜单"
+      },
+      "placeholder": {
+        "pid": "请选择父级菜单",
+        "name": "请输入菜单名称",
+        "code": "请输入编码",
+        "url": "请输入链接地址",
+        "icon": "请选择图标",
+        "category": "请选择菜单分类",
+        "level": "请输入层级",
+        "app": "请输入所属应用",
+        "source": "请输入来源",
+        "target": "请选择打开方式"
+      }
+    }
+  }
+}

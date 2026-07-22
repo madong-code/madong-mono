@@ -1,0 +1,53 @@
+{
+  "title": "Dict Template",
+  "table": {
+    "columns": {
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "data_type": "Data Type",
+      "sort": "Sort",
+      "enabled": "Status"
+    },
+    "search": {
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "enabled": "Status",
+      "placeholder": {
+        "group_code": "Please select group",
+        "name": "Please enter name",
+        "code": "Please enter code",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "group_code": "Group",
+      "name": "Name",
+      "code": "Code",
+      "data_type": "Data Type",
+      "enabled": "Status",
+      "sort": "Sort",
+      "description": "Description",
+      "placeholder": {
+        "group_code": "Please select group",
+        "name": "Please enter name",
+        "code": "Please enter code",
+        "data_type": "Please select data type",
+        "enabled": "Please select status",
+        "sort": "Please enter sort",
+        "description": "Please enter description"
+      }
+    }
+  },
+  "table_actions": {
+    "dict_item": "Dict Items"
+  },
+  "drop_down_actions": {
+    "edit": "Edit",
+    "delete": "Delete"
+  }
+}

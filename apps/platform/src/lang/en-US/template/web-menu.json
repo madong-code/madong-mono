@@ -1,0 +1,65 @@
+{
+  "title": "Web Menu Template",
+  "table": {
+    "columns": {
+      "name": "Menu Name",
+      "code": "Code",
+      "url": "Link URL",
+      "icon": "Icon",
+      "category": "Category",
+      "type": "Menu Type",
+      "sort": "Sort",
+      "is_show": "Visible",
+      "enabled": "Status"
+    },
+    "search": {
+      "name": "Menu Name",
+      "code": "Code",
+      "category": "Category",
+      "type": "Menu Type",
+      "enabled": "Status",
+      "placeholder": {
+        "name": "Please enter menu name",
+        "code": "Please enter code",
+        "category": "Please select category",
+        "type": "Please select menu type",
+        "enabled": "Please select status"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "pid": "Parent Menu",
+      "name": "Menu Name",
+      "code": "Code",
+      "url": "Link URL",
+      "icon": "Icon",
+      "type": "Menu Type",
+      "category": "Menu Category",
+      "level": "Level",
+      "sort": "Sort",
+      "app": "App",
+      "source": "Source",
+      "target": "Open Target",
+      "is_show": "Visible",
+      "enabled": "Status",
+      "type_options": {
+        "directory": "Directory",
+        "menu": "Menu"
+      },
+      "placeholder": {
+        "pid": "Please select parent menu",
+        "name": "Please enter menu name",
+        "code": "Please enter code",
+        "url": "Please enter link URL",
+        "icon": "Please select icon",
+        "category": "Please select menu category",
+        "level": "Please enter level",
+        "app": "Please enter app",
+        "source": "Please enter source",
+        "target": "Please select open target"
+      }
+    }
+  }
+}

@@ -1,9 +1,3 @@
-<template>
-  <div class="divider">
-    <span class="title">{{ title }}</span>
-  </div>
-</template>
-
 <script setup lang="ts">
 withDefaults(
   defineProps<{
@@ -14,6 +8,12 @@ withDefaults(
   },
 );
 </script>
+
+<template>
+  <div class="divider">
+    <span class="title">{{ title }}</span>
+  </div>
+</template>
 
 <style scoped>
 .divider {

@@ -1,0 +1,43 @@
+{
+  "title": "字典项模板",
+  "table": {
+    "columns": {
+      "dict_template_id": "所属字典",
+      "code": "标识",
+      "label": "标签",
+      "value": "值",
+      "color": "颜色",
+      "sort": "排序",
+      "enabled": "状态"
+    },
+    "search": {
+      "label": "标签",
+      "value": "值",
+      "placeholder": {
+        "label": "请输入标签",
+        "value": "请输入值"
+      }
+    }
+  },
+  "form": {
+    "modal": {
+      "id": "ID",
+      "dict_template_id": "所属字典",
+      "code": "标识",
+      "color": "颜色",
+      "label": "标签",
+      "value": "值",
+      "other_class": "扩展样式",
+      "enabled": "状态",
+      "sort": "排序",
+      "remark": "备注",
+      "placeholder": {
+        "label": "请输入标签",
+        "value": "请输入值",
+        "other_class": "请输入扩展样式",
+        "sort": "请输入排序",
+        "remark": "请输入备注"
+      }
+    }
+  }
+}

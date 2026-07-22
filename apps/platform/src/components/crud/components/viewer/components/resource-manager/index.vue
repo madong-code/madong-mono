@@ -1,15 +1,11 @@
-<template>
-  <span class="reader-resource">{{ displayValue ?? '--' }}</span>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
 const props = defineProps<{
-  value?: string | string[] | null;
+  data?: Record<string, any>;
   fieldName?: string;
   schema?: any;
-  data?: Record<string, any>;
+  value?: null | string | string[];
 }>();
 
 const displayValue = computed(() => {
@@ -18,3 +14,7 @@ const displayValue = computed(() => {
   return props.value;
 });
 </script>
+
+<template>
+  <span class="reader-resource">{{ displayValue ?? '--' }}</span>
+</template>

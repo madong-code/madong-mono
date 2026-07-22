@@ -165,9 +165,9 @@ defineExpose({ loadDocuments });
 </script>
 
 <template>
-  <div class="notepad-doc-list flex h-full flex-col bg-white">
+  <div class="notepad-doc-list flex h-full flex-col bg-background">
     <!-- 搜索框 -->
-    <div class="border-b border-gray-100 px-3 py-2.5">
+    <div class="border-b border-border px-3 py-2.5">
       <ElInput
         v-model="searchKeyword"
         placeholder="搜索文档"
@@ -180,11 +180,11 @@ defineExpose({ loadDocuments });
     </div>
 
     <!-- 文档列表 -->
-    <div class="flex-1 overflow-y-auto divide-y divide-gray-100">
+    <div class="flex-1 overflow-y-auto divide-y divide-border">
       <!-- 空状态 -->
       <div
         v-if="!loading && documents.length === 0"
-        class="flex h-full items-center justify-center text-sm text-gray-400"
+        class="flex h-full items-center justify-center text-sm text-muted-foreground"
       >
         暂无文档
       </div>
@@ -192,8 +192,8 @@ defineExpose({ loadDocuments });
       <!-- 文档项 -->
       <template v-for="doc in documents" :key="doc.id">
         <div
-          class="group relative cursor-pointer px-3 py-3 transition-colors hover:bg-gray-50"
-          :class="{ 'bg-blue-50/50': activeDocId === doc.id }"
+          class="group relative cursor-pointer px-3 py-3 transition-colors hover:bg-muted/50"
+          :class="{ 'bg-primary/5': activeDocId === doc.id }"
           @click="handleSelect(doc)"
         >
           <!-- 标题 -->
@@ -201,7 +201,7 @@ defineExpose({ loadDocuments });
             <span
               class="truncate text-sm font-medium"
               :class="
-                activeDocId === doc.id ? 'text-blue-600' : 'text-gray-800'
+                activeDocId === doc.id ? 'text-primary' : 'text-foreground'
               "
             >
               {{ doc.title }}
@@ -217,10 +217,10 @@ defineExpose({ loadDocuments });
               "
             >
               <button
-                class="shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-gray-200"
+                class="shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
                 @click.stop
               >
-                <MoreHorizontal class="h-3.5 w-3.5 text-gray-400" />
+                <MoreHorizontal class="h-3.5 w-3.5 text-muted-foreground" />
               </button>
               <template #dropdown>
                 <ElDropdownMenu>
@@ -234,12 +234,12 @@ defineExpose({ loadDocuments });
           </div>
 
           <!-- 内容预览（一行截断） -->
-          <div class="mb-1 truncate text-xs text-gray-500">
+          <div class="mb-1 truncate text-xs text-muted-foreground">
             {{ truncateText(doc.content) }}
           </div>
 
           <!-- 创建时间 -->
-          <div class="text-xs text-gray-400">
+          <div class="text-xs text-muted-foreground">
             创建于 {{ formatDate(doc.created_at) }}
           </div>
         </div>
@@ -255,7 +255,7 @@ defineExpose({ loadDocuments });
       destroy-on-close
     >
       <div class="py-2">
-        <p class="mb-3 text-sm text-gray-500">
+        <p class="mb-3 text-sm text-muted-foreground">
           将「{{ moveDoc?.title }}」移动到：
         </p>
         <ElSelect
@@ -270,7 +270,7 @@ defineExpose({ loadDocuments });
             :value="opt.value"
           >
             <span class="flex items-center gap-1">
-              <FolderOpen class="h-3.5 w-3.5 text-yellow-500 shrink-0" />
+              <FolderOpen class="h-3.5 w-3.5 text-warning shrink-0" />
               {{ opt.label }}
             </span>
           </ElOption>
@@ -278,13 +278,13 @@ defineExpose({ loadDocuments });
       </div>
       <template #footer>
         <button
-          class="rounded-md border border-gray-200 px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+          class="rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted"
           @click="moveDialogVisible = false"
         >
           取消
         </button>
         <button
-          class="ml-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+          class="ml-2 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground transition-colors hover:bg-primary-hover"
           @click="confirmMove"
         >
           确定更改

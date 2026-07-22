@@ -1,28 +1,22 @@
-<template>
-  <span class="reader-switch">
-    <span :class="['switch-dot', { active: isActive }]">
-      <span class="switch-inner">{{
-        isActive ? activeText : inactiveText
-      }}</span>
-    </span>
-  </span>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    value?: boolean | number | string | null | undefined;
-    fieldName?: string;
-    schema?: any;
-    data?: Record<string, any>;
     activeText?: string;
+    data?: Record<string, any>;
+    fieldName?: string;
     inactiveText?: string;
+    schema?: any;
+    value?: boolean | null | number | string | undefined;
   }>(),
   {
     activeText: '是',
     inactiveText: '否',
+    data: () => ({}),
+    fieldName: '',
+    schema: undefined,
+    value: undefined,
   },
 );
 
@@ -31,6 +25,16 @@ const isActive = computed(() => {
   return !!props.value && String(props.value) !== '0';
 });
 </script>
+
+<template>
+  <span class="reader-switch">
+    <span class="switch-dot" :class="[{ active: isActive }]">
+      <span class="switch-inner">{{
+        isActive ? activeText : inactiveText
+      }}</span>
+    </span>
+  </span>
+</template>
 
 <style lang="scss" scoped>
 .reader-switch {
@@ -44,8 +48,8 @@ const isActive = computed(() => {
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: #64748b;
-  background-color: #e2e8f0;
+  color: var(--el-text-color-secondary, #64748b);
+  background-color: var(--el-fill-color, #e2e8f0);
   border-radius: 12px;
   transition: all 0.3s ease;
 

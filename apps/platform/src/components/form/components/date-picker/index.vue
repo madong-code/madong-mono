@@ -1,13 +1,5 @@
-<template>
-  <ElDatePicker v-model="value">
-    <template v-for="(_, slotName) in slots" #[slotName]>
-      <slot :name="slotName" />
-    </template>
-  </ElDatePicker>
-</template>
-
 <script setup lang="ts">
-import { useSlots, computed } from 'vue';
+import { computed, useSlots } from 'vue';
 
 const props = defineProps<{
   modelValue: any;
@@ -34,3 +26,11 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <ElDatePicker v-model="value">
+    <template v-for="(_, slotName) in slots" #[slotName]>
+      <slot :name="slotName"></slot>
+    </template>
+  </ElDatePicker>
+</template>

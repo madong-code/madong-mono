@@ -1,10 +1,12 @@
 ﻿<script setup lang="ts">
 import type { Component } from 'vue';
+
 import { computed, nextTick, ref, unref, useAttrs, watch } from 'vue';
+
 import { objectOmit } from '@vueuse/core';
 
-import { Icon } from '#/components/icon';
 import { requestClient } from '#/api/request';
+import { Icon } from '#/components/icon';
 
 type AnyPromiseFunction<T extends any[] = any[], R = void> = (
   ...arg: T
@@ -15,7 +17,7 @@ export interface OptionsItem {
   children?: OptionsItem[];
   disabled?: boolean;
   label?: string;
-  modelValue?: string | number;
+  modelValue?: number | string;
 }
 
 export interface Props {
@@ -190,15 +192,16 @@ const mergedParams = computed(() => {
 
 function isEqual(a: any, b: any): boolean {
   if (a === b) return true;
-  if (a !== a && b !== b) return true;
+  if (Number.isNaN(a) && Number.isNaN(b)) return true;
   if (typeof a !== typeof b) return false;
-  if (a == null || b == null) return a === b;
+  if (a === null || a === undefined || b === null || b === undefined)
+    return a === b;
   if (a instanceof Date && b instanceof Date)
     return a.getTime() === b.getTime();
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; i++) {
-      if (!isEqual(a[i], b[i])) return false;
+    for (const [i, item] of a.entries()) {
+      if (!isEqual(item, b[i])) return false;
     }
     return true;
   }
@@ -217,7 +220,7 @@ function isEqual(a: any, b: any): boolean {
 
 function cloneDeep(obj: any): any {
   if (obj === null || typeof obj !== 'object') return obj;
-  if (Array.isArray(obj)) return obj.map(cloneDeep);
+  if (Array.isArray(obj)) return obj.map((item) => cloneDeep(item));
   const copy: any = {};
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -228,7 +231,12 @@ function cloneDeep(obj: any): any {
 }
 
 function getDeep(obj: any, path: string) {
-  return path.split('.').reduce((o, k) => (o != null ? o[k] : undefined), obj);
+  let current: any = obj;
+  for (const k of path.split('.')) {
+    if (current === null || current === undefined) return undefined;
+    current = current[k];
+  }
+  return current;
 }
 
 watch(
@@ -291,7 +299,7 @@ defineExpose({
     ref="componentRef"
   >
     <template v-for="item in Object.keys($slots)" #[item]="data">
-      <slot :name="item" v-bind="data || {}" />
+      <slot :name="item" v-bind="data || {}"></slot>
     </template>
     <template v-if="loadingSlot && loading" #[loadingSlot]>
       <Icon class="animate-spin" icon="lucide:loader" />

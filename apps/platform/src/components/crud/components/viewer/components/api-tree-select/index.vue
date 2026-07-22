@@ -1,19 +1,13 @@
-<template>
-  <span class="reader-api-tree-select">{{
-    displayValue ?? value ?? '--'
-  }}</span>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  value?: string | number | (string | number)[] | null;
-  fieldName?: string;
-  schema?: any;
-  data?: Record<string, any>;
   code?: string;
+  data?: Record<string, any>;
+  fieldName?: string;
   labelField?: string;
+  schema?: any;
+  value?: (number | string)[] | null | number | string;
   valueField?: string;
 }>();
 
@@ -31,7 +25,7 @@ const flattenTree = (nodes: any[]): any[] => {
 };
 
 const displayValue = computed(() => {
-  if (!options.value.length || props.value == null) return null;
+  if (options.value.length === 0 || props.value == null) return null;
   const flat = flattenTree(options.value);
   const vals = Array.isArray(props.value) ? props.value : [props.value];
   const names = vals.map((v) => {
@@ -56,3 +50,9 @@ const fetchData = async () => {
 watch(() => props.code, fetchData);
 onMounted(fetchData);
 </script>
+
+<template>
+  <span class="reader-api-tree-select">{{
+    displayValue ?? value ?? '--'
+  }}</span>
+</template>

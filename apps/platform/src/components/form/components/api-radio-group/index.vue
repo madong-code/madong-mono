@@ -1,23 +1,17 @@
-<template>
-  <ApiComponent
-    v-model="value"
-    model-prop-name="value"
-    :component="RadioGroup"
-  />
-</template>
-
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import ApiComponent from '../api-component/index.vue';
 import RadioGroup from '../radio-group/index.vue';
 
 const props = defineProps<{
-  modelValue?: string | number | boolean | undefined;
   isBtn?: boolean;
-  size?: 'default' | 'small' | 'large' | undefined;
+  modelValue?: boolean | number | string | undefined;
+  size?: 'default' | 'large' | 'small' | undefined;
 }>();
 
 const emit = defineEmits<{
-  'update:modelValue': [modelValue: string | number | boolean | undefined];
+  'update:modelValue': [modelValue: boolean | number | string | undefined];
 }>();
 
 const value = computed({
@@ -29,11 +23,17 @@ const value = computed({
   },
 });
 
-import { computed } from 'vue';
-
 defineExpose({
   getValue() {
     return value.value;
   },
 });
 </script>
+
+<template>
+  <ApiComponent
+    v-model="value"
+    model-prop-name="value"
+    :component="RadioGroup"
+  />
+</template>
