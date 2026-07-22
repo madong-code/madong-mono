@@ -149,7 +149,9 @@ async function copyJson() {
       <!-- 顶部模式切换栏 -->
       <div class="render-toolbar">
         <div class="toolbar-left">
-          <span class="toolbar-title">{{ $t('demo.form_render.title') }}</span>
+          <span class="toolbar-title">{{
+            $t('demo.widgets.form-render.title')
+          }}</span>
           <ElTag
             :type="modeColors[currentMode] as any"
             effect="dark"
@@ -209,8 +211,8 @@ async function copyJson() {
         <template #footer>
           <ElButton @click="copyJson">复制 JSON</ElButton>
           <ElButton type="primary" @click="jsonDialogVisible = false">
-关闭
-</ElButton>
+            关闭
+          </ElButton>
         </template>
       </ElDialog>
     </template>
@@ -220,10 +222,7 @@ async function copyJson() {
 <style scoped>
 .form-render-page {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -231,22 +230,22 @@ async function copyJson() {
 }
 
 .render-toolbar {
+  z-index: 10;
   display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
   background: #fff;
   border-bottom: 1px solid #eef2f7;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  gap: 8px;
-  z-index: 10;
 }
 
 .toolbar-left {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .toolbar-title {
@@ -257,44 +256,44 @@ async function copyJson() {
 
 .toolbar-right {
   display: flex;
-  align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .mode-description {
+  flex-shrink: 0;
   padding: 8px 16px;
-  background: #fafafa;
-  border-bottom: 1px solid #eef2f7;
   font-size: 13px;
   color: var(--el-text-color-secondary);
-  flex-shrink: 0;
+  background: #fafafa;
+  border-bottom: 1px solid #eef2f7;
 }
 
 .render-content {
   flex: 1;
-  overflow: auto;
   padding: 16px;
-  background: #fff;
   margin: 12px;
+  overflow: auto;
+  background: #fff;
   border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
 }
 
 .loading-wrapper {
-  flex: 1;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
 }
 
 .json-content {
   max-height: 500px;
-  overflow: auto;
-  background: #f5f5f5;
   padding: 16px;
-  border-radius: 4px;
+  overflow: auto;
   font-size: 12px;
   line-height: 1.6;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 </style>

@@ -12,7 +12,7 @@ import { ElButton, ElCard, ElMessage } from 'element-plus';
 import { Page } from '#/components/page';
 import { $t } from '#/locales';
 
-import DocButton from '../doc-button.vue';
+import DocButton from '../../doc-button.vue';
 import AutoHeightDemo from './auto-height-demo.vue';
 import BlurDemo from './blur-demo.vue';
 import DragDemo from './drag-demo.vue';
@@ -76,7 +76,10 @@ function openFormModal() {
 </script>
 
 <template>
-  <Page :description="$t('demo.modal.desc')" :title="$t('demo.modal.title')">
+  <Page
+    :description="$t('demo.widgets.modal.desc')"
+    :title="$t('demo.widgets.modal.title')"
+  >
     <template #extra>
       <DocButton path="/components/common-ui/vben-modal" />
     </template>
@@ -85,8 +88,8 @@ function openFormModal() {
       <template #header>基本使用</template>
       <div class="flex flex-wrap gap-2">
         <ElButton type="primary" @click="baseModalApi.open()">
-基本弹窗
-</ElButton>
+          基本弹窗
+        </ElButton>
       </div>
     </ElCard>
 
@@ -112,18 +115,18 @@ function openFormModal() {
           @click="
             confirm('确定要删除吗？').then(() => ElMessage.success('已确认'))
           "
-          >
-Confirm
-</ElButton>
+        >
+          Confirm
+        </ElButton>
         <ElButton
           @click="
             prompt({ content: '请输入名称' }).then((v: any) =>
               ElMessage.success(`输入: ${v}`),
             )
           "
-          >
-Prompt
-</ElButton>
+        >
+          Prompt
+        </ElButton>
         <ElButton @click="clearAllAlerts()">关闭所有弹窗</ElButton>
       </div>
     </ElCard>

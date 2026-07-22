@@ -69,7 +69,7 @@ const textareaStyle = computed(() => {
 
   .empty-value {
     line-height: 1.6;
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

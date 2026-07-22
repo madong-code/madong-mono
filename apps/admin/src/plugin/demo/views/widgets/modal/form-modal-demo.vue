@@ -64,7 +64,10 @@ function onSubmit(values: Record<string, any>) {
   modalApi.lock();
   setTimeout(() => {
     modalApi.close();
-    ElMessage({ message: `提交成功：${JSON.stringify(values)}`, type: 'success' });
+    ElMessage({
+      message: `提交成功：${JSON.stringify(values)}`,
+      type: 'success',
+    });
   }, 3000);
 }
 </script>

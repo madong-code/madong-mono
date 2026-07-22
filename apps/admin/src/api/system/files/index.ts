@@ -8,8 +8,13 @@ const baseUrl = '/system/files';
 export const FilesService = {
   ...BaseService<FilesRow>({ baseUrl }),
 
-  uploadFile(data: any) {
-    return requestClient.post(`${baseUrl}/upload-image`, data);
+  uploadFile(data: { file: File; sub_dir: string }) {
+    const formData = new FormData();
+    formData.append('file', data.file);
+    formData.append('sub_dir', data.sub_dir);
+    return requestClient.post(`${baseUrl}/upload-image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
 
   uploadImageBase64(data: any) {

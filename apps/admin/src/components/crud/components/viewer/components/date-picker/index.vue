@@ -40,7 +40,7 @@ const formattedValue = computed(() => {
 <style lang="scss" scoped>
 .reader-date-picker {
   .empty-value {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

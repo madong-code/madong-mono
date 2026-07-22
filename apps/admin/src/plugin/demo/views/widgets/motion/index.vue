@@ -153,10 +153,7 @@ function openDocPage() {
             </ElCol>
             <ElCol :span="8">
               <ElFormItem label="按下时缩放">
-                <ElInputNumber
-                  v-model="motionProps.tapped.scale"
-                  :step="0.1"
-                />
+                <ElInputNumber v-model="motionProps.tapped.scale" :step="0.1" />
               </ElFormItem>
             </ElCol>
           </ElRow>

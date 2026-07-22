@@ -75,7 +75,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .reader-api-select-position {
   .loading-text {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

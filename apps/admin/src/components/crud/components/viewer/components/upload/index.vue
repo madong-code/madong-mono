@@ -1,3 +1,46 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(
+  defineProps<{
+    data?: Record<string, any>;
+    fieldName?: string;
+    schema?: any;
+    value?: null | string | undefined | { name: string; url: string; }[];
+  }>(),
+  {},
+);
+
+const files = computed(() => {
+  if (!props.value) return [];
+
+  if (Array.isArray(props.value)) {
+    return props.value;
+  }
+
+  if (typeof props.value === 'string') {
+    try {
+      const parsed = JSON.parse(props.value);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item: any) => ({
+          url: item.url || item,
+          name: item.name || '',
+        }));
+      }
+    } catch {
+      return [{ url: props.value, name: '' }];
+    }
+  }
+
+  return [];
+});
+
+const isImage = (url: string) => {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+  return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+};
+</script>
+
 <template>
   <span class="reader-upload">
     <template v-if="files.length > 0">
@@ -14,49 +57,6 @@
     <span v-else class="empty-value">--</span>
   </span>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-const props = withDefaults(
-  defineProps<{
-    value?: string | { url: string; name: string }[] | null | undefined
-    fieldName?: string
-    schema?: any
-    data?: Record<string, any>
-  }>(),
-  {},
-)
-
-const files = computed(() => {
-  if (!props.value) return []
-  
-  if (Array.isArray(props.value)) {
-    return props.value
-  }
-  
-  if (typeof props.value === 'string') {
-    try {
-      const parsed = JSON.parse(props.value)
-      if (Array.isArray(parsed)) {
-        return parsed.map((item: any) => ({
-          url: item.url || item,
-          name: item.name || '',
-        }))
-      }
-    } catch {
-      return [{ url: props.value, name: '' }]
-    }
-  }
-  
-  return []
-})
-
-const isImage = (url: string) => {
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
-  return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext))
-}
-</script>
 
 <style lang="scss" scoped>
 .reader-upload {
@@ -93,6 +93,6 @@ const isImage = (url: string) => {
 }
 
 .empty-value {
-  color: #94a3b8;
+  color: var(--el-text-color-placeholder, #94a3b8);
 }
 </style>

@@ -98,10 +98,10 @@ function handleSave() {
 </script>
 
 <template>
-  <div class="notepad-page flex h-screen overflow-hidden bg-gray-50">
+  <div class="notepad-page flex h-screen overflow-hidden bg-background-deep">
     <!-- 左侧：目录面板 -->
     <div
-      class="notepad-left-1 h-full w-[200px] shrink-0 overflow-hidden border-r border-gray-200"
+      class="notepad-left-1 h-full w-[200px] shrink-0 overflow-hidden border-r border-border"
     >
       <DirectoryPanel
         ref="directoryRef"
@@ -113,7 +113,7 @@ function handleSave() {
 
     <!-- 中间：文档列表面板 -->
     <div
-      class="notepad-left-2 h-full w-[280px] shrink-0 overflow-hidden border-r border-gray-200"
+      class="notepad-left-2 h-full w-[280px] shrink-0 overflow-hidden border-r border-border"
     >
       <DocListPanel
         ref="docListRef"
@@ -127,12 +127,12 @@ function handleSave() {
     <div class="notepad-right flex h-full flex-1 flex-col overflow-hidden">
       <!-- 头部操作栏：标题(可点击编辑) + 保存 + 关闭 -->
       <div
-        class="flex items-center justify-between border-b border-gray-100 px-4 py-2.5"
+        class="flex items-center justify-between border-b border-border px-4 py-2.5"
       >
         <!-- 标题：点击可输入，失焦自动保存 -->
         <input
           :value="currentDocument?.title || ''"
-          class="min-w-0 flex-1 border-none bg-transparent text-base font-medium text-gray-800 outline-none placeholder:text-gray-300"
+          class="min-w-0 flex-1 border-none bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/50"
           placeholder="点击输入标题..."
           @blur="
             (e) => {
@@ -147,7 +147,7 @@ function handleSave() {
         <div class="ml-3 flex shrink-0 items-center gap-2">
           <!-- 保存按钮 -->
           <button
-            class="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-800"
+            class="flex items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="保存 (Ctrl+S)"
             @click="handleSave"
           >
@@ -156,7 +156,7 @@ function handleSave() {
           </button>
           <!-- 关闭按钮（关闭整个抽屉） -->
           <button
-            class="flex items-center justify-center rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            class="flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="关闭"
             @click="handleClose"
           >

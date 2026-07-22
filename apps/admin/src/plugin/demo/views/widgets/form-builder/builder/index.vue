@@ -93,7 +93,9 @@ async function copyJson() {
       <!-- 顶部工具栏 -->
       <div class="builder-toolbar">
         <div class="toolbar-left">
-          <span class="toolbar-title">{{ $t('demo.form_builder.title') }}</span>
+          <span class="toolbar-title">{{
+            $t('demo.widgets.form-builder.title')
+          }}</span>
         </div>
         <div class="toolbar-right">
           <ElButton @click="loadSampleForm">加载示例</ElButton>

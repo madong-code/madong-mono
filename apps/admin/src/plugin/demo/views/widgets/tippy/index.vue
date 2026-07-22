@@ -13,14 +13,14 @@ import { Page } from '#/components/page';
       <div class="flex flex-wrap gap-4">
         <ElButton v-tippy="'默认提示'">默认提示</ElButton>
         <ElButton v-tippy="{ content: '指定主题', theme: 'light' }">
-light 主题
-</ElButton>
+          light 主题
+        </ElButton>
         <ElButton v-tippy="{ content: '指定延时', delay: [500, 200] }">
-延时显示
-</ElButton>
+          延时显示
+        </ElButton>
         <ElButton v-tippy="{ content: '指定动画', animation: 'scale' }">
-scale 动画
-</ElButton>
+          scale 动画
+        </ElButton>
       </div>
     </ElCard>
 

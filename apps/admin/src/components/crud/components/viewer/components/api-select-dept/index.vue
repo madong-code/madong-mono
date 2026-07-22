@@ -81,7 +81,7 @@ watch(() => props.value, fetchTree, { immediate: true });
 <style lang="scss" scoped>
 .reader-api-select-dept {
   .loading-text {
-    color: #94a3b8;
+    color: var(--el-text-color-placeholder, #94a3b8);
   }
 }
 </style>

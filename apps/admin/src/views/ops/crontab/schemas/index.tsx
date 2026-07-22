@@ -29,6 +29,16 @@ export const useCrudSchema = (): CrudSchema => {
     columns: [
       { type: 'checkbox', width: 60 },
       {
+        field: 'type',
+        title: $t('ops.crontab.table.columns.type'),
+        minWidth: 150,
+        align: 'left',
+        cellRender: {
+          name: 'CellDict',
+          attrs: { code: DictEnum.SYS_MONITOR_CRONTAB_TYPE },
+        },
+      },
+      {
         field: 'title',
         title: $t('ops.crontab.table.columns.title'),
         minWidth: 150,
@@ -38,40 +48,87 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'rule',
         title: $t('ops.crontab.table.columns.rule'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'singleton',
         title: $t('ops.crontab.table.columns.singleton'),
-        minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_MONITOR_CRONTAB_MODE },
+        minWidth: 70,
+        align: 'center',
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_MONITOR_CRONTAB_MODE },
+        },
       },
       {
         field: 'rule_name',
         title: $t('ops.crontab.table.columns.rule_name'),
         minWidth: 120,
+        align: 'left',
       },
       {
         field: 'target',
         title: $t('ops.crontab.table.columns.target'),
         minWidth: 150,
+        align: 'left',
       },
       {
         field: 'parameter',
         title: $t('ops.crontab.table.columns.parameter'),
         minWidth: 120,
+        align: 'left',
+        visible: false,
+        cellRender: {
+          name: 'CellJson',
+        },
       },
       {
         field: 'enabled',
         title: $t('ops.crontab.table.columns.enabled'),
-        minWidth: 80,
-        viewComponent: 'ApiDict',
-        viewComponentProps: { code: DictEnum.SYS_ENABLED_STATUS },
+        align: 'center',
+        width: 70,
+        cellRender: {
+          name: 'CellDictTag',
+          attrs: { code: DictEnum.SYS_ENABLED_STATUS },
+        },
       },
       {
-        field: 'running_status',
-        title: $t('ops.crontab.table.columns.running_status'),
+        field: 'source',
+        title: $t('ops.crontab.table.columns.source'),
         minWidth: 100,
+        align: 'left',
+        visible: false,
+        // 任务来源：system-系统内置 / custom-自定义 / plugin:{插件名}-插件任务（动态值，前端映射展示）
+        vxeColumn: {
+          slots: {
+            default: ({ row }: { row: any }) => {
+              const s = row?.source ?? 'custom';
+              if (s === 'system') return '系统内置';
+              if (s === 'custom') return '自定义';
+              if (s.startsWith('plugin:')) return `插件(${s.slice(7)})`;
+              return s;
+            },
+          },
+        },
+      },
+      {
+        field: 'tenant_id',
+        title: $t('ops.crontab.table.columns.tenant_id'),
+        minWidth: 120,
+        align: 'left',
+        visible: false,
+        // 关联租户对象：有则显示租户名称，无（全局任务 tenant=null）显示 -
+        vxeColumn: {
+          slots: {
+            default: ({ row }: { row: any }) => row?.tenant?.name ?? '-',
+          },
+        },
+      },
+      {
+        field: 'last_running_time',
+        title: $t('ops.crontab.table.columns.last_running_time'),
+        minWidth: 140,
+        align: 'left',
       },
     ],
     tableActions: [],
@@ -106,6 +163,15 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             placeholder: $t('ops.crontab.table.search.placeholder.enabled'),
             code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+          },
+        },
+        {
+          component: 'Input',
+          fieldName: 'EQ_source',
+          label: $t('ops.crontab.table.search.source'),
+          componentProps: {
+            placeholder: $t('ops.crontab.table.search.placeholder.source'),
             clearable: true,
           },
         },
@@ -298,6 +364,12 @@ export const useCrudSchema = (): CrudSchema => {
             clearable: true,
           },
           rules: 'required',
+          formItemClass: 'col-span-24 w-full',
+        },
+        {
+          fieldName: 'parameter',
+          label: $t('ops.crontab.form.parameter'),
+          component: 'KeyValueEditor',
           formItemClass: 'col-span-24 w-full',
         },
         {

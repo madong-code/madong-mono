@@ -19,7 +19,7 @@ const routes: PluginRoute[] = [
     redirect: '/demo/crud/basic',
     meta: {
       title: $t('demo.menu.title'),
-      icon: 'lucide:boxes',
+      icon: 'lucide:flask-conical',
       order: 9999,
       module: 'demo',
     },
@@ -31,7 +31,7 @@ const routes: PluginRoute[] = [
         redirect: '/demo/crud/basic',
         meta: {
           title: $t('demo.menu.crud'),
-          icon: 'lucide:table-2',
+          icon: 'lucide:database',
           module: 'demo',
         },
         children: [
@@ -41,6 +41,7 @@ const routes: PluginRoute[] = [
             component: '/crud/basic',
             meta: {
               title: $t('demo.crud.basic.title'),
+              icon: 'lucide:file-spreadsheet',
               module: 'demo',
             },
           },
@@ -50,6 +51,7 @@ const routes: PluginRoute[] = [
             component: 'crud/tree',
             meta: {
               title: $t('demo.crud.tree.title'),
+              icon: 'lucide:git-fork',
               module: 'demo',
             },
           },
@@ -59,6 +61,7 @@ const routes: PluginRoute[] = [
             component: 'crud/drawer',
             meta: {
               title: $t('demo.crud.drawer.title'),
+              icon: 'lucide:panel-right-open',
               module: 'demo',
             },
           },
@@ -71,7 +74,7 @@ const routes: PluginRoute[] = [
         redirect: '/demo/form/overview',
         meta: {
           title: $t('demo.menu.form'),
-          icon: 'lucide:text-cursor-input',
+          icon: 'lucide:clipboard-list',
           module: 'demo',
         },
         children: [
@@ -81,6 +84,7 @@ const routes: PluginRoute[] = [
             component: 'form/overview',
             meta: {
               title: $t('demo.form.overview.title'),
+              icon: 'lucide:layout-dashboard',
               module: 'demo',
             },
           },
@@ -90,6 +94,7 @@ const routes: PluginRoute[] = [
             component: 'form/basic',
             meta: {
               title: $t('demo.form.basic.title'),
+              icon: 'lucide:file-text',
               module: 'demo',
             },
           },
@@ -99,6 +104,7 @@ const routes: PluginRoute[] = [
             component: 'form/query',
             meta: {
               title: $t('demo.form.query.title'),
+              icon: 'lucide:search',
               module: 'demo',
             },
           },
@@ -108,6 +114,7 @@ const routes: PluginRoute[] = [
             component: 'form/rules',
             meta: {
               title: $t('demo.form.rules.title'),
+              icon: 'lucide:shield-check',
               module: 'demo',
             },
           },
@@ -117,6 +124,7 @@ const routes: PluginRoute[] = [
             component: 'form/dynamic',
             meta: {
               title: $t('demo.form.dynamic.title'),
+              icon: 'lucide:git-branch',
               module: 'demo',
             },
           },
@@ -126,6 +134,7 @@ const routes: PluginRoute[] = [
             component: 'form/api',
             meta: {
               title: $t('demo.form.api.title'),
+              icon: 'lucide:code-2',
               module: 'demo',
             },
           },
@@ -135,6 +144,7 @@ const routes: PluginRoute[] = [
             component: 'form/merge',
             meta: {
               title: $t('demo.form.merge.title'),
+              icon: 'lucide:combine',
               module: 'demo',
             },
           },
@@ -144,6 +154,7 @@ const routes: PluginRoute[] = [
             component: 'form/custom-layout',
             meta: {
               title: $t('demo.form.custom_layout.title'),
+              icon: 'lucide:panels-top-left',
               module: 'demo',
             },
           },
@@ -156,7 +167,7 @@ const routes: PluginRoute[] = [
         redirect: '/demo/vxe-table/basic',
         meta: {
           title: $t('demo.menu.vxe_table'),
-          icon: 'lucide:table',
+          icon: 'lucide:sheet',
           module: 'demo',
         },
         children: [
@@ -166,6 +177,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/basic',
             meta: {
               title: $t('demo.vxe_table.basic.title'),
+              icon: 'lucide:table',
               module: 'demo',
             },
           },
@@ -175,6 +187,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/remote',
             meta: {
               title: $t('demo.vxe_table.remote.title'),
+              icon: 'lucide:cloud-download',
               module: 'demo',
             },
           },
@@ -184,6 +197,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/tree',
             meta: {
               title: $t('demo.vxe_table.tree.title'),
+              icon: 'lucide:list-tree',
               module: 'demo',
             },
           },
@@ -193,6 +207,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/custom-cell',
             meta: {
               title: $t('demo.vxe_table.custom_cell.title'),
+              icon: 'lucide:square-stack',
               module: 'demo',
             },
           },
@@ -202,6 +217,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/edit-cell',
             meta: {
               title: $t('demo.vxe_table.edit_cell.title'),
+              icon: 'lucide:pencil-line',
               module: 'demo',
             },
           },
@@ -211,6 +227,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/edit-row',
             meta: {
               title: $t('demo.vxe_table.edit_row.title'),
+              icon: 'lucide:edit-3',
               module: 'demo',
             },
           },
@@ -220,6 +237,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/fixed',
             meta: {
               title: $t('demo.vxe_table.fixed.title'),
+              icon: 'lucide:pin',
               module: 'demo',
             },
           },
@@ -229,6 +247,7 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/form',
             meta: {
               title: $t('demo.vxe_table.form.title'),
+              icon: 'lucide:table-properties',
               module: 'demo',
             },
           },
@@ -238,150 +257,202 @@ const routes: PluginRoute[] = [
             component: 'vxe-table/virtual',
             meta: {
               title: $t('demo.vxe_table.virtual.title'),
+              icon: 'lucide:zap',
               module: 'demo',
             },
           },
         ],
       },
-      // ===================== 表单设计 =====================
+      // ===================== 控件中心 =====================
       {
-        path: '/demo/form-builder',
-        name: 'DemoFormBuilder',
-        component: 'visual-form/builder/index',
+        path: '/demo/widgets',
+        name: 'DemoWidgetCenter',
+        redirect: '/demo/widgets/form-builder',
         meta: {
-          title: $t('demo.form_builder.title'),
+          title: $t('demo.menu.widget_center'),
+          icon: 'lucide:blocks',
           module: 'demo',
         },
-      },
-      // ===================== 通用组件 =====================
-      {
-        path: '/demo/locale',
-        name: 'DemoLocale',
-        component: 'locale/index',
-        meta: {
-          title: $t('demo.locale.title'),
-          icon: 'lucide:languages',
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/modal',
-        name: 'DemoModal',
-        component: 'modal/index',
-        meta: {
-          title: $t('demo.modal.title'),
-          keepAlive: true,
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/drawer',
-        name: 'DemoDrawer',
-        component: 'drawer/index',
-        meta: {
-          title: $t('demo.drawer.title'),
-          keepAlive: true,
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/captcha',
-        name: 'DemoCaptcha',
-        component: 'captcha/slider-captcha',
-        meta: {
-          title: $t('demo.captcha.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/ellipsis',
-        name: 'DemoEllipsis',
-        component: 'ellipsis/index',
-        meta: {
-          title: $t('demo.ellipsis.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/json-viewer',
-        name: 'DemoJsonViewer',
-        component: 'json-viewer/index',
-        meta: {
-          title: $t('demo.json_viewer.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/loading',
-        name: 'DemoLoading',
-        component: 'loading/index',
-        meta: {
-          title: $t('demo.loading.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/count-to',
-        name: 'DemoCountTo',
-        component: 'count-to/index',
-        meta: {
-          title: $t('demo.count_to.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/cropper',
-        name: 'DemoCropper',
-        component: 'cropper/index',
-        meta: {
-          title: $t('demo.cropper.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/context-menu',
-        name: 'DemoContextMenu',
-        component: 'context-menu/index',
-        meta: {
-          title: $t('demo.context_menu.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/resize',
-        name: 'DemoResize',
-        component: 'resize/basic',
-        meta: {
-          title: $t('demo.resize.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/tippy',
-        name: 'DemoTippy',
-        component: 'tippy/index',
-        meta: {
-          title: $t('demo.tippy.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/tiptap',
-        name: 'DemoTiptap',
-        component: 'tiptap/index',
-        meta: {
-          title: $t('demo.tiptap.title'),
-          module: 'demo',
-        },
-      },
-      {
-        path: '/demo/motion',
-        name: 'DemoMotion',
-        component: 'motion/index',
-        meta: {
-          title: $t('demo.motion.title'),
-          module: 'demo',
-        },
+        children: [
+          // 表单设计
+          {
+            path: '/demo/widgets/form-builder',
+            name: 'DemoFormBuilder',
+            component: 'widgets/form-builder/builder/index',
+            meta: {
+              title: $t('demo.widgets.form-builder.title'),
+              icon: 'lucide:layout-template',
+              module: 'demo',
+            },
+          },
+          // 图片选择器
+          {
+            path: '/demo/widgets/image-selector',
+            name: 'DemoImageSelector',
+            component: 'widgets/image-selector/index',
+            meta: {
+              title: $t('demo.widgets.image-selector.title'),
+              icon: 'lucide:image',
+              module: 'demo',
+            },
+          },
+          // 模态框
+          {
+            path: '/demo/widgets/modal',
+            name: 'DemoModal',
+            component: 'widgets/modal/index',
+            meta: {
+              title: $t('demo.widgets.modal.title'),
+              icon: 'lucide:app-window',
+              keepAlive: true,
+              module: 'demo',
+            },
+          },
+          // 抽屉
+          {
+            path: '/demo/widgets/drawer',
+            name: 'DemoDrawer',
+            component: 'widgets/drawer/index',
+            meta: {
+              title: $t('demo.widgets.drawer.title'),
+              icon: 'lucide:panel-right',
+              keepAlive: true,
+              module: 'demo',
+            },
+          },
+          // 验证码
+          {
+            path: '/demo/widgets/captcha',
+            name: 'DemoCaptcha',
+            component: 'widgets/captcha/slider-captcha',
+            meta: {
+              title: $t('demo.widgets.captcha.title'),
+              icon: 'lucide:shield',
+              module: 'demo',
+            },
+          },
+          // 文本省略
+          {
+            path: '/demo/widgets/ellipsis',
+            name: 'DemoEllipsis',
+            component: 'widgets/ellipsis/index',
+            meta: {
+              title: $t('demo.widgets.ellipsis.title'),
+              icon: 'lucide:more-horizontal',
+              module: 'demo',
+            },
+          },
+          // JSON 查看器
+          {
+            path: '/demo/widgets/json-viewer',
+            name: 'DemoJsonViewer',
+            component: 'widgets/json-viewer/index',
+            meta: {
+              title: $t('demo.widgets.json-viewer.title'),
+              icon: 'lucide:braces',
+              module: 'demo',
+            },
+          },
+          // 加载
+          {
+            path: '/demo/widgets/loading',
+            name: 'DemoLoading',
+            component: 'widgets/loading/index',
+            meta: {
+              title: $t('demo.widgets.loading.title'),
+              icon: 'lucide:loader-circle',
+              module: 'demo',
+            },
+          },
+          // 数字动画
+          {
+            path: '/demo/widgets/count-to',
+            name: 'DemoCountTo',
+            component: 'widgets/count-to/index',
+            meta: {
+              title: $t('demo.widgets.count-to.title'),
+              icon: 'lucide:hash',
+              module: 'demo',
+            },
+          },
+          // 图片裁剪
+          {
+            path: '/demo/widgets/cropper',
+            name: 'DemoCropper',
+            component: 'widgets/cropper/index',
+            meta: {
+              title: $t('demo.widgets.cropper.title'),
+              icon: 'lucide:crop',
+              module: 'demo',
+            },
+          },
+          // 右键菜单
+          {
+            path: '/demo/widgets/context-menu',
+            name: 'DemoContextMenu',
+            component: 'widgets/context-menu/index',
+            meta: {
+              title: $t('demo.widgets.context-menu.title'),
+              icon: 'lucide:mouse-pointer-click',
+              module: 'demo',
+            },
+          },
+          // 尺寸监听
+          {
+            path: '/demo/widgets/resize',
+            name: 'DemoResize',
+            component: 'widgets/resize/basic',
+            meta: {
+              title: $t('demo.widgets.resize.title'),
+              icon: 'lucide:maximize-2',
+              module: 'demo',
+            },
+          },
+          // Tippy 提示
+          {
+            path: '/demo/widgets/tippy',
+            name: 'DemoTippy',
+            component: 'widgets/tippy/index',
+            meta: {
+              title: $t('demo.widgets.tippy.title'),
+              icon: 'lucide:message-square',
+              module: 'demo',
+            },
+          },
+          // 富文本编辑器
+          {
+            path: '/demo/widgets/tiptap',
+            name: 'DemoTiptap',
+            component: 'widgets/tiptap/index',
+            meta: {
+              title: $t('demo.widgets.tiptap.title'),
+              icon: 'lucide:pen-tool',
+              module: 'demo',
+            },
+          },
+          // 动画
+          {
+            path: '/demo/widgets/motion',
+            name: 'DemoMotion',
+            component: 'widgets/motion/index',
+            meta: {
+              title: $t('demo.widgets.motion.title'),
+              icon: 'lucide:wand-2',
+              module: 'demo',
+            },
+          },
+          // 国际化
+          {
+            path: '/demo/widgets/locale',
+            name: 'DemoLocale',
+            component: 'widgets/locale/index',
+            meta: {
+              title: $t('demo.widgets.locale.title'),
+              icon: 'lucide:languages',
+              module: 'demo',
+            },
+          },
+        ],
       },
     ],
   },

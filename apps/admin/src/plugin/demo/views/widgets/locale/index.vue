@@ -10,12 +10,21 @@ const { locale, mergeLocaleMessage } = useI18n();
 const currentLocale = computed(() => locale.value);
 
 function testTranslation() {
-  console.warn('demo.locale.test.greeting:', $t('demo.locale.test.greeting'));
-  console.warn('demo.locale.test.welcome:', $t('demo.locale.test.welcome'));
-  console.warn('demo.locale.test.menuHome:', $t('demo.locale.test.menuHome'));
   console.warn(
-    'demo.locale.test.menuSettings:',
-    $t('demo.locale.test.menuSettings'),
+    'demo.widgets.locale.test.greeting:',
+    $t('demo.widgets.locale.test.greeting'),
+  );
+  console.warn(
+    'demo.widgets.locale.test.welcome:',
+    $t('demo.widgets.locale.test.welcome'),
+  );
+  console.warn(
+    'demo.widgets.locale.test.menuHome:',
+    $t('demo.widgets.locale.test.menuHome'),
+  );
+  console.warn(
+    'demo.widgets.locale.test.menuSettings:',
+    $t('demo.widgets.locale.test.menuSettings'),
   );
 }
 
@@ -75,7 +84,7 @@ async function reloadLocale() {
     <div class="test-container">
       <div class="header">
         <h1>🌐 后端语言包测试页面</h1>
-        <p>{{ $t('demo.locale.test.description') }}</p>
+        <p>{{ $t('demo.widgets.locale.test.description') }}</p>
       </div>
 
       <div class="test-section">
@@ -84,31 +93,37 @@ async function reloadLocale() {
       </div>
 
       <div class="test-section">
-        <h2>{{ $t('demo.locale.test.pluginLocaleTest') }}</h2>
+        <h2>{{ $t('demo.widgets.locale.test.pluginLocaleTest') }}</h2>
         <div class="test-grid">
           <div class="test-card">
-            <div class="card-label">demo.locale.test.greeting</div>
-            <div class="card-value">{{ $t('demo.locale.test.greeting') }}</div>
-          </div>
-          <div class="test-card">
-            <div class="card-label">demo.locale.test.welcome</div>
-            <div class="card-value">{{ $t('demo.locale.test.welcome') }}</div>
-          </div>
-          <div class="test-card">
-            <div class="card-label">demo.locale.test.menuHome</div>
-            <div class="card-value">{{ $t('demo.locale.test.menuHome') }}</div>
-          </div>
-          <div class="test-card">
-            <div class="card-label">demo.locale.test.menuSettings</div>
+            <div class="card-label">demo.widgets.locale.test.greeting</div>
             <div class="card-value">
-              {{ $t('demo.locale.test.menuSettings') }}
+              {{ $t('demo.widgets.locale.test.greeting') }}
+            </div>
+          </div>
+          <div class="test-card">
+            <div class="card-label">demo.widgets.locale.test.welcome</div>
+            <div class="card-value">
+              {{ $t('demo.widgets.locale.test.welcome') }}
+            </div>
+          </div>
+          <div class="test-card">
+            <div class="card-label">demo.widgets.locale.test.menuHome</div>
+            <div class="card-value">
+              {{ $t('demo.widgets.locale.test.menuHome') }}
+            </div>
+          </div>
+          <div class="test-card">
+            <div class="card-label">demo.widgets.locale.test.menuSettings</div>
+            <div class="card-value">
+              {{ $t('demo.widgets.locale.test.menuSettings') }}
             </div>
           </div>
         </div>
       </div>
 
       <div class="test-section">
-        <h2>{{ $t('demo.locale.test.frameworkLocaleTest') }}</h2>
+        <h2>{{ $t('demo.widgets.locale.test.frameworkLocaleTest') }}</h2>
         <div class="test-grid">
           <div class="test-card">
             <div class="card-label">common.confirm</div>
@@ -122,17 +137,17 @@ async function reloadLocale() {
       </div>
 
       <div class="test-section">
-        <h2>{{ $t('demo.locale.test.currentLocale') }}</h2>
+        <h2>{{ $t('demo.widgets.locale.test.currentLocale') }}</h2>
         <div class="locale-info">
           <div class="info-row">
-            <span class="info-label">{{ $t('demo.locale.test.currentLang') }}:</span>
+            <span class="info-label">{{ $t('demo.widgets.locale.test.currentLang') }}:</span>
             <span class="info-value">{{ currentLocale }}</span>
           </div>
         </div>
       </div>
 
       <div class="test-section">
-        <h2>{{ $t('demo.locale.test.switchLanguage') }}</h2>
+        <h2>{{ $t('demo.widgets.locale.test.switchLanguage') }}</h2>
         <div class="lang-buttons">
           <button
             class="lang-btn"
@@ -141,7 +156,7 @@ async function reloadLocale() {
             }"
             @click="switchLocale('zh-CN')"
           >
-            🇨🇳 {{ $t('demo.locale.test.chinese') }}
+            🇨🇳 {{ $t('demo.widgets.locale.test.chinese') }}
           </button>
           <button
             class="lang-btn"
@@ -150,7 +165,7 @@ async function reloadLocale() {
             }"
             @click="switchLocale('en-US')"
           >
-            🇬🇧 {{ $t('demo.locale.test.english') }}
+            🇬🇧 {{ $t('demo.widgets.locale.test.english') }}
           </button>
         </div>
       </div>

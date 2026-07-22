@@ -56,14 +56,14 @@ export const useCrudSchema = (): CrudSchema => {
     hasEdit: true,
     hasView: true,
     hasRemove: true,
-    hasBatchRemove: false,
+    hasBatchRemove: true,
     permissions: {
       add: 'system:menu:create',
       edit: 'system:menu:update',
       remove: 'system:menu:delete',
       view: 'system:menu:read',
     },
-    tree: { id: 'id', pid: 'pid', children: 'children' },
+    tree: { id: 'id', pid: 'pid', children: 'children', reserve: true },
     beforeFetch: (params: any) => {
       return { ...params, page: 1, limit: 999 };
     },
@@ -75,6 +75,7 @@ export const useCrudSchema = (): CrudSchema => {
       };
     },
     columns: [
+      { type: 'checkbox', width: 60 },
       {
         field: 'id',
         title: $t('system.menu.table.columns.id'),
@@ -243,11 +244,18 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 1,
           formItemClass: 'col-span-2',
           rules: 'required',
-          componentProps: {
-            placeholder: $t('system.menu.form.placeholder.type'),
-            code: DictEnum.SYS_MENU_TYPE,
-            isBtn: true,
-            renderType: 'RadioGroup',
+          componentProps: (_value) => {
+            return {
+              placeholder: $t('system.menu.form.placeholder.type'),
+              code: DictEnum.SYS_MENU_TYPE,
+              isBtn: true,
+              renderType: 'RadioGroup',
+              onChange: (val: any) => {
+                if (val !== 2) {
+                  _value.openType = 0;
+                }
+              },
+            };
           },
         },
         {
@@ -351,10 +359,14 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 1,
           formItemClass: 'col-span-1',
           rules: 'required',
+          dependencies: {
+            triggerFields: ['type'],
+            rules: (value: any) => (value.type === 2 ? 'required' : null),
+          },
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.open_type'),
-              code: 'sys_menu_open_type',
+              code: DictEnum.SYS_MENU_OPEN_TYPE,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: values.type !== 2,
@@ -409,7 +421,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.enabled'),
-            code: 'yes_no',
+            code: DictEnum.SYS_ENABLED_STATUS,
             isBtn: true,
             renderType: 'RadioGroup',
           },
@@ -423,7 +435,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_show'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),
@@ -438,7 +450,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.is_sync'),
-            code: 'yes_no',
+            code: DictEnum.SYS_YES_NO,
             isBtn: true,
             renderType: 'RadioGroup',
           },
@@ -452,7 +464,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: (values) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_cache'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),

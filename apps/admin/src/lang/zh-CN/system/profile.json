@@ -47,6 +47,10 @@
     "fail": "保存失败，请稍后重试",
     "load_fail": "加载用户信息失败"
   },
+  "avatar": {
+    "success": "头像更新成功",
+    "fail": "头像更新失败"
+  },
   "security": {
     "title": "安全设置",
     "old_password": "旧密码",

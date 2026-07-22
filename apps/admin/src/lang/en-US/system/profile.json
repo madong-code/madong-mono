@@ -47,6 +47,10 @@
     "fail": "Failed to save, please try again later",
     "load_fail": "Failed to load user information"
   },
+  "avatar": {
+    "success": "Avatar updated successfully",
+    "fail": "Avatar update failed"
+  },
   "security": {
     "title": "Security Settings",
     "old_password": "Old Password",

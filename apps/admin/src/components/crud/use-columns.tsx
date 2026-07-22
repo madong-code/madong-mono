@@ -31,6 +31,8 @@ export function useColumns(
         result.cellRender = {
           name: viewComponent,
           props: viewComponentProps,
+          // 同时透传到 attrs，兼容基于 attrs 读取配置的渲染器（如 CellDict / CellDictTag）
+          attrs: viewComponentProps,
         };
       }
 

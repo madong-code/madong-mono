@@ -58,6 +58,15 @@ export const useAuthStore = defineStore('auth', () => {
           accessStore.setTenantId(params.tenant_id);
         }
 
+        // 登录成功后立即预加载权限码，确保路由渲染（权限判断钩子）前权限码已就绪。
+        // 避免「刚登录时按钮缺失、刷新后正常」的时序竞态；失败不阻塞登录，由路由守卫补偿。
+        try {
+          const accessCodes = await getAccessCodesApi();
+          accessStore.setAccessCodes(accessCodes);
+        } catch {
+          // 预加载失败由 setupAccessGuard 补偿加载
+        }
+
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
         } else {

@@ -2,6 +2,7 @@
   "title": "定时任务",
   "table": {
     "columns": {
+      "type": "类型",
       "title": "任务名称",
       "rule": "Cron规则",
       "singleton": "单例",
@@ -9,25 +10,27 @@
       "target": "目标",
       "parameter": "参数",
       "enabled": "状态",
-      "running_status": "运行状态"
+      "source": "来源",
+      "tenant_id": "租户",
+      "last_running_time": "最后运行时间"
     },
     "search": {
       "title": "任务名称",
       "type": "类型",
+      "source": "来源",
       "enabled": "状态",
       "placeholder": {
         "title": "请输入任务名称",
         "type": "请选择类型",
+        "source": "请选择来源",
         "enabled": "请选择状态"
       }
     }
   },
   "form": {
+    "id": "ID",
     "title": "任务名称",
     "type": "类型",
-    "placeholder": {
-      "type": "请选择类型"
-    },
     "task_cycle": "任务周期",
     "second": "秒",
     "week": "周",

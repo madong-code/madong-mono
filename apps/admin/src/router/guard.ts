@@ -5,8 +5,8 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
-import { accessRoutes, coreRouteNames } from '#/router/routes';
 import { getAccessCodesApi } from '#/api';
+import { accessRoutes, coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
 
 import { generateAccess } from './access';
@@ -95,9 +95,12 @@ function setupAccessGuard(router: Router) {
     // 当前登录用户拥有的角色标识列表
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
 
-    // 刷新页面时重新从后端获取最新权限码
-    const accessCodes = await getAccessCodesApi();
-    accessStore.setAccessCodes(accessCodes);
+    // 刷新页面时重新从后端获取最新权限码（若 authLogin 已预加载则跳过重复请求）
+    const accessCodes = accessStore.accessCodes;
+    if (!accessCodes || accessCodes.length === 0) {
+      const newAccessCodes = await getAccessCodesApi();
+      accessStore.setAccessCodes(newAccessCodes);
+    }
 
     const userRoles = userInfo.roles ?? [];
 

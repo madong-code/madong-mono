@@ -3,31 +3,34 @@
   "table": {
     "columns": {
       "title": "Title",
+      "type": "Type",
       "rule": "Rule",
       "singleton": "Singleton",
       "rule_name": "Rule Name",
       "target": "Target",
       "parameter": "Parameter",
       "enabled": "Status",
-      "running_status": "Running"
+      "source": "Source",
+      "tenant_id": "Tenant",
+      "last_running_time": "Last Running Time"
     },
     "search": {
       "title": "Title",
       "type": "Type",
+      "source": "Source",
       "enabled": "Status",
       "placeholder": {
         "title": "Please input title",
         "type": "Please select type",
+        "source": "Please select source",
         "enabled": "Please select status"
       }
     }
   },
     "form": {
+    "id": "ID",
     "title": "Title",
     "type": "Type",
-    "placeholder": {
-      "type": "Please select type"
-    },
     "task_cycle": "Task Cycle",
     "second": "Second",
     "week": "Week",

@@ -19,7 +19,7 @@ function handleAvatarSuccess(newUrl: string) {
   if (info) {
     userStore.setUserInfo({ ...info, avatar: newUrl } as any);
   }
-  ElMessage.success($t('message.success'));
+  ElMessage.success($t('system.profile.avatar.success'));
 }
 </script>
 

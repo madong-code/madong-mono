@@ -6,6 +6,8 @@ export const DictEnum = {
 
   SYS_DICT_DATA_TYPE: 'system.DictDataType',
   SYS_DICT_GROUP_CODE: 'sys_dict_group_code',
+  SYS_CONFIG_TYPE: 'system.ConfigType',
+  SYS_CONFIG_GROUP_CODE: 'system.ConfigGroupCode',
 
   SYS_MENU_TYPE: 'system.MenuType',
   SYS_MENU_OPEN_TYPE: 'system.MenuOpenType',

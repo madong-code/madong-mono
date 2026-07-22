@@ -37,28 +37,32 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
         field: 'target',
         title: $t('ops.crontab.log.table.columns.target'),
         width: 170,
+        align: 'left',
       },
       {
         field: 'running_time',
         title: $t('ops.crontab.log.table.columns.running_time'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'return_code',
         title: $t('ops.crontab.log.table.columns.return_code'),
         minWidth: 100,
-        viewComponent: 'ApiDict',
+        viewComponent: 'CellDictTag',
         viewComponentProps: { code: DictEnum.SYS_OPERATION_RESULT },
       },
       {
         field: 'log',
         title: $t('ops.crontab.log.table.columns.log'),
         minWidth: 200,
+        align: 'left',
       },
       {
         field: 'created_date',
         title: $t('ops.crontab.log.table.columns.created_date'),
         minWidth: 140,
+        align: 'left',
       },
     ],
     searchForm: {
@@ -82,6 +86,7 @@ export const useCrudSchema = (crontab_id?: number | string): CrudSchema => {
         },
       ],
     },
-    formDialog: { enabled: false, schema: [] },
+    // 启用 formDialog 以暴露「勾选批量删除 / 行删除」按钮（本页无新增/编辑表单，schema 为空，不会弹出表单）
+    formDialog: { enabled: true, schema: [] },
   };
 };
