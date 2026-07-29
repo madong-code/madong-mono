@@ -2,6 +2,7 @@
 import { computed, ref, useSlots } from 'vue';
 
 import { WangEditor } from '@vben/plugins/wangeditor';
+import { useAccessStore } from '@vben/stores';
 
 import { ElButton } from 'element-plus';
 
@@ -41,15 +42,24 @@ const emit = defineEmits<{
   (e: 'change', value: string): void;
 }>();
 
-// 合并上传配置：VITE_API_URL 由包装器统一处理，schema 只传路径
+// 合并上传配置：URL 前缀与鉴权头由包装器统一处理，schema 只传路径
 const mergedUploadConfig = computed(() => {
   const custom = props.uploadConfig || {};
   let server = custom.server || '/adminapi/system/files/common/wangeditor';
-  // 相对路径统一拼接 VITE_API_URL，绝对 URL 直接用
-  if (!/^https?:\/\//i.test(server)) {
-    server = import.meta.env.VITE_API_URL + server;
+  // 相对路径统一拼接 API 基础地址（VITE_GLOB_API_URL），绝对 URL 或已带前缀的路径直接使用
+  const apiBase = import.meta.env.VITE_GLOB_API_URL || '';
+  if (apiBase && !/^https?:\/\//i.test(server) && !server.startsWith(apiBase)) {
+    server = apiBase + server;
   }
-  return { ...custom, server };
+
+  // wangeditor 使用原生 fetch 上传，不会走 requestClient 拦截器，需手动注入鉴权头
+  const accessStore = useAccessStore();
+  const headers: Record<string, string> = { ...custom.headers };
+  if (accessStore.accessToken) {
+    headers.Authorization = `Bearer ${accessStore.accessToken}`;
+  }
+
+  return { ...custom, server, headers };
 });
 
 const value = computed({
