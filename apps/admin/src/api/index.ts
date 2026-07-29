@@ -1,3 +1,4 @@
+export * from '../plugin/excel/api';
 export * from './auth';
 export * from './content';
 export * from './core';

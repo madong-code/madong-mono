@@ -191,6 +191,8 @@ export type ComponentType =
   | 'DatePicker'
   | 'Divider'
   | 'Editor'
+  | 'ExcelColumnBuilder'
+  | 'ExcelParamsBuilder'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -234,6 +236,14 @@ export interface ComponentPropsMap {
   TimePicker: ElTimePickerSchemaProps;
   TreeSelect: ElTreeSelectSchemaProps;
   Upload: UploadProps;
+  ExcelColumnBuilder: {
+    filters?: Record<string, any>;
+    height?: number | string;
+    modelClass?: string;
+  };
+  ExcelParamsBuilder: {
+    modelValue?: Array<Record<string, any>>;
+  };
 }
 
 async function initComponentAdapter() {
@@ -244,12 +254,23 @@ async function initComponentAdapter() {
     formComponentsObj[name as ComponentType] = comp;
   });
 
+  const ExcelColumnBuilder = defineAsyncComponent(
+    () => import('#/plugin/excel/components/column-builder/index.vue'),
+  );
+  const ExcelParamsBuilder = defineAsyncComponent(
+    () => import('#/plugin/excel/components/params-builder/index.vue'),
+  );
+
   const components: Partial<Record<ComponentType, Component>> = {
     // 如果你的组件体积比较大，可以使用异步加载
     // Button: () =>
     // import('xxx').then((res) => res.Button),
     // 自定义业务组件（来自 component-map 自动扫描）
     ...formComponentsObj,
+    // Excel 导出列可视化构建器
+    ExcelColumnBuilder,
+    // Excel 运行时参数声明
+    ExcelParamsBuilder,
     // ApiSelect: withDefaultPlaceholder(
     //   {
     //     ...ApiComponent,

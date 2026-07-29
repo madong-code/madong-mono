@@ -41,6 +41,20 @@ for (const [path, mod] of Object.entries(flatModules)) {
   }
 }
 
+// 插件自定义表单组件（如 excel 的导出列 / 关联编辑器），随插件目录一起扫描注册
+const pluginModules = import.meta.glob(
+  '../../plugin/excel/components/**/index.vue',
+  { eager: true },
+) as Record<string, { default: Component }>;
+
+for (const [path, mod] of Object.entries(pluginModules)) {
+  const match = path.match(/\/components\/([^/]+)\/index\.vue$/);
+  if (match?.[1]) {
+    const name = toPascalCase(match[1]);
+    add(name, markRaw(mod.default));
+  }
+}
+
 import.meta.env.DEV &&
   console.warn('[component-map] 扫描到的组件:', [...componentMap.keys()]);
 
