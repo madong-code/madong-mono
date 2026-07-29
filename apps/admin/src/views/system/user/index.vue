@@ -1,41 +1,47 @@
-<script setup lang="ts">
-import { ref } from 'vue';
+<script lang="ts" setup>
+import { Page } from '@vben/common-ui';
 
 import { useCrud } from '#/adapter/crud';
-import { Page } from '#/components/page';
-import { $t } from '#/locales';
+import ListExportButton from '#/plugin/excel/components/list-export-button/index.vue';
 
-import GrantRole from './grant-role.vue';
 import { useCrudSchema } from './schemas';
 
-const grantRoleRef = ref();
+/** 管理员模型（与后端 Eloquent 类名一致，供导出元数据/黑名单识别） */
+const EXPORT_MODEL = String.raw`app\model\system\admin\Admin`;
 
-const [BasicCrud, crudApi] = useCrud({
-  ...useCrudSchema(),
-  dropDownActions: [
-    {
-      label: $t('system.user.action.grant_role'),
-      icon: 'ant-design:team-outlined',
-      type: 'primary',
-      link: true,
-      auth: 'system:user:grant_role',
-      ifShow(_action, record) {
-        return record?.is_super !== 1;
-      },
-      onClick(_e, row) {
-        grantRoleRef.value?.show({
-          data: row,
-          getCrudApi: () => crudApi,
-        });
-      },
-    },
-  ],
-});
+const schema = useCrudSchema();
+const [Grid] = useCrud(schema);
+
+/**
+ * 从当前表格列推导默认导出列（排除操作/选择列）
+ * 列表轻量导出：所见即所得
+ */
+function getExportColumns() {
+  const cols =
+    typeof schema.columns === 'function' ? schema.columns() : schema.columns;
+  return (cols || [])
+    .filter(
+      (col: any) =>
+        col?.field &&
+        col.field !== 'action' &&
+        col.type !== 'checkbox' &&
+        col.type !== 'seq',
+    )
+    .map((col: any) => ({
+      field: col.field as string,
+      title: (col.title as string) || (col.field as string),
+    }));
+}
 </script>
-
 <template>
   <Page auto-content-height>
-    <BasicCrud />
-    <GrantRole ref="grantRoleRef" @success="crudApi?.refreshUpdate()" />
+    <Grid>
+      <template #toolbar-tools>
+        <ListExportButton
+          :model-class="EXPORT_MODEL"
+          :get-columns="getExportColumns"
+        />
+      </template>
+    </Grid>
   </Page>
 </template>
