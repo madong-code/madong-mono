@@ -75,7 +75,7 @@ export const useCrudSchema = (): CrudSchema => ({
     ],
   },
   formDialog: {
-    enabled: false,
+    enabled: true,
     schema: [],
   },
 });

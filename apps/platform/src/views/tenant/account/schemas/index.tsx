@@ -3,6 +3,7 @@ import type { CrudSchema } from '#/components/crud/components/types';
 import { DbSettingService } from '#/api/database';
 import { TenantService } from '#/api/tenant/account';
 import { $t } from '#/locales';
+import { formatDateTime } from '#/utils/tools/format';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -11,7 +12,19 @@ export const useCrudSchema = (): CrudSchema => {
       add: TenantService.create,
       edit: TenantService.update,
       remove: TenantService.delete,
-      view: TenantService.get,
+      // 后端以秒级时间戳存储，编辑时转为 Date 对象回填到 DatePicker
+      view: async (id: number) => {
+        const res = await TenantService.get(id);
+        return {
+          ...res,
+          start_time: res.start_time
+            ? new Date(Number(res.start_time) * 1000)
+            : null,
+          expire_time: res.expire_time
+            ? new Date(Number(res.expire_time) * 1000)
+            : null,
+        };
+      },
     },
 
     hasAdd: true,
@@ -101,11 +114,25 @@ export const useCrudSchema = (): CrudSchema => {
         },
       },
       {
+        field: 'start_time',
+        title: $t('tenant.account.form.start_time'),
+        minWidth: 160,
+        slots: {
+          default: ({ row }: any) => (
+            <span>{row.start_time ? formatDateTime(row.start_time) : '/'}</span>
+          ),
+        },
+      },
+      {
         field: 'expire_time',
         title: $t('tenant.account.columns.expire_time'),
         minWidth: 160,
         slots: {
-          default: ({ row }: any) => <span>{row.expire_time || '/'}</span>,
+          default: ({ row }: any) => (
+            <span>
+              {row.expire_time ? formatDateTime(row.expire_time) : '/'}
+            </span>
+          ),
         },
       },
       {
@@ -174,6 +201,33 @@ export const useCrudSchema = (): CrudSchema => {
     formDialog: {
       wrapperClass: 'grid-cols-2',
       dialogType: 'drawer',
+      // 提交时将 DatePicker 的 Date 对象转为秒级时间戳
+      transformFormValues: (values: Record<string, any>) => {
+        const toUnix = (v: any): any => {
+          if (v === null || v === undefined || v === '') {
+            return null;
+          }
+          if (v instanceof Date) {
+            return Math.floor(v.getTime() / 1000);
+          }
+          if (typeof v === 'number') {
+            return v.toString().length === 10 ? v : Math.floor(v / 1000);
+          }
+          if (typeof v === 'string') {
+            if (/^\d{10}$/.test(v)) {
+              return Number(v);
+            }
+            const t = new Date(v).getTime();
+            return Number.isNaN(t) ? null : Math.floor(t / 1000);
+          }
+          return null;
+        };
+        return {
+          ...values,
+          start_time: toUnix(values.start_time),
+          expire_time: toUnix(values.expire_time),
+        };
+      },
       schema: [
         {
           fieldName: 'id',

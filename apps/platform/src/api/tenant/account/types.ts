@@ -41,7 +41,7 @@ export interface TenantRow {
   code: string;
   status: string;
   effective_mode: string;
-  start_time?: string;
+  start_time?: number;
   database_mode: string;
   db_setting_id?: number;
   database_name?: string;
@@ -51,7 +51,7 @@ export interface TenantRow {
   contact_email?: string;
   contact_address?: string;
   system_name?: string;
-  expire_time?: string;
+  expire_time?: number;
   suspend_reason?: string;
   suspend_time?: string;
   sort: number;
