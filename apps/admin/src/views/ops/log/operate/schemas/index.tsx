@@ -124,7 +124,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'id',
           label: 'ID',
           component: 'Input',
-          dependencies: { show: false },
+          dependencies: { triggerFields: ['id'], show: false },
         },
         {
           fieldName: 'app',

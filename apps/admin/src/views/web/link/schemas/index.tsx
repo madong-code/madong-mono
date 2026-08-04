@@ -1,8 +1,8 @@
-import type { CrudSchema } from '#/components/crud/components/types'
+import type { CrudSchema } from '#/components/crud/components/types';
 
-import { LinkService } from '#/api/web'
-import { DictEnum } from '#/enums'
-import { $t } from '#/locales'
+import { LinkService } from '#/api/web';
+import { DictEnum } from '#/enums';
+import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
   return {
@@ -29,9 +29,17 @@ export const useCrudSchema = (): CrudSchema => {
     columns: [
       { type: 'checkbox', width: 60 },
       { field: 'logo', title: $t('web.link.table.columns.logo'), width: 80 },
-      { field: 'name', title: $t('web.link.table.columns.name'), minWidth: 120 },
+      {
+        field: 'name',
+        title: $t('web.link.table.columns.name'),
+        minWidth: 120,
+      },
       { field: 'url', title: $t('web.link.table.columns.url'), minWidth: 200 },
-      { field: 'description', title: $t('web.link.table.columns.description'), minWidth: 150 },
+      {
+        field: 'description',
+        title: $t('web.link.table.columns.description'),
+        minWidth: 150,
+      },
       { field: 'sort', title: $t('web.link.table.columns.sort'), minWidth: 80 },
       {
         field: 'enabled',
@@ -47,9 +55,25 @@ export const useCrudSchema = (): CrudSchema => {
       collapsed: true,
       collapsedRows: 2,
       schema: [
-        { component: 'Input', fieldName: 'LIKE_name', label: $t('web.link.table.search.name') },
-        { component: 'Input', fieldName: 'LIKE_url', label: $t('web.link.table.search.url') },
-        { component: 'ApiDict', fieldName: 'EQ_enabled', label: $t('web.link.table.search.enabled'), componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true } },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_name',
+          label: $t('web.link.table.search.name'),
+        },
+        {
+          component: 'Input',
+          fieldName: 'LIKE_url',
+          label: $t('web.link.table.search.url'),
+        },
+        {
+          component: 'ApiDict',
+          fieldName: 'EQ_enabled',
+          label: $t('web.link.table.search.enabled'),
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            clearable: true,
+          },
+        },
       ],
     },
 
@@ -60,14 +84,53 @@ export const useCrudSchema = (): CrudSchema => {
       wrapperClass: 'grid-cols-1',
       commonConfig: { labelWidth: 120 },
       schema: [
-        { fieldName: 'id', label: 'ID', component: 'Input', dependencies: { show: false } },
-        { fieldName: 'name', label: $t('web.link.form.name'), component: 'Input', rules: 'required' },
-        { fieldName: 'url', label: $t('web.link.form.url'), component: 'Input', rules: 'required' },
-        { fieldName: 'logo', label: $t('web.link.form.logo'), component: 'Avatar' },
-        { fieldName: 'sort', label: $t('web.link.form.sort'), component: 'InputNumber', componentProps: { min: 0 } },
-        { fieldName: 'enabled', label: $t('web.link.form.enabled'), component: 'ApiDict', defaultValue: 1, componentProps: { code: DictEnum.SYS_ENABLED_STATUS, isBtn: true, renderType: 'RadioGroup' } },
-        { fieldName: 'description', label: $t('web.link.form.description'), component: 'Input', componentProps: { type: 'textarea', rows: 4 } },
+        {
+          fieldName: 'id',
+          label: 'ID',
+          component: 'Input',
+          dependencies: { triggerFields: ['id'], show: false },
+        },
+        {
+          fieldName: 'name',
+          label: $t('web.link.form.name'),
+          component: 'Input',
+          rules: 'required',
+        },
+        {
+          fieldName: 'url',
+          label: $t('web.link.form.url'),
+          component: 'Input',
+          rules: 'required',
+        },
+        {
+          fieldName: 'logo',
+          label: $t('web.link.form.logo'),
+          component: 'Avatar',
+        },
+        {
+          fieldName: 'sort',
+          label: $t('web.link.form.sort'),
+          component: 'InputNumber',
+          componentProps: { min: 0 },
+        },
+        {
+          fieldName: 'enabled',
+          label: $t('web.link.form.enabled'),
+          component: 'ApiDict',
+          defaultValue: 1,
+          componentProps: {
+            code: DictEnum.SYS_ENABLED_STATUS,
+            isBtn: true,
+            renderType: 'RadioGroup',
+          },
+        },
+        {
+          fieldName: 'description',
+          label: $t('web.link.form.description'),
+          component: 'Input',
+          componentProps: { type: 'textarea', rows: 4 },
+        },
       ],
     },
-  }
-}
+  };
+};
