@@ -22,6 +22,7 @@
     "icp_url": "备案查询URL",
     "network_security_url": "公安备案查询URL",
     "description": "站点描述",
+    "copyright": "版权信息",
     "placeholder": {
       "url": "请输入站点URL",
       "name": "请输入站点名称",
@@ -30,7 +31,8 @@
       "network_security": "请输入公安备案号",
       "network_security_url": "请输入公安备案查询URL",
       "keywords": "请输入站点关键词",
-      "description": "请输入站点描述"
+      "description": "请输入站点描述",
+      "copyright": "请输入版权信息"
     }
   },
   "web_site": {

@@ -111,6 +111,16 @@ const [BasicForm, formApi] = useVbenForm({
       },
     },
     {
+      fieldName: 'site_copyright',
+      label: $t('system.config.site.copyright'),
+      component: 'Input',
+      formItemClass: 'col-span-2 w-1/2',
+      componentProps: {
+        placeholder: $t('system.config.site.placeholder.copyright'),
+        clearable: true,
+      },
+    },
+    {
       fieldName: 'site_description',
       label: $t('system.config.site.description'),
       component: 'Input',

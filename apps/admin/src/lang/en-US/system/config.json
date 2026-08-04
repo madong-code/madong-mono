@@ -22,6 +22,7 @@
     "icp_url": "ICP Query URL",
     "network_security_url": "Security Query URL",
     "description": "Site Description",
+    "copyright": "Copyright",
     "placeholder": {
       "url": "Enter site URL",
       "name": "Enter site name",
@@ -30,7 +31,8 @@
       "network_security": "Enter security record number",
       "network_security_url": "Enter security query URL",
       "keywords": "Enter site keywords",
-      "description": "Enter site description"
+      "description": "Enter site description",
+      "copyright": "Enter copyright text"
     }
   },
   "web_site": {
