@@ -13,6 +13,10 @@ export const reviewLogService = {
 
   /** 清理指定天数之前的日志 */
   clean: (days: number) => requestClient.post(`${baseUrl}/clean`, { days }),
+
+  /** 批量删除审核操作日志 */
+  batchRemove: (params: { ids: (number | string)[] }) =>
+    requestClient.delete(baseUrl, { data: { ids: params.ids } }),
 };
 
 export default reviewLogService;

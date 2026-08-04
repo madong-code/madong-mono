@@ -103,6 +103,7 @@ export function useCrudSchema(): CrudSchema {
     crudApi: {
       list: reviewLogService.list,
       view: reviewLogService.detail,
+      batchRemove: reviewLogService.batchRemove,
     },
     rowKey: 'id',
     hasAdd: false,
