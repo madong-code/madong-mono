@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onUnmounted, ref } from 'vue';
 
 import {
   ElButton,
@@ -39,12 +39,20 @@ const installationLogs = ref<string[]>([]);
 const installationResult = ref<'error' | 'success'>('success');
 const logsContainer = ref<HTMLElement>();
 let sseConn: null | { close: () => void } = null;
+const isUpdate = computed(() =>
+  Boolean(props.plugin?.is_installed && props.plugin?.has_update),
+);
 
 const openDialog = async () => {
   if (!props.plugin?.name && !props.plugin?.code) {
     ElMessage.error('模块信息不完整');
     return;
   }
+  dialogApi.setState({
+    title: isUpdate.value
+      ? $t('app.plugin.market.standalone.update.title')
+      : $t('app.plugin.market.standalone.install.title'),
+  });
   dialogApi.open();
   currentStep.value = 1;
   installationProgress.value = 0;
@@ -94,13 +102,17 @@ const scrollToBottom = () => {
 const startInstallation = async () => {
   currentStep.value = 2;
   installationProgress.value = 0;
-  installationLogs.value = ['开始安装...'];
+  installationLogs.value = [isUpdate.value ? '开始更新...' : '开始安装...'];
   await startSseInstallation();
 };
 
 const startSseInstallation = async () => {
-  const installMode = props.plugin.is_local === 1 ? 'local' : 'remote';
-  const url = `/plugin/${props.plugin.code}/install?source=${installMode}`;
+  let installMode = 'remote';
+  if (!isUpdate.value && props.plugin.is_local === 1) {
+    installMode = 'local';
+  }
+  const action = isUpdate.value ? 'update' : 'install';
+  const url = `/plugin/${props.plugin.code}/${action}?source=${installMode}`;
   sseConn = sse(url, {
     open: () => {},
     progress: (payload: any) => {
@@ -250,7 +262,11 @@ defineExpose({ openDialog });
               {{ $t('app.plugin.market.standalone.install.cancel') }}
             </ElButton>
             <ElButton type="primary" @click="startInstallation">
-              {{ $t('app.plugin.market.standalone.install.install') }}
+              {{
+                isUpdate
+                  ? $t('app.plugin.market.standalone.update.start')
+                  : $t('app.plugin.market.standalone.install.install')
+              }}
             </ElButton>
           </div>
         </div>

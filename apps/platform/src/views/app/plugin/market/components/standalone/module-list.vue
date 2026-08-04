@@ -90,6 +90,12 @@ const downloadModule = async (mod: any) => {
   installDialogRef.value?.openDialog();
 };
 
+const updateModule = async (mod: any) => {
+  selectedModuleForInstall.value = mod;
+  await nextTick();
+  installDialogRef.value?.openDialog();
+};
+
 const uninstallModule = async (mod: any) => {
   selectedModuleForUninstall.value = mod;
   await nextTick();
@@ -153,7 +159,9 @@ const handleCurrentChange = (page: number) => {
                     alt=""
                     class="w-full h-full object-contain"
                   />
-                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl">📦</span>
+                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl">
+                    📦
+                  </span>
                 </div>
               </div>
               <div class="card-info-text">
@@ -186,7 +194,8 @@ const handleCurrentChange = (page: number) => {
                 size="small"
                 @click.stop="showUpdateLog(mod)"
               >
-                <ElIcon :size="14"><Info /></ElIcon>{{ $t('app.plugin.market.update_log') }}
+                <ElIcon :size="14"><Info /></ElIcon>
+                <span>{{ $t('app.plugin.market.update_log') }}</span>
               </ElButton>
             </div>
           </div>
@@ -194,16 +203,25 @@ const handleCurrentChange = (page: number) => {
           <!-- 底部：操作按钮 -->
           <div class="card-footer">
             <div class="action-row">
-              <!-- 已安装 → 卸载 -->
-              <ElButton
-                v-if="mod.is_installed"
-                type="danger"
-                size="small"
-                class="flex-1"
-                @click.stop="uninstallModule(mod)"
-              >
-                {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
-              </ElButton>
+              <template v-if="mod.is_installed">
+                <ElButton
+                  v-if="mod.has_update"
+                  type="warning"
+                  size="small"
+                  class="flex-1"
+                  @click.stop="updateModule(mod)"
+                >
+                  {{ $t('app.plugin.market.standalone.update.immediate') }}
+                </ElButton>
+                <ElButton
+                  type="danger"
+                  size="small"
+                  class="flex-1"
+                  @click.stop="uninstallModule(mod)"
+                >
+                  {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
+                </ElButton>
+              </template>
               <!-- 已购买未安装 → 下载 -->
               <ElButton
                 v-else-if="mod.purchased && !mod.is_installed"
@@ -265,7 +283,9 @@ const handleCurrentChange = (page: number) => {
               alt=""
               class="w-full h-full object-contain"
             />
-            <span v-else class="text-blue-600 dark:text-blue-400 text-base">📦</span>
+            <span v-else class="text-blue-600 dark:text-blue-400 text-base">
+              📦
+            </span>
           </div>
           <div>
             <div class="text-sm font-medium">{{ row.name }}</div>
@@ -290,14 +310,23 @@ const handleCurrentChange = (page: number) => {
       </template>
       <template #action="{ row }">
         <div class="table-actions">
-          <ElButton
-            v-if="row.is_installed"
-            type="danger"
-            size="small"
-            @click.stop="uninstallModule(row)"
-          >
-            {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
-          </ElButton>
+          <template v-if="row.is_installed">
+            <ElButton
+              v-if="row.has_update"
+              type="warning"
+              size="small"
+              @click.stop="updateModule(row)"
+            >
+              {{ $t('app.plugin.market.standalone.update.immediate') }}
+            </ElButton>
+            <ElButton
+              type="danger"
+              size="small"
+              @click.stop="uninstallModule(row)"
+            >
+              {{ $t('app.plugin.market.standalone.uninstall.immediate') }}
+            </ElButton>
+          </template>
           <template v-else>
             <ElButton
               v-if="row.purchased"

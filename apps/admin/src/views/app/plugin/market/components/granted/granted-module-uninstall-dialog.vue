@@ -1,11 +1,11 @@
 <script setup lang="ts">
-/** 授权版卸载弹窗 - 仅卸载菜单，无文件操作 */
-import { ref } from 'vue';
+/** 租户插件卸载弹窗 */
+import { onUnmounted, ref } from 'vue';
 
 import { ElButton, ElCard, ElIcon, ElMessage, ElProgress } from 'element-plus';
 import { TriangleAlert } from 'lucide-vue-next';
 
-import { requestClient } from '#/api/request';
+import { requestClient, sse } from '#/api/request';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
 
@@ -27,41 +27,85 @@ const [Dialog, dialogApi] = useDialog({
 
 const loading = ref(false);
 const uninstalling = ref(false);
+const progress = ref(0);
+const progressMessage = ref('');
+const cleanupItems = ref<any[]>([]);
+let sseConn: null | { close: () => void } = null;
 
-const openDialog = () => {
-  if (!props.plugin?.code) {
+const pluginKey = () => props.plugin?.name || props.plugin?.code;
+
+const openDialog = async () => {
+  if (!pluginKey()) {
     ElMessage.error($t('app.plugin.market.install.invalid'));
     return;
   }
   loading.value = false;
   uninstalling.value = false;
+  progress.value = 0;
+  progressMessage.value = '';
+  cleanupItems.value = [];
   dialogApi.open();
-};
-
-const confirmUninstall = async () => {
-  uninstalling.value = true;
-  loading.value = true;
   try {
-    await requestClient.post(
-      `/tenant/plugin/${props.plugin.code}/uninstall-menu`,
+    const plan: any = await requestClient.get(
+      `/tenant/plugin/${pluginKey()}/cleanup-plan`,
     );
-    ElMessage.success(
-      $t('app.plugin.market.uninstall.success', { name: props.plugin.name }),
-    );
-    dialogApi.close();
-    emit('refresh');
+    cleanupItems.value = plan?.items || [];
   } catch (error: any) {
     ElMessage.error(error?.message || $t('app.plugin.market.uninstall.fail'));
-  } finally {
-    uninstalling.value = false;
-    loading.value = false;
   }
 };
 
+const finishWithError = (payload?: any) => {
+  const eventData = payload?.data || payload;
+  ElMessage.error(eventData?.message || $t('app.plugin.market.uninstall.fail'));
+  loading.value = false;
+  uninstalling.value = false;
+  sseConn?.close();
+  sseConn = null;
+};
+
+const confirmUninstall = () => {
+  uninstalling.value = true;
+  loading.value = true;
+  progress.value = 0;
+  progressMessage.value = '开始卸载...';
+
+  sseConn = sse(`/tenant/plugin/${pluginKey()}/uninstall`, {
+    progress: (payload: any) => {
+      const eventData = payload?.data || payload;
+      if (eventData?.progress !== undefined)
+        progress.value = eventData.progress;
+      if (eventData?.message) progressMessage.value = eventData.message;
+    },
+    completed: (payload: any) => {
+      const eventData = payload?.data || payload;
+      progress.value = 100;
+      progressMessage.value = eventData?.message || '';
+      ElMessage.success(
+        $t('app.plugin.market.uninstall.success', { name: props.plugin.name }),
+      );
+      sseConn?.close();
+      sseConn = null;
+      loading.value = false;
+      uninstalling.value = false;
+      emit('refresh');
+      handleClose();
+    },
+    error: finishWithError,
+    onError: () => {
+      if (uninstalling.value) finishWithError();
+    },
+  });
+};
+
 const handleClose = () => {
+  sseConn?.close();
+  sseConn = null;
   dialogApi.close();
   emit('close');
 };
+
+onUnmounted(() => sseConn?.close());
 
 defineExpose({ openDialog });
 </script>
@@ -87,17 +131,24 @@ defineExpose({ openDialog });
         <p class="text-sm text-orange-500 mb-6">
           {{ $t('app.plugin.market.uninstall.warning') }}
         </p>
+        <ul v-if="cleanupItems.length" class="mb-6 space-y-1 text-left text-sm">
+          <li v-for="item in cleanupItems" :key="item.action">
+            <strong>{{ item.action }}：</strong>{{ item.detail }}
+          </li>
+        </ul>
         <div v-if="loading" class="flex flex-col items-center gap-3">
           <ElProgress
-            :percentage="100"
+            :percentage="progress"
             :stroke-width="6"
             striped
             striped-flow
             status="warning"
           />
-          <span class="text-sm text-gray-400">{{
-            $t('app.plugin.market.uninstall.uninstalling')
-          }}</span>
+          <span class="text-sm text-gray-400">
+            {{
+              progressMessage || $t('app.plugin.market.uninstall.uninstalling')
+            }}
+          </span>
         </div>
         <div v-else class="flex justify-center gap-3">
           <ElButton @click="handleClose">

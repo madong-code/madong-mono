@@ -19,3 +19,20 @@ export interface ModuleListResponse {
   items: ModuleRow[];
   total: number;
 }
+
+export interface PluginUninstallImpactItem {
+  installed_at?: number;
+  installed_version: string;
+  status: number;
+  tenant_id: string;
+  tenant_name: string;
+}
+
+export interface PluginUninstallImpact {
+  has_impact: boolean;
+  items: PluginUninstallImpactItem[];
+  message: string;
+  plugin: string;
+  strategy: 'disable_only';
+  total: number;
+}

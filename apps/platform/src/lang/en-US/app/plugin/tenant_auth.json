@@ -1,0 +1,33 @@
+{
+  "title": "Tenant Plugin Authorization",
+  "description": "Manage the platform plugins each tenant can install and use",
+  "tenant": "Tenant",
+  "tenant_placeholder": "Select a tenant",
+  "batch_status": "Batch authorization",
+  "apply": "Apply to selected",
+  "save": "Save authorization",
+  "refresh": "Refresh authorizations",
+  "installed": "Installed",
+  "not_installed": "Not installed",
+  "empty_plugins": "No platform plugins are installed",
+  "empty_tenants": "No tenants available",
+  "columns": {
+    "plugin": "Plugin",
+    "platform_version": "Platform version",
+    "installation": "Tenant installation",
+    "current_status": "Current status",
+    "authorization": "Authorization"
+  },
+  "status": {
+    "authorized": "Authorized",
+    "trial": "Trial",
+    "none": "Not authorized"
+  },
+  "message": {
+    "tenant_failed": "Failed to load tenants",
+    "load_failed": "Failed to load plugin authorizations",
+    "select_plugin": "Select at least one plugin",
+    "save_success": "Tenant plugin authorizations saved",
+    "save_failed": "Failed to save tenant plugin authorizations"
+  }
+}

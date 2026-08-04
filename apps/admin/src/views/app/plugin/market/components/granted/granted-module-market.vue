@@ -1,10 +1,9 @@
 <script setup lang="ts">
-/** 授权版模块市场 - 对接租户已授权插件接口，仅安装/卸载菜单，更新数据库 */
+/** 租户插件市场 - 对接租户插件生命周期接口 */
 import { ref } from 'vue';
 
 import { requestClient } from '#/api/request';
 
-import GrantedModuleDetail from './granted-module-detail.vue';
 import GrantedModuleList from './granted-module-list.vue';
 import GrantedTableHeader from './table-header.vue';
 
@@ -17,10 +16,6 @@ const currentViewMode = ref<'card' | 'table'>('card');
 const loading = ref(false);
 const modulesData = ref<any[]>([]);
 const totalCount = ref(0);
-
-// 模块详情
-const moduleDetailRef = ref();
-const selectedModuleForDetail = ref<any>(null);
 
 // ── API 请求（租户已授权插件列表）────────
 const buildApiParams = () => {
@@ -61,17 +56,17 @@ const handleRefresh = async () => {
   await fetchModules();
 };
 
-// 安装菜单：由子弹窗内部处理 POST /tenant/plugin/{code}/install-menu
+// 安装由子弹窗通过 SSE 生命周期接口处理
 const handleInstall = async () => {
   await fetchModules();
 };
 
-// 卸载菜单：由子弹窗内部处理 POST /tenant/plugin/{code}/uninstall-menu
+// 卸载由子弹窗通过 SSE 生命周期接口处理
 const handleUninstall = async () => {
   await fetchModules();
 };
 
-// 更新数据库：由子组件处理 POST /tenant/plugin/{code}/update-db
+// 更新由子组件通过 SSE 生命周期接口处理
 const handleUpdateDb = async () => {
   await fetchModules();
 };
@@ -99,16 +94,6 @@ const handleUpdateDb = async () => {
       @install="handleInstall"
       @uninstall="handleUninstall"
       @update="handleUpdateDb"
-    />
-
-    <GrantedModuleDetail
-      ref="moduleDetailRef"
-      :module-id="selectedModuleForDetail?.id"
-      @close="selectedModuleForDetail = null"
-      @install="handleInstall"
-      @uninstall="handleUninstall"
-      @update="handleUpdateDb"
-      @refresh="handleRefresh"
     />
   </div>
 </template>
