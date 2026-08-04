@@ -36,11 +36,13 @@ export const useCrudSchema = (): CrudSchema => {
         field: 'original_filename',
         title: $t('system.files.table.columns.original_filename'),
         width: 200,
+        align: 'left',
       },
       {
         field: 'size_info',
         title: $t('system.files.table.columns.size_info'),
         minWidth: 100,
+        align: 'left',
       },
       {
         field: 'ext',
@@ -90,6 +92,6 @@ export const useCrudSchema = (): CrudSchema => {
         },
       ],
     },
-    formDialog: { enabled: false, schema: [] },
+    formDialog: { enabled: true, schema: [] },
   };
 };
