@@ -1,4 +1,4 @@
-import type { ModuleListResponse } from './types';
+import type { ModuleListResponse, PluginUninstallImpact } from './types';
 
 import { requestClient } from '#/api/request';
 
@@ -28,5 +28,10 @@ export const AppPluginMarketService = {
   /** 环境检测 */
   checkEnvironment(key: string): Promise<any> {
     return requestClient.get(`${baseUrl}/${key}/check-environment`);
+  },
+
+  /** 获取平台卸载的下游影响 */
+  getUninstallImpact(key: string): Promise<PluginUninstallImpact> {
+    return requestClient.get(`${baseUrl}/${key}/uninstall-impact`);
   },
 };

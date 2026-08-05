@@ -10,6 +10,12 @@ export interface ModuleRow {
   type?: string;
   is_installed: number;
   is_purchased: number;
+  auth_status?: 'authorized' | 'none' | 'trial';
+  can_install?: { allowed: boolean; reason: string };
+  can_update?: number;
+  has_update?: number;
+  installed_version?: null | string;
+  version_mismatch?: number;
   category?: string;
   install_status?: string;
 }

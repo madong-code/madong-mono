@@ -2,11 +2,27 @@
 /** 三步卸载对话框：卸载确认 → 卸载进度 → 卸载完成 */
 import { nextTick, onUnmounted, ref } from 'vue';
 
-import { ElAlert, ElButton, ElCard, ElMessage, ElProgress } from 'element-plus';
+import {
+  ElAlert,
+  ElButton,
+  ElCard,
+  ElCheckbox,
+  ElMessage,
+  ElProgress,
+  ElTable,
+  ElTableColumn,
+  ElTag,
+} from 'element-plus';
 
+import { AppPluginMarketService } from '#/api/app/plugin/market';
 import { sse } from '#/api/request';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
+
+import {
+  canProceedWithUninstall,
+  requiresUninstallConfirmation,
+} from './impact';
 
 defineOptions({ name: 'ModuleUninstallDialog' });
 
@@ -29,6 +45,9 @@ const uninstallProgress = ref(0);
 const uninstallStatus = ref<string>('');
 const uninstallLogs = ref<string[]>([]);
 const uninstallResult = ref<'error' | 'success'>('success');
+const impact = ref<any>({ has_impact: false, items: [], total: 0 });
+const impactConfirmed = ref(false);
+const impactReady = ref(false);
 const logsContainer = ref<HTMLElement>();
 let sseConn: null | { close: () => void } = null;
 
@@ -43,6 +62,22 @@ const openDialog = async () => {
   uninstallStatus.value = '';
   uninstallLogs.value = [];
   uninstallResult.value = 'success';
+  impactConfirmed.value = false;
+  impactReady.value = false;
+  loading.value = true;
+  try {
+    impact.value = await AppPluginMarketService.getUninstallImpact(
+      props.plugin.code,
+    );
+    impactReady.value = true;
+  } catch {
+    impact.value = { has_impact: false, items: [], total: 0 };
+    ElMessage.error(
+      $t('app.plugin.market.standalone.uninstall.impact_load_failed'),
+    );
+  } finally {
+    loading.value = false;
+  }
 };
 
 const handleClose = () => {
@@ -59,6 +94,18 @@ const scrollToBottom = () => {
 };
 
 const startUninstall = async () => {
+  if (!impactReady.value) {
+    ElMessage.error(
+      $t('app.plugin.market.standalone.uninstall.impact_load_failed'),
+    );
+    return;
+  }
+  if (requiresUninstallConfirmation(impact.value) && !impactConfirmed.value) {
+    ElMessage.warning(
+      $t('app.plugin.market.standalone.uninstall.impact_confirm_required'),
+    );
+    return;
+  }
   currentStep.value = 2;
   uninstallProgress.value = 0;
   uninstallLogs.value = ['开始卸载...'];
@@ -66,7 +113,7 @@ const startUninstall = async () => {
 };
 
 const startSseUninstall = () => {
-  sseConn = sse(`/plugin/${props.plugin.code}/uninstall`, {
+  sseConn = sse(`/plugin/${props.plugin.code}/uninstall?confirmed=1`, {
     open: () => {},
     progress: (payload: any) => {
       const eventData = payload?.data || payload;
@@ -183,14 +230,13 @@ defineExpose({ openDialog });
             class="mb-4"
           >
             <template #default>
-              <p
-                class="mb-2"
-                v-html="
+              <p class="mb-2">
+                {{
                   $t('app.plugin.market.standalone.uninstall.confirm_msg', {
                     name: plugin?.name,
                   })
-                "
-              ></p>
+                }}
+              </p>
               <p class="text-sm text-gray-600">
                 {{
                   $t('app.plugin.market.standalone.uninstall.operations_title')
@@ -209,11 +255,53 @@ defineExpose({ openDialog });
               </p>
             </template>
           </ElAlert>
+          <div v-if="impact.has_impact" class="impact-panel">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <span class="text-sm font-medium">
+                {{
+                  $t('app.plugin.market.standalone.uninstall.impact_title', {
+                    count: impact.total,
+                  })
+                }}
+              </span>
+              <ElTag type="danger" effect="plain">
+                {{ $t('app.plugin.market.standalone.uninstall.impact_tag') }}
+              </ElTag>
+            </div>
+            <ElTable :data="impact.items" max-height="220" size="small">
+              <ElTableColumn
+                prop="tenant_name"
+                :label="$t('app.plugin.market.standalone.uninstall.tenant')"
+                min-width="180"
+              />
+              <ElTableColumn
+                prop="tenant_id"
+                :label="$t('app.plugin.market.standalone.uninstall.tenant_id')"
+                min-width="150"
+              />
+              <ElTableColumn
+                prop="installed_version"
+                :label="
+                  $t('app.plugin.market.standalone.uninstall.installed_version')
+                "
+                width="120"
+              />
+            </ElTable>
+            <ElCheckbox v-model="impactConfirmed" class="mt-3">
+              {{ $t('app.plugin.market.standalone.uninstall.impact_confirm') }}
+            </ElCheckbox>
+          </div>
           <div class="mt-4 flex justify-end">
             <ElButton @click="handleClose">
               {{ $t('app.plugin.market.standalone.uninstall.cancel') }}
             </ElButton>
-            <ElButton type="danger" @click="startUninstall">
+            <ElButton
+              type="danger"
+              :disabled="
+                !canProceedWithUninstall(impact, impactConfirmed, impactReady)
+              "
+              @click="startUninstall"
+            >
               {{
                 $t('app.plugin.market.standalone.uninstall.confirm_uninstall')
               }}
@@ -283,6 +371,13 @@ defineExpose({ openDialog });
   justify-content: space-between;
   max-width: 600px;
   margin: 0 auto;
+}
+
+.impact-panel {
+  padding: 16px;
+  background: var(--el-color-danger-light-9);
+  border: 1px solid var(--el-color-danger-light-5);
+  border-radius: 6px;
 }
 
 .step {

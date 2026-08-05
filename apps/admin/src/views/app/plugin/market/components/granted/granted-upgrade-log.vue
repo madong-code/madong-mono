@@ -52,7 +52,7 @@ const fetchVersionList = async (code?: string) => {
   loading.value = true;
   try {
     const response: any = await requestClient.get(
-      `/tenant/plugin/${moduleCode}/upgrade-logs`,
+      `/plugin/${moduleCode}/upgrade-logs`,
     );
     versionList.value = response?.version_list || [];
   } catch {
@@ -71,7 +71,7 @@ const formatTimestamp = (timestamp: string) => {
 };
 
 const openDialog = async (mod?: any) => {
-  currentModuleCode.value = mod?.code || props.moduleCode;
+  currentModuleCode.value = mod?.name || mod?.code || props.moduleCode;
   dialogApi.open();
   await fetchVersionList(currentModuleCode.value);
   if (versionList.value.length > 0) activeName.value = 0;
@@ -120,7 +120,8 @@ defineExpose({ openDialog });
                 <br />
                 <span
                   class="text-[#999999] text-[14px] w-[78px] block mt-[10px] absolute text-right"
-                  >{{ formatTimestamp(item.release_time)[1] }}</span>
+                  >{{ formatTimestamp(item.release_time)[1] }}</span
+                >
               </div>
               <ElCollapse v-model="activeName" accordion>
                 <ElCollapseItem :name="index">
@@ -134,7 +135,8 @@ defineExpose({ openDialog });
                         class="ml-2"
                         >{{
                           $t('app.plugin.market.upgrade_log.important')
-                        }}</ElTag>
+                        }}</ElTag
+                      >
                     </span>
                   </template>
                   <div

@@ -78,7 +78,9 @@
       "immediate": "下载"
     },
     "update": {
-      "immediate": "更新"
+      "immediate": "更新",
+      "title": "更新模块",
+      "start": "开始更新"
     },
     "install": {
       "immediate": "安装",
@@ -136,6 +138,14 @@
       "op4": "清理模块关联的配置信息",
       "op5": "清除模块相关缓存及日志",
       "irreversible": "此操作不可撤销，请谨慎操作！",
+      "impact_title": "受影响租户（{count}）",
+      "impact_tag": "下游影响",
+      "tenant": "租户",
+      "tenant_id": "租户 ID",
+      "installed_version": "安装版本",
+      "impact_confirm": "我已确认：这些租户的插件将被停用，业务数据不会自动删除",
+      "impact_confirm_required": "请确认下游租户影响后再卸载",
+      "impact_load_failed": "无法获取卸载影响，请稍后重试",
       "uninstalling": "正在卸载...",
       "cancel": "取消",
       "prev": "上一步",

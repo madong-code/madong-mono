@@ -1,11 +1,11 @@
 <script setup lang="ts">
 /** 授权版模块详情对话框 - 无删除功能 */
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 
 import { ElButton, ElCard, ElIcon, ElMessage, ElTag } from 'element-plus';
 import { Calendar, Key, RotateCw } from 'lucide-vue-next';
 
-import { requestClient } from '#/api/request';
+import { sse } from '#/api/request';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
 
@@ -39,6 +39,7 @@ const [Dialog, dialogApi] = useDialog({
 
 const loading = ref(false);
 const moduleData = ref<any>({});
+let sseConn: null | { close: () => void } = null;
 
 const openDialog = (mod?: any) => {
   dialogApi.open();
@@ -50,6 +51,8 @@ const openDialog = (mod?: any) => {
 };
 
 const handleClose = () => {
+  sseConn?.close();
+  sseConn = null;
   dialogApi.close();
   emit('close');
 };
@@ -64,20 +67,42 @@ const handleUninstall = async () => {
   dialogApi.close();
 };
 
-const handleUpdate = async () => {
-  try {
-    await requestClient.post(
-      `/tenant/plugin/${moduleData.value.code}/update-db`,
-    );
-    ElMessage.success(
-      $t('app.plugin.market.update.success', { name: moduleData.value.name }),
-    );
-    emit('update', moduleData.value);
-    dialogApi.close();
-  } catch (error: any) {
-    ElMessage.error(error?.message || $t('app.plugin.market.update.fail'));
-  }
+const handleUpdate = () => {
+  const key = moduleData.value.name || moduleData.value.code;
+  if (!key) return;
+
+  loading.value = true;
+  sseConn = sse(`/tenant/plugin/${key}/update`, {
+    completed: () => {
+      loading.value = false;
+      sseConn?.close();
+      sseConn = null;
+      ElMessage.success(
+        $t('app.plugin.market.update.success', { name: moduleData.value.name }),
+      );
+      emit('update', moduleData.value);
+      handleClose();
+    },
+    error: (payload: any) => {
+      const eventData = payload?.data || payload;
+      loading.value = false;
+      sseConn?.close();
+      sseConn = null;
+      ElMessage.error(
+        eventData?.message || $t('app.plugin.market.update.fail'),
+      );
+    },
+    onError: () => {
+      if (!loading.value) return;
+      loading.value = false;
+      sseConn?.close();
+      sseConn = null;
+      ElMessage.error($t('app.plugin.market.update.fail'));
+    },
+  });
 };
+
+onUnmounted(() => sseConn?.close());
 
 defineExpose({ openDialog });
 </script>
@@ -209,6 +234,14 @@ defineExpose({ openDialog });
                 {{ $t('app.plugin.market.detail.close') }}
               </ElButton>
               <ElButton
+                v-if="moduleData.has_update"
+                type="warning"
+                size="large"
+                @click="handleUpdate"
+              >
+                {{ $t('app.plugin.market.update_db') }}
+              </ElButton>
+              <ElButton
                 v-if="moduleData.is_installed"
                 type="danger"
                 size="large"
@@ -217,15 +250,7 @@ defineExpose({ openDialog });
                 {{ $t('app.plugin.market.uninstall_menu') }}
               </ElButton>
               <ElButton
-                v-else-if="moduleData.has_update"
-                type="warning"
-                size="large"
-                @click="handleUpdate"
-              >
-                {{ $t('app.plugin.market.update_db') }}
-              </ElButton>
-              <ElButton
-                v-else
+                v-if="!moduleData.is_installed"
                 type="primary"
                 size="large"
                 @click="handleInstall"

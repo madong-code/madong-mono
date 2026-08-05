@@ -2,11 +2,10 @@
 /** 授权版模块列表：卡片/表格视图 + 分页 + 操作弹窗（无删除功能） */
 import { computed, nextTick, ref } from 'vue';
 
-import { ElButton, ElIcon, ElMessage, ElPagination, ElTag } from 'element-plus';
+import { ElButton, ElIcon, ElPagination, ElTag } from 'element-plus';
 import { Info, Key, Package } from 'lucide-vue-next';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { requestClient } from '#/api/request';
 import { $t } from '#/locales';
 
 import GrantedModuleInstallDialog from './granted-module-install-dialog.vue';
@@ -106,15 +105,9 @@ const uninstallModule = async (mod: any) => {
 };
 
 const updateModule = async (mod: any) => {
-  try {
-    await requestClient.post(`/tenant/plugin/${mod.code || mod.key}/update-db`);
-    ElMessage.success(
-      $t('app.plugin.market.update.success', { name: mod.name }),
-    );
-    emit('update', mod);
-  } catch (error: any) {
-    ElMessage.error(error?.message || $t('app.plugin.market.update.fail'));
-  }
+  selectedModuleForInstall.value = mod;
+  await nextTick();
+  installDialogRef.value?.openDialog();
 };
 
 const showUpdateLog = (mod: any) => {
@@ -170,7 +163,9 @@ const handleCurrentChange = (page: number) => {
                     alt=""
                     class="w-full h-full object-contain"
                   />
-                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl">📦</span>
+                  <span v-else class="text-blue-600 dark:text-blue-400 text-xl"
+                    >📦</span
+                  >
                 </div>
               </div>
               <div class="card-info-text">
@@ -203,7 +198,8 @@ const handleCurrentChange = (page: number) => {
                 size="small"
                 @click.stop="showUpdateLog(mod)"
               >
-                <ElIcon :size="14"><Info /></ElIcon>{{ $t('app.plugin.market.update_log') }}
+                <ElIcon :size="14"><Info /></ElIcon
+                >{{ $t('app.plugin.market.update_log') }}
               </ElButton>
             </div>
           </div>
@@ -211,7 +207,15 @@ const handleCurrentChange = (page: number) => {
           <!-- 底部：操作按钮（无删除） -->
           <div class="card-footer">
             <div class="action-row">
-              <!-- 已安装 → 卸载菜单 -->
+              <ElButton
+                v-if="mod.has_update"
+                type="warning"
+                size="small"
+                class="flex-1"
+                @click.stop="updateModule(mod)"
+              >
+                {{ $t('app.plugin.market.update_db') }}
+              </ElButton>
               <ElButton
                 v-if="mod.is_installed"
                 type="danger"
@@ -221,19 +225,8 @@ const handleCurrentChange = (page: number) => {
               >
                 {{ $t('app.plugin.market.uninstall_menu') }}
               </ElButton>
-              <!-- 可更新 → 更新数据库 -->
               <ElButton
-                v-else-if="mod.has_update"
-                type="warning"
-                size="small"
-                class="flex-1"
-                @click.stop="updateModule(mod)"
-              >
-                {{ $t('app.plugin.market.update_db') }}
-              </ElButton>
-              <!-- 未安装 → 安装菜单 -->
-              <ElButton
-                v-else
+                v-if="!mod.is_installed"
                 type="primary"
                 size="small"
                 class="flex-1"
@@ -263,7 +256,9 @@ const handleCurrentChange = (page: number) => {
               alt=""
               class="w-full h-full object-contain"
             />
-            <span v-else class="text-blue-600 dark:text-blue-400 text-base">📦</span>
+            <span v-else class="text-blue-600 dark:text-blue-400 text-base"
+              >📦</span
+            >
           </div>
           <div>
             <div class="text-sm font-medium">{{ row.name }}</div>
@@ -288,7 +283,14 @@ const handleCurrentChange = (page: number) => {
       </template>
       <template #action="{ row }">
         <div class="table-actions">
-          <!-- 已安装 → 卸载菜单 -->
+          <ElButton
+            v-if="row.has_update"
+            type="warning"
+            size="small"
+            @click.stop="updateModule(row)"
+          >
+            {{ $t('app.plugin.market.update_db') }}
+          </ElButton>
           <ElButton
             v-if="row.is_installed"
             type="danger"
@@ -297,18 +299,8 @@ const handleCurrentChange = (page: number) => {
           >
             {{ $t('app.plugin.market.uninstall_menu') }}
           </ElButton>
-          <!-- 可更新 → 更新数据库 -->
           <ElButton
-            v-else-if="row.has_update"
-            type="warning"
-            size="small"
-            @click.stop="updateModule(row)"
-          >
-            {{ $t('app.plugin.market.update_db') }}
-          </ElButton>
-          <!-- 未安装 → 安装菜单 -->
-          <ElButton
-            v-else
+            v-if="!row.is_installed"
             type="primary"
             size="small"
             @click.stop="installModule(row)"

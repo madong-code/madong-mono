@@ -4,7 +4,6 @@ import { ref } from 'vue';
 
 import { requestClient } from '#/api/request';
 
-import GrantedModuleDetail from './granted-module-detail.vue';
 import GrantedModuleList from './granted-module-list.vue';
 import GrantedTableHeader from './table-header.vue';
 
@@ -17,10 +16,6 @@ const currentViewMode = ref<'card' | 'table'>('card');
 const loading = ref(false);
 const modulesData = ref<any[]>([]);
 const totalCount = ref(0);
-
-// 模块详情
-const moduleDetailRef = ref();
-const selectedModuleForDetail = ref<any>(null);
 
 // ── API 请求（租户已授权插件列表）────────
 const buildApiParams = () => {
@@ -99,16 +94,6 @@ const handleUpdateDb = async () => {
       @install="handleInstall"
       @uninstall="handleUninstall"
       @update="handleUpdateDb"
-    />
-
-    <GrantedModuleDetail
-      ref="moduleDetailRef"
-      :module-id="selectedModuleForDetail?.id"
-      @close="selectedModuleForDetail = null"
-      @install="handleInstall"
-      @uninstall="handleUninstall"
-      @update="handleUpdateDb"
-      @refresh="handleRefresh"
     />
   </div>
 </template>

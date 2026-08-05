@@ -1,0 +1,33 @@
+{
+  "title": "租户插件授权",
+  "description": "管理各租户可安装和使用的平台插件",
+  "tenant": "租户",
+  "tenant_placeholder": "请选择租户",
+  "batch_status": "批量授权状态",
+  "apply": "应用到所选插件",
+  "save": "保存授权",
+  "refresh": "刷新授权列表",
+  "installed": "已安装",
+  "not_installed": "未安装",
+  "empty_plugins": "平台暂无已安装插件",
+  "empty_tenants": "暂无可管理的租户",
+  "columns": {
+    "plugin": "插件",
+    "platform_version": "平台版本",
+    "installation": "租户安装状态",
+    "current_status": "当前授权",
+    "authorization": "授权设置"
+  },
+  "status": {
+    "authorized": "已授权",
+    "trial": "试用",
+    "none": "未授权"
+  },
+  "message": {
+    "tenant_failed": "租户列表加载失败",
+    "load_failed": "插件授权加载失败",
+    "select_plugin": "请先选择插件",
+    "save_success": "租户插件授权已保存",
+    "save_failed": "租户插件授权保存失败"
+  }
+}

@@ -78,7 +78,9 @@
       "immediate": "Download"
     },
     "update": {
-      "immediate": "Update"
+      "immediate": "Update",
+      "title": "Update Module",
+      "start": "Start Update"
     },
     "install": {
       "immediate": "Install",
@@ -136,6 +138,14 @@
       "op4": "Clean up module-related configuration",
       "op5": "Clear module caches and logs",
       "irreversible": "This operation cannot be undone. Proceed with caution!",
+      "impact_title": "Affected tenants ({count})",
+      "impact_tag": "Downstream impact",
+      "tenant": "Tenant",
+      "tenant_id": "Tenant ID",
+      "installed_version": "Installed version",
+      "impact_confirm": "I understand these tenant plugins will be disabled and business data will be retained",
+      "impact_confirm_required": "Confirm the downstream impact before uninstalling",
+      "impact_load_failed": "Unable to load uninstall impact. Try again later.",
       "uninstalling": "Uninstalling...",
       "cancel": "Cancel",
       "prev": "Previous",
