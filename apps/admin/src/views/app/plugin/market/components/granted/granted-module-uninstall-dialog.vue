@@ -131,7 +131,10 @@ defineExpose({ openDialog });
         <p class="text-sm text-orange-500 mb-6">
           {{ $t('app.plugin.market.uninstall.warning') }}
         </p>
-        <ul v-if="cleanupItems.length" class="mb-6 space-y-1 text-left text-sm">
+        <ul
+          v-if="cleanupItems.length > 0"
+          class="mb-6 space-y-1 text-left text-sm"
+        >
           <li v-for="item in cleanupItems" :key="item.action">
             <strong>{{ item.action }}：</strong>{{ item.detail }}
           </li>
