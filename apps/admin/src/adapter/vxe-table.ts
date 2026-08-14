@@ -16,7 +16,7 @@ setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
     vxeUI.setConfig({
       grid: {
-        align: 'center',
+        align: 'left',
         border: 'none' as any,
         stripe: true,
         columnConfig: {

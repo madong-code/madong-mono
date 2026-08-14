@@ -14,6 +14,16 @@ interface UseColumnsOptions {
   tableActionColumn?: Partial<CrudColumn>;
 }
 
+/**
+ * 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中，其余继承全局 grid.align
+ */
+const BUILTIN_CENTER_COLUMNS = (col: CrudColumn) =>
+  col.cellRender?.name === 'CellDictTag' ||
+  col.cellRender?.name === 'CellDict' ||
+  /(_at|_time)$|^(created|updated|create|update|time|date)/i.test(
+    String(col.field ?? ''),
+  );
+
 export function useColumns(
   options: UseColumnsOptions,
   tableActions: Ref<ActionItem[]>,
@@ -26,6 +36,11 @@ export function useColumns(
       const { viewComponent, viewComponentProps, vxeColumn, ...rest } = col;
 
       const result: any = { ...rest };
+
+      // 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中
+      if (result.align === undefined && BUILTIN_CENTER_COLUMNS(col)) {
+        result.align = 'center';
+      }
 
       if (viewComponent) {
         result.cellRender = {

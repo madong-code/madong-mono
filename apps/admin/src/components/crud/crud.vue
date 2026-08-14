@@ -104,10 +104,19 @@ const tableColumns = computed(() => {
   return typeof cols === 'function' ? cols() : cols;
 });
 
+// 操作栏默认固定右侧，外部通过 tableActionColumn 自定义可覆盖
+const tableActionColumn = computed(() => {
+  const custom = tableConfig.value.tableActionColumn || {};
+  return {
+    fixed: 'right' as const,
+    ...custom,
+  };
+});
+
 const columns = useColumns(
   {
     columns: tableColumns.value,
-    tableActionColumn: tableConfig.value.tableActionColumn,
+    tableActionColumn: tableActionColumn.value,
   },
   tableActions,
   dropDownActions,
