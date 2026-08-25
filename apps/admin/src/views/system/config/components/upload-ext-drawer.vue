@@ -61,6 +61,11 @@ const show = async (values: Record<string, any>) => {
       }
     });
   }
+  // local 模式下根目录、目录名固定为 public/upload 且不可修改
+  if (currentMode.value === 'local') {
+    formData.root = 'public';
+    formData.dirname = 'upload';
+  }
   visible.value = true;
 };
 
@@ -110,7 +115,14 @@ defineExpose({ show });
         :key="key"
         :label="label"
       >
-        <ElInput v-model="formData[key]" :placeholder="label" clearable />
+        <ElInput
+          v-model="formData[key]"
+          :placeholder="label"
+          :disabled="
+            currentMode === 'local' && ['root', 'dirname'].includes(key)
+          "
+          clearable
+        />
       </ElFormItem>
     </ElForm>
     <template #footer>

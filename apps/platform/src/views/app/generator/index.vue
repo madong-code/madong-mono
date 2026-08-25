@@ -48,17 +48,6 @@ const [BasicCrud, crudApi] = useCrud({
       icon: 'ant-design:plus-outlined',
       dialogRef: importTableRef,
     },
-    {
-      label: $t('components.crud.action.batch_delete'),
-      type: 'danger',
-      sort: 1020,
-      icon: 'ant-design:delete-outlined',
-      auth: 'platform:generator:code:delete',
-      ifShow: () => crudApi.getRowSelection().length > 0,
-      onClick: () => {
-        crudApi.executeBatchRemove();
-      },
-    },
   ],
   dropDownToolbarActions: [],
   tableActions: [
@@ -75,15 +64,6 @@ const [BasicCrud, crudApi] = useCrud({
     },
   ],
   dropDownActions: [
-    {
-      label: $t('components.crud.action.delete'),
-      type: 'danger',
-      icon: 'ant-design:delete-outlined',
-      auth: 'platform:generator:code:delete',
-      onClick: (_e: Event, row: any) => {
-        crudApi.executeRemove(row);
-      },
-    },
     {
       label: $t('app.generator.action.preview'),
       sort: 1010,

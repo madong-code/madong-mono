@@ -3,7 +3,7 @@
  */
 export const templateField = function (groupCode: string) {
   const data: Record<string, string[]> = {
-    local: ['root', 'dirname', 'domain', 'remark'],
+    local: ['root', 'dirname'],
     oss: [
       'accessKeyId',
       'accessKeySecret',
