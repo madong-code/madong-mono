@@ -357,7 +357,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.enabled'),
-            code: 'yes_no',
+            code: DictEnum.SYS_YES_NO,
             isBtn: true,
             renderType: 'RadioGroup',
           },
@@ -371,7 +371,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: (values: any) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_show'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),
@@ -386,7 +386,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.is_sync'),
-            code: 'yes_no',
+            code: DictEnum.SYS_YES_NO,
             isBtn: true,
             renderType: 'RadioGroup',
           },
@@ -400,7 +400,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: (values: any) => {
             return {
               placeholder: $t('system.menu.form.placeholder.is_cache'),
-              code: 'yes_no',
+              code: DictEnum.SYS_YES_NO,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),
@@ -415,7 +415,7 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-1',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.is_affix'),
-            code: 'yes_no',
+            code: DictEnum.SYS_YES_NO,
             isBtn: true,
             renderType: 'RadioGroup',
           },
