@@ -1,5 +1,8 @@
 <script setup lang="ts">
-/** 授权管理：平台默认顶级管理员单一模式，直接显示单体授权页面 */
+/** 平台端 - 授权信息(对接官网平台)
+ *  - SaaS 授权码认证(公司名/域名/授权码 + 重新认证对话框)
+ *  - 调 /plugin/auth-info (GET/POST)
+ */
 import StandaloneDelegation from './StandaloneDelegation.vue';
 
 defineOptions({ name: 'AppPluginDelegation' });

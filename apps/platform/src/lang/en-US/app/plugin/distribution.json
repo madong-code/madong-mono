@@ -1,0 +1,96 @@
+{
+  "tab": {
+    "distribution": "Distribution Center",
+    "auth": "Authorization"
+  },
+  "sub": {
+    "upgrade": "Upgrade Stats",
+    "matrix": "Authorization Matrix"
+  },
+  "stat": {
+    "title": "Upgrade Statistics",
+    "plugin": "Plugin",
+    "latest_version": "Latest Version",
+    "installed": "Installed",
+    "upgradable": "Upgradable",
+    "ungranted": "Ungranted",
+    "progress": "Progress",
+    "batch_upgrade": "Batch Upgrade",
+    "occupying": "Occupying",
+    "platform_installed": "Platform Installed",
+    "up_to_date": "Up-to-date",
+    "upgradable_count": "Upgradable",
+    "ungranted_count": "Ungranted"
+  },
+  "matrix": {
+    "title": "Platform × Tenant Authorization Matrix",
+    "head_plugin": "Plugin",
+    "filter_plugin": "Filter by Plugin",
+    "filter_tenant": "Filter by Tenant",
+    "empty": "No data",
+    "cell": {
+      "none": "None",
+      "authorized": "Authorized",
+      "trial": "Trial",
+      "installed": "Installed"
+    }
+  },
+  "upgrade": {
+    "title": "Upgrade Plugin",
+    "hint": "Select tenants to upgrade to the target version. Force upgrade ignores business blocking.",
+    "target_version": "Target Version",
+    "target_placeholder": "e.g. 1.2.0",
+    "force": "Force upgrade",
+    "select_all": "Select All",
+    "clear": "Clear",
+    "execute": "Upgrade ({count})",
+    "all_latest": "All tenants are up to date 🎉",
+    "tenant_code": "Tenant Code",
+    "tenant_name": "Tenant Name",
+    "tenant_type": "Isolation",
+    "isolation_field": "Shared Schema",
+    "isolation_database": "Dedicated DB",
+    "current_version": "Current Version",
+    "result": "Result",
+    "log_title": "Execution Log",
+    "progress_title": "Upgrade Progress",
+    "close": "Close",
+    "interrupt": "Connection interrupted, please retry",
+    "processing": "Upgrading...",
+    "completed": "Done",
+    "failed": "Failed",
+    "waiting": "Waiting for output...",
+    "msg_version_required": "Target version is required",
+    "msg_no_upgradable": "No tenant needs upgrade",
+    "msg_no_selection": "Please select at least one tenant",
+    "msg_success": "Upgrade done: {processed}/{total}, failed {failed}",
+    "msg_fail": "Upgrade failed"
+  },
+  "batch": {
+    "title": "Batch Upgrade {plugin} → {version}",
+    "hint": "Only upgradable tenants are selected by default",
+    "target": "Target Tenants",
+    "force": "Force upgrade (skip version check)",
+    "start": "Start Upgrade",
+    "no_target": "Please select at least one target tenant",
+    "upgradable_count": "Upgradable tenants: {count}",
+    "invalid": "Plugin or version cannot be empty",
+    "success": "Batch upgrade done: {processed}/{total}, mode: {mode}",
+    "fail": "Batch upgrade failed",
+    "result": "Processed {processed}/{total}, failed {failed}, mode {mode}"
+  },
+  "occupying": {
+    "title": "{plugin} Occupying Tenants ({count})",
+    "tenant": "Tenant",
+    "tenant_id": "Tenant ID",
+    "isolation": "Isolation",
+    "version": "Version",
+    "expired": "Expires",
+    "cascade_title": "Confirm Force Cascade Uninstall",
+    "cascade_confirm": "Plugin {plugin} is still occupied by {count} tenant(s). Continue?",
+    "cascade_button": "Cascade Uninstall",
+    "cascade_hint": "Tenant cleanup first, then platform uninstall",
+    "cascade_success": "Cascade uninstall started",
+    "cascade_fail": "Cascade uninstall failed"
+  }
+}

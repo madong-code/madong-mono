@@ -1,0 +1,96 @@
+{
+  "tab": {
+    "distribution": "插件分发中心",
+    "auth": "授权认证"
+  },
+  "sub": {
+    "upgrade": "升级统计",
+    "matrix": "授权矩阵"
+  },
+  "stat": {
+    "title": "升级统计",
+    "plugin": "插件",
+    "latest_version": "最新版本",
+    "installed": "已装租户",
+    "upgradable": "可升级租户",
+    "ungranted": "未授权租户",
+    "progress": "完成度",
+    "batch_upgrade": "批量升级",
+    "occupying": "占用清单",
+    "platform_installed": "平台已装插件",
+    "up_to_date": "已最新租户",
+    "upgradable_count": "可升级租户",
+    "ungranted_count": "未授权租户"
+  },
+  "matrix": {
+    "title": "平台 × 租户授权矩阵",
+    "head_plugin": "插件",
+    "filter_plugin": "按插件筛选",
+    "filter_tenant": "按租户筛选",
+    "empty": "暂无数据",
+    "cell": {
+      "none": "无",
+      "authorized": "已授权",
+      "trial": "试用",
+      "installed": "已装"
+    }
+  },
+  "upgrade": {
+    "title": "插件升级",
+    "hint": "勾选需要升级的租户,批量升级到目标版本,支持强制升级(忽略业务阻断)",
+    "target_version": "目标版本",
+    "target_placeholder": "如 1.2.0",
+    "force": "强制升级",
+    "select_all": "全选",
+    "clear": "清空",
+    "execute": "执行升级 ({count})",
+    "all_latest": "所有租户已为最新版本 🎉",
+    "tenant_code": "租户编码",
+    "tenant_name": "租户名称",
+    "tenant_type": "租户类型",
+    "isolation_field": "字段隔离",
+    "isolation_database": "库隔离",
+    "current_version": "当前版本",
+    "result": "执行结果",
+    "log_title": "执行日志",
+    "progress_title": "升级进度",
+    "close": "关闭",
+    "interrupt": "连接中断,请重试",
+    "processing": "升级中...",
+    "completed": "已完成",
+    "failed": "失败",
+    "waiting": "等待输出...",
+    "msg_version_required": "目标版本不能为空",
+    "msg_no_upgradable": "所选租户无需升级",
+    "msg_no_selection": "请至少勾选一个租户",
+    "msg_success": "升级完成: {processed}/{total},失败 {failed}",
+    "msg_fail": "升级失败"
+  },
+  "batch": {
+    "title": "批量升级 {plugin} → {version}",
+    "hint": "默认仅勾选「可升级」租户",
+    "target": "目标租户",
+    "force": "强制升级(忽略版本跳过)",
+    "start": "开始升级",
+    "no_target": "请选择至少一个目标租户",
+    "upgradable_count": "可升级租户 {count}",
+    "invalid": "插件或版本不能为空",
+    "success": "批量升级完成: {processed}/{total}, 模式: {mode}",
+    "fail": "批量升级失败",
+    "result": "处理 {processed}/{total}, 失败 {failed}, 模式 {mode}"
+  },
+  "occupying": {
+    "title": "{plugin} 占用清单 ({count})",
+    "tenant": "租户",
+    "tenant_id": "租户ID",
+    "isolation": "隔离模式",
+    "version": "当前版本",
+    "expired": "到期时间",
+    "cascade_title": "确认强制级联卸载",
+    "cascade_confirm": "插件 {plugin} 仍被 {count} 个租户占用,继续将级联卸载,确定吗?",
+    "cascade_button": "级联卸载",
+    "cascade_hint": "先逐租户清理再平台卸载",
+    "cascade_success": "级联卸载已启动",
+    "cascade_fail": "级联卸载失败"
+  }
+}
