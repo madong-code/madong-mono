@@ -1,0 +1,134 @@
+{
+  "title": "My Apps",
+  "search_placeholder": "Search plugin key ...",
+  "card_view": "Card",
+  "table_view": "Table",
+  "total_count": "{count} plugins",
+  "tabs": {
+    "all": "All",
+    "installed": "Installed",
+    "upgradable": "Upgradable",
+    "ungranted": "Ungranted",
+    "empty": "Unused"
+  },
+  "empty": {
+    "platform_no_plugins": "No plugins installed on the platform",
+    "no_match": "No matching plugins",
+    "refresh": "Refresh List"
+  },
+  "column": {
+    "plugin": "Module",
+    "latest_version": "Latest Version",
+    "upgrade_progress": "Upgrade Progress",
+    "installed": "Installed",
+    "upgradable": "Upgradable",
+    "ungranted": "Ungranted",
+    "action": "Actions"
+  },
+  "card": {
+    "changelog": "Changelog",
+    "tenants_upgradable": "{count} tenants upgradable",
+    "tenants_ungranted": "{count} tenants ungranted",
+    "all_ready": "All Ready · Manage",
+    "empty": "Unused",
+    "hover_tip": "Hover for quick actions"
+  },
+  "tooltip": {
+    "authorize": "Tenant Authorization",
+    "upgrade": "Upgrade Plugin",
+    "uninstall": "Force Uninstall",
+    "install": "Remote Install"
+  },
+  "action": {
+    "authorize": "Authorize",
+    "more": "More",
+    "upgrade": "Upgrade",
+    "uninstall": "Uninstall"
+  },
+  "auth_status": {
+    "authorized": "Authorized",
+    "trial": "Trial",
+    "ungranted": "Ungranted",
+    "expired": "Expired"
+  },
+  "isolation": {
+    "field": "Shared Schema",
+    "database": "Dedicated DB"
+  },
+  "drawer": {
+    "authorize": {
+      "title": "Tenant Authorization",
+      "select_all": "Select All ({selected}/{total})",
+      "set_authorized": "Set Authorized",
+      "set_trial": "Set Trial",
+      "cancel_auth": "Cancel Authorization",
+      "cancel_confirm_title": "Cancel Authorization",
+      "cancel_confirm_msg": "Cancel authorization of plugin 「{plugin}」 for the selected {count} tenant(s)? They will no longer be able to use this plugin.",
+      "confirm_cancel": "Confirm Cancel",
+      "back": "Back",
+      "please_select": "Please select at least one tenant",
+      "partial": "Set {action} for {success}/{total} tenants, {failed} failed",
+      "success": "Set {action} for {success} tenants: {status}",
+      "col_code": "Tenant Code",
+      "col_name": "Tenant Name",
+      "col_status": "Auth Status",
+      "col_version": "Installed Version",
+      "col_expired": "Expires",
+      "empty": "No tenant data for {plugin}",
+      "loading": "Loading tenant data..."
+    },
+    "install": {
+      "title": "Remote Install to Tenant",
+      "plugin_key": "Plugin Key",
+      "plugin_key_placeholder": "e.g. demo",
+      "tip": "Select tenants to install (only authorized tenants shown; installed ones are disabled). Install scope is auto-decided by each tenant's isolation mode: shared schema = menu only, dedicated DB = menu + database migration.",
+      "select_all": "Select All ({selected}/{total})",
+      "install_btn": "Install Selected ({count})",
+      "empty_key": "Please enter the plugin key first",
+      "loading": "Loading tenant data...",
+      "empty_no_tenant": "No authorized tenants for {plugin}",
+      "col_code": "Tenant Code",
+      "col_name": "Tenant Name",
+      "col_status": "Auth Status",
+      "col_isolation": "Isolation",
+      "col_version": "Installed Version",
+      "progress_title": "Remote Install Progress",
+      "progress_counter": "Install progress: {current}/{total}",
+      "progress_preparing": "Preparing...",
+      "phase_running": "Installing ...",
+      "phase_done": "✅ Installed",
+      "phase_error": "❌ Partial failure",
+      "close": "Close",
+      "log_installing": "Installing to tenant {name} ({mode})",
+      "log_success": "Install succeeded",
+      "log_fail": "Install failed",
+      "log_interrupt": "Connection interrupted",
+      "msg_success": "Successfully installed {count} tenant(s)",
+      "msg_partial": "Done {count}, failed {failed}"
+    },
+    "uninstall": {
+      "title": "Force Uninstall",
+      "alert": "Force uninstall applies to this plugin across all tenants and cannot be undone",
+      "occupying_count": "Occupying tenants: {count}",
+      "selected": "Selected {count}",
+      "cascade": "Cascade Uninstall",
+      "force_cascade": "Force Cascade Uninstall",
+      "empty": "{plugin} is not occupied by any tenant",
+      "col_code": "Tenant Code",
+      "col_name": "Tenant Name",
+      "col_isolation": "Isolation",
+      "col_version": "Version",
+      "col_expired": "Expires",
+      "scope_all": "All occupying tenants",
+      "scope_selected": "Selected {count} tenant(s)",
+      "cascade_msg": "Cascade uninstall will release this plugin's occupancy for {scope}. Continue?",
+      "cascade_title": "Cascade Uninstall",
+      "force_msg": "Force cascade uninstall will purge this plugin's data for {scope}, cannot be undone. Continue?",
+      "force_title": "⚠️ Force Cascade Uninstall",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "success": "Cascade uninstall done: processed {count} tenant(s)",
+      "fail": "Uninstall failed"
+    }
+  }
+}

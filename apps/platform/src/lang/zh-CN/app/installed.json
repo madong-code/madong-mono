@@ -1,0 +1,134 @@
+{
+  "title": "我的应用",
+  "search_placeholder": "搜索插件 key ...",
+  "card_view": "卡片",
+  "table_view": "表格",
+  "total_count": "共 {count} 个插件",
+  "tabs": {
+    "all": "全部",
+    "installed": "已安装",
+    "upgradable": "可升级",
+    "ungranted": "未授权",
+    "empty": "未占用"
+  },
+  "empty": {
+    "platform_no_plugins": "平台暂未安装任何插件",
+    "no_match": "没有匹配的插件",
+    "refresh": "刷新列表"
+  },
+  "column": {
+    "plugin": "模块",
+    "latest_version": "最新版本",
+    "upgrade_progress": "升级进度",
+    "installed": "已装",
+    "upgradable": "可升级",
+    "ungranted": "未授权",
+    "action": "操作"
+  },
+  "card": {
+    "changelog": "更新日志",
+    "tenants_upgradable": "{count} 个租户可升级",
+    "tenants_ungranted": "{count} 个租户未授权",
+    "all_ready": "全部已就绪 · 管理",
+    "empty": "未占用",
+    "hover_tip": "悬停查看快捷操作"
+  },
+  "tooltip": {
+    "authorize": "租户授权",
+    "upgrade": "插件升级",
+    "uninstall": "强制卸载",
+    "install": "远程安装"
+  },
+  "action": {
+    "authorize": "授权",
+    "more": "更多",
+    "upgrade": "升级",
+    "uninstall": "卸载"
+  },
+  "auth_status": {
+    "authorized": "已授权",
+    "trial": "试用",
+    "ungranted": "未授权",
+    "expired": "已过期"
+  },
+  "isolation": {
+    "field": "字段隔离",
+    "database": "库隔离"
+  },
+  "drawer": {
+    "authorize": {
+      "title": "租户授权",
+      "select_all": "全选 ({selected}/{total})",
+      "set_authorized": "设为已授权",
+      "set_trial": "设为试用",
+      "cancel_auth": "取消授权",
+      "cancel_confirm_title": "取消授权确认",
+      "cancel_confirm_msg": "确认对所选 {count} 个租户取消「{plugin}」授权？取消后这些租户将无法使用该插件。",
+      "confirm_cancel": "确认取消",
+      "back": "返回",
+      "please_select": "请先勾选要操作的租户",
+      "partial": "已{action} {success}/{total} 个租户，失败 {failed} 个",
+      "success": "已{action} {success} 个租户：{status}",
+      "col_code": "租户编码",
+      "col_name": "租户名称",
+      "col_status": "授权状态",
+      "col_version": "已装版本",
+      "col_expired": "到期",
+      "empty": "{plugin} 暂无租户数据",
+      "loading": "正在加载租户数据..."
+    },
+    "install": {
+      "title": "远程安装到租户",
+      "plugin_key": "插件标识",
+      "plugin_key_placeholder": "如 demo",
+      "tip": "勾选要安装的租户（仅展示已授权租户，已安装项不可选）。安装范围按各租户隔离模式自动决定：字段隔离=仅菜单，库隔离=菜单 + 数据库迁移。",
+      "select_all": "全选 ({selected}/{total})",
+      "install_btn": "勾选安装（{count}）",
+      "empty_key": "请先填写插件标识",
+      "loading": "正在加载租户数据...",
+      "empty_no_tenant": "{plugin} 暂无已授权租户",
+      "col_code": "租户编码",
+      "col_name": "租户名称",
+      "col_status": "授权状态",
+      "col_isolation": "隔离模式",
+      "col_version": "安装版本",
+      "progress_title": "远程安装进度",
+      "progress_counter": "安装进度：{current}/{total}",
+      "progress_preparing": "准备中...",
+      "phase_running": "安装中 ...",
+      "phase_done": "✅ 安装成功",
+      "phase_error": "❌ 部分失败",
+      "close": "关闭",
+      "log_installing": "安装到租户 {name}（{mode}）",
+      "log_success": "安装成功",
+      "log_fail": "安装失败",
+      "log_interrupt": "连接中断",
+      "msg_success": "已成功安装 {count} 个租户",
+      "msg_partial": "完成 {count} 个，失败 {failed} 个"
+    },
+    "uninstall": {
+      "title": "强制卸载",
+      "alert": "强制卸载将作用于全部租户的该插件，不可撤销",
+      "occupying_count": "占用租户：{count} 个",
+      "selected": "已选 {count} 个",
+      "cascade": "级联卸载",
+      "force_cascade": "强制级联卸载",
+      "empty": "{plugin} 暂无租户占用",
+      "col_code": "租户编码",
+      "col_name": "租户名称",
+      "col_isolation": "隔离模式",
+      "col_version": "版本",
+      "col_expired": "到期时间",
+      "scope_all": "全部占用租户",
+      "scope_selected": "选中的 {count} 个租户",
+      "cascade_msg": "级联卸载将解除 {scope} 该插件占用，确认继续？",
+      "cascade_title": "级联卸载",
+      "force_msg": "强制级联卸载将清空 {scope} 该插件数据，不可撤销，确认继续？",
+      "force_title": "⚠️ 强制级联卸载",
+      "confirm": "确认",
+      "cancel": "取消",
+      "success": "级联卸载完成：已处理 {count} 个租户",
+      "fail": "卸载失败"
+    }
+  }
+}
