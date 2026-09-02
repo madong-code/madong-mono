@@ -7,6 +7,7 @@
     "updatable": "Updatable"
   },
   "uncategorized": "Uncategorized",
+  "more": "More",
   "search_placeholder": "Search module name…",
   "card_view": "Card",
   "table_view": "Table",
@@ -19,14 +20,18 @@
   "installed_tag": "Installed",
   "uninstalled_tag": "Uninstalled",
   "update_log": "Changelog",
-  "install_menu": "Install Menu",
-  "uninstall_menu": "Uninstall Menu",
-  "update_db": "Update Database",
+  "install_menu": "Install",
+  "uninstall_menu": "Uninstall",
+  "not_authorized": "Not Authorized",
+  "update_db": "Update",
   "update_info": "Update Info",
   "column_seq": "#",
-  "column_module": "Module Info",
+  "column_module": "Module",
   "column_version": "Version",
   "column_status": "Status",
+  "column_auth_status": "Auth Status",
+  "authorized_tag": "Authorized",
+  "unauthorized_tag": "Unauthorized",
   "column_action": "Actions",
   "detail": {
     "title": "Module Detail",
@@ -60,8 +65,22 @@
     "fail": "Failed to uninstall menu"
   },
   "update": {
-    "success": "Module {name} database updated successfully",
-    "fail": "Failed to update database"
+    "success": "Module {name} updated successfully",
+    "fail": "Update failed",
+    "dialog_title": "Update Module",
+    "start": "Start Update",
+    "no_install": "Plugin not installed yet, cannot update",
+    "up_to_date": "Already up-to-date, no update needed",
+    "current_version": "Current Version",
+    "platform_version": "Platform Version",
+    "log_title": "Execution Log",
+    "log_empty": "No logs yet, click 'Start Update'",
+    "sync_status": "Sync status: {state}"
+  },
+  "status": {
+    "available": "Available",
+    "installed": "Installed",
+    "upgradeable": "Upgradable"
   },
   "upgrade_log": {
     "title": "Update Info",

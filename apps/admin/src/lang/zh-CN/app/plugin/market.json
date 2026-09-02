@@ -7,6 +7,7 @@
     "updatable": "可更新"
   },
   "uncategorized": "未分类",
+  "more": "更多",
   "search_placeholder": "搜索模块名称…",
   "card_view": "卡片",
   "table_view": "表格",
@@ -19,14 +20,18 @@
   "installed_tag": "已安装",
   "uninstalled_tag": "未安装",
   "update_log": "更新日志",
-  "install_menu": "安装菜单",
-  "uninstall_menu": "卸载菜单",
-  "update_db": "更新数据库",
+  "install_menu": "安装",
+  "uninstall_menu": "卸载",
+  "not_authorized": "未授权",
+  "update_db": "更新",
   "update_info": "更新信息",
   "column_seq": "#",
-  "column_module": "模块信息",
+  "column_module": "模块",
   "column_version": "版本",
   "column_status": "状态",
+  "column_auth_status": "授权状态",
+  "authorized_tag": "已授权",
+  "unauthorized_tag": "未授权",
   "column_action": "操作",
   "detail": {
     "title": "模块详情",
@@ -60,8 +65,22 @@
     "fail": "卸载菜单失败"
   },
   "update": {
-    "success": "模块 {name} 数据库更新成功",
-    "fail": "更新数据库失败"
+    "success": "模块 {name} 更新成功",
+    "fail": "更新失败",
+    "dialog_title": "更新模块",
+    "start": "开始更新",
+    "no_install": "插件尚未安装,无法更新",
+    "up_to_date": "当前已是最新版本,无需更新",
+    "current_version": "当前版本",
+    "platform_version": "平台版本",
+    "log_title": "执行日志",
+    "log_empty": "暂无日志,点击「开始更新」",
+    "sync_status": "同步状态: {state}"
+  },
+  "status": {
+    "available": "可安装",
+    "installed": "已安装",
+    "upgradeable": "可更新"
   },
   "upgrade_log": {
     "title": "更新信息",

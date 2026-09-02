@@ -16,7 +16,7 @@ import { requestClient } from '#/api/request';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
 
-defineOptions({ name: 'GrantedUpgradeLog' });
+defineOptions({ name: 'TenantUpgradeLog' });
 
 const props = defineProps<{ moduleCode?: string }>();
 

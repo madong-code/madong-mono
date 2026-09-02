@@ -9,7 +9,7 @@ import { requestClient } from '#/api/request';
 import { useDialog } from '#/components/dialog';
 import { $t } from '#/locales';
 
-defineOptions({ name: 'GrantedModuleDetail' });
+defineOptions({ name: 'TenantModuleDetail' });
 
 const _props = defineProps<{ moduleId: any }>();
 
