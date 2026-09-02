@@ -12,6 +12,7 @@
     "install_status": "Install Status",
     "installed": "Installed",
     "uninstalled": "Uninstalled",
+    "installed_at": "Installed At",
     "updated_at": "Updated At",
     "created_at": "Created At"
   },

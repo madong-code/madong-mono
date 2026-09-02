@@ -6,6 +6,7 @@ import { ElTag } from 'element-plus';
 import { z } from '#/adapter/form';
 import { AppPluginDevelopService } from '#/api/app/plugin/develop';
 import { DictEnum } from '#/enums';
+import { formatDateTime } from '#/utils/tools/format';
 import { $t } from '#/locales';
 
 export const useCrudSchema = (): CrudSchema => {
@@ -92,28 +93,35 @@ export const useCrudSchema = (): CrudSchema => {
         },
       },
       {
-        field: 'installed_at',
+        field: 'install_status',
         title: $t('app.plugin.develop.list.install_status'),
-        width: 140,
+        width: 100,
         slots: {
           default: ({ row }: any) => {
             const installed = !!row.installed_at;
             return (
-              <div class="inline-flex items-center gap-1">
-                <ElTag
-                  effect={installed ? 'dark' : 'plain'}
-                  type={installed ? 'success' : 'info'}
-                >
-                  {installed
-                    ? $t('app.plugin.develop.list.installed')
-                    : $t('app.plugin.develop.list.uninstalled')}
-                </ElTag>
-                {installed && (
-                  <span class="text-xs text-gray-400">{row.installed_at}</span>
-                )}
-              </div>
+              <ElTag
+                effect={installed ? 'dark' : 'plain'}
+                size="small"
+                type={installed ? 'success' : 'info'}
+              >
+                {installed
+                  ? $t('app.plugin.develop.list.installed')
+                  : $t('app.plugin.develop.list.uninstalled')}
+              </ElTag>
             );
           },
+        },
+      },
+      {
+        field: 'installed_at',
+        title: $t('app.plugin.develop.list.installed_at'),
+        width: 180,
+        show: false,
+        visible: false,
+        slots: {
+          default: ({ row }: any) =>
+            row.installed_at ? formatDateTime(row.installed_at) : '',
         },
       },
       {

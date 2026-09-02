@@ -12,6 +12,7 @@
     "install_status": "安装状态",
     "installed": "已安装",
     "uninstalled": "未安装",
+    "installed_at": "安装时间",
     "updated_at": "更新时间",
     "created_at": "创建时间"
   },
