@@ -1,10 +1,28 @@
 import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import { getPackagesSync } from '@vben/node-utils';
 
 const { packages } = getPackagesSync();
 
+// 大仓内应用目录 apps/{name} 直接作为 scope 使用（admin / platform / install ...）
+const repoRoot = execSync('git rev-parse --show-toplevel || true')
+  .toString()
+  .trim();
+const appsDir = repoRoot
+  ? path.join(repoRoot, 'apps')
+  : path.resolve(process.cwd(), 'apps');
+const appScopes = fs.existsSync(appsDir)
+  ? fs
+      .readdirSync(appsDir, { withFileTypes: true })
+      .filter((item) => item.isDirectory())
+      .map((item) => item.name)
+  : [];
+
 const allowedScopes = [
+  ...appScopes,
+  'apps',
   ...packages.map((pkg) => pkg.packageJson.name),
   'project',
   'style',
