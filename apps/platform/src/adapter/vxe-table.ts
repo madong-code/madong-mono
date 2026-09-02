@@ -16,7 +16,8 @@ setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
     vxeUI.setConfig({
       grid: {
-        align: 'center',
+        // 平台表格默认左对齐（状态/时间列由 useColumns 单独居中，操作栏右对齐）
+        align: 'left',
         border: 'none' as any,
         stripe: true,
         columnConfig: {

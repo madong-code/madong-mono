@@ -14,6 +14,16 @@ interface UseColumnsOptions {
   tableActionColumn?: Partial<CrudColumn>;
 }
 
+/**
+ * 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中，其余默认左对齐
+ */
+const BUILTIN_CENTER_COLUMNS = (col: CrudColumn) =>
+  col.cellRender?.name === 'CellDictTag' ||
+  col.cellRender?.name === 'CellDict' ||
+  /(_at|_time)$|^(created|updated|create|update|time|date)/i.test(
+    String(col.field ?? ''),
+  );
+
 export function useColumns(
   options: UseColumnsOptions,
   tableActions: Ref<ActionItem[]>,
@@ -26,6 +36,11 @@ export function useColumns(
       const { viewComponent, viewComponentProps, vxeColumn, ...rest } = col;
 
       const result: any = { ...rest };
+
+      // 框架内置对齐规则：未显式指定 align 时，状态列 / 时间列默认居中，其余默认左对齐
+      if (result.align === undefined) {
+        result.align = BUILTIN_CENTER_COLUMNS(col) ? 'center' : 'left';
+      }
 
       if (viewComponent) {
         result.cellRender = {
@@ -48,6 +63,8 @@ export function useColumns(
         title: $t('components.crud.table.action'),
         width: 220,
         align: 'center',
+        // 操作栏默认固定显示在右侧，可通过 tableActionColumn.fixed 显式覆盖
+        fixed: 'right',
         showOverflow: 'tooltip',
         slots: {
           default: ({ row }: { row: any }) => (
