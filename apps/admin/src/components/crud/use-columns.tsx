@@ -65,6 +65,8 @@ export function useColumns(
         title: $t('components.crud.table.action'),
         width: 220,
         align: 'center',
+        // 操作栏默认固定显示在右侧，可通过 tableActionColumn.fixed 显式覆盖
+        fixed: 'right',
         showOverflow: 'tooltip',
         slots: {
           default: ({ row }: { row: any }) => (
