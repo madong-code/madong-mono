@@ -44,7 +44,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       nitroMockOptions: {},
       print: !isBuild,
       printInfoMap: {
-        'Vben Admin Docs': 'https://doc.vben.pro',
+        'MaDong-SaaS Docs': 'https://madong.tech/docs/framework-multi',
       },
       pwa: true,
       pwaOptions: getDefaultPwaOptions(appTitle),

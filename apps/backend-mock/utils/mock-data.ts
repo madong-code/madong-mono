@@ -1037,7 +1037,7 @@ export const MOCK_MENU_LIST = [
         status: 1,
         meta: {
           icon: 'carbon:book',
-          iframeSrc: 'https://doc.vben.pro',
+          iframeSrc: 'https://madong.tech/docs/framework-multi',
           title: 'demos.vben.document',
         },
       },
