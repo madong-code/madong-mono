@@ -10,13 +10,13 @@ export const WEB_LINKS = {
   GITHUB_HOME: 'https://gitee.com/liu_guan_qing',
 
   // 项目 Github 主页
-  GITHUB: 'https://gitee.com/motion-code/madong-vue',
+  GITHUB: 'https://gitee.com/motion-code/madong-multi-vue',
 
   // 个人博客
   BLOG: 'https://madong.tech/',
 
   // 项目文档
-  DOCS: 'https://madong.tech/docs/framework',
+  DOCS: 'https://madong.tech/docs/framework-multi',
 
 
   // 项目社区

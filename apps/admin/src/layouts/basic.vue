@@ -3,7 +3,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
 import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import { BasicLayout, LockScreen, UserDropdown } from '@vben/layouts';
@@ -16,6 +15,7 @@ import { Bell, FileText, TerminalSquare } from 'lucide-vue-next';
 import TenantSwitchModal from '#/components/tenant-switch/tenant-switch-modal.vue';
 import { $t } from '#/locales';
 import { useAuthStore, useNotifyStore, useTerminalStore } from '#/store';
+import { WEB_LINKS } from '#/utils/constants/links';
 import LoginForm from '#/views/_core/authentication/login.vue';
 import MessageDrawer from '#/views/content/message/notify/components/message-drawer.vue';
 import NotepadDrawer from '#/views/content/notepad/components/notepad-drawer.vue';
@@ -90,7 +90,7 @@ const menus = computed(() => [
     : []),
   {
     handler: () => {
-      openWindow(VBEN_DOC_URL, {
+      openWindow(WEB_LINKS.DOCS, {
         target: '_blank',
       });
     },
@@ -99,7 +99,7 @@ const menus = computed(() => [
   },
   {
     handler: () => {
-      openWindow(VBEN_GITHUB_URL, {
+      openWindow(WEB_LINKS.GITHUB, {
         target: '_blank',
       });
     },
@@ -108,7 +108,7 @@ const menus = computed(() => [
   },
   {
     handler: () => {
-      openWindow(`${VBEN_GITHUB_URL}/issues`, {
+      openWindow(`${WEB_LINKS.GITHUB}/issues`, {
         target: '_blank',
       });
     },
