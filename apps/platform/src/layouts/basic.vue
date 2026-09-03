@@ -4,14 +4,17 @@ import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { useWatermark } from '@vben/hooks';
+import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import { BasicLayout, LockScreen, UserDropdown } from '@vben/layouts';
 import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
+import { openWindow } from '@vben/utils';
 
 import { FileText, TerminalSquare } from 'lucide-vue-next';
 
 import { $t } from '#/locales';
 import { useAuthStore, useTerminalStore } from '#/store';
+import { WEB_LINKS } from '#/utils/constants/links';
 import LoginForm from '#/views/_core/authentication/login.vue';
 import NotepadDrawer from '#/views/content/notepad/components/notepad-drawer.vue';
 import TerminalDialog from '#/views/devtools/terminal/index.vue';
@@ -42,33 +45,33 @@ const menus = computed(() => [
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
   },
-  // {
-  //   handler: () => {
-  //     openWindow(VBEN_DOC_URL, {
-  //       target: '_blank',
-  //     });
-  //   },
-  //   icon: BookOpenText,
-  //   text: $t('ui.widgets.document'),
-  // },
-  // {
-  //   handler: () => {
-  //     openWindow(VBEN_GITHUB_URL, {
-  //       target: '_blank',
-  //     });
-  //   },
-  //   icon: SvgGithubIcon,
-  //   text: 'GitHub',
-  // },
-  // {
-  //   handler: () => {
-  //     openWindow(`${VBEN_GITHUB_URL}/issues`, {
-  //       target: '_blank',
-  //     });
-  //   },
-  //   icon: CircleHelp,
-  //   text: $t('ui.widgets.qa'),
-  // },
+  {
+    handler: () => {
+      openWindow(WEB_LINKS.DOCS, {
+        target: '_blank',
+      });
+    },
+    icon: BookOpenText,
+    text: $t('ui.widgets.document'),
+  },
+  {
+    handler: () => {
+      openWindow(WEB_LINKS.GITHUB, {
+        target: '_blank',
+      });
+    },
+    icon: SvgGithubIcon,
+    text: 'GitHub',
+  },
+  {
+    handler: () => {
+      openWindow(`${WEB_LINKS.GITHUB}/issues`, {
+        target: '_blank',
+      });
+    },
+    icon: CircleHelp,
+    text: $t('ui.widgets.qa'),
+  },
 ]);
 
 const avatar = computed(() => {
