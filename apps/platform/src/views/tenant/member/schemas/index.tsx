@@ -13,6 +13,7 @@ export const useCrudSchema = (
       add: api.create,
       edit: api.update,
       remove: api.delete,
+      batchRemove: api.remove,
       view: api.get,
     },
 

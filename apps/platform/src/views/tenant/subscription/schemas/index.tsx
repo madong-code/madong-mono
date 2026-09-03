@@ -16,6 +16,7 @@ export const useCrudSchema = (options: {
       add: SubscriptionService.create,
       edit: SubscriptionService.update,
       remove: SubscriptionService.delete,
+      batchRemove: SubscriptionService.remove,
       view: SubscriptionService.get,
     },
 
@@ -23,6 +24,7 @@ export const useCrudSchema = (options: {
     hasEdit: true,
     hasRemove: true,
     hasView: true,
+    hasBatchRemove: true,
 
     columns: [
       { type: 'checkbox', width: 60 },
