@@ -5,7 +5,6 @@
  *  - 主页 useVbenDrawer({ connectedComponent: AuthorizeContent })
  */
 import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import {
@@ -23,10 +22,9 @@ import { Ban, Key, ShieldCheck } from 'lucide-vue-next';
 
 import { usePluginMatrix } from '#/composables/usePluginMatrix';
 import { AppPluginDelegationService } from '#/api/app/plugin/delegation';
+import { $t } from '#/locales';
 
 defineOptions({ name: 'AuthorizeContent' });
-
-const { t } = useI18n();
 
 const { matrix, refreshAll } = usePluginMatrix();
 
@@ -58,7 +56,7 @@ const AUTH_ACTION: Record<string, string> = {
 const pluginKey = ref<string>('');
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  title: t('app.installed.drawer.authorize.title'),
+  title: $t('app.installed.drawer.authorize.title'),
   placement: 'right',
   // vben Drawer 用 class 控宽度, contentClass 只影响内层
   class: '!w-[70vw] !max-w-[1100px]',
@@ -128,10 +126,10 @@ type AuthStatus = 'authorized' | 'trial' | 'ungranted' | 'expired';
 const apply = async (authStatus: AuthStatus) => {
   if (!pluginKey.value) return;
   if (selected.value.size === 0) {
-    ElMessage.warning(t('app.installed.drawer.authorize.please_select'));
+    ElMessage.warning($t('app.installed.drawer.authorize.please_select'));
     return;
   }
-  const actionLabel = t(AUTH_ACTION[authStatus] || authStatus);
+  const actionLabel = $t(AUTH_ACTION[authStatus] || authStatus);
   submitting.value = true;
   try {
     const ids = Array.from(selected.value);
@@ -146,7 +144,7 @@ const apply = async (authStatus: AuthStatus) => {
     const failed  = data?.failed ?? [];
     if (failed.length > 0) {
       ElMessage.warning(
-        t('app.installed.drawer.authorize.partial', {
+        $t('app.installed.drawer.authorize.partial', {
           action: actionLabel,
           success,
           total: ids.length,
@@ -155,10 +153,10 @@ const apply = async (authStatus: AuthStatus) => {
       );
     } else {
       ElMessage.success(
-        t('app.installed.drawer.authorize.success', {
+        $t('app.installed.drawer.authorize.success', {
           action: actionLabel,
           success,
-          status: t(AUTH_LABEL[authStatus] || authStatus),
+          status: $t(AUTH_LABEL[authStatus] || authStatus),
         }),
       );
     }
@@ -172,15 +170,15 @@ const apply = async (authStatus: AuthStatus) => {
 const cancelAuth = () => {
   // 二次确认 (取消 = 业务上的"未授权",有数据风险)
   ElMessageBox.confirm(
-    t('app.installed.drawer.authorize.cancel_confirm_msg', {
+    $t('app.installed.drawer.authorize.cancel_confirm_msg', {
       count: selected.value.size,
       plugin: pluginKey.value,
     }),
-    t('app.installed.drawer.authorize.cancel_confirm_title'),
+    $t('app.installed.drawer.authorize.cancel_confirm_title'),
     {
       type: 'warning',
-      confirmButtonText: t('app.installed.drawer.authorize.confirm_cancel'),
-      cancelButtonText: t('app.installed.drawer.authorize.back'),
+      confirmButtonText: $t('app.installed.drawer.authorize.confirm_cancel'),
+      cancelButtonText: $t('app.installed.drawer.authorize.back'),
     },
   )
     .then(() => apply('ungranted'))

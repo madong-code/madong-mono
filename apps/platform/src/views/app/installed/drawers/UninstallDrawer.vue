@@ -4,7 +4,6 @@
  *  - 自身 useVbenDrawer 拿注入 api,onOpenChange 时 getData() 读 pluginKey
  */
 import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import {
@@ -22,17 +21,16 @@ import { Trash2, Zap } from 'lucide-vue-next';
 
 import { AppPluginDelegationService } from '#/api/app/plugin/delegation';
 import { usePluginMatrix } from '#/composables/usePluginMatrix';
+import { $t } from '#/locales';
 
 defineOptions({ name: 'UninstallContent' });
-
-const { t } = useI18n();
 
 const { occupying, occupyingLoading, loadOccupying, refreshAll } = usePluginMatrix();
 
 const pluginKey = ref<string>('');
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  title: t('app.installed.drawer.uninstall.title'),
+  title: $t('app.installed.drawer.uninstall.title'),
   placement: 'right',
   class: '!w-[70vw] !max-w-[1100px]',
   footer: false,
@@ -65,18 +63,18 @@ const submitting = ref(false);
 const buildConfirm = (forced: boolean) => {
   const scope =
     selectedCount.value === 0
-      ? t('app.installed.drawer.uninstall.scope_all')
-      : t('app.installed.drawer.uninstall.scope_selected', { count: selectedCount.value });
+      ? $t('app.installed.drawer.uninstall.scope_all')
+      : $t('app.installed.drawer.uninstall.scope_selected', { count: selectedCount.value });
   return forced
     ? {
-        msg: t('app.installed.drawer.uninstall.force_msg', { scope }),
-        title: t('app.installed.drawer.uninstall.force_title'),
-        confirm: t('app.installed.drawer.uninstall.force_cascade'),
+        msg: $t('app.installed.drawer.uninstall.force_msg', { scope }),
+        title: $t('app.installed.drawer.uninstall.force_title'),
+        confirm: $t('app.installed.drawer.uninstall.force_cascade'),
       }
     : {
-        msg: t('app.installed.drawer.uninstall.cascade_msg', { scope }),
-        title: t('app.installed.drawer.uninstall.cascade_title'),
-        confirm: t('app.installed.drawer.uninstall.cascade'),
+        msg: $t('app.installed.drawer.uninstall.cascade_msg', { scope }),
+        title: $t('app.installed.drawer.uninstall.cascade_title'),
+        confirm: $t('app.installed.drawer.uninstall.cascade'),
       };
 };
 const doCascade = async (forced: boolean) => {
@@ -86,7 +84,7 @@ const doCascade = async (forced: boolean) => {
     await ElMessageBox.confirm(msg, title, {
       type: forced ? 'error' : 'warning',
       confirmButtonText: confirm,
-      cancelButtonText: t('app.installed.drawer.uninstall.cancel'),
+      cancelButtonText: $t('app.installed.drawer.uninstall.cancel'),
     });
   } catch {
     return;
@@ -99,13 +97,13 @@ const doCascade = async (forced: boolean) => {
       tenant_ids: targetTenantIds.value,
     });
     const processed = res?.processed ?? res?.tenants?.length ?? '?';
-    ElMessage.success(t('app.installed.drawer.uninstall.success', { count: processed }));
+    ElMessage.success($t('app.installed.drawer.uninstall.success', { count: processed }));
     selectedRows.value = [];
     await refreshAll();
     // 刷新抽屉内的占用租户列表 (refreshAll 只重载 matrix/stats)
     await loadOccupying(pluginKey.value);
   } catch (e: any) {
-    ElMessage.error(e?.message || t('app.installed.drawer.uninstall.fail'));
+    ElMessage.error(e?.message || $t('app.installed.drawer.uninstall.fail'));
   } finally {
     submitting.value = false;
   }

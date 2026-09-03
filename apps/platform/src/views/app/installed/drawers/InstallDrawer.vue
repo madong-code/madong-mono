@@ -7,7 +7,6 @@
  *  - 表格 + 勾选 参考 AuthorizeDrawer
  */
 import { computed, nextTick, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import {
@@ -31,17 +30,16 @@ import { CloudDownload, Package } from 'lucide-vue-next';
 import { sse } from '#/api/request';
 import { AppPluginDelegationService } from '#/api/app/plugin/delegation';
 import { usePluginMatrix } from '#/composables/usePluginMatrix';
+import { $t } from '#/locales';
 
 defineOptions({ name: 'InstallContent' });
-
-const { t } = useI18n();
 
 const { matrix, refreshAll } = usePluginMatrix();
 
 const prefillName = ref<string>('');
 
 const [Drawer, drawerApi] = useVbenDrawer({
-  title: t('app.installed.drawer.install.title'),
+  title: $t('app.installed.drawer.install.title'),
   placement: 'right',
   class: '!w-[70vw] !max-w-[1100px]',
   footer: false,
@@ -208,12 +206,12 @@ const runOne = (tenantId: string, withDatabase: boolean) =>
         finish();
       },
       error: (p: any) => {
-        logs.value.push({ ts: Date.now(), msg: '❌ ' + (p?.data?.msg || t('app.installed.drawer.install.log_fail')) });
+        logs.value.push({ ts: Date.now(), msg: '❌ ' + (p?.data?.msg || $t('app.installed.drawer.install.log_fail')) });
         failedCount.value += 1;
         finish();
       },
       onError: () => {
-        logs.value.push({ ts: Date.now(), msg: '❌ ' + t('app.installed.drawer.install.log_interrupt') });
+        logs.value.push({ ts: Date.now(), msg: '❌ ' + $t('app.installed.drawer.install.log_interrupt') });
         failedCount.value += 1;
         finish();
       },
@@ -239,11 +237,11 @@ const start = async () => {
     const withDb = tenant?.database_mode === 'database';
     logs.value.push({
       ts: Date.now(),
-      msg: t('app.installed.drawer.install.log_installing', {
+      msg: $t('app.installed.drawer.install.log_installing', {
         name: tenant?.name ?? tid,
         mode: withDb
-          ? t('app.installed.isolation.database')
-          : t('app.installed.isolation.field'),
+          ? $t('app.installed.isolation.database')
+          : $t('app.installed.isolation.field'),
       }),
     });
     const failedBefore = failedCount.value;
@@ -256,9 +254,9 @@ const start = async () => {
   phase.value = failedCount.value === 0 ? 'done' : 'error';
   pct.value = 100;
   if (failedCount.value === 0) {
-    ElMessage.success(t('app.installed.drawer.install.msg_success', { count: ids.length }));
+    ElMessage.success($t('app.installed.drawer.install.msg_success', { count: ids.length }));
   } else {
-    ElMessage.warning(t('app.installed.drawer.install.msg_partial', { count: ids.length, failed: failedCount.value }));
+    ElMessage.warning($t('app.installed.drawer.install.msg_partial', { count: ids.length, failed: failedCount.value }));
   }
   await refreshAll();
 };
