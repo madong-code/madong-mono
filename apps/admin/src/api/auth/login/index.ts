@@ -12,6 +12,8 @@ export namespace AuthApi {
     grant_type?: string;
     key_id?: string;
     tenant_id?: number | string;
+    /** 租户代码（与 tenant_id 二选一，多租户登录） */
+    tenant_code?: string;
   }
 
   /** 登录接口返回值 */
@@ -53,6 +55,12 @@ export namespace AuthApi {
     database_name: string;
     is_default?: boolean;
   }
+
+  /** 租户分页结果 */
+  export interface TenantPageResult {
+    list: AuthApi.TenantOption[];
+    total: number;
+  }
 }
 
 export async function loginApi(data: AuthApi.LoginParams) {
@@ -63,8 +71,15 @@ export async function getTenantModeFlagApi() {
   return requestClient.get<AuthApi.TenantModeFlag>('/auth/tenant-mode');
 }
 
-export async function getTenantListApi() {
-  return requestClient.get<AuthApi.TenantOption[]>('/auth/tenants');
+/** 分页搜索租户（供租户搜索器使用） */
+export async function getTenantPageApi(params: {
+  keyword?: string;
+  page?: number;
+  page_size?: number;
+} = {}) {
+  return requestClient.get<AuthApi.TenantPageResult>('/auth/tenants', {
+    params,
+  });
 }
 
 export async function logoutApi() {

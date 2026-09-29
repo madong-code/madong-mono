@@ -3,6 +3,7 @@
  */
 export const templateField = function (groupCode: string) {
   const data: Record<string, string[]> = {
+    // 本地存储恒为公开，无私有概念，不含 is_private / ttl
     local: ['root', 'dirname'],
     oss: [
       'accessKeyId',
@@ -11,6 +12,9 @@ export const templateField = function (groupCode: string) {
       'domain',
       'endpoint',
       'dirname',
+      // 私有空间（非公开读）：开启后由后端签发临时直链
+      'is_private',
+      'ttl',
       'remark',
     ],
     cos: [
@@ -20,6 +24,8 @@ export const templateField = function (groupCode: string) {
       'domain',
       'region',
       'dirname',
+      'is_private',
+      'ttl',
       'remark',
     ],
     qiniu: [
@@ -29,6 +35,8 @@ export const templateField = function (groupCode: string) {
       'domain',
       'region',
       'dirname',
+      'is_private',
+      'ttl',
       'remark',
     ],
     s3: [
@@ -41,6 +49,8 @@ export const templateField = function (groupCode: string) {
       'version',
       'endpoint',
       'acl',
+      'is_private',
+      'ttl',
       'remark',
     ],
   };

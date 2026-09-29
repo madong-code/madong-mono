@@ -86,8 +86,27 @@ async function fetchBackendMenus(): Promise<any[]> {
     });
   };
 
+  // 后端根级 badge(snake_case) → route.meta(camelCase)，供核心包 generateMenus 提取
+  const mapRootBadgeToMeta = (menus: any[]): any[] =>
+    menus.map((m) => {
+      if (
+        m.badge !== undefined ||
+        m.badge_type !== undefined ||
+        m.badge_variants !== undefined
+      ) {
+        m.meta = m.meta || {};
+        if (m.badge !== undefined) m.meta.badge = String(m.badge);
+        if (m.badge_type !== undefined) m.meta.badgeType = m.badge_type;
+        if (m.badge_variants !== undefined) {
+          m.meta.badgeVariants = m.badge_variants;
+        }
+      }
+      if (m.children) m.children = mapRootBadgeToMeta(m.children);
+      return m;
+    });
+
   // 合并插件定义的后端格式路由
-  return pluginRouter.mergeBackendMenus(dedup(backendMenus));
+  return pluginRouter.mergeBackendMenus(mapRootBadgeToMeta(dedup(backendMenus)));
 }
 
 /**

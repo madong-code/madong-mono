@@ -23,7 +23,6 @@ const [BasicCrud] = useCrud({
   ...schema,
   formDialog: {
     ...schema.formDialog,
-    showFooter: false,
     transformFormValues: (values, type) => {
       if (type === 'add') {
         values.dict_template_id = record.value?.id;

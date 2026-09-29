@@ -119,7 +119,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'id',
           label: 'ID',
           component: 'Input',
-          dependencies: { show: false },
+          dependencies: { show: false, triggerFields: [] },
         },
         {
           fieldName: 'user_name',

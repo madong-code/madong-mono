@@ -9,7 +9,7 @@ import TenantMemberIndex from '../../member/index.vue';
 
 const emit = defineEmits<{ reload: [] }>();
 
-const currentTenant = ref<{ id: number | string; name?: string }>({});
+const currentTenant = ref<{ id?: number | string; name?: string }>({});
 
 const [Drawer, drawerApi] = useVbenDrawer({
   destroyOnClose: true,

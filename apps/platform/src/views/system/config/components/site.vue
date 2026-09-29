@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-import { updatePreferences } from '@vben/preferences';
-
 import { ElButton, ElMessage } from 'element-plus';
 
 import { useVbenForm } from '#/adapter/form';
@@ -10,6 +8,7 @@ import { ConfigService } from '#/api/system/config';
 import { Page } from '#/components/page';
 import { DictEnum } from '#/enums';
 import { $t } from '#/locales';
+import { useSiteConfigStore } from '#/store/modules/site-config';
 
 import { convertStringNumbers } from '../schemas';
 
@@ -140,21 +139,10 @@ async function onSubmit() {
     content,
   };
   await ConfigService.update('site_setting', values);
-  // 保存后同步刷新 preferences（logo/标题/favicon）
-  updatePreferences({
-    app: { name: content.site_name || '' },
-    logo: {
-      source: content.site_logo || '/logo.png',
-      sourceDark: content.site_logo || '/logo.png',
-    },
-  });
-  if (content.site_favicon) {
-    const iconLink =
-      document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-    if (iconLink) {
-      iconLink.href = content.site_favicon;
-    }
-  }
+  // 保存后重新拉取配置并同步 preferences：logo 是资源 key，需经 buildStaticUrl
+  // 解析（公开空间拼 cdn_url / 私有空间换签名直链）后才能写入，直接写原始 key 会 404
+  const siteConfigStore = useSiteConfigStore();
+  await siteConfigStore.syncTenantPreferences();
   ElMessage.success($t('system.config.save_success'));
 }
 

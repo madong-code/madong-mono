@@ -44,7 +44,8 @@
       "is_show": "Visible",
       "is_sync": "Sync",
       "is_cache": "Cache",
-      "is_affix": "Affix"
+      "is_affix": "Affix",
+      "is_tab": "Show Tab"
     },
     "placeholder": {
       "type": "Please select menu type",
@@ -61,7 +62,8 @@
       "is_show": "Please select visibility",
       "is_sync": "Please select sync status",
       "is_cache": "Please select cache status",
-      "is_affix": "Please select"
+      "is_affix": "Please select",
+      "is_tab": "Please select whether to show tab"
     },
     "help": {
       "path": "Route path must start with /, API path is not required",

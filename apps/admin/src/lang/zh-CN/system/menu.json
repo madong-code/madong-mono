@@ -57,7 +57,8 @@
       "enabled": "启用",
       "is_show": "显示",
       "is_sync": "同步",
-      "is_cache": "缓存"
+      "is_cache": "缓存",
+      "is_tab": "显示标签页"
     },
     "placeholder": {
       "type": "请选择菜单类型",
@@ -74,7 +75,8 @@
       "enabled": "请选择启用状态",
       "is_show": "请选择显示状态",
       "is_sync": "请选择同步状态",
-      "is_cache": "请选择缓存状态"
+      "is_cache": "请选择缓存状态",
+      "is_tab": "请选择是否显示标签页"
     },
     "help": {
       "path": "路由地址必须以 / 开头，接口地址无需填写",

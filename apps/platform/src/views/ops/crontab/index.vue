@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ActionItem } from '#/components/crud/components/types';
+
 import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
@@ -20,13 +22,13 @@ const [BasicCrud, crudApi] = useCrud({
       label: '执行',
       type: 'primary',
       icon: 'ant-design:right-circle-outlined',
-      ifShow: (_action: string, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 1;
       },
       sort: 1020,
       link: true,
       auth: 'crontab:task:execute',
-      onClick: async (e: Event, row: any) => {
+      onClick: async (_e: Event, row: any) => {
         await CrontabService.execute(row.id);
         ElMessage.success($t('common.operation_success'));
         crudApi.refreshUpdate();
@@ -39,10 +41,10 @@ const [BasicCrud, crudApi] = useCrud({
       link: true,
       icon: 'ant-design:play-circle-outlined',
       auth: 'crontab:task:start',
-      ifShow: (_action: string, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 0;
       },
-      onClick: async (e: Event, row: any) => {
+      onClick: async (_e: Event, row: any) => {
         await CrontabService.start(row.id);
         ElMessage.success($t('common.operation_success'));
         crudApi.refreshUpdate();
@@ -54,11 +56,11 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:close-circle-outlined',
       link: true,
-      ifShow: (_action: string, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 0;
       },
       auth: 'crontab:task:resume',
-      onClick: async (e: Event, row: any) => {
+      onClick: async (_e: Event, row: any) => {
         await CrontabService.resume(row.id);
         ElMessage.success($t('common.operation_success'));
         crudApi.refreshUpdate();
@@ -70,11 +72,11 @@ const [BasicCrud, crudApi] = useCrud({
       sort: 1020,
       icon: 'ant-design:pause-circle-outlined',
       link: true,
-      ifShow: (_action: string, record: any) => {
+      ifShow: (_action: ActionItem, record: any) => {
         return record.enabled === 1;
       },
       auth: 'crontab:task:pause',
-      onClick: async (e: Event, row: any) => {
+      onClick: async (_e: Event, row: any) => {
         await CrontabService.pause(row.id);
         ElMessage.success($t('common.operation_success'));
         crudApi.refreshUpdate();
@@ -87,7 +89,7 @@ const [BasicCrud, crudApi] = useCrud({
       icon: 'ant-design:info-circle-outlined',
       link: true,
       auth: 'crontab:task:logs',
-      onClick: (e: Event, row: any) => {
+      onClick: (_e: Event, row: any) => {
         crontabLogsWrapRef.value.show(row);
       },
     },

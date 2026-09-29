@@ -3,6 +3,7 @@ import { useVModel } from '@vueuse/core';
 import { ElMessage, ElUpload } from 'element-plus';
 
 import { ProfileService } from '#/api/auth/profile';
+import { buildStaticUrl } from '#/utils/url';
 
 defineOptions({
   inheritAttrs: false,
@@ -65,7 +66,9 @@ const handleRemove = (e: Event) => {
   >
     <div v-if="mValue" class="m-avatar-wrap" :class="`is-${shape}`">
       <span class="m-avatar-icon-delete" @click="handleRemove">✕</span>
-      <img :src="mValue" width="100%" />
+      <!-- 表单值是资源 key（相对路径），必须经 buildStaticUrl 解析：
+           公开空间拼 cdn_url、私有空间换签名直链、本地/同域才回落相对路径 -->
+      <img :src="buildStaticUrl(mValue)" width="100%" />
     </div>
     <span v-else>+</span>
   </ElUpload>

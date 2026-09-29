@@ -10,6 +10,11 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { defineStore } from 'pinia';
 
 import { getUserInfoApi, loginApi, logoutApi } from '#/api';
+import { destroyMenuBadgePush } from '#/hooks/use-menu-badge-push';
+import { useMenuBadgeStore } from '#/store/modules/menu-badge';
+import { useSiteConfigStore } from '#/store/modules/site-config';
+import { stopBadgeApplier } from '#/utils/menu-badge-applier';
+import { destroyPushClient } from '#/utils/push/client';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -38,6 +43,14 @@ export const useAuthStore = defineStore('auth', () => {
         accessStore.setAccessToken(accessToken);
         accessStore.setRefreshToken(refreshToken);
 
+        // 登录成功后重新拉取站点配置，覆盖登录页使用的平台配置（Logo/标题/Favicon）
+        // 必须在进入主布局前完成，否则会短暂展示登录页的平台品牌
+        try {
+          await useSiteConfigStore().syncTenantPreferences();
+        } catch {
+          // 站点配置同步失败不阻塞登录
+        }
+
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
         } else {
@@ -57,6 +70,12 @@ export const useAuthStore = defineStore('auth', () => {
     } catch {
       // 不做任何处理
     }
+
+    // 0. 销毁 WS 连接与徽标订阅（须在 resetAllStores 前，避免残留订阅）
+    destroyMenuBadgePush();
+    stopBadgeApplier();
+    destroyPushClient();
+    useMenuBadgeStore().clearAll();
 
     // 1. 重置所有 store（access/user/siteConfig/tabbar...）
     resetAllStores();
