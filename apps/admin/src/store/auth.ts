@@ -19,10 +19,22 @@ import {
   logoutApi,
   switchTenantApi,
 } from '#/api';
+import {
+  destroyMenuBadgePush,
+  useMenuBadgePush,
+} from '#/hooks/use-menu-badge-push';
 import { resetRoutes as resetRouterRoutes } from '#/router';
 import { generateAccess } from '#/router/access';
 import { accessRoutes } from '#/router/routes';
+import { useMenuBadgeStore } from '#/store/modules/menu-badge';
+import { useNotifyStore } from '#/store/modules/notify';
 import { useSiteConfigStore } from '#/store/modules/site-config';
+import { extractBadgesFromMenus } from '#/utils/menu-badge';
+import {
+  startBadgeApplier,
+  stopBadgeApplier,
+} from '#/utils/menu-badge-applier';
+import { destroyPushClient } from '#/utils/push/client';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -53,9 +65,11 @@ export const useAuthStore = defineStore('auth', () => {
         // 将 accessToken 和 refreshToken 存储到 accessStore 中
         accessStore.setAccessToken(accessToken);
         accessStore.setRefreshToken(refreshToken);
-        // 存储租户ID（多租户模式）
-        if (params.tenant_id) {
-          accessStore.setTenantId(params.tenant_id);
+        // 存储租户ID（多租户模式）：优先取登录响应中的租户，
+        // 兼容「下拉选择(tenant_id)」与「租户代码(tenant_code)」两种登录方式
+        const tenantId = loginResult.tenant?.id ?? params.tenant_id;
+        if (tenantId) {
+          accessStore.setTenantId(tenantId);
         }
 
         // 登录成功后立即预加载权限码，确保路由渲染（权限判断钩子）前权限码已就绪。
@@ -65,6 +79,14 @@ export const useAuthStore = defineStore('auth', () => {
           accessStore.setAccessCodes(accessCodes);
         } catch {
           // 预加载失败由 setupAccessGuard 补偿加载
+        }
+
+        // 登录成功后重新拉取站点配置，覆盖登录页使用的平台配置（Logo/标题/Favicon）
+        // 必须在进入主布局前完成，否则会短暂展示登录页的平台品牌
+        try {
+          await useSiteConfigStore().syncTenantPreferences();
+        } catch {
+          // 站点配置同步失败不阻塞登录
         }
 
         if (accessStore.loginExpired) {
@@ -86,6 +108,12 @@ export const useAuthStore = defineStore('auth', () => {
     } catch {
       // 不做任何处理
     }
+
+    // 0. 销毁 WS 连接与徽标订阅（须在 resetAllStores 前，避免残留旧租户订阅）
+    destroyMenuBadgePush();
+    stopBadgeApplier();
+    destroyPushClient();
+    useMenuBadgeStore().clearAll();
 
     // 1. 重置所有 store（access/user/siteConfig/tabbar...），siteConfig.$reset 已包含 clearTenantConfig
     resetAllStores();
@@ -169,6 +197,17 @@ export const useAuthStore = defineStore('auth', () => {
 
     accessStore.setAccessMenus(accessibleMenus);
     accessStore.setAccessRoutes(newAccessRoutes);
+
+    // 重建租户相关的 WS 订阅：销毁旧连接（旧租户频道）后按新租户重订
+    const notifyStore = useNotifyStore();
+    destroyMenuBadgePush();
+    notifyStore.$reset();
+    destroyPushClient();
+
+    useMenuBadgeStore().initBadges(extractBadgesFromMenus(accessibleMenus));
+    useMenuBadgePush();
+    notifyStore.initPush();
+    startBadgeApplier();
   }
 
   function $reset() {

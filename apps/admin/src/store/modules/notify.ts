@@ -8,11 +8,10 @@ import { defineStore } from 'pinia';
 
 import { CategoryService } from '#/api/content/message/category';
 import { NotifyService } from '#/api/content/message/notify';
-// @ts-expect-error: push-vue.js has no type declarations
-import { Push } from '#/utils/push/push-vue.js';
+import { subscribeUserChannel } from '#/utils/push/client';
 
-// 全局 Push 连接（Store 多次创建时复用）
-let pushClient: InstanceType<typeof Push> | null = null;
+// 标记 message 事件是否已挂载（Push 单例由 utils/push/client.ts 统一持有）
+let pushInitialized = false;
 
 export const useNotifyStore = defineStore('notify', () => {
   // ========== 状态 ==========
@@ -26,31 +25,17 @@ export const useNotifyStore = defineStore('notify', () => {
 
   // ========== Push 连接管理 ==========
   function initPush() {
-    if (pushClient) return;
-
-    const wssEnabled = import.meta.env.VITE_GLOB_ENABLE_WSS === 'true';
-    if (!wssEnabled) return;
-
-    const wssUrl = import.meta.env.VITE_GLOB_WSS_URL;
-    const appKey = import.meta.env.VITE_GLOB_WSS_APPKEY;
-    if (!wssUrl || !appKey) {
-      console.warn('[NotifyStore] WSS 未配置');
-      return;
-    }
+    if (pushInitialized) return;
 
     const userStore = useUserStore();
     const userId = (userStore.userInfo as Record<string, any>)?.id || '0';
     const tenantId =
       (userStore.userInfo as Record<string, any>)?.current_tenant?.id || '*';
 
-    pushClient = new Push({
-      url: wssUrl,
-      app_key: appKey,
-      auth: '/adminapi/plugin/webman/push/auth',
-    });
+    // 复用全局 Push 单例（backend-admin-{tenantId}-{userId}），与菜单徽标共用同一条 WS
+    const channel = subscribeUserChannel(tenantId, String(userId));
+    if (!channel) return;
 
-    // 订阅个人消息通道 backend-admin-{tenantId}-{userId}
-    const channel = pushClient.subscribe(`backend-admin-${tenantId}-${userId}`);
     channel.on('message', (data: any) => {
       const messages = data.messages || data;
       const list = Array.isArray(messages) ? messages : [messages];
@@ -64,6 +49,7 @@ export const useNotifyStore = defineStore('notify', () => {
       }
     });
 
+    pushInitialized = true;
     pushConnected.value = true;
     loadUnreadCount();
   }
@@ -163,7 +149,7 @@ export const useNotifyStore = defineStore('notify', () => {
     totalItems.value = 0;
     loading.value = false;
     pushConnected.value = false;
-    pushClient = null;
+    pushInitialized = false;
   }
 
   // ========== 工具函数 ==========
