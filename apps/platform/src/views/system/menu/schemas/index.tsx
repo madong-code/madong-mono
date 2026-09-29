@@ -420,6 +420,19 @@ export const useCrudSchema = (): CrudSchema => {
             renderType: 'RadioGroup',
           },
         },
+        {
+          label: $t('system.menu.form.modal.is_tab'),
+          fieldName: 'is_tab',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('system.menu.form.placeholder.is_tab'),
+            code: DictEnum.SYS_YES_NO,
+            isBtn: true,
+            renderType: 'RadioGroup',
+          },
+        },
       ],
     },
   };

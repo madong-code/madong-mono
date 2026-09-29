@@ -479,7 +479,7 @@ export const useCrudSchema = (): CrudSchema => {
               renderType: 'RadioGroup',
               onChange: (val: any) => {
                 if (val !== 2) {
-                  _value.openType = 0;
+                  _value.open_type = 0;
                 }
               },
             };
@@ -580,7 +580,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('template.menu.form.modal.open_type'),
-          fieldName: 'openType',
+          fieldName: 'open_type',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
@@ -615,7 +615,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('template.menu.form.modal.link_url'),
-          fieldName: 'url',
+          fieldName: 'link_url',
           component: 'Input',
           formItemClass: 'col-span-1',
           help: $t('template.menu.form.help.link_url'),
@@ -623,7 +623,7 @@ export const useCrudSchema = (): CrudSchema => {
             return {
               placeholder: $t('template.menu.form.placeholder.link_url'),
               clearable: true,
-              disabled: ![2, 3].includes(values.openType),
+              disabled: ![2, 3].includes(values.open_type),
             };
           },
         },
@@ -654,7 +654,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('template.menu.form.modal.is_show'),
-          fieldName: 'isShow',
+          fieldName: 'is_show',
           component: 'ApiDict',
           defaultValue: 1,
           formItemClass: 'col-span-1',
@@ -670,7 +670,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('template.menu.form.modal.is_sync'),
-          fieldName: 'isSync',
+          fieldName: 'is_sync',
           component: 'ApiDict',
           defaultValue: 0,
           formItemClass: 'col-span-1',
@@ -683,7 +683,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           label: $t('template.menu.form.modal.is_cache'),
-          fieldName: 'isCache',
+          fieldName: 'is_cache',
           component: 'ApiDict',
           defaultValue: 0,
           formItemClass: 'col-span-1',
@@ -695,6 +695,19 @@ export const useCrudSchema = (): CrudSchema => {
               renderType: 'RadioGroup',
               disabled: ![1, 2].includes(values.type),
             };
+          },
+        },
+        {
+          label: $t('template.menu.form.modal.is_tab'),
+          fieldName: 'is_tab',
+          component: 'ApiDict',
+          defaultValue: 1,
+          formItemClass: 'col-span-1',
+          componentProps: {
+            placeholder: $t('template.menu.form.placeholder.is_tab'),
+            code: DictEnum.SYS_YES_NO,
+            isBtn: true,
+            renderType: 'RadioGroup',
           },
         },
       ],
