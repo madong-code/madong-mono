@@ -15,6 +15,7 @@ import { FileText, TerminalSquare } from 'lucide-vue-next';
 import { $t } from '#/locales';
 import { useAuthStore, useTerminalStore } from '#/store';
 import { WEB_LINKS } from '#/utils/constants/links';
+import { buildStaticUrl } from '#/utils/url';
 import LoginForm from '#/views/_core/authentication/login.vue';
 import NotepadDrawer from '#/views/content/notepad/components/notepad-drawer.vue';
 import TerminalDialog from '#/views/devtools/terminal/index.vue';
@@ -75,7 +76,10 @@ const menus = computed(() => [
 ]);
 
 const avatar = computed(() => {
-  return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
+  const raw = userStore.userInfo?.avatar;
+  // 头像存储的是资源 key（去域名的相对路径），必须经 buildStaticUrl 解析：
+  // 公开空间拼 cdn_url、私有空间换签名直链，直接当同域路径会 404
+  return raw ? buildStaticUrl(raw) : preferences.app.defaultAvatar;
 });
 
 async function handleLogout() {

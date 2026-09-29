@@ -236,7 +236,7 @@ const expandToLevel = (level: number) => {
 const selectAll = () => {
   const traverse = (nodes: TreeNode[]) => {
     nodes.forEach((n) => {
-      treeRef.value?.setChecked(n.key, true);
+      treeRef.value?.setChecked(n.key, true, false);
       if (n.children) traverse(n.children);
     });
   };
@@ -246,7 +246,7 @@ const selectAll = () => {
 const selectNone = () => {
   const traverse = (nodes: TreeNode[]) => {
     nodes.forEach((n) => {
-      treeRef.value?.setChecked(n.key, false);
+      treeRef.value?.setChecked(n.key, false, false);
       if (n.children) traverse(n.children);
     });
   };
@@ -271,7 +271,7 @@ const selectInverse = () => {
 
   treeRef.value?.setCheckedKeys([]);
   nextTick(() => {
-    toCheck.forEach((k) => treeRef.value?.setChecked(k, true));
+    toCheck.forEach((k) => treeRef.value?.setChecked(k, true, false));
   });
 };
 </script>

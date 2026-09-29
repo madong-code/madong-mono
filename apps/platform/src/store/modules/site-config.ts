@@ -5,6 +5,8 @@ import { defineStore } from 'pinia';
 
 import { getSiteInfoApi } from '#/api';
 import { ConfigService } from '#/api/system/config';
+import { buildStaticUrl } from '#/utils/url';
+import { prefetchSignedUrls } from '#/utils/url/private-storage';
 
 // 定义站点配置接口（平台配置 + 租户配置共用）
 // 平台配置：从 /login/site-info 获取，code='site_setting_platform'
@@ -198,17 +200,22 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
     const { updatePreferences } = await import('@vben/preferences');
     const updates: Record<string, any> = {};
     if (config.title) updates.app = { name: config.title };
+    // 私有空间下 logo/favicon 需先向后台换取签名地址，再写入 preferences（一次性写入，无法后续重算）
+    await prefetchSignedUrls([config.logo, config.favicon]);
+    // buildStaticUrl 已含私有分支：私有空间返回签名地址，公开空间按 cdn_url / static_url 拼接，
+    // 不能只处理私有场景，否则公开空间的相对 key 会被当作站点同域路径而 404
+    const logoUrl = buildStaticUrl(config.logo || '');
     // logo 有空/有值都更新：空时回退到本地默认 /logo.png，防止 preferences 残留旧值
     updates.logo = {
-      source: config.logo || '/logo.png',
-      sourceDark: config.logo || '/logo.png',
+      source: logoUrl || '/logo.png',
+      sourceDark: logoUrl || '/logo.png',
     };
     updatePreferences(updates);
     if (config.favicon) {
       const linkEl =
         document.querySelector<HTMLLinkElement>('link[rel="icon"]');
       if (linkEl) {
-        linkEl.href = config.favicon;
+        linkEl.href = buildStaticUrl(config.favicon);
       }
     }
   };
