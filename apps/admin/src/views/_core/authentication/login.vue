@@ -6,10 +6,8 @@ import { computed, markRaw, onMounted, ref } from 'vue';
 import { AuthenticationLogin, SliderCaptcha, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import {
-  getTenantListApi,
-  getTenantModeFlagApi,
-} from '#/api';
+import { getTenantModeFlagApi } from '#/api';
+import TenantSearcher from '#/components/tenant-searcher/index.vue';
 import { useAuthStore } from '#/store';
 
 defineOptions({ name: 'Login' });
@@ -18,41 +16,29 @@ const authStore = useAuthStore();
 
 /** 租户模式开关 */
 const tenantEnabled = ref(false);
-const tenantAutoFirst = ref(true);
-const tenantOptions = ref<{ label: string; value: string }[]>([]);
+const tenantAutoFirst = ref(false);
 
-/** 获取租户数据 */
-async function fetchTenantInfo() {
+/** 获取租户模式状态 */
+async function fetchTenantMode() {
   try {
     const modeData = await getTenantModeFlagApi();
     tenantEnabled.value = modeData.enabled ?? false;
-    tenantAutoFirst.value = modeData.auto_select_first ?? true;
-
-    if (tenantEnabled.value) {
-      const tenants = await getTenantListApi();
-      tenantOptions.value = tenants.map((t) => ({
-        label: `${t.name} (${t.code})`,
-        value: String(t.id),
-      }));
-      // 未开启租户模式时隐藏该字段
-    }
+    tenantAutoFirst.value = modeData.auto_select_first ?? false;
   } catch {
     // 接口失败时保持默认关闭状态
   }
 }
 
 onMounted(() => {
-  fetchTenantInfo();
+  fetchTenantMode();
 });
 
-/** 表单提交处理：注入 tenant_id */
+/** 表单提交处理：租户字段统一提交 tenant_code */
 function handleLogin(values: Record<string, any>) {
   const params = { ...values };
-  // 仅租户模式开启且有选中值时才传 tenant_id
-  if (tenantEnabled.value && params.tenant_id) {
-    params.tenant_id = params.tenant_id;
-  } else {
-    delete params.tenant_id;
+  // 非租户模式或未填写时不传租户标识
+  if (!tenantEnabled.value || !params.tenant_code) {
+    delete params.tenant_code;
   }
   authStore.authLogin(params);
 }
@@ -60,20 +46,22 @@ function handleLogin(values: Record<string, any>) {
 const formSchema = computed((): VbenFormSchema[] => {
   const schemas: VbenFormSchema[] = [];
 
-  // 租户模式下添加租户选择
-  if (tenantEnabled.value && tenantOptions.value.length > 0) {
+  if (tenantEnabled.value) {
     schemas.push({
-      component: 'VbenSelect',
+      component: markRaw(TenantSearcher),
       componentProps: {
-        options: tenantOptions.value,
-        placeholder: '请选择租户',
+        autoFirst: tenantAutoFirst.value,
+        placeholder: '输入租户代码或名称搜索',
       },
-      fieldName: 'tenant_id',
-      label: '选择租户',
-      rules: z.string().min(1, { message: '请选择租户' }),
-      defaultValue: tenantAutoFirst.value
-        ? tenantOptions.value[0]?.value
-        : undefined,
+      fieldName: 'tenant_code',
+      label: '租户',
+      // defaultValue 必须给空串：值为 undefined 时 zod 会先报内置的
+      // 「Required」英文提示，而不是下面的中文文案
+      defaultValue: '',
+      rules: z
+        .string({ required_error: '请输入租户代码' })
+        .min(1, { message: '请输入租户代码' })
+        .regex(/^[\w-]{1,64}$/, { message: '租户代码格式不正确' }),
     });
   }
 
