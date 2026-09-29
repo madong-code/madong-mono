@@ -6,8 +6,12 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
 import { getAccessCodesApi } from '#/api';
+import { useMenuBadgePush } from '#/hooks/use-menu-badge-push';
 import { accessRoutes, coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
+import { useMenuBadgeStore } from '#/store/modules/menu-badge';
+import { extractBadgesFromMenus } from '#/utils/menu-badge';
+import { startBadgeApplier } from '#/utils/menu-badge-applier';
 
 import { generateAccess } from './access';
 
@@ -113,6 +117,13 @@ function setupAccessGuard(router: Router) {
     accessStore.setAccessMenus(accessibleMenus);
     accessStore.setAccessRoutes(accessibleRoutes);
     accessStore.setIsAccessChecked(true);
+
+    // 初始化菜单徽标：从菜单树提取静态徽标 → 订阅 WS 推送 → 启动实时写回
+    const badgeStore = useMenuBadgeStore();
+    badgeStore.initBadges(extractBadgesFromMenus(accessibleMenus));
+    useMenuBadgePush();
+    startBadgeApplier();
+
     const redirectPath = (from.query.redirect ??
       (to.path === preferences.app.defaultHomePath
         ? userInfo.homePath || preferences.app.defaultHomePath
