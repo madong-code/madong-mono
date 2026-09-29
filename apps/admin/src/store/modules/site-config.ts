@@ -6,6 +6,7 @@ import { defineStore } from 'pinia';
 import { getSiteInfoApi } from '#/api';
 import { ConfigService } from '#/api/system/config';
 import { buildStaticUrl } from '#/utils/url';
+import { prefetchSignedUrls } from '#/utils/url/private-storage';
 
 // 定义站点配置接口（平台配置 + 租户配置共用）
 // 平台配置：从 /auth/site-info 获取，code='site_setting_platform'
@@ -191,6 +192,16 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
   };
 
   /**
+   * 获取存储相关配置（upload_mode / cdn_url / static_url / is_private / storage_prefix）
+   *
+   * 与 getCurrentConfig() 的区别：后者带 title 兜底，租户未配置站点名称时会整体回退到
+   * 平台配置；而存储字段只由租户的 site_setting 下发（后端 appendUploadInfo 追加），
+   * 一旦回退就会丢失 is_private / static_url，导致私有模式与云存储前缀失效。
+   */
+  const getStorageConfig = (): SystemConfig =>
+    tenantIsLoaded.value ? tenantConfig.value : platformConfig.value;
+
+  /**
    * 获取租户配置并同步到 preferences（logo/标题/favicon）
    * 供 settings 保存后、登录后、切换租户后统一调用
    *
@@ -204,26 +215,50 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
       console.warn('获取租户配置失败，使用平台配置作为回退');
     }
 
-    const config = getCurrentConfig();
-    if (!config.title && !config.logo) {
+    // 站点名称：租户优先，未配置 site_name 时回退平台品牌名
+    const title = tenantConfig.value.title || platformConfig.value.title;
+
+    // Logo / favicon 及其存储字段取「已配置 logo 的一方」：
+    // 不能用 getCurrentConfig()——它要求租户配置存在 site_name，否则整体回退平台配置，
+    // 导致租户只配置了 Logo、未配置站点名称时，Logo 始终被平台 Logo 覆盖
+    const storage = tenantConfig.value.logo
+      ? tenantConfig.value
+      : platformConfig.value;
+
+    if (!title && !storage.logo) {
       return; // 无可用配置，跳过同步
     }
 
+    // 私有空间下 logo / favicon 不能在前端拼接，需先换取带签名的临时直链，
+    // 否则写入 preferences 的会是不可访问的地址
+    await prefetchSignedUrls([storage.logo, storage.favicon], storage);
+
     const { updatePreferences } = await import('@vben/preferences');
     const updates: Record<string, any> = {};
-    if (config.title) updates.app = { name: config.title };
-    // logo 通过 buildStaticUrl 处理：同域使用相对路径，CDN 自动拼接域名
-    const logoUrl = buildStaticUrl(config.logo || '');
+    if (title) updates.app = { name: title };
+    // 必须用「提供该 logo 的配置」自身的存储字段拼地址：
+    // 多租户模式下回退到平台配置时，logo 在平台公开空间，用租户私有空间域名拼接会 401
+    const logoUrl = buildStaticUrl(
+      storage.logo || '',
+      storage.static_url,
+      true,
+      storage,
+    );
     updates.logo = {
       source: logoUrl || '/logo.png',
       sourceDark: logoUrl || '/logo.png',
     };
     updatePreferences(updates);
-    if (config.favicon) {
+    if (storage.favicon) {
       const faviconLink =
         document.querySelector<HTMLLinkElement>('link[rel="icon"]');
       if (faviconLink) {
-        faviconLink.href = buildStaticUrl(config.favicon);
+        faviconLink.href = buildStaticUrl(
+          storage.favicon,
+          storage.static_url,
+          true,
+          storage,
+        );
       }
     }
   };
@@ -242,6 +277,7 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
     clearTenantConfig,
     resetConfig,
     getCurrentConfig,
+    getStorageConfig,
     syncTenantPreferences,
     $reset,
   };

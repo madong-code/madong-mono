@@ -9,6 +9,8 @@ export interface PopConfirm {
   content?: string;
   confirm?: (e?: any, record?: any) => void;
   cancel?: (record?: any) => void;
+  /** 确认回调（运行时读取该字段执行确认逻辑） */
+  ok?: (record?: any) => void;
   icon?: Component | string;
   confirmText?: string;
   cancelText?: string;

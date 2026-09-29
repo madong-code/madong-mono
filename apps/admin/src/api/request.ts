@@ -79,12 +79,17 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       config.headers['Accept-Language'] = preferences.app.locale;
 
       // 多租户：注入租户ID（SaaS 管理接口跳过）
+      // /auth/site-info 是登录页使用的平台级接口（后端按 tenant.enable 决定取
+      // platform 分组还是 default 分组），必须跳过租户上下文：
+      // 数据库隔离的租户库中没有平台配置，带上 X-Tenant-Id 会切到租户库，
+      // 导致站点 Logo / 名称回显为空而退回默认值。
       if (
         accessStore.tenantId &&
         !config.url?.startsWith('/tenant') &&
         !config.url?.startsWith('/db-settings') &&
         !config.url?.startsWith('/db-drivers') &&
-        !config.url?.startsWith('/subscription')
+        !config.url?.startsWith('/subscription') &&
+        !config.url?.startsWith('/auth/site-info')
       ) {
         config.headers['X-Tenant-Id'] = String(accessStore.tenantId);
       }

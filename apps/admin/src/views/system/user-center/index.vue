@@ -26,16 +26,16 @@ import { Avatar } from '#/components/form';
 import Icon from '#/components/icon/index.vue';
 import { Page } from '#/components/page';
 import { $t } from '#/locales';
+import { useAuthStore } from '#/store';
 
 import { useCrudSchema } from './schemas';
 
 defineOptions({ name: 'UserCenter' });
 
 const userStore = useUserStore();
-const userInfo = computed(() => {
-  const info = userStore.userInfo;
-  return info || {};
-});
+const userInfo = computed<Record<string, any>>(
+  () => (userStore.userInfo as any) || {},
+);
 
 // 格式化部门信息（从 depts 数组中获取 name）
 const formatDepts = (depts: any[] | undefined): string => {
@@ -51,8 +51,7 @@ const handleAvatarUpdate = (_newAvatarUrl: string) => {
 // 头像上传成功回调
 const handleAvatarSuccess = async (avatarUrl: string) => {
   try {
-    // 调用专用头像更新接口
-    await ProfileService.updateAvatar({ avatar: avatarUrl });
+    // 头像已由 Avatar 组件通过 ProfileService.uploadAvatarFile 上传并落库
 
     // 更新本地 store 中的用户头像
     const currentUser = userStore.userInfo;

@@ -70,19 +70,21 @@ async function bootstrap(namespace: string) {
   const { MotionPlugin } = await import('@vben/plugins/motion');
   app.use(MotionPlugin);
 
-  // 预加载平台站点配置（阻塞，确保登录页品牌信息就绪）
   const { useSiteConfigStore } = await import('#/store/modules/site-config');
   const siteConfigStore = useSiteConfigStore();
-  await siteConfigStore.fetchPlatformConfig();
+
+  if (accessStore.accessToken) {
+    // 已登录：当前已是租户上下文，只取租户配置（/system/config/code/site_setting），
+    // 不再请求登录前的平台站点信息 /auth/site-info
+    // 非阻塞同步，解决刷新页面后左侧 Logo/标题被 preferences 默认值覆盖的问题
+    siteConfigStore.syncTenantPreferences();
+  } else {
+    // 未登录：预加载平台站点配置（阻塞，确保登录页品牌信息就绪）
+    await siteConfigStore.fetchPlatformConfig();
+  }
 
   // loading 动画的标题/Logo/主色由 loading.html 的内联脚本在渲染前从 localStorage 读取处理
   // bootstrap.ts 不再事后修改 loading 动画 DOM，避免"硬编码 → 动态切换"的闪动
-
-  // 如果已登录（有持久化的 token），非阻塞获取租户配置并同步到 preferences
-  // 解决刷新页面后左侧 Logo/标题被 preferences 默认值覆盖的问题
-  if (accessStore.accessToken) {
-    siteConfigStore.syncTenantPreferences();
-  }
 
   // 动态更新标题
   watchEffect(() => {
