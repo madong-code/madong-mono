@@ -5,7 +5,7 @@ export const DictEnum = {
   SYS_SEX: 'system.Sex',
 
   SYS_DICT_DATA_TYPE: 'system.DictDataType',
-  SYS_DICT_GROUP_CODE: 'sys_dict_group_code',
+  SYS_DICT_GROUP_CODE: 'system.DictGroupCode',
   SYS_CONFIG_TYPE: 'system.ConfigType',
   SYS_CONFIG_GROUP_CODE: 'system.ConfigGroupCode',
 
