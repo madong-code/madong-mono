@@ -167,7 +167,7 @@ export const useCrudSchema = (): CrudSchema => {
           component: 'ApiDict',
           fieldName: 'EQ_status',
           label: $t('app.plugin.develop.search.status'),
-          componentProps: { code: 'sys_enabled_status', clearable: true },
+          componentProps: { code: DictEnum.SYS_ENABLED_STATUS, clearable: true },
         },
       ],
     },

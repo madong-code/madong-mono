@@ -149,7 +149,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'EQ_type',
           label: $t('system.menu.table.search.type'),
           componentProps: {
-            code: 'sys_menu_type',
+            code: DictEnum.SYS_MENU_TYPE,
             clearable: true,
             placeholder: $t('system.menu.table.search.placeholder.type'),
           },
@@ -159,7 +159,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'EQ_enabled',
           label: $t('system.menu.table.search.enabled'),
           componentProps: {
-            code: 'sys_enabled_status',
+            code: DictEnum.SYS_ENABLED_STATUS,
             clearable: true,
             placeholder: $t('system.menu.table.search.placeholder.enabled'),
           },
@@ -223,7 +223,7 @@ export const useCrudSchema = (): CrudSchema => {
           rules: 'required',
           componentProps: {
             placeholder: $t('system.menu.form.placeholder.type'),
-            code: 'sys_menu_type',
+            code: DictEnum.SYS_MENU_TYPE,
             isBtn: true,
             renderType: 'RadioGroup',
           },
@@ -302,7 +302,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: (values: any) => {
             return {
               placeholder: $t('system.menu.form.placeholder.open_type'),
-              code: 'sys_menu_open_type',
+              code: DictEnum.SYS_MENU_OPEN_TYPE,
               isBtn: true,
               renderType: 'RadioGroup',
               disabled: values.type !== 2,
