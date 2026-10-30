@@ -39,7 +39,8 @@ function mapSiteConfig(source: Record<string, any>): SystemConfig {
   return {
     logo: source?.site_logo || '',
     title: source?.site_name || '',
-    favicon: source?.site_favicon || '',
+    // 未单独配置 favicon 时回退使用 logo，保证配置 logo 后浏览器标签页图标跟随
+    favicon: source?.site_favicon || source?.site_logo || '',
     copyright: source?.site_copyright || '',
     site_open: source?.site_open,
     site_url: source?.site_url,
@@ -179,6 +180,7 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
 
   /**
    * 获取当前有效配置（优先租户，回退平台）
+   * @deprecated 品牌（logo/favicon）选择应使用 getBrandConfig，避免「有 logo 无站点名」时回退不一致
    */
   const getCurrentConfig = (): SystemConfig => {
     if (tenantIsLoaded.value && tenantConfig.value.title) {
@@ -191,32 +193,59 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
   };
 
   /**
+   * 统一的品牌配置选择逻辑：
+   * - logo/favicon 取「已配置 logo 的一方」（租户优先，回退平台）；
+   *   不能用 getCurrentConfig()：它要求租户配置存在 site_name，否则整体回退平台配置，
+   *   导致租户只配置了 Logo、未配置站点名称时品牌信息被平台配置覆盖。
+   * - 站点名称取租户/平台各自兜底。
+   * syncTenantPreferences 与 app.vue 的 watch 共用，避免两端取到不同配置而反复切换图标。
+   */
+  const getBrandConfig = (): SystemConfig => {
+    const storage = tenantConfig.value.logo
+      ? tenantConfig.value
+      : platformConfig.value;
+    const title = tenantConfig.value.title || platformConfig.value.title;
+    return { ...storage, title: storage.title || title };
+  };
+
+  /**
+   * 更新浏览器标签页图标，仅在地址真正变化时赋值，避免重复写入造成闪烁
+   */
+  const setFaviconHref = (url: string) => {
+    if (!url) return;
+    const linkEl = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (linkEl && linkEl.href !== url) {
+      linkEl.href = url;
+    }
+  };
+
+  /**
    * 获取租户配置并同步到 preferences（logo/标题/favicon）
    * 供 settings 保存后、登录后统一调用
    */
   const syncTenantPreferences = async () => {
     await fetchTenantConfig();
-    const config = getCurrentConfig();
+    const brand = getBrandConfig();
+    const title = brand.title;
+    if (!title && !brand.logo) {
+      return; // 无可用配置，跳过同步
+    }
     const { updatePreferences } = await import('@vben/preferences');
     const updates: Record<string, any> = {};
-    if (config.title) updates.app = { name: config.title };
+    if (title) updates.app = { name: title };
     // 私有空间下 logo/favicon 需先向后台换取签名地址，再写入 preferences（一次性写入，无法后续重算）
-    await prefetchSignedUrls([config.logo, config.favicon]);
+    await prefetchSignedUrls([brand.logo, brand.favicon]);
     // buildStaticUrl 已含私有分支：私有空间返回签名地址，公开空间按 cdn_url / static_url 拼接，
     // 不能只处理私有场景，否则公开空间的相对 key 会被当作站点同域路径而 404
-    const logoUrl = buildStaticUrl(config.logo || '');
+    const logoUrl = buildStaticUrl(brand.logo || '');
     // logo 有空/有值都更新：空时回退到本地默认 /logo.png，防止 preferences 残留旧值
     updates.logo = {
       source: logoUrl || '/logo.png',
       sourceDark: logoUrl || '/logo.png',
     };
     updatePreferences(updates);
-    if (config.favicon) {
-      const linkEl =
-        document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-      if (linkEl) {
-        linkEl.href = buildStaticUrl(config.favicon);
-      }
+    if (brand.favicon) {
+      setFaviconHref(buildStaticUrl(brand.favicon));
     }
   };
 
@@ -234,6 +263,7 @@ export const useSiteConfigStore = defineStore('siteConfig', () => {
     clearTenantConfig,
     resetConfig,
     getCurrentConfig,
+    getBrandConfig,
     syncTenantPreferences,
     $reset,
   };
