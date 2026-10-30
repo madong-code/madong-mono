@@ -68,6 +68,25 @@ This issue occurs because route switching animations are enabled, and the corres
 
 :::
 
+### Hidden Variant: Single-Root Component with a Comment Before the Root Node (Real Case)
+
+This rule also bites components that "look single-root": as long as there is a comment between `<template>` and the root element, the DEV-mode compiler keeps it as a node, making the component multi-root (Fragment) and triggering the same blank page:
+
+```vue
+<template>
+  <!-- This comment turns the component into a Fragment root in DEV mode -->
+  <Page auto-content-height> ... </Page>
+</template>
+```
+
+Real case: `apps/admin/src/views/web/site-config/index.vue` — after opening that page, switching to any other tab produced a blank page. What makes this variant so misleading:
+
+- **Not reproducible in production builds**: comments are stripped in production compilation, so it only happens in DEV — easy to misdiagnose as an "environment/cache issue"
+- **No errors at all**: with `mode="out-in"` transitions, unloading a Fragment-rooted page returns early via `removeFragment` without firing `afterLeave`, so the Transition's `isLeaving` flag stays stuck forever and the new page never mounts — blank page, URL and route state normal, console clean, only a refresh recovers
+- **Breaks only when leaving the problem page**: the problematic page itself renders fine; other pages go blank after switching away, which easily sends the investigation down the wrong path (routing, KeepAlive, state management)
+
+Debugging tip: first disable the "page switching animation" in preferences as a controlled experiment. If everything works with animations off, the component is almost certainly multi-root — check for comments or multiple elements around the template root node.
+
 ## My code works locally but not when packaged
 
 The reason for this issue could be one of the following. You can check these reasons, and if there are other possibilities, feel free to add them:
