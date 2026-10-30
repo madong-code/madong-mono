@@ -8,6 +8,9 @@
   },
   "group_entry": "Footer Entries",
   "group_contact": "Contact",
+  "group_basic": "Basic Info",
+  "group_record": "Filing Info",
+  "group_tongji": "Analytics Config",
   "fields": {
     "site_open": "Portal Site Switch",
     "site_url": "Portal Site URL",
@@ -42,6 +45,7 @@
     "save": "Save Settings"
   },
   "messages": {
-    "save_success": "Site settings saved"
+    "save_success": "Site settings saved",
+    "tongji_key_required": "Please fill in the analytics key before enabling Baidu Analytics"
   }
 }

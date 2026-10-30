@@ -8,6 +8,9 @@
   },
   "group_entry": "页脚入口",
   "group_contact": "联系方式",
+  "group_basic": "基础信息",
+  "group_record": "备案信息",
+  "group_tongji": "统计配置",
   "fields": {
     "site_open": "前台站点开关",
     "site_url": "前台站点URL",
@@ -42,6 +45,7 @@
     "save": "保存设置"
   },
   "messages": {
-    "save_success": "站点设置已保存"
+    "save_success": "站点设置已保存",
+    "tongji_key_required": "启用百度统计前请先填写统计 Key"
   }
 }
