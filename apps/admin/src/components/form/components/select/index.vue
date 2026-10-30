@@ -1,14 +1,16 @@
 <template>
-  <ElSelectV2 v-model="value" :options="options || []">
+  <!-- 普通 ElSelect 同样支持 options prop(EP 2.5+)；ElSelectV2 虚拟列表在部分容器中
+       高度塌陷(clientHeight=0)导致下拉选项无法渲染，故此处不使用 V2 -->
+  <ElSelect v-model="value" :options="options || []">
     <template v-for="(_, slotName) in slots" #[slotName]>
       <slot :name="slotName" />
     </template>
-  </ElSelectV2>
+  </ElSelect>
 </template>
 
 <script setup lang="ts">
 import { useSlots, computed } from 'vue'
-import { ElSelectV2 } from 'element-plus'
+import { ElSelect } from 'element-plus'
 
 interface Option {
   label: string
