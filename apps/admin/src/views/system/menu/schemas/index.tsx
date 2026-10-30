@@ -181,7 +181,7 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 'admin',
           componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'GET',
+            requestMethod: 'get',
             placeholder: $t('system.menu.form.placeholder.app'),
             clearable: true,
           },

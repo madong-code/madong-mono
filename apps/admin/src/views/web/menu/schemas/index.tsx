@@ -47,7 +47,8 @@ export const useCrudSchema = (): CrudSchema => {
       remove: 'web:menu:delete',
       view: 'web:menu:read',
     },
-    tree: { id: 'id', pid: 'parent_id', children: 'children' },
+    // pid 与后端 web_menu.pid 字段对应（父菜单ID）；reserve 让刷新后保持树形展开状态
+    tree: { id: 'id', pid: 'pid', children: 'children', reserve: true },
     beforeFetch: (params: any) => ({ ...params, page: 1, limit: 999 }),
     afterFetch: (res: any) => {
       const items = res?.items || [];
@@ -158,7 +159,8 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 'web',
           componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'GET',
+            requestMethod: 'get',
+            params: { end: 'web' },
           },
         },
         {
@@ -169,13 +171,13 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           component: 'Input',
-          fieldName: 'LINK_name',
+          fieldName: 'LIKE_name',
           label: $t('web.menu.table.search.name'),
           componentProps: { clearable: true },
         },
         {
           component: 'Input',
-          fieldName: 'LINK_code',
+          fieldName: 'LIKE_code',
           label: $t('web.menu.table.search.code'),
           componentProps: {
             clearable: true,
@@ -184,7 +186,7 @@ export const useCrudSchema = (): CrudSchema => {
         },
         {
           component: 'ApiDict',
-          fieldName: 'type',
+          fieldName: 'EQ_type',
           label: $t('web.menu.table.search.type'),
           componentProps: { code: DictEnum.WEB_MENU_TYPE, clearable: true },
         },
@@ -226,7 +228,8 @@ export const useCrudSchema = (): CrudSchema => {
           formItemClass: 'col-span-2',
           componentProps: {
             api: '/system/menu/app/list',
-            requestMethod: 'GET',
+            requestMethod: 'get',
+            params: { end: 'web' },
           },
         },
         {
@@ -251,7 +254,7 @@ export const useCrudSchema = (): CrudSchema => {
           componentProps: {
             placeholder: $t('web.menu.form.placeholder_code'),
             clearable: true,
-            allowClear: true,
+            maxlength: 64,
           },
         },
         {
@@ -261,7 +264,11 @@ export const useCrudSchema = (): CrudSchema => {
           defaultValue: 1,
           rules: 'required',
           formItemClass: 'col-span-2',
-          componentProps: { code: DictEnum.WEB_MENU_TYPE },
+          componentProps: {
+            code: DictEnum.WEB_MENU_TYPE,
+            isBtn: true,
+            renderType: 'RadioGroup',
+          },
         },
         {
           fieldName: 'pid',
@@ -347,7 +354,7 @@ export const useCrudSchema = (): CrudSchema => {
           fieldName: 'is_public',
           label: $t('web.menu.form.is_public'),
           component: 'ApiDict',
-          defaultValue: 0,
+          defaultValue: 1,
           formItemClass: 'col-span-1',
           componentProps: {
             code: DictEnum.SYS_YES_NO,
