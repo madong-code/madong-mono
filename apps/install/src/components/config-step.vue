@@ -241,7 +241,7 @@ onUnmounted(() => {
               <el-switch v-model="formData.installDatabase" />
             </label>
             <label class="opt-item">
-              <span class="opt-text"><strong>构建打包</strong><small>编译前端资源</small></span>
+              <span class="opt-text"><strong>构建打包</strong><small>编译前端资源（耗时较长，默认关闭；可安装后单独构建）</small></span>
               <el-switch v-model="formData.buildProject" />
             </label>
             <label class="opt-item">
