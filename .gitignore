@@ -40,9 +40,8 @@ vite.config.mjs.*
 vite.config.js.*
 vite.config.ts.*
 
-# Application plugin directories (generated at runtime)
+# 插件前端为插件包安装产物（admin/platform 等），源码统一在 backend/plugin/*/resource 维护，不纳入追踪
 apps/*/src/plugin/*
-!apps/*/src/plugin/demo/
 .idea
 .vscode
 *.suo

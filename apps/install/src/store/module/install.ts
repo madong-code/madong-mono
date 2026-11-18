@@ -283,6 +283,18 @@ export const useInstallStore = defineStore('install', {
             }
           });
 
+          eventSource.addEventListener('warning', (event) => {
+            try {
+              const response = JSON.parse((event as MessageEvent).data);
+              const data = response.data || {};
+              this.install_logs.push(
+                `[${new Date().toLocaleTimeString()}] [警告] ${data.message || response.message || '安装警告'}`,
+              );
+            } catch (error) {
+              console.error('解析警告消息失败:', error);
+            }
+          });
+
           eventSource.addEventListener('runtime_error', (event) => {
             try {
               const response = JSON.parse((event as MessageEvent).data);
