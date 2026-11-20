@@ -9,10 +9,6 @@
       "path": "apps/backend-mock"
     },
     {
-      "name": "@madong/install",
-      "path": "apps/install"
-    },
-    {
       "name": "@madong/platform",
       "path": "apps/platform"
     },
